@@ -1,6 +1,38 @@
 # DSGE-modell (Dynare)
 
-## Állapot: v0.1 (sztochasztikus váz) + v0.2 (euró-szcenárió)
+## Állapot: v0.1 (sztochasztikus váz) + v0.2 (euró-szcenárió) + v0.3 (WP-kalibráció, UIP-csatorna)
+
+## v0.3 — `kkv_dsge_v03.mod`: WP 2017/7 kalibráció + UIP-országprémium
+
+Két változás a v0.2-höz képest (futtatás: `run_v03`, kimenet:
+`szcenario_v03.csv` + `szcenario_v03_hosszutav.csv`, ábra:
+`src/05_szcenario_abrak_v03.py`):
+
+1. **Kalibráció a WP 2017/7 appendix HU oszlopából**: β=0.99, σ=0.4,
+   α=0.30, Calvo-ár 0.92 → κ≈0.01, beruh. kiig. 6.0, Taylor 0.87/1.70/0.10,
+   C/Y 0.61, I/Y 0.19, G/Y 0.20, X/Y=M/Y 0.75. A pénzügyi blokk (chi, lev)
+   továbbra is az Opten-panelből.
+2. **UIP-országprémium csatorna**: a szuverén konvergencia zsov=0.5 súllyal
+   az UIP-be is belép. Dekompozíció: UIP = kockázatmentes görbe / árfolyam-
+   és NFA-dinamika; EFP = vállalati hitelfelár (tsov/tbank, változatlan).
+
+**Fő eredmények (alappálya):** hosszú távú GDP-szint **+0,49%**
+(optimista +0,67%, pesszimista +0,32%), KKV-kibocsátás +0,56% vs.
+nagyvállalati +0,41% — a KKV-többlet tartós. A felépülés lassú (10 évnél
++0,11%, 30 évnél +0,25%): a szűk keresztmetszet a tőkefelhalmozás
+sebessége (WP-beli beruházási kiigazítási költség 6.0).
+
+**Két strukturális tanulság:**
+- A reprezentatív háztartás Euler-egyenlete hosszú távon βhoz köti a
+  belföldi reálkamatot, ezért az UIP-prémium csökkenése főleg az
+  NFA/árfolyam-oldalt mozgatja — a tartós kibocsátási hatást az
+  EFP-ék (tőkeköltség-csatorna) adja. A vázlatbeli 1,5–2% a kereskedelmi/
+  tranzakciós csatornákat és az extenzív margót is tartalmazza, amelyek
+  tudatosan nem ebben a rétegben élnek.
+- A belépés előtti szakaszban átmeneti kibocsátás-visszaesés jelenik meg
+  (~−0,2%): az anticipált konvergencia reálfelértékelődése fékezi az
+  exportot, mielőtt a beruházási csatorna beindul — a klasszikus
+  konvergenciás felértékelődési dilemma, endogén módon.
 
 ## v0.2 — `kkv_dsge_v02.mod`: euró-belépési szcenárió
 
