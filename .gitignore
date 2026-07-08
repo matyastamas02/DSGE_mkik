@@ -1,0 +1,42 @@
+# --- Adat: struktúra marad, tartalom NEM (Drive-on van) ---
+data/raw/*
+data/processed/*
+!data/raw/.gitkeep
+!data/processed/.gitkeep
+
+# --- Output: ha gyors a generálás, ignore; ha lassú, kommenteld ki ---
+# output/figures/*
+# output/tables/*
+# !output/figures/.gitkeep
+# !output/tables/.gitkeep
+
+# --- Dynare / MATLAB melléktermékek ---
+*.log
++*/
+*_results.mat
+*.jnl
+*.eps.*
+model_main/
+*.m~
+
+# --- R ---
+.Rhistory
+.RData
+.Rproj.user/
+
+# --- LaTeX ---
+*.aux
+*.bbl
+*.blg
+*.out
+*.toc
+*.synctex.gz
+*.fls
+*.fdb_latexmk
+
+# --- OS / editor ---
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+*.swp
