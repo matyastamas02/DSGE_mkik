@@ -13,6 +13,7 @@ data/processed/*
 # --- Dynare / MATLAB melléktermékek ---
 *.log
 +*/
+src/model/kkv_dsge_v*/
 *_results.mat
 *.jnl
 *.eps.*
