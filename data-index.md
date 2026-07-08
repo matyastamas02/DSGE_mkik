@@ -17,7 +17,7 @@ Drive-mappa (minden adat itt): https://drive.google.com/drive/folders/1L7rlzdq3i
 
 | Fájl | Leírás | Előállító script | Drive link | Lokális útvonal |
 |------|--------|------------------|------------|-----------------|
-| *(még nincs — az egységes cég-év panel elkészültekor kerül ide)* | | | | |
+| opten_panel.csv | Egységes, tisztított cég-év panel (150 982 sor × 69 oszlop, 2021–2025): kulcs mérleg- és eredménymezők ezer Ft-ban + kockázati besorolás évenként + méret/ágazat/régió (NUTS-2, irsz-alapú közelítés) + EU-támogatás- és közbeszerzés-jelzők + származtatott változók (implicit kamatráta, van_hitel, exportarány, tőkeáttétel) | `src/01_opten_panel_tisztitas.py` | *(scriptből reprodukálható, nem kell Drive)* | `data/processed/opten_panel.csv` |
 
 ## Kapcsolódó dokumentumok
 
