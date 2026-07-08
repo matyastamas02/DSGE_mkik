@@ -6,7 +6,7 @@ Projekt-instrukció a Claude Code számára. Ez a fájl minden munkamenet elejé
 
 New Keynesian DSGE modell magyar adatokra, egy Chamber of Commerce megbízásra.
 Deadline: 2026. december. Három kollaborátor dolgozik rajta, mind a `main`-en.
-A modell alapja egy korábbi Corvinus mesterszakos DSGE-thesis.
+A modell alapja egy korábbi tanulmány (forrás később kerül be ide).
 
 ## Repo-struktúra
 
