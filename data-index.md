@@ -5,21 +5,29 @@ Ez a fájl a hivatkozási pont: minden adathoz link + leírás + elvárt lokáli
 
 Letöltés után a fájlokat a lent megadott `Lokális útvonal`-ra tedd, hogy a `src/` scriptek megtalálják.
 
+Drive-mappa (minden adat itt): https://drive.google.com/drive/folders/1L7rlzdq3izqFV1d6lPS5Du1auA0ADqXx
+
 ## Nyers adat (`data/raw/`)
 
 | Fájl | Leírás | Forrás | Drive link | Lokális útvonal |
 |------|--------|--------|------------|-----------------|
-| [pl. macro_raw.csv] | [KSH negyedéves GDP, infláció, ...] | [KSH / MNB] | [link] | `data/raw/macro_raw.csv` |
-| | | | | |
+| opten.xlsx | Opten vállalati panel 2021–2025: 37 805 cég (10+ fő), 150 982 cég-év megfigyelés, 162 pénzügyi mező (teljes mérleg + eredménykimutatás); szegmentáció: méret, ágazat (TEÁOR), régió (NUTS-2), kockázati besorolás; plusz közbeszerzés- és EU-támogatás-jelzők. ~80 MB. | MKIK (Opten) | [link](https://drive.google.com/file/d/1nDEhfF7zp1Lo5mi1ClzBZegcUMfAe-4A/view) | `data/raw/opten.xlsx` |
 
 ## Tisztított / modellbe menő adat (`data/processed/`)
 
 | Fájl | Leírás | Előállító script | Drive link | Lokális útvonal |
 |------|--------|------------------|------------|-----------------|
-| [pl. model_input.csv] | [detrendelt, transzformált sorok] | `src/[prep_script]` | [link] | `data/processed/model_input.csv` |
-| | | | | |
+| *(még nincs — az egységes cég-év panel elkészültekor kerül ide)* | | | | |
+
+## Kapcsolódó dokumentumok
+
+- `adat_helyzet.html` — belső adathelyzet-jelentés az Opten-panelről (lefedettség, korlátok,
+  módszertani teendők): [link](https://drive.google.com/file/d/1dssEbTAUCSUfj0gJdkwZ244Ej-bL9CO5/view).
+  Nem adat, nem kell letölteni a `data/`-ba.
 
 ## Megjegyzések
 
 - Ha egy tisztított fájl script-ből reprodukálható, elég a nyerset letölteni + a scriptet futtatni.
 - Új adat felvételekor: töltsd fel Drive-ra, majd vedd fel ide egy sorral.
+- Nyitott kérdések az adathoz (részletek az adathelyzet-jelentésben): az „AVG" kockázati besorolás
+  jelentése (szállítónál tisztázandó); a részleges 2025-ös év csak ellenőrzésre javasolt.
