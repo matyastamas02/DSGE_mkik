@@ -1,0 +1,574 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+<meta charset="UTF-8">
+<title>DSGE modell ábrák — euróbevezetés és KKV hitelkörnyezet</title>
+<style>
+:root {
+  --bg: #faf9f5;
+  --fg: #1f1e1c;
+  --muted: #6b6963;
+  --border: #d8d4c8;
+  --teal-bg: #d6ebe5;
+  --teal-fg: #0f6e56;
+  --purple-bg: #e0deee;
+  --purple-fg: #4a448c;
+  --amber-bg: #f0e1c6;
+  --amber-fg: #8a5a17;
+  --coral-bg: #f3d8cc;
+  --coral-fg: #993c1d;
+  --blue-bg: #d6e0ee;
+  --blue-fg: #2a5a8c;
+  --gray-bg: #e8e6e0;
+  --gray-fg: #555350;
+  --pink-bg: #efd9e2;
+  --pink-fg: #8c4060;
+  --green-bg: #d8e8d2;
+  --green-fg: #3d6b2e;
+}
+* { box-sizing: border-box; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+  background: var(--bg);
+  color: var(--fg);
+  margin: 0;
+  padding: 48px 24px;
+  line-height: 1.6;
+}
+.container {
+  max-width: 900px;
+  margin: 0 auto;
+}
+header {
+  border-bottom: 1px solid var(--border);
+  padding-bottom: 24px;
+  margin-bottom: 48px;
+}
+h1 {
+  font-size: 28px;
+  font-weight: 600;
+  margin: 0 0 8px 0;
+}
+header .subtitle {
+  color: var(--muted);
+  font-size: 15px;
+  margin: 0;
+}
+.figure {
+  margin-bottom: 64px;
+}
+.figure-header {
+  margin-bottom: 24px;
+}
+.figure-number {
+  display: inline-block;
+  font-size: 13px;
+  color: var(--muted);
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  margin-bottom: 4px;
+}
+h2 {
+  font-size: 20px;
+  font-weight: 600;
+  margin: 0 0 8px 0;
+}
+.figure-desc {
+  color: var(--muted);
+  font-size: 14px;
+  margin: 0 0 20px 0;
+  max-width: 700px;
+}
+.svg-wrap {
+  background: white;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 20px;
+  overflow-x: auto;
+}
+.svg-wrap svg {
+  display: block;
+  width: 100%;
+  height: auto;
+  max-width: 100%;
+}
+.node rect { transition: opacity 0.15s; }
+.node:hover rect { opacity: 0.75; cursor: default; }
+.th { font-size: 13px; font-weight: 600; fill: var(--fg); }
+.ts { font-size: 11.5px; fill: var(--fg); }
+.arr { stroke: var(--muted); stroke-width: 1.2; fill: none; }
+.c-teal rect { fill: var(--teal-bg); stroke: var(--teal-fg); }
+.c-purple rect { fill: var(--purple-bg); stroke: var(--purple-fg); }
+.c-amber rect { fill: var(--amber-bg); stroke: var(--amber-fg); }
+.c-coral rect { fill: var(--coral-bg); stroke: var(--coral-fg); }
+.c-blue rect { fill: var(--blue-bg); stroke: var(--blue-fg); }
+.c-gray rect { fill: var(--gray-bg); stroke: var(--gray-fg); }
+.c-pink rect { fill: var(--pink-bg); stroke: var(--pink-fg); }
+.c-green rect { fill: var(--green-bg); stroke: var(--green-fg); }
+footer {
+  border-top: 1px solid var(--border);
+  margin-top: 64px;
+  padding-top: 24px;
+  color: var(--muted);
+  font-size: 13px;
+}
+@media print {
+  body { padding: 24px; }
+  .figure { page-break-inside: avoid; }
+}
+</style>
+</head>
+<body>
+<div class="container">
+
+<header>
+<h1>DSGE modell — vizuális összefoglaló</h1>
+<p class="subtitle">Az euróbevezetés hatása a magyar KKV-szektor hitelkörnyezetére. Ábragyűjtemény a tervezéshez és a megbeszéléshez.</p>
+</header>
+
+<!-- 1. ÁBRA: Fejlesztési irányok -->
+<section class="figure">
+<div class="figure-header">
+<span class="figure-number">1. ábra</span>
+<h2>A modell-építés alternatív irányai</h2>
+<p class="figure-desc">A kezdeti modellfejlesztési alternatívák összehasonlítása: a tisztán makro DSGE-től a vállalati heterogenitással bővített integrált modellig. Ez vezetett a végleges háromrétegű architektúrához.</p>
+</div>
+<div class="svg-wrap">
+<svg viewBox="0 0 680 520" xmlns="http://www.w3.org/2000/svg">
+<defs>
+<marker id="arrow1" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+<path d="M2 1L8 5L2 9" fill="none" stroke="context-stroke" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+</marker>
+</defs>
+<text class="th" x="340" y="30" text-anchor="middle">Fejlesztési irányok a jelenlegi modellhez képest</text>
+
+<g class="node c-teal">
+<rect x="30" y="52" width="195" height="100" rx="8" stroke-width="0.5"/>
+<text class="th" x="127" y="76" text-anchor="middle">1. Kétszektoros modell</text>
+<text class="ts" x="127" y="96" text-anchor="middle">KKV vs. nagyvállalat</text>
+<text class="ts" x="127" y="114" text-anchor="middle">méretfüggő prémium</text>
+<text class="ts" x="127" y="132" text-anchor="middle">→ MNB NemKor-stílusú</text>
+</g>
+
+<g class="node c-purple">
+<rect x="242" y="52" width="195" height="100" rx="8" stroke-width="0.5"/>
+<text class="th" x="339" y="76" text-anchor="middle">2. BGG akcelerátor</text>
+<text class="ts" x="339" y="96" text-anchor="middle">endogén finansz. korlát</text>
+<text class="ts" x="339" y="114" text-anchor="middle">nettó vagyon → hitel</text>
+<text class="ts" x="339" y="132" text-anchor="middle">→ válságban erős hatás</text>
+</g>
+
+<g class="node c-amber">
+<rect x="454" y="52" width="195" height="100" rx="8" stroke-width="0.5"/>
+<text class="th" x="551" y="76" text-anchor="middle">3. Addicionalitás</text>
+<text class="ts" x="551" y="96" text-anchor="middle">ki jutott volna hitelhez</text>
+<text class="ts" x="551" y="114" text-anchor="middle">program nélkül is?</text>
+<text class="ts" x="551" y="132" text-anchor="middle">→ kiszorítás korrekció</text>
+</g>
+
+<line x1="127" y1="152" x2="127" y2="178" stroke="#888780" stroke-width="0.8" stroke-dasharray="4 3" marker-end="url(#arrow1)"/>
+<line x1="339" y1="152" x2="339" y2="178" stroke="#888780" stroke-width="0.8" stroke-dasharray="4 3" marker-end="url(#arrow1)"/>
+<line x1="551" y1="152" x2="551" y2="178" stroke="#888780" stroke-width="0.8" stroke-dasharray="4 3" marker-end="url(#arrow1)"/>
+
+<g class="node c-coral">
+<rect x="140" y="178" width="400" height="64" rx="8" stroke-width="0.5"/>
+<text class="th" x="340" y="202" text-anchor="middle">Javasolt kombinált modell</text>
+<text class="ts" x="340" y="224" text-anchor="middle">kétszektor + BGG pénzügyi akcelerátor + heterogén transzmisszió</text>
+</g>
+
+<line x1="340" y1="242" x2="340" y2="266" stroke="#888780" stroke-width="1" marker-end="url(#arrow1)"/>
+
+<g class="node c-blue">
+<rect x="60" y="266" width="240" height="56" rx="8" stroke-width="0.5"/>
+<text class="th" x="180" y="288" text-anchor="middle">Ex-post: tényellentétes pálya</text>
+<text class="ts" x="180" y="308" text-anchor="middle">strukturális azonosítás, IRF</text>
+</g>
+
+<g class="node c-blue">
+<rect x="380" y="266" width="240" height="56" rx="8" stroke-width="0.5"/>
+<text class="th" x="500" y="288" text-anchor="middle">Ex-ante: 3 szcenárió</text>
+<text class="ts" x="500" y="308" text-anchor="middle">alap / optimista / pesszimista</text>
+</g>
+
+<rect x="30" y="346" width="620" height="148" rx="8" fill="none" stroke="#d8d4c8" stroke-width="0.5" stroke-dasharray="6 3"/>
+<text class="th" x="340" y="368" text-anchor="middle">Mit ad ez többet a jelenlegi tanulmánynál?</text>
+
+<rect x="50" y="382" width="180" height="98" rx="6" fill="#d6ebe5" opacity="0.5"/>
+<text class="ts" x="140" y="400" text-anchor="middle" font-weight="500">Elméleti megalapozás</text>
+<text class="ts" x="140" y="418" text-anchor="middle">A KKV-hatás strukturálisan</text>
+<text class="ts" x="140" y="434" text-anchor="middle">levezethető, nem csak</text>
+<text class="ts" x="140" y="450" text-anchor="middle">inputként injektált</text>
+<text class="ts" x="140" y="466" text-anchor="middle">pénzügyi sokk</text>
+
+<rect x="250" y="382" width="180" height="98" rx="6" fill="#e0deee" opacity="0.5"/>
+<text class="ts" x="340" y="400" text-anchor="middle" font-weight="500">Anticiklikusság magyarázata</text>
+<text class="ts" x="340" y="418" text-anchor="middle">A BGG miatt modell</text>
+<text class="ts" x="340" y="434" text-anchor="middle">endogén módon mutatja,</text>
+<text class="ts" x="340" y="450" text-anchor="middle">miért nagyobb a hatás</text>
+<text class="ts" x="340" y="466" text-anchor="middle">gyenge konjunktúrában</text>
+
+<rect x="450" y="382" width="180" height="98" rx="6" fill="#f0e1c6" opacity="0.5"/>
+<text class="ts" x="540" y="400" text-anchor="middle" font-weight="500">Heterogén transzmisszió</text>
+<text class="ts" x="540" y="418" text-anchor="middle">Méret és kockázati</text>
+<text class="ts" x="540" y="434" text-anchor="middle">besorolás szerint</text>
+<text class="ts" x="540" y="450" text-anchor="middle">differenciált hatás,</text>
+<text class="ts" x="540" y="466" text-anchor="middle">szegmensenkénti pálya</text>
+</svg>
+</div>
+</section>
+
+<!-- 2. ÁBRA: Kétszektoros architektúra -->
+<section class="figure">
+<div class="figure-header">
+<span class="figure-number">2. ábra</span>
+<h2>A kétszektoros DSGE architektúra</h2>
+<p class="figure-desc">A modell strukturális felépítése: háztartások, pénzügyi közvetítő, két vállalati szektor (KKV és nagyvállalat), monetáris és fiskális politika, külső szektor. A modell magját képező építőkockák.</p>
+</div>
+<div class="svg-wrap">
+<svg viewBox="0 0 680 620" xmlns="http://www.w3.org/2000/svg">
+<defs>
+<marker id="arrow2" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+<path d="M2 1L8 5L2 9" fill="none" stroke="context-stroke" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+</marker>
+</defs>
+
+<g class="node c-gray">
+<rect x="240" y="16" width="200" height="52" rx="8" stroke-width="0.5"/>
+<text class="th" x="340" y="36" text-anchor="middle">Háztartások</text>
+<text class="ts" x="340" y="54" text-anchor="middle">fogyasztás, megtakarítás, munka</text>
+</g>
+
+<g class="node c-purple">
+<rect x="240" y="106" width="200" height="64" rx="8" stroke-width="0.5"/>
+<text class="th" x="340" y="126" text-anchor="middle">Pénzügyi közvetítő</text>
+<text class="ts" x="340" y="144" text-anchor="middle">EFP_KKV &gt; EFP_NV</text>
+<text class="ts" x="340" y="158" text-anchor="middle">méretfüggő prémium</text>
+</g>
+
+<line x1="340" y1="68" x2="340" y2="106" class="arr" marker-end="url(#arrow2)" stroke="#888780"/>
+<path d="M 310 106 L 310 90 L 270 90 L 270 68" fill="none" stroke="#888780" stroke-width="1" marker-end="url(#arrow2)"/>
+
+<g class="node c-coral">
+<rect x="30" y="226" width="220" height="76" rx="8" stroke-width="0.5"/>
+<text class="th" x="140" y="250" text-anchor="middle">KKV szektor</text>
+<text class="ts" x="140" y="268" text-anchor="middle">magas EFP, fedezeti korlát</text>
+<text class="ts" x="140" y="284" text-anchor="middle">Y_S = A_S · K_S^α · L_S^(1-α)</text>
+</g>
+
+<g class="node c-teal">
+<rect x="430" y="226" width="220" height="76" rx="8" stroke-width="0.5"/>
+<text class="th" x="540" y="250" text-anchor="middle">Nagyvállalati szektor</text>
+<text class="ts" x="540" y="268" text-anchor="middle">alacsony EFP, tőkepiac</text>
+<text class="ts" x="540" y="284" text-anchor="middle">Y_L = A_L · K_L^β · L_L^(1-β)</text>
+</g>
+
+<path d="M 280 170 L 200 226" fill="none" stroke="#993C1D" stroke-width="1.2" marker-end="url(#arrow2)"/>
+<path d="M 400 170 L 480 226" fill="none" stroke="#0F6E56" stroke-width="1.2" marker-end="url(#arrow2)"/>
+
+<g class="node c-amber">
+<rect x="30" y="100" width="180" height="52" rx="8" stroke-width="0.5"/>
+<text class="th" x="120" y="120" text-anchor="middle">Hitelköltség-sokk</text>
+<text class="ts" x="120" y="138" text-anchor="middle">EFP_S csökkentése</text>
+</g>
+<path d="M 210 126 L 240 138" fill="none" stroke="#BA7517" stroke-width="1.2" stroke-dasharray="5 3" marker-end="url(#arrow2)"/>
+
+<g class="node c-gray">
+<rect x="190" y="352" width="300" height="52" rx="8" stroke-width="0.5"/>
+<text class="th" x="340" y="372" text-anchor="middle">Végső termék aggregátor</text>
+<text class="ts" x="340" y="390" text-anchor="middle">Y = [ω·Y_S^ρ + (1-ω)·Y_L^ρ]^(1/ρ)</text>
+</g>
+
+<path d="M 180 302 L 270 352" fill="none" stroke="#888780" stroke-width="1" marker-end="url(#arrow2)"/>
+<path d="M 500 302 L 410 352" fill="none" stroke="#888780" stroke-width="1" marker-end="url(#arrow2)"/>
+
+<g class="node c-gray">
+<rect x="30" y="452" width="190" height="52" rx="8" stroke-width="0.5"/>
+<text class="th" x="125" y="472" text-anchor="middle">Monetáris politika</text>
+<text class="ts" x="125" y="490" text-anchor="middle">Taylor-szabály, i_t</text>
+</g>
+
+<g class="node c-gray">
+<rect x="460" y="452" width="190" height="52" rx="8" stroke-width="0.5"/>
+<text class="th" x="555" y="472" text-anchor="middle">Fiskális politika</text>
+<text class="ts" x="555" y="490" text-anchor="middle">kamattámogatás, G_t</text>
+</g>
+
+<g class="node c-gray">
+<rect x="190" y="452" width="300" height="52" rx="8" stroke-width="0.5"/>
+<text class="th" x="340" y="472" text-anchor="middle">Külső szektor</text>
+<text class="ts" x="340" y="490" text-anchor="middle">export, import, REER</text>
+</g>
+
+<line x1="340" y1="404" x2="340" y2="452" class="arr" marker-end="url(#arrow2)" stroke="#888780"/>
+
+<g class="node c-teal">
+<rect x="100" y="546" width="480" height="52" rx="8" stroke-width="0.5"/>
+<text class="th" x="340" y="566" text-anchor="middle">Megfigyelési egyenletek + Bayesi becslés</text>
+<text class="ts" x="340" y="584" text-anchor="middle">KSH, MNB, Opten adatok · impulzusválasz · szcenáriók</text>
+</g>
+
+<line x1="125" y1="504" x2="200" y2="546" class="arr" marker-end="url(#arrow2)" stroke="#888780"/>
+<line x1="340" y1="504" x2="340" y2="546" class="arr" marker-end="url(#arrow2)" stroke="#888780"/>
+<line x1="555" y1="504" x2="480" y2="546" class="arr" marker-end="url(#arrow2)" stroke="#888780"/>
+
+<rect x="30" y="338" width="10" height="10" rx="2" fill="#D85A30" opacity="0.7"/>
+<text class="ts" x="46" y="348">KKV blokk</text>
+<rect x="120" y="338" width="10" height="10" rx="2" fill="#1D9E75" opacity="0.7"/>
+<text class="ts" x="136" y="348">Nagyvállalat</text>
+<rect x="230" y="338" width="10" height="10" rx="2" fill="#7F77DD" opacity="0.7"/>
+<text class="ts" x="246" y="348">Pénzügyi</text>
+<rect x="320" y="338" width="10" height="10" rx="2" fill="#BA7517" opacity="0.7"/>
+<text class="ts" x="336" y="348">Hitelsokk</text>
+</svg>
+</div>
+</section>
+
+<!-- 3. ÁBRA: Folyamatábra -->
+<section class="figure">
+<div class="figure-header">
+<span class="figure-number">3. ábra</span>
+<h2>A teljes folyamat: a kutatási kérdéstől a szakpolitikai következtetésig</h2>
+<p class="figure-desc">A modell logikai íve: a kutatási kérdéstől három csatornán keresztül, a DSGE keretet és empirikus kalibrálást követve a tényleges és tényellentétes pálya összevetéséig, végül a reálgazdasági hatások és szakpolitikai következtetések szintjéig.</p>
+</div>
+<div class="svg-wrap">
+<svg viewBox="0 0 680 880" xmlns="http://www.w3.org/2000/svg">
+<defs>
+<marker id="arrow3" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+<path d="M2 1L8 5L2 9" fill="none" stroke="context-stroke" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+</marker>
+</defs>
+
+<g class="c-gray">
+<rect x="40" y="30" width="600" height="56" rx="8" stroke-width="0.5"/>
+<text class="th" x="340" y="50" text-anchor="middle">Kutatási kérdés</text>
+<text class="ts" x="340" y="70" text-anchor="middle">Hogyan változik a KKV hitelkörnyezet az euróbevezetéssel?</text>
+</g>
+
+<line x1="340" y1="86" x2="340" y2="110" class="arr" marker-end="url(#arrow3)"/>
+
+<g class="node c-purple">
+<rect x="40" y="110" width="190" height="76" rx="8" stroke-width="0.5"/>
+<text class="th" x="135" y="132" text-anchor="middle">Szuverén prémium</text>
+<text class="ts" x="135" y="152" text-anchor="middle">CDS és hozam csökken</text>
+<text class="ts" x="135" y="170" text-anchor="middle">200-300 bp megtakarítás</text>
+</g>
+
+<g class="node c-purple">
+<rect x="245" y="110" width="190" height="76" rx="8" stroke-width="0.5"/>
+<text class="th" x="340" y="132" text-anchor="middle">Banki forrásköltség</text>
+<text class="ts" x="340" y="152" text-anchor="middle">Eurós forrás olcsóbb</text>
+<text class="ts" x="340" y="170" text-anchor="middle">swap-költség eltűnik</text>
+</g>
+
+<g class="node c-purple">
+<rect x="450" y="110" width="190" height="76" rx="8" stroke-width="0.5"/>
+<text class="th" x="545" y="132" text-anchor="middle">Határon átnyúló hitel</text>
+<text class="ts" x="545" y="152" text-anchor="middle">EA bankok belépése</text>
+<text class="ts" x="545" y="170" text-anchor="middle">verseny erősödik</text>
+</g>
+
+<line x1="135" y1="186" x2="245" y2="216" stroke="#888780" stroke-width="0.8" fill="none" marker-end="url(#arrow3)"/>
+<line x1="340" y1="186" x2="340" y2="216" class="arr" marker-end="url(#arrow3)"/>
+<line x1="545" y1="186" x2="435" y2="216" stroke="#888780" stroke-width="0.8" fill="none" marker-end="url(#arrow3)"/>
+
+<g class="c-amber">
+<rect x="160" y="216" width="360" height="50" rx="8" stroke-width="0.5"/>
+<text class="th" x="340" y="234" text-anchor="middle">Aggregált hitelköltség-sokk</text>
+<text class="ts" x="340" y="252" text-anchor="middle">vállalati hitelkamatok x bp-tal csökkennek</text>
+</g>
+
+<line x1="340" y1="266" x2="340" y2="290" class="arr" marker-end="url(#arrow3)"/>
+
+<g class="c-teal">
+<rect x="40" y="290" width="600" height="180" rx="8" stroke-width="0.5"/>
+<text class="th" x="340" y="312" text-anchor="middle">Kétszektoros DSGE modell</text>
+</g>
+
+<g class="node c-teal">
+<rect x="60" y="332" width="170" height="50" rx="6" stroke-width="0.5"/>
+<text class="ts" x="145" y="350" text-anchor="middle">EAGLE alapkeret</text>
+<text class="ts" x="145" y="366" text-anchor="middle">Békési et al. 2017</text>
+</g>
+
+<g class="node c-teal">
+<rect x="255" y="332" width="170" height="50" rx="6" stroke-width="0.5"/>
+<text class="ts" x="340" y="350" text-anchor="middle">BGG akcelerátor</text>
+<text class="ts" x="340" y="366" text-anchor="middle">méretfüggő prémium</text>
+</g>
+
+<g class="node c-teal">
+<rect x="450" y="332" width="170" height="50" rx="6" stroke-width="0.5"/>
+<text class="ts" x="535" y="350" text-anchor="middle">Bankszektor</text>
+<text class="ts" x="535" y="366" text-anchor="middle">Gerali 2010, EAGLE-FLI</text>
+</g>
+
+<g class="node c-teal">
+<rect x="60" y="396" width="265" height="50" rx="6" stroke-width="0.5"/>
+<text class="ts" x="192" y="414" text-anchor="middle">KKV szektor: magas EFP, hitelkorlát</text>
+<text class="ts" x="192" y="430" text-anchor="middle">Iacoviello 2005 logika</text>
+</g>
+
+<g class="node c-teal">
+<rect x="355" y="396" width="265" height="50" rx="6" stroke-width="0.5"/>
+<text class="ts" x="487" y="414" text-anchor="middle">Nagyvállalat: alacsony EFP, tőkepiac</text>
+<text class="ts" x="487" y="430" text-anchor="middle">EAGLE tradable szektor</text>
+</g>
+
+<line x1="340" y1="470" x2="340" y2="494" class="arr" marker-end="url(#arrow3)"/>
+
+<g class="c-coral">
+<rect x="40" y="494" width="600" height="84" rx="8" stroke-width="0.5"/>
+<text class="th" x="340" y="514" text-anchor="middle">Empirikus kalibráció Opten vállalati panellel</text>
+<text class="ts" x="340" y="534" text-anchor="middle">implicit kamatráta, kockázati besorolás A-D, beruházási ráta</text>
+<text class="ts" x="340" y="552" text-anchor="middle">méret × ágazat × régió × export szegmentáció</text>
+<text class="ts" x="340" y="568" text-anchor="middle">Endrész-Harasztosi 2014, Bodnár MNB OP 80 logika</text>
+</g>
+
+<line x1="340" y1="578" x2="340" y2="602" class="arr" marker-end="url(#arrow3)"/>
+
+<g class="node c-blue">
+<rect x="60" y="602" width="265" height="64" rx="8" stroke-width="0.5"/>
+<text class="th" x="192" y="624" text-anchor="middle">Tényleges pálya</text>
+<text class="ts" x="192" y="642" text-anchor="middle">euróbevezetés t időpontban</text>
+<text class="ts" x="192" y="658" text-anchor="middle">alacsonyabb hitelköltség</text>
+</g>
+
+<g class="node c-blue">
+<rect x="355" y="602" width="265" height="64" rx="8" stroke-width="0.5"/>
+<text class="th" x="487" y="624" text-anchor="middle">Tényellentétes pálya</text>
+<text class="ts" x="487" y="642" text-anchor="middle">forint marad, nincs konvergencia</text>
+<text class="ts" x="487" y="658" text-anchor="middle">fennmaradó kockázati prémium</text>
+</g>
+
+<line x1="192" y1="666" x2="280" y2="694" stroke="#888780" stroke-width="0.8" fill="none" marker-end="url(#arrow3)"/>
+<line x1="487" y1="666" x2="400" y2="694" stroke="#888780" stroke-width="0.8" fill="none" marker-end="url(#arrow3)"/>
+
+<g class="c-pink">
+<rect x="40" y="694" width="600" height="76" rx="8" stroke-width="0.5"/>
+<text class="th" x="340" y="714" text-anchor="middle">Reálgazdasági hatások KKV szegmensenként</text>
+<text class="ts" x="340" y="734" text-anchor="middle">beruházás, foglalkoztatás, kibocsátás, csődvalószínűség</text>
+<text class="ts" x="340" y="752" text-anchor="middle">méret, ágazat, régió, exportorientáció szerinti bontás</text>
+</g>
+
+<line x1="340" y1="770" x2="340" y2="794" class="arr" marker-end="url(#arrow3)"/>
+
+<g class="node c-green">
+<rect x="40" y="794" width="600" height="64" rx="8" stroke-width="0.5"/>
+<text class="th" x="340" y="816" text-anchor="middle">Szakpolitikai következtetések</text>
+<text class="ts" x="340" y="836" text-anchor="middle">kik a nyertesek, kik a vesztesek, milyen felkészülés kell</text>
+<text class="ts" x="340" y="852" text-anchor="middle">iparkamarai pozíciópapír gazdaságpolitikai döntéshozóknak</text>
+</g>
+</svg>
+</div>
+</section>
+
+<!-- 4. ÁBRA: Csatornák aggregálása -->
+<section class="figure">
+<div class="figure-header">
+<span class="figure-number">4. ábra</span>
+<h2>A három csatorna aggregálása és szegmenshatások</h2>
+<p class="figure-desc">A három transzmissziós csatorna primer sokkjai, a transzmissziós átviteli ráták, és a végső KKV-hitelkamat csökkenés bázispontokban. Lejjebb a kockázati besorolás szerinti aszimmetrikus hatások és a várt reálgazdasági kimenetek.</p>
+</div>
+<div class="svg-wrap">
+<svg viewBox="0 0 680 620" xmlns="http://www.w3.org/2000/svg">
+<defs>
+<marker id="arrow4" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+<path d="M2 1L8 5L2 9" fill="none" stroke="context-stroke" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+</marker>
+</defs>
+
+<text class="th" x="340" y="28" text-anchor="middle">A három csatorna aggregált hatása KKV-hitelkamatra</text>
+
+<g class="node c-purple">
+<rect x="40" y="60" width="190" height="86" rx="8" stroke-width="0.5"/>
+<text class="th" x="135" y="82" text-anchor="middle">1. Szuverén prémium</text>
+<text class="ts" x="135" y="104" text-anchor="middle">primer sokk: 150-250 bp</text>
+<text class="ts" x="135" y="122" text-anchor="middle">transzmisszió: kb. 25%</text>
+<text class="ts" x="135" y="138" text-anchor="middle">KKV-ra: 40-65 bp</text>
+</g>
+
+<g class="node c-purple">
+<rect x="245" y="60" width="190" height="86" rx="8" stroke-width="0.5"/>
+<text class="th" x="340" y="82" text-anchor="middle">2. Banki forrás</text>
+<text class="ts" x="340" y="104" text-anchor="middle">primer sokk: 30-60 bp</text>
+<text class="ts" x="340" y="122" text-anchor="middle">transzmisszió: kb. 60%</text>
+<text class="ts" x="340" y="138" text-anchor="middle">KKV-ra: 20-40 bp</text>
+</g>
+
+<g class="node c-purple">
+<rect x="450" y="60" width="190" height="86" rx="8" stroke-width="0.5"/>
+<text class="th" x="545" y="82" text-anchor="middle">3. Határon átnyúló</text>
+<text class="ts" x="545" y="104" text-anchor="middle">primer sokk: kicsi</text>
+<text class="ts" x="545" y="122" text-anchor="middle">transzmisszió: lassú</text>
+<text class="ts" x="545" y="138" text-anchor="middle">KKV-ra: 5-15 bp</text>
+</g>
+
+<line x1="135" y1="146" x2="240" y2="200" stroke="#888780" stroke-width="0.8" fill="none" marker-end="url(#arrow4)"/>
+<line x1="340" y1="146" x2="340" y2="200" class="arr" marker-end="url(#arrow4)"/>
+<line x1="545" y1="146" x2="440" y2="200" stroke="#888780" stroke-width="0.8" fill="none" marker-end="url(#arrow4)"/>
+
+<g class="c-amber">
+<rect x="120" y="200" width="440" height="70" rx="8" stroke-width="0.5"/>
+<text class="th" x="340" y="222" text-anchor="middle">Aggregált KKV-hitelkamat csökkenés</text>
+<text class="ts" x="340" y="244" text-anchor="middle">teljes: 65-120 bp, várható: kb. 80-90 bp</text>
+<text class="ts" x="340" y="260" text-anchor="middle">de szegmensenként erősen heterogén</text>
+</g>
+
+<line x1="340" y1="270" x2="340" y2="296" class="arr" marker-end="url(#arrow4)"/>
+
+<text class="th" x="340" y="312" text-anchor="middle">Szegmensenkénti heterogén hatás</text>
+
+<g class="node c-teal">
+<rect x="40" y="330" width="190" height="76" rx="8" stroke-width="0.5"/>
+<text class="th" x="135" y="350" text-anchor="middle">A-B besorolás</text>
+<text class="ts" x="135" y="370" text-anchor="middle">jelenleg: 6-8% kamat</text>
+<text class="ts" x="135" y="386" text-anchor="middle">csökkenés: 40-60 bp</text>
+<text class="ts" x="135" y="400" text-anchor="middle">relatív haszon: kisebb</text>
+</g>
+
+<g class="node c-amber">
+<rect x="245" y="330" width="190" height="76" rx="8" stroke-width="0.5"/>
+<text class="th" x="340" y="350" text-anchor="middle">B-C besorolás</text>
+<text class="ts" x="340" y="370" text-anchor="middle">jelenleg: 9-12% kamat</text>
+<text class="ts" x="340" y="386" text-anchor="middle">csökkenés: 80-110 bp</text>
+<text class="ts" x="340" y="400" text-anchor="middle">relatív haszon: közepes</text>
+</g>
+
+<g class="node c-coral">
+<rect x="450" y="330" width="190" height="76" rx="8" stroke-width="0.5"/>
+<text class="th" x="545" y="350" text-anchor="middle">C-D besorolás</text>
+<text class="ts" x="545" y="370" text-anchor="middle">jelenleg: 13-18% kamat</text>
+<text class="ts" x="545" y="386" text-anchor="middle">csökkenés: 120-180 bp</text>
+<text class="ts" x="545" y="400" text-anchor="middle">relatív haszon: nagy</text>
+</g>
+
+<line x1="135" y1="406" x2="240" y2="450" stroke="#888780" stroke-width="0.8" fill="none" marker-end="url(#arrow4)"/>
+<line x1="340" y1="406" x2="340" y2="450" class="arr" marker-end="url(#arrow4)"/>
+<line x1="545" y1="406" x2="440" y2="450" stroke="#888780" stroke-width="0.8" fill="none" marker-end="url(#arrow4)"/>
+
+<g class="c-pink">
+<rect x="40" y="450" width="600" height="86" rx="8" stroke-width="0.5"/>
+<text class="th" x="340" y="472" text-anchor="middle">Reálgazdasági kimenetek (DSGE-becsült)</text>
+<text class="ts" x="340" y="494" text-anchor="middle">KKV beruházás: 3-5% növekedés 5 éves horizonton</text>
+<text class="ts" x="340" y="512" text-anchor="middle">KKV csődvalószínűség: 15-25%-os csökkenés C-D szegmensben</text>
+<text class="ts" x="340" y="528" text-anchor="middle">aggregát kibocsátás: 1-2% pozitív hatás 10 éves horizonton</text>
+</g>
+
+<line x1="340" y1="536" x2="340" y2="560" class="arr" marker-end="url(#arrow4)"/>
+
+<g class="node c-gray">
+<rect x="40" y="560" width="600" height="50" rx="8" stroke-width="0.5"/>
+<text class="th" x="340" y="578" text-anchor="middle">Feltételek és érzékenységi paraméterek</text>
+<text class="ts" x="340" y="596" text-anchor="middle">fiskális hitelesség, banki verseny, NHP/Széchenyi fennmaradása</text>
+</g>
+</svg>
+</div>
+</section>
+
+<footer>
+<p>Készült a tervezett DSGE-modell előzetes specifikációja alapján. A számszerű becslések nagyságrendi jellegűek, a tényleges szimuláció eredményeit fogják pontosítani. A dokumentum lokálisan menthető és nyomtatható (Ctrl+P).</p>
+</footer>
+
+</div>
+</body>
+</html>

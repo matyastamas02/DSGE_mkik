@@ -17,13 +17,20 @@ Drive-mappa (minden adat itt): https://drive.google.com/drive/folders/1L7rlzdq3i
 
 | Fájl | Leírás | Előállító script | Drive link | Lokális útvonal |
 |------|--------|------------------|------------|-----------------|
-| opten_panel.csv | Egységes, tisztított cég-év panel (150 982 sor × 69 oszlop, 2021–2025): kulcs mérleg- és eredménymezők ezer Ft-ban + kockázati besorolás évenként + méret/ágazat/régió (NUTS-2, irsz-alapú közelítés) + EU-támogatás- és közbeszerzés-jelzők + származtatott változók (implicit kamatráta, van_hitel, exportarány, tőkeáttétel) | `src/01_opten_panel_tisztitas.py` | *(scriptből reprodukálható, nem kell Drive)* | `data/processed/opten_panel.csv` |
+| opten_panel.csv | Egységes, tisztított cég-év panel (150 982 sor × 69 oszlop, 2021–2025): kulcs mérleg- és eredménymezők ezer Ft-ban + kockázati besorolás évenként + méret/ágazat/régió (NUTS-2, irsz-alapú közelítés) + EU-támogatás- és közbeszerzés-jelzők + származtatott változók (implicit kamatráta, van_hitel, exportarány, tőkeáttétel) | `src/01_opten_panel_tisztitas.py` | [link](https://drive.google.com/file/d/1SB_eEYCrB8RQoGElIkeFUYH1EIHae0Q-/view) *(scriptből is reprodukálható)* | `data/processed/opten_panel.csv` |
 
 ## Kapcsolódó dokumentumok
 
 - `adat_helyzet.html` — belső adathelyzet-jelentés az Opten-panelről (lefedettség, korlátok,
   módszertani teendők): [link](https://drive.google.com/file/d/1dssEbTAUCSUfj0gJdkwZ244Ej-bL9CO5/view).
   Nem adat, nem kell letölteni a `data/`-ba.
+- Drive `DSGE/alapok/` — az alapul szolgáló modell-tanulmány (összefoglaló docx + ábrák):
+  [mappa](https://drive.google.com/drive/folders/1ukagKIuzFk6mqrN-ne_gpZQpUlCS1SRV).
+  Repo-beli másolat: `docs/`.
+- Drive `DSGE/irodalom/` — szakirodalmi PDF-ek (BGG 1999, Gerali és tsai., MNB EAGLE,
+  euró-bevezetési tanulmányok) + `claude-notion_skill/` feldolgozott jegyzetek:
+  [mappa](https://drive.google.com/drive/folders/1o_cRtlURj-OW5LyPQ5e-p96mOPet_dRO).
+  Szerzői jogos anyagok — a repóba NEM kerülnek, a tudásbázis helye a Notion.
 
 ## Megjegyzések
 
