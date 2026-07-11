@@ -25,6 +25,19 @@ import pandas as pd
 REPO = Path(__file__).resolve().parents[1]
 RAW = REPO / "data" / "raw" / "opten.xlsx"
 OUT = REPO / "data" / "processed" / "opten_panel.csv"
+IRSZ_HNK = REPO / "data" / "raw" / "makro" / "irsz_hnk.csv"
+
+# vármegye -> NUTS-2 (a hivatalos irsz->vármegye térképhez, lásd lent)
+MEGYE_NUTS2 = {
+    "főváros": "HU11", "Pest": "HU12",
+    "Fejér": "HU21", "Komárom-Esztergom": "HU21", "Veszprém": "HU21",
+    "Győr-Moson-Sopron": "HU22", "Vas": "HU22", "Zala": "HU22",
+    "Baranya": "HU23", "Somogy": "HU23", "Tolna": "HU23",
+    "Borsod-Abaúj-Zemplén": "HU31", "Heves": "HU31", "Nógrád": "HU31",
+    "Hajdú-Bihar": "HU32", "Jász-Nagykun-Szolnok": "HU32",
+    "Szabolcs-Szatmár-Bereg": "HU32",
+    "Bács-Kiskun": "HU33", "Békés": "HU33", "Csongrád-Csanád": "HU33",
+}
 
 # ---------------------------------------------------------------------------
 # Beszámolók lap: pozíció -> (ellenőrző kulcsszó a fejlécben, új név)
@@ -164,7 +177,21 @@ def main() -> None:
     alap["teaor4"] = teaor
     alap["agazat_betu"] = alap["nemzetgazdasagi_ag"]
 
-    alap["nuts2"] = alap["szekhely_irsz"].map(irsz_to_nuts2)
+    # NUTS-2: elsődlegesen a hivatalos irsz->vármegye térképből (IrszHnk,
+    # KSH+posta forrás); ha a fájl hiányzik, a sáv-alapú közelítés marad
+    hivatalos = hivatalos_irsz_terkep()
+    if hivatalos is not None:
+        irsz_str = pd.to_numeric(alap["szekhely_irsz"], errors="coerce")
+        alap["nuts2"] = irsz_str.map(hivatalos)
+        maradek = alap["nuts2"].isna()
+        alap.loc[maradek, "nuts2"] = alap.loc[maradek, "szekhely_irsz"].map(
+            irsz_to_nuts2)
+        print(f"NUTS-2: hivatalos térkép ({(~maradek).sum()} cég), "
+              f"sáv-közelítés csak {maradek.sum()} cégre")
+    else:
+        alap["nuts2"] = alap["szekhely_irsz"].map(irsz_to_nuts2)
+        print("NUTS-2: IrszHnk hiányzik — sáv-alapú közelítés "
+              "(lásd data-index.md)")
 
     # --- 3. Kockázati besorolás idősor -------------------------------------
     kock = kivalaszt(xls.parse("Kockázati bes.,ESG előző évekre"),
@@ -265,6 +292,25 @@ def main() -> None:
     OUT.parent.mkdir(parents=True, exist_ok=True)
     panel.to_csv(OUT, index=False, encoding="utf-8-sig")
     print(f"\nKiírva: {OUT}  ({len(panel)} sor, {panel.shape[1]} oszlop)")
+
+
+def hivatalos_irsz_terkep() -> dict | None:
+    """Hivatalos irányítószám -> NUTS-2 térkép az IrszHnk csv-ből.
+
+    Forrás: github.com/tamas-ferenci/IrszHnk (KSH helységnévtár + posta
+    irányítószám-jegyzék összerendelése). Egy irsz elvben több településhez
+    is tartozhat — a leggyakoribb vármegye dönt (gyakorlatban egyezik).
+    """
+    if not IRSZ_HNK.exists():
+        return None
+    m = pd.read_csv(IRSZ_HNK, sep=";", encoding="utf-8",
+                    usecols=["IRSZ", "Vármegye.megnevezése"])
+    m["nuts2"] = m["Vármegye.megnevezése"].map(MEGYE_NUTS2)
+    m = m.dropna(subset=["nuts2"])
+    m["IRSZ"] = pd.to_numeric(m["IRSZ"], errors="coerce")
+    return (m.groupby("IRSZ")["nuts2"]
+             .agg(lambda s: s.mode().iat[0])
+             .to_dict())
 
 
 def irsz_to_nuts2(irsz) -> str | None:

@@ -14,31 +14,41 @@
 
 t_ossz_ = tic;
 
-lep_('1/9: Panel-előkészítés (python)');
+lep_('1/12:Panel-előkészítés (python)');
 piton_('python 01_opten_panel_tisztitas.py');
 
-lep_('2/9: Leíró statisztika (python)');
+lep_('2/12:Leíró statisztika (python)');
 piton_('python 02_leiro_stat.py');
 
-lep_('3/9: Modell v0.1 + IRF-export');
+lep_('3/12:Modell v0.1 + IRF-export');
 ide_ = pwd; cd('model'); run_v01; cd(ide_);
 
-lep_('4/9: Modell v0.3 szcenáriók');
+lep_('4/12:Modell v0.3 szcenáriók');
 ide_ = pwd; cd('model'); run_v03; cd(ide_);
 
-lep_('5/9: IRF-ábra (python)');
+lep_('5/12:IRF-ábra (python)');
 piton_('python 03_irf_abrak.py');
 
-lep_('6/9: Szcenárió-ábra v0.3 (python)');
+lep_('6/12:Szcenárió-ábra v0.3 (python)');
 piton_('python 05_szcenario_abrak_v03.py');
 
-lep_('7/9: Szegmens-leképezés');
+lep_('7/12: Szegmens-leképezés');
 s06_szegmens_lekepezes;
 
-lep_('8/9: Extenzív margó');
+lep_('8/12: Extenzív margó');
 s07_extenziv_margo;
 
-lep_('9/9: Füstteszt');
+lep_('9/12: Támogatott-hitel teszt + támogatási ék');
+s08_tamogatott_hitel_teszt;
+s09_tamogatasi_ek;
+
+lep_('10/12: IRF-panelek + akcelerátor ki/be');
+s10_irf_panelek;
+
+lep_('11/12: Fázis-idővonal + csatorna-dekompozíció');
+s11_fazis_es_dekompozicio;
+
+lep_('12/12: Füstteszt');
 smoke_test;
 
 fprintf('\nTELJES LÁNC KÉSZ: %.1f perc\n', toc(t_ossz_)/60);

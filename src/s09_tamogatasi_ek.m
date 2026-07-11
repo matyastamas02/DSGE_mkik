@@ -28,8 +28,15 @@ p = readtable(panel_f, opts);
 p = p(p.ev >= 2021 & p.ev <= 2024 & p.hitelallomany > 0, :);
 kkv_e = ismember(string(p.meret_kategoria), ["10-49", "50-249"]);
 
-evek  = [2021 2022 2023 2024];
-bubor = [0.017 0.099 0.136 0.074];
+evek = [2021 2022 2023 2024];
+try
+    bubor = bubor_evatlag(evek);   % letöltött MNB-idősorból
+    fprintf('BUBOR éves átlagok (MNB): %s%%\n', ...
+        mat2str(round(100*bubor, 2)));
+catch
+    bubor = [0.017 0.099 0.136 0.074];   % tartalék-közelítés
+    warning('BUBOR-fájl hiányzik — közelítő éves átlagok!');
+end
 
 rata = max(0, p.kamatraforditas) ./ p.hitelallomany;
 rata(isnan(rata)) = 0;

@@ -22,6 +22,14 @@ nagyvállalati +0,41% — a KKV-többlet tartós. A felépülés lassú (10 évn
 +0,11%, 30 évnél +0,25%): a szűk keresztmetszet a tőkefelhalmozás
 sebessége (WP-beli beruházási kiigazítási költség 6.0).
 
+**Az akcelerátor két arca (s10 ki/be teszt, f13):** a méretfüggő
+akcelerátor a monetáris sokkot a nettóvagyon-csatornán ERŐSÍTI (a
+KKV-beruházási válasz ~2,4-szeres a χ=0-hoz képest — klasszikus BGG),
+az exogén prémium-sokkokat viszont részben TOMPÍTJA: a fellendülésben a
+cégek eladósodnak (q+k gyorsabban nő, mint nw), és a prémium endogén
+módon visszapattan. Ez magyarázza a szcenáriók mérsékelt hosszú távú
+hatását is, és a tanulmányban mindkét irányt együtt kell kommunikálni.
+
 **Két strukturális tanulság:**
 - A reprezentatív háztartás Euler-egyenlete hosszú távon βhoz köti a
   belföldi reálkamatot, ezért az UIP-prémium csökkenése főleg az
