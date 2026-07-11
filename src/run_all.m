@@ -23,8 +23,8 @@ piton_('python 02_leiro_stat.py');
 lep_('3/12:Modell v0.1 + IRF-export');
 ide_ = pwd; cd('model'); run_v01; cd(ide_);
 
-lep_('4/12:Modell v0.3 szcenáriók');
-ide_ = pwd; cd('model'); run_v03; cd(ide_);
+lep_('4/12: Modell v0.3 szcenáriók + v0.4 összevetés');
+ide_ = pwd; cd('model'); run_v03; run_v04; cd(ide_);
 
 lep_('5/12:IRF-ábra (python)');
 piton_('python 03_irf_abrak.py');

@@ -1,6 +1,33 @@
 # DSGE-modell (Dynare)
 
-## Állapot: v0.1 (sztochasztikus váz) + v0.2 (euró-szcenárió) + v0.3 (WP-kalibráció, UIP-csatorna)
+## Állapot: v0.1 → v0.4 (kamatunió-rezsimváltás + nem-Ricardiánus háztartások)
+
+## v0.4 — `kkv_dsge_v04.mod`: rezsimváltás + nem-Ricardiánus háztartások
+
+Két bővítés a v0.3-hoz képest (futtatás: `run_v04`, kimenet:
+`t16_v04_osszevetes.csv`, ábra: `f16`):
+
+1. **Kamatunió-rezsimváltás a belépéskor (q13)**: az `uni` determinisztikus
+   dummy kapcsolja a monetáris blokkot — előtte Taylor + UIP, utána
+   r = euró-kamat (+ kis NFA-rugalmas felár) és dep = 0. A dummy-szorzatok
+   miatt a modell formálisan nemlineáris; perfect foresight oldja meg.
+2. **Nem-Ricardiánus háztartások** (om_nr = 0.75, az EAGLE HU-értéke;
+   `-DOMNR=0|75` kapcsoló): c_N = w + nn, a Ricardiánus ág viszi az
+   Euler-egyenletet — ez oldja a v0.3-ban dokumentált Euler-rögzítést.
+
+**Eredmények (alappálya, hosszú távú GDP):** v0.3 +0,49% → csak unió
++0,54% → **unió + 75% NR: +0,73%**. A rezsimváltás önmagában keveset
+változtat; a nem-Ricardiánus blokk viszont (a) másfélszeresére emeli a
+tartós hatást (a hozamgörbe-csatorna végre aggregáltan is él), és (b)
+**mélyíti a belépés előtti visszaesést** (−0,38%): a likviditáskorlátos
+háztartások fogyasztása a folyó jövedelmet követi, az ERM-II szakasz
+fájdalmasabb. Szakpolitikai olvasat: az átmenet kezelése (kommunikáció,
+programok időzítése) a nem-Ricardiánus népességarány miatt még fontosabb.
+
+Nyitott (v0.5): Calvo-bérek (a 75%-os NR-arány bér-ragadóssággal áll
+igazán stabilan); a szcenárió-készlet (opt/pessz) átfuttatása v0.4-en.
+
+## v0.1–v0.3 (korábbi verziók)
 
 ## v0.3 — `kkv_dsge_v03.mod`: WP 2017/7 kalibráció + UIP-országprémium
 
