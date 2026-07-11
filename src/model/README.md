@@ -1,6 +1,27 @@
 # DSGE-modell (Dynare)
 
-## Állapot: v0.1 → v0.4 (kamatunió-rezsimváltás + nem-Ricardiánus háztartások)
+## Állapot: v0.1 → v0.5 (Calvo-bérek)
+
+## v0.5 — `kkv_dsge_v05.mod`: Calvo-bérek (EHL bér-Phillips-görbe)
+
+A v0.4 + ragadós bérek: θw = 0.75 (EAGLE; Kézdi–Kónya WDN: a cégek
+~évente igazítanak alapbért), CPI-indexálás 0.75, bér-markup elaszticitás
+4.33. Érzékenység: `-DTHETAW=60|75|85`. Futtatás: `run_v05` →
+`t18_v05_berragadossag.csv`, `f17`.
+
+**Eredmény — robusztussági "null-eredmény", és ez jó hír:** az euró-
+belépési pálya gyakorlatilag érzéketlen a bér-ragadósságra (hosszú táv
+azonos +0,725%; dip −0,373…−0,383% vs. rugalmas −0,38%). Ok: a szcenárió
+lassú, anticipált, fokozatos — a bér-NKPC-nek van ideje alkalmazkodni,
+és az ár-ragadósság (Calvo 0,92) amúgy is dominálja a nominális
+súrlódásokat. **A bérrugalmasság igazi tétje nem a belépési pálya, hanem
+a belépés UTÁNI aszimmetrikus sokk-elnyelés** (önálló monetáris politika
+nélkül a bér az alkalmazkodási eszköz — klasszikus OCA-kérdés): ennek
+vizsgálata a v0.6 feladata (sztochasztikus szimuláció az unió-rezsimben,
+θw-érzékenységgel). Mikro-evidencia a kalibrációhoz: Kézdi–Kónya (MNB OP
+103), Kátay (MNB WP 2011/9), saját panel-lenyomat: t17.
+
+## v0.4 — `kkv_dsge_v04.mod`: rezsimváltás + nem-Ricardiánus háztartások
 
 ## v0.4 — `kkv_dsge_v04.mod`: rezsimváltás + nem-Ricardiánus háztartások
 
