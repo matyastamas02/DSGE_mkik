@@ -11,7 +11,9 @@ ez még ötletelés fázisú vitaanyag, a végleges forrás később kerül be i
 
 ## Repo-struktúra
 
-- `src/` — Dynare `.mod` fájlok, R/MATLAB scriptek. Minden kód ide.
+- `src/` — Dynare `.mod` fájlok és scriptek. Minden kód ide. **Új script
+  MATLAB-ban készüljön** (a korai 01–05 adat-előkészítő/ábra scriptek
+  Pythonban vannak — működnek, nem kell átírni őket).
 - `data/raw/`, `data/processed/` — adat, **git-ignored**. A tartalom Drive-on van, lásd `data-index.md`.
 - `output/figures/`, `output/tables/` — ábrák és eredménytáblák, **kódból generálva**.
 - `docs/` — LaTeX, levezetések.
