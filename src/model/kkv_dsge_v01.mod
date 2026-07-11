@@ -115,8 +115,15 @@ rho_r   = 0.80; phi_pi = 1.50; phi_y = 0.125;
 phi_b   = 0.01;     // adósság-rugalmas országprémium (SOE-zárás)
 
 // --- pénzügyi blokk (BGG-lite) ---
+// -DNOACCEL kapcsolóval az akcelerátor kikapcsolható (chi=0) — az
+// "akcelerátor ki/be" összehasonlító ábrához (s10), a BGG 1999 mintájára.
+@#ifdef NOACCEL
+chi_S   = 0;
+chi_L   = 0;
+@#else
 chi_S   = 0.06;     // KKV: érzékeny akcelerátor
 chi_L   = 0.02;     // nagyvállalat: tompított
+@#endif
 eps_q   = 0.96;     // tőkehozam-linearizációs súly
 omega_nw = 0.95;    // nettó vagyon perzisztencia (túlélési ráta)
 lev_S   = 1.6;      // eszköz/saját tőke — Opten medián tőkeáttételből

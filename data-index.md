@@ -13,6 +13,15 @@ Drive-mappa (minden adat itt): https://drive.google.com/drive/folders/1L7rlzdq3i
 |------|--------|--------|------------|-----------------|
 | opten.xlsx | Opten vállalati panel 2021–2025: 37 805 cég (10+ fő), 150 982 cég-év megfigyelés, 162 pénzügyi mező (teljes mérleg + eredménykimutatás); szegmentáció: méret, ágazat (TEÁOR), régió (NUTS-2), kockázati besorolás; plusz közbeszerzés- és EU-támogatás-jelzők. ~80 MB. | MKIK (Opten) | [link](https://drive.google.com/file/d/1nDEhfF7zp1Lo5mi1ClzBZegcUMfAe-4A/view) | `data/raw/opten.xlsx` |
 
+## Makró-idősorok (`data/raw/makro/`)
+
+| Fájl | Leírás | Forrás | Link | Lokális útvonal | Állapot |
+|------|--------|--------|------|-----------------|---------|
+| bubor_tortenet.xls | Napi BUBOR-fixingek (1h–12h) évenkénti lapokon, 1996-tól | MNB | [stabil URL](https://www.mnb.hu/letoltes/bubor2.xls) — Drive nem kell | `data/raw/makro/bubor_tortenet.xls` | **letöltve** (2026-07-08) — az s08/s09 közelítő éves átlagai ebből cserélendők |
+| mnb_vallalati_kamatok | Vállalati új-szerződéses kamatok (méret/összeg szerint) — a piaci árazás mérése, a red flag-vizsgálat kulcsadata | MNB kamatstatisztika | [statisztika.mnb.hu](https://statisztika.mnb.hu/) → Hitelintézeti kamatok | `data/raw/makro/mnb_vallalati_kamatok.xlsx` | letöltendő |
+| ksh_gdp | Negyedéves GDP és felhasználási tételek, 2010-től (hosszú makropálya) | KSH stadat | [gdp0001](https://www.ksh.hu/stadat_files/gdp/hu/gdp0001.html) | `data/raw/makro/ksh_gdp.csv` | letöltendő |
+| hnb_kamatok | Horvát vállalati kamatstatisztika — az euró-átállás ex-post validációja (B4 ábra) | HNB | [hnb.hr statisztika](https://www.hnb.hr/en/statistics) | `data/raw/makro/hnb_kamatok.xlsx` | letöltendő |
+
 ## Tisztított / modellbe menő adat (`data/processed/`)
 
 | Fájl | Leírás | Előállító script | Drive link | Lokális útvonal |

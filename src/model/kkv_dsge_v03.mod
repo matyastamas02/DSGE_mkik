@@ -27,6 +27,15 @@
   @#define SCENARIO = 1
 @#endif
 
+// -DCHANNEL=1: csak a szuverén csatorna fut (bank-pálya nulla);
+// -DCHANNEL=2: csak a banki csatorna. Alapértelmezés (0): mindkettő.
+// A modell lineáris, ezért a két csatorna-futás összege kiadja a teljes
+// pályát — ez a csatorna-dekompozíciós ábra (s11) alapja. Csak az
+// alap szcenárióval (SCENARIO=1) értelmezett.
+@#ifndef CHANNEL
+  @#define CHANNEL = 0
+@#endif
+
 var
     c lam w nn r infl inflH y ii xx imp rer dep bstar
     y_S n_S k_S i_S q_S rr_S ret_S efp_S nw_S mc_S inflH_S p_S
@@ -125,9 +134,19 @@ sov = 0; bank = 0;
 end;
 
 @#if SCENARIO == 1
+  @#if CHANNEL == 1
+endval;
+sov = -0.005; bank = 0;
+end;
+  @#elseif CHANNEL == 2
+endval;
+sov = 0; bank = -0.001125;
+end;
+  @#else
 endval;
 sov = -0.005; bank = -0.001125;
 end;
+  @#endif
 @#elseif SCENARIO == 2
 endval;
 sov = -0.00625; bank = -0.00175;
@@ -142,13 +161,17 @@ steady;
 
 @#if SCENARIO == 1
 shocks;
+@#if CHANNEL != 2
 var sov;
 periods 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16;
 values -0.00025 -0.0005 -0.00075 -0.001 -0.00125 -0.0015 -0.00175 -0.002
        -0.00225 -0.0025 -0.00275 -0.003 -0.0035 -0.004 -0.0045 -0.005;
+@#endif
+@#if CHANNEL != 1
 var bank;
 periods 1:12 13 14 15 16;
 values 0 -0.00028125 -0.0005625 -0.00084375 -0.001125;
+@#endif
 end;
 @#elseif SCENARIO == 2
 shocks;
