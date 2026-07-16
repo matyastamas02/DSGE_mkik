@@ -25,15 +25,28 @@
 % Szektoronkent három philips görbe van, mint sajat hatarkoltseggel, markuppal es inflacioval es a pi_C a CPI-inflacio a szektorialis inflaciok kombinacioja
 % Ugye ez ertelmezheto, mert pl egy forint leertekelodeskor az export szektor inputja dragul mig mas szektorra ez nem ugy hat es eltero pi_-ket ad
 
-%- Külföld: reál UIP + SGU adósság-rugalmas kockázati prémium (γ_B*=0.1), NFA-felhalmozás, reálárfolyam (rer)
+%- Külföld: ra hazai és külföldi eszközök közötti nem-arbitrázs feltetelt reál fedezetlen kamatparitás (UIP) adja + SGU adósság-rugalmas kockázati prémium (γ_B*=0.1) teszi stacionáriussa(ha az ország külfölddel szemben eladósodik, a külföldi finanszírozás drágul, ami visszahúzza az eszközpozíciót a fenntartható szintre) 
+% + reálárfolyam (rer) importarakon es keri merlegen keresztul kapcsolja a gazdasagot kulfoldhoz
+%mi törtenhet az euro bevezetesekor itt? csökkenhet az rp_schock mert csokken az orszagkockazati premiu
+%R=R_star az onallo monetaris politika hianya vegett a kamat
+%euro bevezetessel a nominális árfolyam rogzul, rer csak a relatív árakon keresztül mozoghat, ami ragadós árak mellett lassú
 
 % - Monetáris politika: Taylor-szabály (φ_π=1.7, φ_Y=0.1, φ_R=0.87, jelenlegi évesített inflációra)
+%monetáris hatóság a nominális kamatot (R) egy Taylor-típusú kamatszabály szerint állítja be, amey az
+% évesített CPI-inflációnak a céltól való eltérésére (φ_π = 1,70) és a kibocsátás növekedési ütemére (φ_Y = 0,10) reagál,eros kamatsimítással (φ_R = 0,87). Mivel φ_π > 1, a szabály kielégíti a Taylor-elvet (inflációs nyomásra a jegybank a reálkamatot emeli)
+% A szabályhoz iid monetáris politikai sokk (ε_R) is tartozik.
+%A magas non-Ricardian arány miatt a kamatcsatorna közvetlenül csak a háztartások (1−ω) hányadát érinti
+%MI MÁS?? a szabály a jelenlegi évesített inflációra reagál (nem a négy negyedév mozgóátlagára)
+
 
 % - Fiskális politika: teljes költségvetési korlát, hat adónem (τ_C, τ_D, τ_K, τ_N, τ_Wf, τ_Wh), adósság-stabilizáló szabály (φ_B=0.1)
-% Forma teljesen REÁL (minden ár CPI-hez relatív, nominális mennyiségek deflálva) — így nincs árszint-egységgyök
+%azaz a kormányzat hat torzító adóból (fogyasztás, munka [munkavállalói és munkáltatói járulék], tőke, osztalék) és lump-sum adóból finanszírozza a kizárólag non-tradable 
+%termékből állóközösségi vásárlásait és a háztartási transzfereket + az államadósságot egy lump-sum adón keresztül működő, adósság-stabilizáló fiskális szabály tartja fenntartható pályán (a lump-sum adó a cél feletti adósság/GDP aránynál emelkedik)
+%kormányzati kiadás/transzferek exogén AR(1) folyamatokat követnek
+% Forma teljesen REÁL (minden ár CPI-hez relatív, nominális mennyiségek deflálva) — így nincs árszint-egységgyök a Calude szerint
 
- %Elteresek az MNB-stol:
-% 1. Egyblokkos (csak HU): a külföld exogén — q_X export-kereslet AR(1),
+ %Elteresek az MNB-stol a Claude szerint:
+% 1. Egyblokkos (csak HU): a külföld exogén — q_X  Az export iránti keresletet exogén AR(1) folyamat (q_X_final) reprezentálja
 %  import relatív árak a reálárfolyamhoz kötve (p_IMC=rer, p_IMX=0.5533·rer)
 % 2. Rugalmas bérek: a bér-Calvo (f/g rekurziók) nincs benne — a bért a
 %  munkapiaci tisztulás + munkakínálati FOC-ok határozzák meg
@@ -60,20 +73,72 @@
 % - Varianciafelbontás: y-t a markup_X + export-kereslet sokkok dominálják
 % (kis nyitott gazdaságra nem irreális, de a sokk-szórások még nyersek)
 
-% EGYSZERUSITESEK A TANULMANYHOZ KEPEST:
-%   1) Egyblokkos: kulfold exogen (export-kereslet AR(1), import-arak
-%      a realarfolyamhoz kotve) - a tanulmany 4-blokkos
-%   2) Rugalmas berek (nincs ber-Calvo) - a bert a munkapiaci tisztulas
-%      + munkakinalati FOC-ok hatarozzak meg
-%   3) Arazas: linearizalt (elteres-formaju) NKPC a teljes nemlinearis
-%      Calvo f/g rekurzio helyett - elso rendben ekvivalens dinamika
-%   4) xi=0.75 (nem 0.92), indexalas=0, Taylor a jelenlegi evesitett
-%      inflaciora - determinaltsagi okokbol (reszletek lent)
-%   5) Nulla trendinflacio (pi_target=1)
+% EGYSZERUSITESEK A TANULMANYHOZ KEPEST Claudedal megfogalmaztatva:
+% Mindegyik pontnal: MIT csinal a tanulmany -> MIT csinalunk helyette -> MIERT -> KOVETKEZMENY
+%
+% 1) EGYBLOKKOS SZERKEZET (a tanulmany 4-blokkos)
+%    A tanulmany negy regiot modellez egyutt (Magyarorszag, eurozona, USA,
+%    a vilag tobbi resze), mindegyiket teljes DSGE-blokként, endogen
+%    haztartasokkal es vallalatokkal, kozottuk kereskedelmi es penzugyi
+%    kapcsolatokkal (~250 egyenlet/blokk). Mi CSAK a magyar blokkot
+%    tartjuk meg, a kulfoldet EXOGENNE tesszuk: a kulfoldi kamat (R_star)
+%    konstans, az export irant tamasztott kereslet (q_X_final) exogen
+%    AR(1) folyamat, az importarakat pedig a realarfolyamhoz kotjuk.
+%    KOVETKEZMENY: nem tudjuk vizsgalni a kulfoldi sokkok visszagyuruzeset
+%    (spillover), es a cserearany sem teljesen endogen. Cserebe a modell
+%    kezelhet (91 egyenlet), es a KKV/euro-kerdeshez ez eppen eleg reszletes.
+%
+% 2) RUGALMAS BEREK (a tanulmanyban Calvo-berek = ragadós berek)
+%    A tanulmanyban a haztartasok a bert is Calvo-modon allitjak (egy
+%    reszuk nem tud atallitani berezni), sajat rekurziv segedvaltozokkal.
+%    Mi ezt ELHAGYJUK: a ber (wr) RUGALMAS, azt a munkapiaci tisztulas
+%    (kinalat=kereslet) es a haztartasok munkakinalati FOC-jai hatarozzak
+%    meg minden idoszakban. KOVETKEZMENY: a realber azonnal alkalmazkodik,
+%    ezert a szimulaciokban volatilisebb; a ber-merevsegi (bér-Phillips)
+%    csatorna hianyzik. A ber-Calvo kesobb visszaepitheto (simitana a bert).
+%
+% 3) REDUKALT-FORMAJU (LINEARIZALT) PHILLIPS-GORBE
+%    A tanulmany a teljes NEMLINEARIS Calvo-arazast irja fel, rekurziv
+%    f_t / g_t segedvaltozokkal (az optimalis atallitasi ar szamlaloja es
+%    nevezoje). Mi kozvetlenul a MASODIK RENDBEN ekvivalens, elteres-formaju
+%    uj-keynesi Phillips-gorbet (NKPC) irjuk fel:
+%      pi - 1 = beta*(pi(+1)-1) + kappa*(realhatárköltseg - 1/markup),
+%    ahol kappa = (1-xi)(1-xi*beta)/xi a standard Calvo-meredekseg.
+%    MIERT nincs veszteseg: a modellt ELSO RENDBEN oldjuk meg (order=1),
+%    igy a Dynare ugyis linearizal; a teljes rekurzio elso rendu (log-
+%    linearis) kozelitese a zero-inflacios steady state korul PONTOSAN ez
+%    az NKPC. Elso rendben tehat a ket feliras azonos dinamikat ad.
+%
+% 4) DETERMINALTSAGI OKOKBOL MODOSITOTT ARAZASI/POLITIKAI PARAMETEREK
+%    Harom, egyenkent is standard valasztas, amelyek egyutt biztositjak,
+%    hogy a modellnek EGYERTELMU (determinalt) megoldasa legyen:
+%    (a) Arragadóssag: xi=0.75 a tanulmany xi=0.92-je helyett. A 0.92
+%        atlagosan ~12,5 negyedeves (3 eves!) aralkalmazkodast jelent,
+%        ami tul lapos Phillips-gorbet -> indeterminaciot ad. A 0.75
+%        (~4 negyedeves atarazas) a standard benchmark, meredekebb gorbe.
+%    (b) Ar-indexalas: KIKAPCSOLVA (gamma=0), a tanulmany 0.5-os
+%        (mult-inflaciohoz kotott) indexalasa helyett -> tiszta
+%        elore-tekinto NKPC (Gali-tipus).
+%    (c) Taylor-szabaly: a JELENLEGI evesitett inflaciora reagal
+%        (pi_C^4), nem a 4 negyedev MOZGOATLAGARA. A mozgoatlag + eros
+%        kamatsimitas a jelenlegi inflaciora tul gyenge (~0,055) azonnali
+%        valaszt adott -> klasszikus "kesleltetett inflacios cel"
+%        indeterminacio (Woodford; Carlstrom-Fuerst).
+%    Mindharom SS-SEMLEGES (a steady state-et nem valtoztatja). A
+%    tanulmany ertekeihez kesobb kozelithetunk tovabbi frikciok mellett.
+%
+% 5) NULLA TRENDINFLACIO (pi_target = 1, a tanulmany 1.03 = 3%/ev helyett)
+%    A zero-inflacios steady state a standard benchmark: (i) itt ervenyes
+%    pontosan a fenti standard NKPC-meredekseg (kappa) keplete -- pozitiv
+%    trendinflacio mellett a Phillips-gorbe tovabbi tagokat kapna; (ii) a
+%    steady state egyszerusodik (minden relativ ar es ar-diszperzio pontosan. KOVETKEZMENY: a modell a trendinflacio koruli ingadozasokat irja
+%    le; ha explicit 3%-os trendinflacio kellene, az NKPC-ket es a
+%    steady state-et annak megfeleloen kellene ujraszamolni.
 
 %==========================================================================
-% ENDOGEN VALTOZOK (91 db) - zarojelben a steady-state ertek
-%==========================================================================
+% ENDOGEN VALTOZOK (91 db) - zarojelben a steady-state ertek (Az állandósult állapotot analitikusan-numerikusan vezetjük le, így nyilvan jot fog kidobni a dyner))
+
+
 var
 % ---------- RICARDIAN HAZTARTAS (megtakarito tipus, 25%) ----------
 c_I              % fogyasztas per fo (SS: 3.378)
@@ -90,7 +155,7 @@ gamma_u_I        % tokehasznositasi koltsegfuggveny erteke (SS: 0)
 gamma_u_prime_I  % annak derivaltja u szerint (SS: 0.0375 = r_K)
 gamma_I_I        % beruhazasi alkalmazkodasi koltseg erteke (SS: 0)
 gamma_I_prime_I  % annak derivaltja (SS: 0)
-% ---------- NON-RICARDIAN HAZTARTAS ( 75%) ----------
+% ---------- NON-RICARDIAN HAZTARTAS ( 75%) -----------
 % Nem tud megtakaritani/hitelt felvenni; minden jovedelmet elkolt.
 % Egyetlen vagyoneszkoze a keszpenz (cash-in-advance).
 c_J              % fogyasztas per fo (SS: 0.869)
@@ -100,7 +165,7 @@ v_J              % penzsebesseg (SS: 2.349)
 gamma_v_J        % penztartasi koltseg (SS: ~0)
 gamma_v_prime_J  % derivalt (SS: 0.0018)
 
-% ---------- AGGREGATUMOK (omega-sulyos atlagok) ----------
+% ---------- AGGREGATUMOK (omega-sulyos atlagok) -----------------------
 c                % aggregalt fogyasztas = (1-om)*c_I + om*c_J (SS: 1.496)
 rm               % aggregalt real penz (SS: 0.777)
 k                % aggregalt toke = (1-om)*k_I (SS: 13.38)
@@ -110,9 +175,9 @@ n_I_agg          % Ricardian munkakinalat per fo (SS: 0.630)
 n_J_agg          % non-Ricardian munkakinalat per fo (SS: 0.826)
 b                % REAL allamadossag, B/P_C (SS: 1.875)
 b_star           % REAL nettó kulfoldi eszkozpozicio (SS: 0)
-% ---------- REAL BER ----------
+% ---------- REAL BER ------------------------------------------------------
 wr               % real ber W/P_C - a munkapiaci tisztulas hatarozza meg (SS: 1.079)
-% ---------- TRADABLE SZEKTOR (exportkepes termekek) ----------
+% ---------- TRADABLE SZEKTOR (exportkepes termekek) ----------------
 y_T              % kibocsatas (SS: 1.140)
 k_d_T            % tokekereslet (SS: 7.607)
 n_d_T            % munkakereslet (SS: 0.506)
@@ -121,7 +186,7 @@ rp_T             % relativ ar P_T/P_C (SS: 1)
 pi_T             % szektoralis inflacio P_T/P_T(-1) (SS: 1)
 s_T              % Calvo ar-diszperzio (termeleshatekonysag-veszteseg; SS: 1)
 
-% ---------- NON-TRADABLE SZEKTOR (szolgaltatasok stb.) ----------
+% ---------- NON-TRADABLE SZEKTOR (szolgaltatasok stb.) ------------
 y_NT             % kibocsatas (SS: 0.861)
 k_d_NT           % tokekereslet (SS: 5.777)
 n_d_NT           % munkakereslet (SS: 0.272)
@@ -130,7 +195,7 @@ rp_NT            % relativ ar (SS: 1)
 pi_NT            % szektoralis inflacio (SS: 1)
 s_NT             % ar-diszperzio (SS: 1)
 
-% ---------- EXPORT SZEKTOR ----------
+% ---------- EXPORT SZEKTOR ---------------------------------------
 % Az export jav hazai tradable + importalt inputbol keszul (CES).
 % Ez adja a magyar gazdasag magas "export importtartalmat" (~40% ktsg-arany).
 rmc_X            % export jav real hatarkoltsege (SS: 0.8333)
@@ -159,7 +224,7 @@ im_i             % import komponens (SS: 0.209)
 rp_I             % beruhazasi jav relativ ara (SS: 1)
 rp_TTI           % tradable al-bundle relativ ara (SS: 1)
 
-% ---------- AGGREGALT KERESLET A KOZBENSO JAVAK IRANT ----------
+% ---------- AGGREGALT KERESLET A KOZBENSO JAVAK IRANT -----------------------------
 h_T_t            % hazai tradable ossz-kereslet = h_T_c+h_T_i+h_T_X (SS: 1.140)
 n_T_t            % non-tradable ossz-kereslet = n_T_c+n_T_i+g (SS: 0.861)
 
@@ -193,7 +258,7 @@ tau_C tau_D tau_K tau_N tau_Wf tau_Wh   % ado-folyamatok (AR(1) a kulcsok korul)
 
 %==========================================================================
 % EXOGEN SOKKOK (17 db, iid innovaciok az AR(1) folyamatokhoz)
-%==========================================================================
+
 varexo
 eps_a_T eps_a_NT             % TFP-sokkok (tradable / non-tradable)
 eps_markup_T eps_markup_NT eps_markup_X   % markup- (koltseg-) sokkok
@@ -208,7 +273,7 @@ eps_tau_Wf_shock eps_tau_Wh_shock         % ado-sokkok
 
 %==========================================================================
 % PARAMETEREK
-%==========================================================================
+
 parameters
 beta sigma chi kappa omega delta alpha alpha_NT
 mu_C v_C mu_TC v_TC mu_I v_I_bundle mu_TI v_TI mu_X v_X
@@ -228,7 +293,7 @@ pimx_scale g_ss tr_ss qX_ss
 %==========================================================================
 % KALIBRACIO - forras: MNB WP 2017/7 Table 1-3, 5 (HU oszlop),
 % kiveve ahol jelezve (determinaltsagi vagy konzisztencia-okokbol elterve)
-%==========================================================================
+
 
 % --- Haztartasi preferenciak (Table 1) ---
 beta = 0.99;     % diszkontfaktor -> SS real kamat = 1/beta = 4.1%/ev
