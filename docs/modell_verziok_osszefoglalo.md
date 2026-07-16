@@ -1,4 +1,19 @@
-# Modellverziók összefoglalója — v0.1 → v0.3
+# Modellverziók összefoglalója
+
+> **FRISSÍTÉS (2026-07-13): alapcikk-váltás.** Csapatdöntés: az alap a
+> **Jakab–Világi (MNB WP 2008/9)** — magyar adaton becsült DSGE —, nem az
+> EAGLE-HU. A lenti v0.1–v0.5 (EAGLE-alapú) sor referencia/robusztussági
+> vonalként marad; a fő vonal a `jv_dsge_v01–v03` (lásd
+> `src/model/README.md`). **Korrekció:** a korábbi szövegek „a DSGE
+> ~0,3–0,7%-ot ad, a többi a 2–3. réteg terepe" megfogalmazása az
+> EAGLE-vonal konkrét számaira vonatkozott, és félreérthetően a DSGE
+> szerepének leértékeléseként olvasható — ez hibás keret. **A DSGE a
+> projekt gerince és kötelező leadandó**; a red flag-vizsgálat a
+> tanulmány keretezését módosította (támogatásfüggés + hozzáférés),
+> nem a DSGE súlyát. A JV-alapon a tartós GDP-hatás egyébként
+> +0,78…+1,41% — közel a vázlat 1,5–2%-os sávjához.
+
+# EAGLE-vonal (referencia): v0.1 → v0.3
 
 *2026-07-08 · a `src/model/` Dynare-implementáció fejlődése, érveléssel,
 eredményekkel és következtetésekkel. Kapcsolódik: `docs/modell_vazlat/`

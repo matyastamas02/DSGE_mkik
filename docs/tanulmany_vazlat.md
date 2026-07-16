@@ -42,11 +42,13 @@ medián 4,5% vs. BUBOR 13,6%). 3.3 A támogatási ék: ✔ t14.
 
 ## 4. A modell
 
-Háromrétegű architektúra (○ E2 diagram a pitch-ből). DSGE-mag: kétszektoros
-magyar EAGLE-alap (Békési–Kaszab–Szentmihályi 2017) méretfüggő
-BGG-akcelerátorral; két hitelköltség-csatorna exogén pályaként; UIP-
-országprémium. Egyenletek: appendix (WP 2017/7 nyomán); kód:
-`src/model/kkv_dsge_v03.mod`. Kalibráció: WP-táblák + Opten (t02, t03).
+Háromrétegű architektúra (○ E2 diagram a pitch-ből). DSGE-mag
+(2026-07-13-i alapcikk-váltás után): **Jakab–Világi (MNB WP 2008/9)**,
+magyar adaton becsült paraméterekkel, méretfüggő BGG-akcelerátorral a
+finanszírozási oldalon; két hitelköltség-csatorna exogén pályaként;
+UIP-csatorna + kamatunió-rezsimváltás. Kód: `src/model/jv_dsge_v03.mod`;
+az EAGLE-vonal (kkv_dsge_v0x) robusztussági referencia. Kalibráció:
+JV-poszteriorok + Opten pénzügyi blokk (t02, t03).
 ✔ f10–f12 IRF-panelek, ✔ f13 (az akcelerátor két arca: monetáris sokknál
 erősít, prémium-sokknál az endogén tőkeáttétel tompít), ✔ f04.
 ○ A4 momentum-egyeztetési tábla.

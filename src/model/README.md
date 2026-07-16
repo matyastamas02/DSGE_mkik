@@ -1,6 +1,42 @@
 # DSGE-modell (Dynare)
 
-## Állapot: v0.1 → v0.5 (Calvo-bérek)
+## ⚠ ALAPCIKK-VÁLTÁS (2026-07-13): Jakab–Világi a fő vonal
+
+Csapatdöntés szerint az alapmodell a **Jakab–Világi: An estimated DSGE
+model of the Hungarian economy (MNB WP 2008/9)** — magyar adaton BECSÜLT
+(Bayes-i) paraméterekkel —, nem az EAGLE-HU. A korábbi `kkv_dsge_v0x`
+sor (EAGLE-alap) referencia/robusztussági vonalként marad meg.
+A DSGE a projekt gerince és kötelező leadandó; a red flag-vizsgálat a
+tanulmány KERETEZÉSÉT módosította, nem a DSGE szerepét.
+
+### JV-vonal (fő):
+
+- **`jv_dsge_v01.mod`** — a JV log-linearizált magja (Appendix A.4–A.9)
+  az IT-rezsim poszterior-átlag paramétereivel: hazai+export szektor
+  munka+import kompozit inputtal, 25% kézről-szájra háztartás (survey-
+  alapú!), hibrid ár/exportár/BÉR Phillips-görbék indexálással, Tobin-Q
+  (Φ″=13), UIP (becsült ν=0.001), Taylor (0.761/1.379). Egyszerűsítések
+  a fájl fejlécében (nincs csúszó-leértékelés blokk, nincs adaptív
+  tanulás, "KOZELITES"-sel jelölt SS-arányok). Fut, BK rendben.
+- **`jv_dsge_v02.mod`** — + kétszektoros (KKV/nagyvállalat) BGG-blokk a
+  FINANSZÍROZÁSI oldalon (a JV termelési szerkezete érintetlen):
+  k = om_S·k_S + (1−om_S)·k_L, típusonkénti Tobin-Q, nettó vagyon, EFP
+  (chi_S=0.06 > chi_L=0.02; lev az Opten-panelből). Monetáris sokkra a
+  KKV-beruházási válasz ~1,5×, EFP-aszimmetria 2,4× — az akcelerátor a
+  JV-magon is él.
+- **`jv_dsge_v03.mod`** — euró-szcenárió (run_jv_v03): prémium-pályák +
+  zsov=0.5 UIP-csatorna + kamatunió-rezsimváltás. **Eredmény (alap):
+  hosszú táv +1,09% GDP** (opt +1,41 / pessz +0,78), 10 év +0,44%,
+  bejelentési dip −0,99%. Fontos zárási tanulság: az unió-ágon a JV
+  apró becsült ν-je helyett külön technikai horgony kell (nu_uni=0.01),
+  különben bstar −250%-nál állna be (a fájlban dokumentálva).
+
+A JV-vonal az EAGLE-vonalnál **magasabb tartós hatást, gyorsabb
+felépülést és mélyebb bejelentési visszaesést** ad (f18 összevetés) —
+a becsült magyar paraméterek (lapos ár-NKPC, becsült UIP-dinamika,
+import-intenzív exportszektor) élesebb dinamikát hordoznak.
+
+## EAGLE-vonal (referencia): v0.1 → v0.5 (Calvo-bérek)
 
 ## v0.5 — `kkv_dsge_v05.mod`: Calvo-bérek (EHL bér-Phillips-görbe)
 
