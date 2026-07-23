@@ -11,6 +11,24 @@ tanulmány KERETEZÉSÉT módosította, nem a DSGE szerepét.
 
 ### JV-vonal (fő):
 
+- **`jv_dsge_v04.mod`** — KÖZGAZDASÁGILAG TARTALMAS KKV/nagyvállalat
+  szegmentálás (csapatdöntés 2026-07): **KKV=hazai szektor** (magas EFP,
+  rugalmas), **nagyvállalat=export szektor** (alacsony EFP, merev), és a
+  fő újítás a **VERTIKÁLIS beszállítói link** — a KKV kibocsátása input
+  az exportőrnek (költség-oldal: mcx tartalmazza s_kkv·mc_d-t; mennyiség-
+  oldal: h_dx a KKV-keresletben). Így az euró-hitelsokk pozitív összegű:
+  a KKV egészsége az exportőrt is segíti, nem "a gyengébb meghal".
+  Futtatás: `run_jv_v04` → `t20`, `src/06_jv_v04_abra.py` → `f19`.
+  Eredmény: BK teljesül; a lánc együtt mozog (monetáris lazításra export,
+  h_dx és KKV együtt +), és a méret-aszimmetria él (KKV-beruházás 2,9% vs
+  nagyvállalati 2,1%). **BK-tanulság (dokumentálva a .mod-ban):** a
+  szektor-specifikus tőke (külön rk_S/rk_L) + CPI-szétválasztásos első
+  változat MEGBONTOTTA a Blanchard–Kahn feltételt; a robusztus verzió a
+  v02 közös-rk szerkezetére épít, a KKV-input árát a KKV határköltsége
+  (mc_d) adja. Kalibráció (2-es döntés): s_kkv=0.20, mu_vert=0.50,
+  psi_i_S=8/psi_i_L=13 IRODALMI/ÉRZÉKENYSÉGI induló — a pontos KKV-input
+  arány a KSH IO-táblából pótolandó.
+
 - **`jv_dsge_v01.mod`** — a JV log-linearizált magja (Appendix A.4–A.9)
   az IT-rezsim poszterior-átlag paramétereivel: hazai+export szektor
   munka+import kompozit inputtal, 25% kézről-szájra háztartás (survey-
