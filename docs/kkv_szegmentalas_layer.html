@@ -1,0 +1,331 @@
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>KKV / nagyvállalat szegmentálási layer — dokumentáció</title>
+<style>
+:root{
+  --paper:#f3efe6; --surface:#faf7f0; --ink:#23211c; --ink-soft:#5d5848;
+  --line:#cfc7b4; --rule:#b8ae97; --accent:#7a3b2e;
+  --core:#3a5a78; --core-bg:#dde6ef;
+  --emp:#3f6b45; --emp-bg:#e3ecdd;
+  --gap:#a4452f; --gap-bg:#f0ddd5;
+  --map:#9a6b1f; --map-bg:#f1e4cc;
+  --code-bg:#ece5d6; --code-ink:#3a352b;
+}
+@media (prefers-color-scheme: dark){
+  :root{
+    --paper:#1c1a16; --surface:#242119; --ink:#ece7db; --ink-soft:#b3ab98;
+    --line:#3c3830; --rule:#4a453a; --accent:#d08a5c;
+    --core:#8fb4d6; --core-bg:#22303c;
+    --emp:#8fc09a; --emp-bg:#20302422;
+    --emp-bg:#1e2a20; --gap:#e08a6f; --gap-bg:#33231d;
+    --map:#d4a95f; --map-bg:#302716;
+    --code-bg:#2a2620; --code-ink:#d8cfbc;
+  }
+}
+:root[data-theme="light"]{
+  --paper:#f3efe6; --surface:#faf7f0; --ink:#23211c; --ink-soft:#5d5848;
+  --line:#cfc7b4; --rule:#b8ae97; --accent:#7a3b2e;
+  --core:#3a5a78; --core-bg:#dde6ef; --emp:#3f6b45; --emp-bg:#e3ecdd;
+  --gap:#a4452f; --gap-bg:#f0ddd5; --map:#9a6b1f; --map-bg:#f1e4cc;
+  --code-bg:#ece5d6; --code-ink:#3a352b;
+}
+:root[data-theme="dark"]{
+  --paper:#1c1a16; --surface:#242119; --ink:#ece7db; --ink-soft:#b3ab98;
+  --line:#3c3830; --rule:#4a453a; --accent:#d08a5c;
+  --core:#8fb4d6; --core-bg:#22303c; --emp:#8fc09a; --emp-bg:#1e2a20;
+  --gap:#e08a6f; --gap-bg:#33231d; --map:#d4a95f; --map-bg:#302716;
+  --code-bg:#2a2620; --code-ink:#d8cfbc;
+}
+*{box-sizing:border-box;}
+body{
+  margin:0; background:var(--paper); color:var(--ink);
+  font-family:"Iowan Old Style","Palatino Linotype",Palatino,Georgia,serif;
+  line-height:1.6; font-size:16px;
+}
+.sheet{max-width:940px;margin:0 auto;padding:56px 40px 96px;}
+.eyebrow{
+  font-family:"SF Mono",ui-monospace,"Cascadia Mono",Menlo,monospace;
+  font-size:11.5px;letter-spacing:.22em;text-transform:uppercase;
+  color:var(--accent);margin:0 0 14px;
+}
+h1{font-size:36px;font-weight:600;line-height:1.14;margin:0 0 16px;letter-spacing:-.01em;max-width:22ch;text-wrap:balance;}
+.standfirst{font-size:18px;color:var(--ink-soft);margin:0;max-width:64ch;}
+.masthead{border-bottom:2px solid var(--ink);padding-bottom:28px;margin-bottom:8px;}
+.meta{font-family:"SF Mono",ui-monospace,Menlo,monospace;font-size:11px;letter-spacing:.04em;color:var(--ink-soft);margin-top:20px;display:flex;gap:26px;flex-wrap:wrap;}
+.meta span strong{color:var(--ink);font-weight:600;}
+
+.verdict{margin:34px 0 46px;padding:24px 28px;background:var(--emp-bg);border-left:4px solid var(--emp);border-radius:0 5px 5px 0;}
+.verdict .tag{font-family:"SF Mono",ui-monospace,Menlo,monospace;font-size:11px;letter-spacing:.15em;text-transform:uppercase;color:var(--emp);font-weight:700;}
+.verdict p{margin:8px 0 0;font-size:17px;}
+
+section{margin:0 0 52px;}
+.sec-head{display:flex;align-items:baseline;gap:14px;border-bottom:1px solid var(--rule);padding-bottom:10px;margin-bottom:22px;}
+.sec-num{font-family:"SF Mono",ui-monospace,Menlo,monospace;font-size:13px;color:var(--accent);font-weight:700;}
+h2{font-size:23px;font-weight:600;margin:0;letter-spacing:-.01em;text-wrap:balance;}
+h3{font-size:16px;font-weight:600;margin:24px 0 8px;}
+p{max-width:70ch;}
+.lede{color:var(--ink-soft);font-size:15.5px;margin:-8px 0 22px;max-width:72ch;}
+a{color:var(--accent);}
+
+/* equation blocks */
+.eq{
+  font-family:"SF Mono",ui-monospace,"Cascadia Mono",Menlo,monospace;
+  background:var(--code-bg);color:var(--code-ink);
+  border-radius:6px;padding:14px 18px;margin:10px 0;font-size:14px;
+  overflow-x:auto;line-height:1.7;border:1px solid var(--line);
+}
+.eq .cm{color:var(--ink-soft);}
+.eqname{font-family:"SF Mono",ui-monospace,Menlo,monospace;font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--accent);font-weight:700;margin:20px 0 2px;}
+.note{font-size:14px;color:var(--ink-soft);margin:6px 0 18px;max-width:72ch;}
+.note b{color:var(--ink);font-weight:600;}
+
+/* asymmetry cards */
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;}
+@media(max-width:760px){.grid3{grid-template-columns:1fr;}}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:18px 20px;}
+.card h4{margin:0 0 6px;font-size:15px;font-weight:600;}
+.card .k{font-family:"SF Mono",monospace;font-size:12px;color:var(--accent);}
+.card p{font-size:13.5px;color:var(--ink-soft);margin:8px 0 0;line-height:1.5;}
+
+/* figure */
+figure{margin:20px 0;}
+figure img{width:100%;height:auto;border:1px solid var(--line);border-radius:8px;background:#fff;}
+figcaption{font-size:13px;color:var(--ink-soft);margin-top:8px;font-family:"SF Mono",Menlo,monospace;}
+
+/* data callout */
+.data{display:flex;gap:14px;background:var(--core-bg);border-radius:8px;padding:16px 20px;margin:18px 0;align-items:baseline;}
+.data .big{font-size:30px;font-weight:600;color:var(--core);font-variant-numeric:tabular-nums;line-height:1;white-space:nowrap;}
+.data p{margin:0;font-size:14px;}
+
+/* rejected alternatives */
+.alt{border:1px solid var(--line);border-radius:8px;padding:18px 22px;margin:14px 0;background:var(--surface);}
+.alt h4{margin:0 0 2px;font-size:15.5px;font-weight:600;display:flex;align-items:center;gap:10px;}
+.alt .x{font-family:"SF Mono",monospace;color:var(--gap);font-weight:700;font-size:14px;}
+.alt .why{margin:10px 0 0;font-size:14.5px;}
+.alt .why b{color:var(--gap);}
+.badge{font-family:"SF Mono",monospace;font-size:10px;letter-spacing:.1em;text-transform:uppercase;padding:3px 8px;border-radius:3px;background:var(--gap-bg);color:var(--gap);font-weight:700;margin-left:auto;white-space:nowrap;}
+
+/* svg arch */
+.arch{background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:8px;margin:8px 0;overflow-x:auto;}
+
+footer{margin-top:60px;padding-top:20px;border-top:1px solid var(--rule);font-size:12px;color:var(--ink-soft);font-family:"SF Mono",ui-monospace,Menlo,monospace;letter-spacing:.03em;}
+ul{max-width:72ch;}
+li{margin-bottom:7px;}
+</style>
+
+<div class="sheet">
+
+<div class="masthead">
+  <p class="eyebrow">Modell-dokumentáció · euró/KKV DSGE · belső</p>
+  <h1>A KKV / nagyvállalat szegmentálási layer</h1>
+  <p class="standfirst">Hogyan válik szét a modellben a kis- és a nagyvállalat, miért éppen egy <em>vertikális beszállítói</em> szerkezettel, és milyen alternatívákat mérlegeltünk — az egyenletekkel, az eredményekkel és az elvetett utak indoklásával együtt.</p>
+  <div class="meta">
+    <span><strong>Modell</strong> jv_dsge_v04.mod</span>
+    <span><strong>Alap</strong> Jakab–Világi (MNB WP 2008/9)</span>
+    <span><strong>Adat</strong> Opten panel 2021–2025</span>
+    <span><strong>Státusz</strong> fut · BK teljesül</span>
+  </div>
+</div>
+
+<div class="verdict">
+  <span class="tag">A döntés egy mondatban</span>
+  <p>A KKV a <b>hazai</b>, a nagyvállalat az <b>export</b> szektor; a kettőt egy <b>vertikális beszállítói lánc</b> köti össze (a KKV inputot ad az exportőrnek), méretfüggő pénzügyi akcelerátorral. Így az euró-hitelsokk <b>pozitív összegű</b>: a KKV egészsége az exportőrt is segíti — nem „a gyengébb meghal" mechanika.</p>
+</div>
+
+<!-- 01 -->
+<section>
+  <div class="sec-head"><span class="sec-num">01</span><h2>Mit csinál ez a réteg</h2></div>
+  <p class="lede">A JV-mag reprezentatív vállalatait szét kell választani KKV-ra és nagyvállalatra, mert a tanulmány kutatási kérdése épp a KKV-hitelkörnyezet. A kérdés nem az, <em>hogy</em> válasszuk szét, hanem <em>hogyan viszonyulnak egymáshoz</em> — mert ez dönti el, hogyan gyűrűzik át rajtuk az euró-sokk.</p>
+  <p>Három megkülönböztetést viszünk be, mindhárom mögött adat vagy irodalom áll:</p>
+  <div class="grid3">
+    <div class="card">
+      <h4>Pénzügyi</h4>
+      <span class="k">χ_S &gt; χ_L</span>
+      <p>A KKV érzékenyebb pénzügyi akcelerátorral (magasabb külső finanszírozási prémium) és magasabb tőkeáttétellel — az Opten-panel medánjaiból.</p>
+    </div>
+    <div class="card">
+      <h4>Rugalmasság</h4>
+      <span class="k">ψ_S &lt; ψ_L</span>
+      <p>A KKV rugalmasabb (alacsonyabb beruházási kiigazítási költség) — az „Audi-beszállító" logika: a kis cég könnyebben alkalmazkodik, ezért szervez ki hozzá a nagy.</p>
+    </div>
+    <div class="card">
+      <h4>Vertikális</h4>
+      <span class="k">s_kkv</span>
+      <p>A KKV kibocsátása <b>input</b> az exportőrnek (költséghányad s_kkv). Ez a fő újítás: a beszállítói lánc.</p>
+    </div>
+  </div>
+  <div class="data">
+    <span class="big">70% / 6%</span>
+    <p>A 250+ fős cégek 70%-a exportőr, a 10–49 fősöknek csak 6%-a (Opten t02). Ez közvetlenül alátámasztja a leképezést: <b>nagyvállalat = exportkapu, KKV = hazai</b>, kétszintű beszállítói szerkezet — nem szimmetrikus verseny.</p>
+  </div>
+</section>
+
+<!-- 02 -->
+<section>
+  <div class="sec-head"><span class="sec-num">02</span><h2>Az architektúra</h2></div>
+  <p class="lede">A KKV a hazai piacra termel <em>és</em> beszállít az exportőrnek; az exportőr a KKV-inputból + saját hozzáadott értékből állítja elő az exportot. Az euró-hitelsokk mindkét vállalattípus finanszírozását éri, de eltérő erővel (χ_S &gt; χ_L), majd a láncon tovagyűrűzik.</p>
+  <div class="arch">
+  <svg viewBox="0 0 900 340" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="A vertikális KKV-nagyvállalat architektúra">
+    <defs>
+      <marker id="ar" markerWidth="9" markerHeight="9" refX="7" refY="4" orient="auto">
+        <path d="M0,0 L8,4 L0,8 z" fill="var(--core)"/>
+      </marker>
+      <marker id="arg" markerWidth="9" markerHeight="9" refX="7" refY="4" orient="auto">
+        <path d="M0,0 L8,4 L0,8 z" fill="var(--emp)"/>
+      </marker>
+      <marker id="ara" markerWidth="9" markerHeight="9" refX="7" refY="4" orient="auto">
+        <path d="M0,0 L8,4 L0,8 z" fill="var(--accent)"/>
+      </marker>
+    </defs>
+    <style>
+      .lbl{font-family:"SF Mono",Menlo,monospace;font-size:12px;fill:var(--ink);}
+      .sub{font-family:"SF Mono",Menlo,monospace;font-size:10.5px;fill:var(--ink-soft);}
+      .ttl{font-family:"Iowan Old Style",Georgia,serif;font-size:16px;font-weight:600;fill:var(--ink);}
+      .chan{font-family:"SF Mono",Menlo,monospace;font-size:11px;fill:var(--core);}
+    </style>
+    <!-- euró shock -->
+    <rect x="20" y="140" width="118" height="60" rx="8" fill="var(--gap-bg)" stroke="var(--gap)" stroke-width="1.5"/>
+    <text x="79" y="165" text-anchor="middle" class="ttl" style="fill:var(--gap);font-size:14px;">Euró-sokk</text>
+    <text x="79" y="184" text-anchor="middle" class="sub">szuverén + banki</text>
+    <!-- KKV box -->
+    <rect x="230" y="40" width="230" height="120" rx="10" fill="var(--emp-bg)" stroke="var(--emp)" stroke-width="1.8"/>
+    <text x="345" y="70" text-anchor="middle" class="ttl">KKV — hazai szektor</text>
+    <text x="345" y="94" text-anchor="middle" class="sub">magas EFP (χ_S), rugalmas (ψ_S)</text>
+    <text x="345" y="113" text-anchor="middle" class="sub">tőke k_S · kibocsátás y_d</text>
+    <text x="345" y="138" text-anchor="middle" class="sub">→ fogyasztás + beruházás + kormányzat</text>
+    <!-- Large box -->
+    <rect x="230" y="200" width="230" height="120" rx="10" fill="var(--core-bg)" stroke="var(--core)" stroke-width="1.8"/>
+    <text x="345" y="230" text-anchor="middle" class="ttl">Nagyvállalat — export</text>
+    <text x="345" y="254" text-anchor="middle" class="sub">alacsony EFP (χ_L), merev (ψ_L)</text>
+    <text x="345" y="273" text-anchor="middle" class="sub">tőke k_L · kibocsátás y_x</text>
+    <text x="345" y="298" text-anchor="middle" class="sub">→ export (xx)</text>
+    <!-- shock arrows to both -->
+    <path d="M138,158 C180,120 190,100 228,100" fill="none" stroke="var(--accent)" stroke-width="1.6" marker-end="url(#ara)"/>
+    <path d="M138,182 C180,220 190,260 228,260" fill="none" stroke="var(--accent)" stroke-width="1.6" marker-end="url(#ara)"/>
+    <!-- vertical link KKV -> Large -->
+    <path d="M360,160 L360,198" fill="none" stroke="var(--emp)" stroke-width="2.2" marker-end="url(#arg)"/>
+    <text x="372" y="184" class="chan" style="fill:var(--emp);">KKV-input (mennyiség: h_dx)</text>
+    <path d="M330,160 L330,198" fill="none" stroke="var(--core)" stroke-width="2.2" stroke-dasharray="4 3" marker-end="url(#ar)"/>
+    <!-- output arrows -->
+    <path d="M460,100 L560,100" fill="none" stroke="var(--emp)" stroke-width="1.6" marker-end="url(#arg)"/>
+    <text x="470" y="90" class="sub">hazai kereslet</text>
+    <path d="M460,260 L560,260" fill="none" stroke="var(--core)" stroke-width="1.6" marker-end="url(#ar)"/>
+    <text x="470" y="250" class="sub">export (világpiac)</text>
+    <!-- channels legend -->
+    <rect x="580" y="130" width="300" height="90" rx="8" fill="none" stroke="var(--line)" stroke-width="1"/>
+    <text x="596" y="152" class="lbl" style="font-size:11px;fill:var(--accent);">A VERTIKÁLIS LINK KÉT CSATORNÁJA</text>
+    <text x="596" y="174" class="sub">• költség: mcx tartalmazza s_kkv·mc_d-t</text>
+    <text x="596" y="194" class="sub">• mennyiség: h_dx a KKV-keresletben</text>
+    <text x="596" y="210" class="sub">→ olcsóbb KKV = olcsóbb input az exportnak</text>
+  </svg>
+  </div>
+  <p class="note">A folytonos zöld nyíl a mennyiségi csatorna (a KKV fizikai inputot szállít), a szaggatott kék a költség-csatorna (a KKV ára beépül az export határköltségébe). A kettő együtt teszi a kapcsolatot <b>pozitív összegűvé</b>.</p>
+</section>
+
+<!-- 03 -->
+<section>
+  <div class="sec-head"><span class="sec-num">03</span><h2>Az egyenletek</h2></div>
+  <p class="lede">A réteg a JV-mag BK-biztos kétszektoros BGG-szerkezetére épül (közös tőke-bérleti ráta rk), és két új egyenlettel adja hozzá a vertikális linket. Minden változó log-eltérés a steady state-től.</p>
+
+  <p class="eqname">Méretfüggő pénzügyi akcelerátor (típusonként, j = S, L)</p>
+  <div class="eq">
+efp<sub>j</sub> = χ<sub>j</sub> · (q<sub>j</sub> + k<sub>j</sub> − nw<sub>j</sub>)<br>
+E[ret<sub>j</sub>(+1)] = r − E[π(+1)] + efp<sub>j</sub><br>
+nw<sub>j</sub> = ω · ( nw<sub>j</sub>(−1) + lev<sub>j</sub> · (ret<sub>j</sub> − (r(−1) − π)) )
+  </div>
+  <p class="note">A külső finanszírozási prémium (<b>efp</b>) a tőkeáttételtől (q+k−nw) függ; a KKV-nál <b>χ_S = 0,06 &gt; χ_L = 0,02</b>, tehát ugyanaz a nettóvagyon-mozgás nagyobb prémium-választ ad. Innen jön a méret-aszimmetria endogén módon.</p>
+
+  <p class="eqname">Rugalmassági aszimmetria (beruházás)</p>
+  <div class="eq">
+i<sub>j</sub> = <span class="cm">[simítás]</span> + 1/((1+β)·ψ<sub>j</sub>) · q<sub>j</sub> + ε<sub>i</sub>&nbsp;&nbsp;&nbsp;<span class="cm">ψ_S = 8 &lt; ψ_L = 13</span>
+  </div>
+  <p class="note">Alacsonyabb ψ = rugalmasabb beruházás. A KKV könnyebben alkalmazkodik — ezért is beszállító —, de ezt a rugalmasságot ma a hitelkorlát fojtja. Az euró oldja a korlátot → felszabadítja a rugalmasságot.</p>
+
+  <p class="eqname">Vertikális link — költség-csatorna</p>
+  <div class="eq">
+mcx = (1 − s<sub>kkv</sub>) · (ζ<sub>x</sub>·rk + (1−ζ<sub>x</sub>)·wz<sub>x</sub> − a) + s<sub>kkv</sub> · mc<sub>d</sub> − px
+  </div>
+  <p class="note">Az export határköltsége (<b>mcx</b>) a saját hozzáadott értéke <em>és</em> a KKV-input ára — amit a KKV határköltsége (<b>mc_d</b>) ad, s<sub>kkv</sub>=0,20 súllyal. Ha a KKV olcsóbb hitelhez jut → több tőke → alacsonyabb rk és mc_d → <b>olcsóbb input az exportőrnek</b>.</p>
+
+  <p class="eqname">Vertikális link — mennyiségi csatorna</p>
+  <div class="eq">
+h<sub>dx</sub> = xx − μ<sub>vert</sub> · (mc<sub>d</sub> − mcx)&nbsp;&nbsp;&nbsp;<span class="cm">[KKV-input kereslet, skálázódik az exporttal]</span><br>
+y<sub>d</sub> = sh<sub>c</sub>·c + sh<sub>i</sub>·i<sub>S</sub> + sh<sub>g</sub>·g + sh<sub>v</sub>·h<sub>dx</sub>&nbsp;&nbsp;&nbsp;<span class="cm">[KKV-kibocsátás felhasználása]</span>
+  </div>
+  <p class="note">Az exportőr KKV-input-kereslete (<b>h_dx</b>) az exporttal (xx) skálázódik, és a KKV-kibocsátás keresletének része (sh<sub>v</sub>). Így egy exportfellendülés <em>felhúzza</em> a hazai KKV-t is — a lánc mindkét irányban működik.</p>
+</section>
+
+<!-- 04 -->
+<section>
+  <div class="sec-head"><span class="sec-num">04</span><h2>Az eredmények</h2></div>
+  <p class="lede">A modell megoldódik (Blanchard–Kahn teljesül), és a réteg két kulcsmechanizmusa működik: a lánc együtt mozog, és a KKV érzékenyebb.</p>
+  <figure>
+    <img src="../output/figures/f19_jv_v04_vertikalis.png" alt="A vertikális együttmozgás és a méret-aszimmetria impulzusválaszai">
+    <figcaption>f19 — bal: a lánc együttmozgása; jobb: a méret-aszimmetria. (src/06_jv_v04_abra.py)</figcaption>
+  </figure>
+  <ul>
+    <li><b>Vertikális együttmozgás:</b> monetáris lazításra az export (+2,8%), a KKV-input az exportőrhöz (+3,0%) és a KKV-kibocsátás <em>együtt</em> mozdul — a beszállítói lánc közösen reagál.</li>
+    <li><b>Méret-aszimmetria:</b> ugyanarra a sokkra a KKV-beruházás (+2,9%) érzékenyebben reagál, mint a nagyvállalati (+2,1%) — a méretfüggő akcelerátor endogén eredménye.</li>
+    <li><b>Pozitív összeg:</b> a KKV-t javító hitelfeltétel a láncon át az exportőr költségét is csökkenti — nem nyertes-vesztes reallokáció.</li>
+  </ul>
+</section>
+
+<!-- 05 -->
+<section>
+  <div class="sec-head"><span class="sec-num">05</span><h2>Miért ezt a módszert választottuk</h2></div>
+  <p class="lede">Három elv vezetett: (1) az adat vezéreljen; (2) az eredmény legyen egyensúly, ne előre eldöntött; (3) a magyar valóság szerkezetét képezze le.</p>
+  <ul>
+    <li><b>Az adat a vertikálisra mutat.</b> A 70% vs. 6% export-intenzitás (méret szerint) egy FDI-vezérelt, kétszintű gazdaságot ír le: exportáló nagyvállalatok + hazai beszállító KKV-k. Ez beszállítói lánc, nem szimmetrikus verseny.</li>
+    <li><b>Az eredmény egyensúly, nem sors.</b> A vertikális link + a rugalmasság-vs-hitelkorlát trade-off miatt az euró-sokk hatása egy belső egyensúlyi kimenet: a KKV nyer az olcsóbb hitelen, és ezt a láncon át az exportőr is élvezi. Nincs a modellbe drótozva, hogy „a gyengébb meghal".</li>
+    <li><b>Pozitív összegű, szakpolitikailag használható üzenet.</b> „Az egészséges KKV-finanszírozás az egész exportláncot versenyképesebbé teszi" — ez erősebb kamarai pozíció, mint a győztes-vesztes keret.</li>
+    <li><b>Stabil és karcsú.</b> A JV BK-biztos magjára épül, minimális új állapotváltozóval; a hitel-blokk tisztán ráültethető.</li>
+  </ul>
+</section>
+
+<!-- 06 -->
+<section>
+  <div class="sec-head"><span class="sec-num">06</span><h2>Amit mérlegeltünk — és miért nem azt</h2></div>
+  <p class="lede">Öt alternatíva volt az asztalon. Mindegyiket konkrét okból vetettük el; az egyiket ténylegesen kipróbáltuk, és megbukott a stabilitási teszten.</p>
+
+  <div class="alt">
+    <h4><span class="x">✕</span> Horizontális verseny (CES-helyettesítők) <span class="badge">determinált</span></h4>
+    <p class="why">A KKV és a nagyvállalat helyettesítő terméket ad, ugyanazért a keresletért versenyeznek. <b>Miért nem:</b> tökéletes helyettesítőknél, ha a KKV kevésbé produktív, az eredmény mechanikus — „az olcsóbb nyer, a gyengébb meghal". Ez előre eldöntött, politikailag terhelt, és nem a magyar szerkezet (a KKV nem az Audival versenyez, hanem beszállít neki). Másodlagos elemként megtartható, de nem ez a fő szerkezet.</p>
+  </div>
+
+  <div class="alt">
+    <h4><span class="x">✕</span> Szektor-specifikus tőke (külön rk_S/rk_L) + CPI-szétválasztás <span class="badge">BK megbukott</span></h4>
+    <p class="why">Az első, ambiciózusabb változatunk: mindkét szektor saját tőkével, saját bérleti rátával, külön CPI/termelői-ár blokkal. <b>Miért nem:</b> <b>ténylegesen kipróbáltuk — megbontotta a Blanchard–Kahn feltételt</b> („no stable equilibrium"). A robusztus verzió ezért a JV közös-rk szerkezetére épül, és a KKV-input árát a KKV határköltsége (mc_d) adja. A szektor-specifikus tőke egy későbbi, gondos fejlesztési pont maradt.</p>
+  </div>
+
+  <div class="alt">
+    <h4><span class="x">✕</span> Két vállalattípus <em>minden</em> szektoron belül <span class="badge">adat-hiány</span></h4>
+    <p class="why">KKV és nagyvállalat mindkét (hazai és export) szektorban, egymással versenyezve. <b>Miért nem:</b> nehezebb és több paramétert hoz be, miközben nincs rá adat-támogatás; ráadásul nem a vertikális tézist szolgálja, amit az Opten-adat sugall.</p>
+  </div>
+
+  <div class="alt">
+    <h4><span class="x">✕</span> Teljes endogén bankblokk (Gerali / EAGLE-FLI) <span class="badge">túlparaméterezett</span></h4>
+    <p class="why">A hitel-transzmissziót egy explicit, monopolisztikus bankszektor adná, becsült marzsokkal. <b>Miért nem:</b> tucatnyi paramétert hozna be, amit az 5 éves, sokk-terhelt panelen nem tudunk fegyelmezni — a modell fele feketedoboz lenne. A pitch is ezért vetette el; a Gerali-féle ~60%-os átgyűrűzés kalibrációs horgony marad, nem futó kód.</p>
+  </div>
+
+  <div class="alt">
+    <h4><span class="x">✕</span> Feltételezett produktivitás-küszöb („a kevésbé produktív meghal") <span class="badge">körkörös</span></h4>
+    <p class="why">Egy exogén szabály, ami kiszelektálja a gyenge cégeket. <b>Miért nem:</b> ez a végeredményt <em>feltételezi</em>, nem levezeti — tudományosan védhetetlen. Nálunk a cégek „halála/születése" az extenzív margón (hitelhozzáférés) endogén, és empirikusan is ezt találtuk: a heterogenitás a hozzáférésben van, nem a produktivitási küszöbben.</p>
+  </div>
+</section>
+
+<!-- 07 -->
+<section>
+  <div class="sec-head"><span class="sec-num">07</span><h2>Korlátok és nyitott kalibráció</h2></div>
+  <ul>
+    <li><b>A kulcsparaméterek érzékenységi jellegűek.</b> s_kkv=0,20 (KKV-input arány az exportban), μ_vert=0,50, ψ_S/ψ_L=8/13 — irodalmi/becsült induló értékek. A pontos KKV-input arányt a <b>KSH ágazati kapcsolatok mérlegéből (IO-tábla)</b> pótoljuk; addig érzékenységként kezeljük.</li>
+    <li><b>Közös tőke-bérleti ráta.</b> A stabilitás ára, hogy nincs szektor-specifikus tőkepiac (lásd 06). A finanszírozás szétválik (χ_S/χ_L), a bérleti ráta nem.</li>
+    <li><b>Volatilis reálárfolyam.</b> A JV kis adósság-rugalmas prémiuma (ν=0,001) miatt a reálárfolyam érzékeny; ezért az export-keresleti sokkos vizualizáció zajos volt, és a tisztább monetáris sokkot használtuk a lánc bemutatására. A ν kalibrációja egy későbbi finomítás.</li>
+    <li><b>A vertikális link erősségének izolálása.</b> Következő lépés: az s_kkv „be/ki" érzékenységi futás (a Streamlit-appban csúszkaként), ami tisztán megmutatja a csatorna hozzájárulását.</li>
+  </ul>
+</section>
+
+<footer>
+  Belső modell-dokumentáció · Pécs-Baranyai KIK · euró/KKV DSGE projekt · jv_dsge_v04.mod · a számok a modell közvetlen kimenetéből · Ctrl+P a nyomtatáshoz
+</footer>
+
+</div>
