@@ -26,13 +26,17 @@ ide_ = pwd; cd('model'); run_v01; cd(ide_);
 lep_('4/12: Modell v0.3 szcenáriók + v0.4 összevetés');
 ide_ = pwd; cd('model'); run_v03; run_v04; cd(ide_);
 
+lep_('4b/12: JV-vonal (FŐ): v03 szcenáriók, v04 vertikális, v05 szegmentált');
+ide_ = pwd; cd('model'); run_jv_v03; run_jv_v04; run_jv_v05; cd(ide_);
+s13_szegmens_lekepezes_v05;   % 2. réteg a szegmentált modellre
+
 lep_('5/12:IRF-ábra (python)');
 piton_('python 03_irf_abrak.py');
 
 lep_('6/12:Szcenárió-ábra v0.3 (python)');
 piton_('python 05_szcenario_abrak_v03.py');
 
-lep_('7/12: Szegmens-leképezés');
+lep_('7/12: Szegmens-leképezés (s06: EAGLE-vonal, referencia)');
 s06_szegmens_lekepezes;
 
 lep_('8/12: Extenzív margó');

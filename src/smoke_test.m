@@ -56,6 +56,34 @@ if exist(lek_f, 'file') == 2
         't09: minden szegmensben kamatCSOKKENES', ok, hiba);
 end
 
+% --- 4. JV-vonal (FŐ vonal): szegmentált euró-szcenárió (v05) -----------
+jv_ht = fullfile(repo, 'output', 'tables', 't21_jv_v05_hosszutav.csv');
+[ok, hiba] = ell(exist(jv_ht, 'file') == 2, 't21 jv_v05 hosszutav letezik', ok, hiba);
+if exist(jv_ht, 'file') == 2
+    j = readtable(jv_ht);
+    ya = j.y(string(j.szcenario) == "alap");
+    [ok, hiba] = ell(ya > 0.002 && ya < 0.03, ...
+        sprintf('v05 alap GDP plauzibilis (%.3f%%)', 100*ya), ok, hiba);
+    % a javitott unio-zaras utan a realarfolyamnak plauzibilisnek kell lennie
+    % (a hibas nu_uni=0.01 mellett +34.7%% volt!)
+    [ok, hiba] = ell(abs(j.rer(string(j.szcenario) == "alap")) < 0.15, ...
+        sprintf('v05 realarfolyam plauzibilis (%.1f%%) - unio-zaras OK', ...
+        100*j.rer(string(j.szcenario) == "alap")), ok, hiba);
+    [ok, hiba] = ell(all(j.i_S > j.i_L), ...
+        'v05: meret-aszimmetria minden szcenarioban (i_S > i_L)', ok, hiba);
+end
+
+jv_lek = fullfile(repo, 'output', 'tables', 't22_szegmens_lekepezes_v05.csv');
+[ok, hiba] = ell(exist(jv_lek, 'file') == 2, 't22 v05-lekepezes letezik', ok, hiba);
+if exist(jv_lek, 'file') == 2
+    L = readtable(jv_lek);
+    [ok, hiba] = ell(height(L) == 15, 't22: 3 szcenario x 5 szegmens', ok, hiba);
+    % a KKV-felar csokkenese legyen nagyobb, mint a nagyvallalatie
+    [ok, hiba] = ell(all(L.modell_kkv_bp_csucs < L.modell_nagyvallalat_bp_csucs), ...
+        't22: a KKV hitelfelar-nyeresege > nagyvallalatie (modell-eredmeny)', ...
+        ok, hiba);
+end
+
 % --- Összegzés ----------------------------------------------------------
 fprintf('\nFUSTTESZT: %d rendben, %d hiba\n', ok, hiba);
 if hiba > 0
