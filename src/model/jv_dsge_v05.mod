@@ -1,0 +1,272 @@
+/*
+ * jv_dsge_v05.mod — Szegmentált euró-szcenárió (v04 + v03 összevonása)
+ * =====================================================================
+ * A projekt tényleges kutatási kérdésének modellje: a KKV/nagyvállalat
+ * vertikális szegmentálás (jv_dsge_v04) RÁFUTTATVA a valós euró-belépési
+ * szcenárióra (jv_dsge_v03: UIP-országprémium csatorna + kamatunió-
+ * rezsimváltás + három anticipált forgatókönyv, perfect foresight).
+ *
+ * Eddig ez a két réteg külön élt:
+ *  - v04: szegmentálás + vertikális link, de csak ÁLTALÁNOS sztochasztikus
+ *    sokkokra (nem a tényleges euró-pályára);
+ *  - v03: euró-szcenárió, de szegmentálás NÉLKÜL (egyetlen reprezentatív
+ *    vállalat).
+ * Ez a fájl a hiányzó láncszem: szegmensenkénti (KKV/nagyvállalat) kimenet
+ * a VALÓS euró-belépési pályán.
+ *
+ * Változtatások a v04-hez képest:
+ *  1. sov/bank/uni exogén pálya (mint v03) — a szuverén és banki prémium
+ *     típusonként eltérő súllyal (tsov_S/L, tbank_S/L) lép be az efp_S/L-be.
+ *  2. Rezsimfüggő monetáris blokk (mint v03/kkv_dsge_v04): a belépés előtt
+ *     Taylor+UIP, utána közös euró-kamat (uni dummy), zsov=0,5 UIP-csatorna.
+ *  3. perfect_foresight_solver a stoch_simul helyett; 3 szcenárió.
+ * A v04 vertikális linkje (mcx_rel, h_dx, s_kkv, mu_vert) VÁLTOZATLAN.
+ *
+ * MEGFIGYELÉS (diag_yd_v04.m alapján, fontos a szcenárió-eredmények
+ * értelmezéséhez): a JV kis adósság-rugalmassága (nu_b=0.001) miatt egy
+ * kamatsokkra a reálárfolyam nagyot és tartósan ugrik (Dornbusch-túllövés),
+ * ami a fogyasztáson át felülírhatja a y_d aggregátum rövid távú vertikális
+ * együttmozgását — ez NEM hiba, hanem a JV saját becslésének tulajdonsága;
+ * a vertikális csatorna (h_dx, y_x) ettől függetlenül robusztus marad.
+ *
+ * !! JAVÍTOTT ZÁRÁS (nu_uni), diag_nuuni_v05.m alapján !!
+ * Az ELSŐ v05-futás implauzibilis eredményt adott (export +12.9%, rer
+ * +34.7%, bstar -25% GDP), mert a v03-ból örökölt nu_uni=0.01 zárás a
+ * szegmentált modellben — ahol a vertikális link önerősítő kört hoz létre
+ * (KKV olcsóbb -> export olcsóbb -> több export -> több KKV-input -> ...) —
+ * túl gyenge horgony. A diagnosztika (nu_uni = 0.01 ... 0.5) alapján:
+ *   nu_uni=0.01: y +4.53%, rer +34.7%, bstar -25.0%  <- implauzibilis
+ *   nu_uni=0.25: y +0.80%, rer  +4.1%, bstar  -1.0%  <- VÁLASZTOTT
+ *   nu_uni=0.50: y +0.72%, rer  +3.5%, bstar  -0.5%  <- alig változik
+ * A 0.25 a "plató" elején van (0.25->0.5 alig mozdít), tehát az eredmény
+ * NEM érzékeny a pontos értékre. Validáció: a link KIKAPCSOLVA (-DNOVERT=1)
+ * a régi zárással y=+1.07%, ami egyezik a szegmentálás nélküli v03
+ * eredményével (+1.09%) — a modell tehát konzisztens, a probléma kizárólag
+ * a zárás erőssége volt. A vertikális link hozzájárulása a javított
+ * zárással: y +0.40% (link nélkül) -> +0.80% (linkkel), azaz kb. duplázás.
+ *
+ * Szcenáriók: -DSCENARIO=1 (alap: -200bp szuv./-45bp banki) | 2 (opt) | 3 (pessz)
+ * Futtatás:   run_jv_v05.m
+ */
+
+@#ifndef SCENARIO
+  @#define SCENARIO = 1
+@#endif
+
+// -DNOVERT=1: a vertikális link KIKAPCSOLÁSA (s_kkv, mu_vert ~ 0) —
+// az érzékenységi/diagnosztikai futáshoz, hogy izolálni lehessen a link
+// tényleges hozzájárulását az eredményhez.
+@#ifndef NOVERT
+  @#define NOVERT = 0
+@#endif
+
+// -DNUUNI=<érték>: az unió-rezsim külső-egyensúlyi zárásának erőssége.
+// A v03-ból örökölt 0.01 egy ideiglenes patch volt; a szegmentált
+// modellben (a vertikális link önerősítése mellett) túl gyenge horgony —
+// lásd diag_nuuni_v05.m. Az alapérték a diagnosztika alapján kalibrálva.
+@#ifndef NUUNI
+  @#define NUUNI = 0.25
+@#endif
+
+var
+    c_o c_no c ii k
+    rk w piw infl pix px
+    wz_d wz_x mc_d mcx_rel
+    y_d y_x z_d z_x l_d l_x ll im xx y
+    r dep rer bstar
+    k_S k_L i_S i_L q_S q_L ret_S ret_L efp_S efp_L nw_S nw_L
+    h_dx
+    a g e_c_ar e_x_ar e_w_ar e_i_ar e_pr_ar e_mx_ar
+;
+
+varexo
+    sov bank uni
+    eps_a eps_x eps_c eps_md eps_mx eps_w eps_i eps_q eps_r eps_pr eps_g
+;
+
+parameters
+    beta delta sigma habit fii
+    zeta_d zeta_x a_d a_x rho_kz rho_z
+    xi_p vth_p xi_x vth_x xi_w vth_w theta_w
+    lam_p lam_x lam_w
+    hx mu_x gam_i phi_pi nu_b nu_uni om_no
+    chi_S chi_L eps_qw omega_nw lev_S lev_L om_S
+    psi_i_S psi_i_L s_kkv mu_vert
+    sc si sg sx sm sh_ld sh_kd sh_imd
+    shd_c shd_i shd_g shd_v
+    tsov_S tsov_L tbank_S tbank_L zsov
+    rho_a rho_x rho_c rho_w rho_i rho_pr rho_mx rho_g
+;
+
+beta = 0.99; delta = 0.025;
+zeta_d = 0.17; zeta_x = 0.14; rho_kz = 0.80; rho_z = 0.50;
+theta_w = 3.0; nu_b = 0.001; om_no = 0.25; fii = 2.0;
+a_d = 0.80; a_x = 0.45;
+sigma = 1.814; habit = 0.646;
+xi_p = 0.921; vth_p = 0.431;
+xi_x = 0.810; vth_x = 0.494;
+xi_w = 0.657; vth_w = 0.185;
+mu_x = 0.534; hx = 0.507; gam_i = 0.761; phi_pi = 1.379;
+lam_p = (1-xi_p)*(1-beta*xi_p)/xi_p;
+lam_x = (1-xi_x)*(1-beta*xi_x)/xi_x;
+lam_w = (1-xi_w)*(1-beta*xi_w)/(xi_w*(1+theta_w*fii));
+chi_S = 0.06; chi_L = 0.02;
+eps_qw = 0.96; omega_nw = 0.95;
+lev_S = 1.6; lev_L = 1.85; om_S = 0.50;
+psi_i_S = 8.0; psi_i_L = 13.0;
+@#if NOVERT == 1
+s_kkv   = 0.0001;    // vertikális link kikapcsolva (diagnosztika)
+mu_vert = 0.0001;
+@#else
+s_kkv   = 0.20;
+mu_vert = 0.50;
+@#endif
+sc = 0.54; si = 0.23; sg = 0.10; sx = 0.60; sm = 0.47;
+sh_ld = 0.70; sh_kd = 0.65; sh_imd = 0.30;
+shd_c = 0.55; shd_i = 0.15; shd_g = 0.12; shd_v = 0.18;
+// --- euró-szcenárió: prémium-transzmisszió + rezsimváltás (mint v03) ---
+tsov_S = 0.25; tsov_L = 0.10; tbank_S = 0.60; tbank_L = 0.30;
+zsov = 0.5;
+// az unió-ág technikai zárása (lásd jv_dsge_v03: a JV becsült nu_b=0.001
+// az unió-rezsimben túl gyenge horgony, -250% GDP-s NFA-hoz vezetne)
+nu_uni = @{NUUNI};
+rho_a = 0.552; rho_x = 0.625; rho_c = 0.767; rho_w = 0.661;
+rho_i = 0.488; rho_pr = 0.820; rho_mx = 0.318; rho_g = 0.80;
+
+model;
+
+// --- 1. Háztartások (JV) ---
+c_o = habit/(1+habit)*c_o(-1) + 1/(1+habit)*c_o(+1)
+      - (1-habit)/((1+habit)*sigma)*(r - infl(+1)) + e_c_ar;
+c_no = w + ll;
+c = (1-om_no)*c_o + om_no*c_no;
+
+// --- 2. Kétszektoros BGG + euró-prémium csatornák szegmensenként ---
+ret_S = (1-eps_qw)*rk + eps_qw*q_S - q_S(-1);
+ret_L = (1-eps_qw)*rk + eps_qw*q_L - q_L(-1);
+ret_S(+1) = r - infl(+1) + efp_S + eps_q;
+ret_L(+1) = r - infl(+1) + efp_L + eps_q;
+efp_S = chi_S*(q_S + k_S - nw_S) + tsov_S*sov + tbank_S*bank;
+efp_L = chi_L*(q_L + k_L - nw_L) + tsov_L*sov + tbank_L*bank;
+nw_S = omega_nw*(nw_S(-1) + lev_S*(ret_S - (r(-1) - infl)));
+nw_L = omega_nw*(nw_L(-1) + lev_L*(ret_L - (r(-1) - infl)));
+i_S = 1/(1+beta)*i_S(-1) + beta/(1+beta)*i_S(+1)
+      + 1/((1+beta)*psi_i_S)*q_S + e_i_ar;
+i_L = 1/(1+beta)*i_L(-1) + beta/(1+beta)*i_L(+1)
+      + 1/((1+beta)*psi_i_L)*q_L + e_i_ar;
+k_S = (1-delta)*k_S(-1) + delta*i_S;
+k_L = (1-delta)*k_L(-1) + delta*i_L;
+k  = om_S*k_S + (1-om_S)*k_L;
+ii = om_S*i_S + (1-om_S)*i_L;
+
+// --- 3. Termelés + vertikális export-input (v04, változatlan) ---
+wz_d = a_d*w + (1-a_d)*rer;
+wz_x = a_x*w + (1-a_x)*rer;
+mc_d = zeta_d*rk + (1-zeta_d)*wz_d - a;
+mcx_rel = (1-s_kkv)*(zeta_x*rk + (1-zeta_x)*wz_x - a) + s_kkv*mc_d - px;
+z_d = rho_kz*zeta_d*(rk - wz_d) + y_d - a;
+z_x = rho_kz*zeta_x*(rk - wz_x) + y_x - a;
+l_d = z_d - rho_z*(w - wz_d);
+l_x = z_x - rho_z*(w - wz_x);
+ll  = sh_ld*l_d + (1-sh_ld)*l_x;
+im  = sh_imd*(z_d - rho_z*(rer - wz_d)) + (1-sh_imd)*(z_x - rho_z*(rer - wz_x));
+k(-1) = sh_kd*(z_d - rho_kz*(rk - wz_d)) + (1-sh_kd)*(z_x - rho_kz*(rk - wz_x));
+h_dx = xx - mu_vert*(mc_d - mcx_rel);
+
+// --- 4. Phillips-görbék (változatlan) ---
+infl = beta/(1+beta*vth_p)*infl(+1) + vth_p/(1+beta*vth_p)*infl(-1)
+       + lam_p/(1+beta*vth_p)*mc_d + eps_md;
+pix  = beta/(1+beta*vth_x)*pix(+1) + vth_x/(1+beta*vth_x)*pix(-1)
+       + lam_x/(1+beta*vth_x)*mcx_rel + e_mx_ar;
+piw  = beta/(1+beta*vth_w)*piw(+1) + vth_w/(1+beta*vth_w)*piw(-1)
+       + lam_w/(1+beta*vth_w)*(sigma/(1-habit)*(c - habit*c(-1))
+                                + fii*ll - w) + e_w_ar;
+w  = w(-1) + piw - infl;
+px = px(-1) + pix - infl;
+
+// --- 5. Kereslet, külkereskedelem (változatlan) ---
+y_d = shd_c*c + shd_i*i_S + shd_g*g + shd_v*h_dx;
+xx = hx*xx(-1) + (1-hx)*(-mu_x*(px - rer)) + e_x_ar;
+y_x = xx;
+y  = sc*c + si*ii + sg*g + sx*xx - sm*im;
+bstar = (1/beta)*bstar(-1) + sx*(px + xx) - sm*(rer + im);
+
+// --- 6. REZSIMFÜGGŐ monetáris blokk (mint jv_dsge_v03) ---
+// belépés előtt (uni=0): Taylor + UIP; után (uni=1): közös euró-kamat,
+// nincs önálló árfolyam
+(1-uni)*(r - gam_i*r(-1) - (1-gam_i)*phi_pi*infl - eps_r)
+    + uni*(r - zsov*sov + nu_uni*bstar) = 0;
+(1-uni)*(r - dep(+1) + nu_b*bstar - zsov*sov - e_pr_ar) + uni*dep = 0;
+rer = rer(-1) + dep - infl;
+
+// --- 7. Sokk-folyamatok ---
+a       = rho_a*a(-1) + eps_a;
+e_x_ar  = rho_x*e_x_ar(-1) + eps_x;
+e_c_ar  = rho_c*e_c_ar(-1) + eps_c;
+e_w_ar  = rho_w*e_w_ar(-1) + eps_w;
+e_i_ar  = rho_i*e_i_ar(-1) + eps_i;
+e_pr_ar = rho_pr*e_pr_ar(-1) + eps_pr;
+e_mx_ar = rho_mx*e_mx_ar(-1) + eps_mx;
+g       = rho_g*g(-1) + eps_g;
+
+end;
+
+initval;
+sov = 0; bank = 0; uni = 0;
+end;
+
+@#if SCENARIO == 1
+endval;
+sov = -0.005; bank = -0.001125; uni = 1;
+end;
+@#elseif SCENARIO == 2
+endval;
+sov = -0.00625; bank = -0.00175; uni = 1;
+end;
+@#else
+endval;
+sov = -0.00375; bank = -0.0005; uni = 1;
+end;
+@#endif
+
+steady;
+
+@#if SCENARIO == 1
+shocks;
+var uni;  periods 1:12; values 0;
+var sov;
+periods 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16;
+values -0.00025 -0.0005 -0.00075 -0.001 -0.00125 -0.0015 -0.00175 -0.002
+       -0.00225 -0.0025 -0.00275 -0.003 -0.0035 -0.004 -0.0045 -0.005;
+var bank;
+periods 1:12 13 14 15 16;
+values 0 -0.00028125 -0.0005625 -0.00084375 -0.001125;
+end;
+@#elseif SCENARIO == 2
+shocks;
+var uni;  periods 1:12; values 0;
+var sov;
+periods 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16;
+values -0.0003125 -0.000625 -0.0009375 -0.00125 -0.0015625 -0.001875
+       -0.0021875 -0.0025 -0.0028125 -0.003125 -0.0034375 -0.00375
+       -0.004375 -0.005 -0.005625 -0.00625;
+var bank;
+periods 1:12 13 14 15 16;
+values 0 -0.0004375 -0.000875 -0.0013125 -0.00175;
+end;
+@#else
+shocks;
+var uni;  periods 1:12; values 0;
+var sov;
+periods 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16;
+values -0.0001875 -0.000375 -0.0005625 -0.00075 -0.0009375 -0.001125
+       -0.0013125 -0.0015 -0.0016875 -0.001875 -0.0020625 -0.00225
+       -0.002625 -0.003 -0.003375 -0.00375;
+var bank;
+periods 1:12 13 14 15 16;
+values 0 -0.000125 -0.00025 -0.000375 -0.0005;
+end;
+@#endif
+
+perfect_foresight_setup(periods=120);
+perfect_foresight_solver;

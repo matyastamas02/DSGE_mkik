@@ -179,4 +179,4 @@ var eps_g;  stderr 0.01;
 end;
 
 stoch_simul(order=1, irf=24, nograph, noprint) y c y_d y_x i_S i_L efp_S
-    efp_L h_dx xx mcx_rel mc_d r rer;
+    efp_L h_dx xx mcx_rel mc_d r rer g ii;
