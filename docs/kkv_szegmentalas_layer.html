@@ -120,10 +120,10 @@ li{margin-bottom:7px;}
   <h1>A KKV / nagyvállalat szegmentálási layer</h1>
   <p class="standfirst">Hogyan válik szét a modellben a kis- és a nagyvállalat, miért éppen egy <em>vertikális beszállítói</em> szerkezettel, és milyen alternatívákat mérlegeltünk — az egyenletekkel, az eredményekkel és az elvetett utak indoklásával együtt.</p>
   <div class="meta">
-    <span><strong>Modell</strong> jv_dsge_v04.mod</span>
+    <span><strong>Modell</strong> jv_dsge_v04 → v05 (szcenáriós)</span>
     <span><strong>Alap</strong> Jakab–Világi (MNB WP 2008/9)</span>
     <span><strong>Adat</strong> Opten panel 2021–2025</span>
-    <span><strong>Státusz</strong> fut · BK teljesül</span>
+    <span><strong>Státusz</strong> fut · BK teljesül · füstteszt 19/19</span>
   </div>
 </div>
 
@@ -258,16 +258,44 @@ y<sub>d</sub> = sh<sub>c</sub>·c + sh<sub>i</sub>·i<sub>S</sub> + sh<sub>g</su
 <!-- 04 -->
 <section>
   <div class="sec-head"><span class="sec-num">04</span><h2>Az eredmények</h2></div>
-  <p class="lede">A modell megoldódik (Blanchard–Kahn teljesül), és a réteg két kulcsmechanizmusa működik: a lánc együtt mozog, és a KKV érzékenyebb.</p>
+  <p class="lede">Két szinten van eredményünk: (a) a mechanizmus-teszt (v04, általános sokkokra), és (b) — ami a tanulmány szempontjából a lényeg — a <b>tényleges euró-belépési szcenárió</b> szegmentált futása (v05).</p>
+
+  <h3>4.1 A mechanizmus működik (v04, tesztsokkok)</h3>
   <figure>
     <img src="../output/figures/f19_jv_v04_vertikalis.png" alt="A vertikális együttmozgás és a méret-aszimmetria impulzusválaszai">
     <figcaption>f19 — bal: a lánc együttmozgása; jobb: a méret-aszimmetria. (src/06_jv_v04_abra.py)</figcaption>
   </figure>
   <ul>
-    <li><b>Vertikális együttmozgás:</b> monetáris lazításra az export (+2,8%), a KKV-input az exportőrhöz (+3,0%) és a KKV-kibocsátás <em>együtt</em> mozdul — a beszállítói lánc közösen reagál.</li>
-    <li><b>Méret-aszimmetria:</b> ugyanarra a sokkra a KKV-beruházás (+2,9%) érzékenyebben reagál, mint a nagyvállalati (+2,1%) — a méretfüggő akcelerátor endogén eredménye.</li>
-    <li><b>Pozitív összeg:</b> a KKV-t javító hitelfeltétel a láncon át az exportőr költségét is csökkenti — nem nyertes-vesztes reallokáció.</li>
+    <li><b>Vertikális együttmozgás:</b> monetáris lazításra az export (+2,8%) és a KKV-input az exportőrhöz (+3,0%) <em>együtt</em> mozdul — a beszállítói lánc közösen reagál. (A KKV <em>teljes</em> kibocsátása csak az első ~3 negyedévben tart velük: hosszabb távon a reálárfolyam-csatorna dominál — lásd 7. pont.)</li>
+    <li><b>Méret-aszimmetria:</b> ugyanarra a sokkra a KKV-beruházás (+2,9%) érzékenyebben és gyorsabban reagál, mint a nagyvállalati (+2,1%). Későbbi horizonton a sorrend megfordul (a rugalmas szereplő gyorsan vissza is áll, a merev tovább tartja a hatást) — ez a ψ-paraméter konzisztens működése.</li>
   </ul>
+
+  <h3>4.2 A tényleges euró-szcenárió (v05) — ez a fő eredmény</h3>
+  <figure>
+    <img src="../output/figures/f21_szegmens_lekepezes_v05.png" alt="A KKV és nagyvállalati hitelfelár-csökkenés a három euró-szcenárióban">
+    <figcaption>f21 — jobb: a modell natív KKV/nagyvállalat felár-differenciája; bal: a besoroláson belüli szóródás. (src/s13_szegmens_lekepezes_v05.m)</figcaption>
+  </figure>
+  <div class="data">
+    <span class="big">−100 vs. −45 bp</span>
+    <p>Az alappálya csúcshatásán (13. negyedév, a belépés) a <b>KKV hitelfelára 100,3 bázisponttal</b> csökken, a nagyvállalaté csak <b>45,1 bp-tal</b> — a KKV <b>több mint kétszeres</b> nyereséget realizál. Ez már a <b>modell kimenete</b>, nem utólagos leképezés.</p>
+  </div>
+  <div style="overflow-x:auto;">
+  <table>
+    <thead><tr><th>Szcenárió</th><th>KKV-felár (csúcs)</th><th>Nagyvállalat</th><th>KKV-többlet</th><th>GDP (h. táv)</th><th>KKV-beruh.</th><th>Nagyváll. beruh.</th></tr></thead>
+    <tbody>
+      <tr><td>alap</td><td>−100,3 bp</td><td>−45,1 bp</td><td>55,3 bp</td><td>+0,80%</td><td>+1,63%</td><td>+1,33%</td></tr>
+      <tr><td>optimista</td><td>−143,8 bp</td><td>−64,0 bp</td><td>79,8 bp</td><td>+1,07%</td><td>+2,18%</td><td>+1,81%</td></tr>
+      <tr><td>pesszimista</td><td>−56,8 bp</td><td>−26,1 bp</td><td>30,8 bp</td><td>+0,53%</td><td>+1,08%</td><td>+0,85%</td></tr>
+    </tbody>
+  </table>
+  </div>
+  <ul>
+    <li><b>A méret-aszimmetria mindhárom szcenárióban fennáll</b> — a KKV-beruházás tartósan a nagyvállalati fölött.</li>
+    <li><b>A vertikális link kb. megduplázza az aggregált hatást:</b> GDP +0,40% (link nélkül) → +0,80% (linkkel).</li>
+    <li><b>Pozitív összeg:</b> a KKV-t javító hitelfeltétel a láncon át az exportőr költségét is csökkenti — a két szereplő egyetlen negyedévben sem mozog ellentétes irányba.</li>
+    <li><b>Módszertani előrelépés:</b> a "kalibrált leképezés" réteg zsugorodott — a KKV/nagyvállalat különbség modell-eredmény, csak a besoroláson <em>belüli</em> szóródás marad leképezés.</li>
+  </ul>
+  <p class="note"><b>Fontos a helyes értelmezéshez:</b> a felár-differencia a <b>csúcshatáson</b> él, nem a hosszú távú egyensúlyban — a BGG-akcelerátor átmeneti mechanizmus (a nettó vagyon visszaáll, ezért steady state-ben efp_S = efp_L). A leképezés ezért tudatosan a csúcsra és a 10 éves pontra épül, és a teljes kamat helyett a <b>hitelfelárra</b> (a kamat az átmenetben a rezsimváltás miatt nagyot leng).</p>
 </section>
 
 <!-- 05 -->
@@ -319,7 +347,8 @@ y<sub>d</sub> = sh<sub>c</sub>·c + sh<sub>i</sub>·i<sub>S</sub> + sh<sub>g</su
   <ul>
     <li><b>A kulcsparaméterek érzékenységi jellegűek.</b> s_kkv=0,20 (KKV-input arány az exportban), μ_vert=0,50, ψ_S/ψ_L=8/13 — irodalmi/becsült induló értékek. A pontos KKV-input arányt a <b>KSH ágazati kapcsolatok mérlegéből (IO-tábla)</b> pótoljuk; addig érzékenységként kezeljük.</li>
     <li><b>Közös tőke-bérleti ráta.</b> A stabilitás ára, hogy nincs szektor-specifikus tőkepiac (lásd 06). A finanszírozás szétválik (χ_S/χ_L), a bérleti ráta nem.</li>
-    <li><b>Volatilis reálárfolyam.</b> A JV kis adósság-rugalmas prémiuma (ν=0,001) miatt a reálárfolyam érzékeny; ezért az export-keresleti sokkos vizualizáció zajos volt, és a tisztább monetáris sokkot használtuk a lánc bemutatására. A ν kalibrációja egy későbbi finomítás.</li>
+    <li><b>A külső egyensúly zárása kalibrációs döntés volt — és számít.</b> A v05 első futása implauzibilis eredményt adott (export +12,9%, reálárfolyam +34,7%, külső pozíció −25% GDP), mert a v03-ból örökölt gyenge zárás (ν<sub>unió</sub>=0,01) a vertikális link önerősítő köre mellett nem tartott horgonyt. Diagnosztikával (ν<sub>unió</sub> = 0,01…0,5) <b>0,25-re kalibráltuk</b>: itt a reálárfolyam +4,1%, a külső pozíció −1,0% GDP. A 0,25 a „plató" elején van (0,25→0,5 alig mozdít), tehát az eredmény <em>nem érzékeny</em> a pontos értékre. <b>Validáció:</b> a linket kikapcsolva a GDP +1,07%, ami egyezik a szegmentálás nélküli v03 eredményével (+1,09%) — a modell konzisztens. A füstteszt mostantól regressziós védőhálót tartalmaz erre.</li>
+    <li><b>A KKV teljes kibocsátásának hosszú távú útja.</b> A JV kis adósság-rugalmassága (ν=0,001) miatt egy kamatsokk tartós, Dornbusch-típusú reálárfolyam-túllövést okoz, ami a fogyasztáson át a KKV <em>aggregált</em> kibocsátását más irányba viheti, mint a beszállítói csatornát. Tagonkénti bontással azonosítottuk (a fogyasztási tag a domináns) — ez a JV becslésének tulajdonsága, nem hiba, és a vertikális csatorna (h_dx, y_x) ettől függetlenül robusztus.</li>
     <li><b>A vertikális link erősségének izolálása.</b> Következő lépés: az s_kkv „be/ki" érzékenységi futás (a Streamlit-appban csúszkaként), ami tisztán megmutatja a csatorna hozzájárulását.</li>
   </ul>
 </section>
