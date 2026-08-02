@@ -68,6 +68,26 @@
   @#define NUUNI = 0.25
 @#endif
 
+// -DSKKV / -DMUVERT: a vertikális link erőssége (érzékenységi protokoll,
+// lásd sens_skkv_v05.m). SKKV=0 + MUVERT=0 a "link nélküli" ellenpróba.
+//
+// !! ÉRVÉNYESSÉGI SÁV: s_kkv < 0.25 !!
+// A modellnek SZINGULARITÁSA van s_kkv ~ 0.25-nél (0.24: y=+1.61%,
+// 0.26: y=-4.25%, rer=-35%). A pólus alatt a viselkedés sima és monoton,
+// felette értelmezhetetlen. Ok: a vertikális link a KKV-kibocsátás és az
+// export között kétirányú visszacsatolást hoz létre (a KKV inputot ad az
+// exportnak, az export kereslete pedig a KKV-kibocsátás része), és elég
+// erős linknél ez a hurok "átfordul". Az alapkalibráció (0.20) érvényes,
+// de a pólushoz viszonylag közel van -> a KSH IO-tábla ellenőrzése
+// PRIORITÁS: ha a valódi KKV-input arány 0.25 felett lenne, a modellt
+// át kell strukturálni (pl. explicit CES-input-aggregátorral).
+@#ifndef SKKV
+  @#define SKKV = 0.20
+@#endif
+@#ifndef MUVERT
+  @#define MUVERT = 0.50
+@#endif
+
 var
     c_o c_no c ii k
     rk w piw infl pix px
@@ -118,12 +138,25 @@ psi_i_S = 8.0; psi_i_L = 13.0;
 s_kkv   = 0.0001;    // vertikális link kikapcsolva (diagnosztika)
 mu_vert = 0.0001;
 @#else
-s_kkv   = 0.20;
-mu_vert = 0.50;
+s_kkv   = @{SKKV};
+mu_vert = @{MUVERT};
 @#endif
 sc = 0.54; si = 0.23; sg = 0.10; sx = 0.60; sm = 0.47;
 sh_ld = 0.70; sh_kd = 0.65; sh_imd = 0.30;
-shd_c = 0.55; shd_i = 0.15; shd_g = 0.12; shd_v = 0.18;
+// A hazai (KKV) jószág felhasználási arányai. FONTOS KONZISZTENCIA
+// (sens_skkv_v05.m diagnosztika): a shd_v (a KKV-kibocsátás mekkora része
+// megy az exportőrhöz) és az s_kkv (az export költségének mekkora része
+// KKV-input) UGYANAZT a kereskedelmi kapcsolatot írja le két oldalról,
+// ezért nem adhatók meg egymástól függetlenül. Az összefüggés:
+//     shd_v = s_kkv * (export/KKV-kibocsátás arány)
+// A korábbi, független megadás (shd_v=0.18 fixen, s_kkv szabadon) egy
+// önerősítő hurkot hozott létre: az alapkalibrációnál a KKV-kibocsátás
+// 115%-át az export-input tag adta, és s_kkv~0.23-nál a modell
+// SZINGULARITÁSBA futott (0.22: y=+1.18%, 0.25: y=-5.26%, rer=-45%).
+// Most shd_v az s_kkv-ból SZÁRMAZTATOTT, a többi súly arányosan igazodik.
+shd_v = s_kkv * 0.60;                       // export/KKV-kibocsátás arány ~0.6
+shd_c = 0.55*(1-shd_v)/0.82; shd_i = 0.15*(1-shd_v)/0.82;
+shd_g = 0.12*(1-shd_v)/0.82;                // a maradék arányosan szétosztva
 // --- euró-szcenárió: prémium-transzmisszió + rezsimváltás (mint v03) ---
 tsov_S = 0.25; tsov_L = 0.10; tbank_S = 0.60; tbank_L = 0.30;
 zsov = 0.5;
@@ -171,7 +204,16 @@ l_x = z_x - rho_z*(w - wz_x);
 ll  = sh_ld*l_d + (1-sh_ld)*l_x;
 im  = sh_imd*(z_d - rho_z*(rer - wz_d)) + (1-sh_imd)*(z_x - rho_z*(rer - wz_x));
 k(-1) = sh_kd*(z_d - rho_kz*(rk - wz_d)) + (1-sh_kd)*(z_x - rho_kz*(rk - wz_x));
-h_dx = xx - mu_vert*(mc_d - mcx_rel);
+// KKV-input kereslet az exportőrtől.
+// JAVÍTVA (sens_skkv_v05.m diagnosztika alapján): a relatívár-tag súlya
+// s_kkv-val skálázódik. Indoklás: egy CES-input-keresletben a helyettesítési
+// válasz a KOSTSÉGHÁNYADDAL arányos — ha a KKV-input a költség 20%-a, a
+// relatívár-változásra adott válasz is ennyivel súlyozott. A korábbi,
+// nem skálázott alak (h_dx = xx - mu_vert*(mc_d - mcx)) erős s_kkv-nál
+// önerősítő hurkot hozott létre a y_d-n keresztül (s_kkv=0.30-nál a h_dx
+// előjelet váltott, s_kkv=0.35-nél a felár -573 bp-ra szaladt) — nem
+// numerikus hiba volt (a megoldó reziduuma 1e-17), hanem szerkezeti.
+h_dx = xx - mu_vert*s_kkv*(mc_d - mcx_rel);
 
 // --- 4. Phillips-görbék (változatlan) ---
 infl = beta/(1+beta*vth_p)*infl(+1) + vth_p/(1+beta*vth_p)*infl(-1)
