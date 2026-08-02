@@ -1,0 +1,364 @@
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>A v05 bővítés — szegmentált euró-szcenárió</title>
+<style>
+:root{
+  --paper:#f3efe6; --surface:#faf7f0; --ink:#23211c; --ink-soft:#5d5848;
+  --line:#cfc7b4; --rule:#b8ae97; --accent:#7a3b2e;
+  --core:#3a5a78; --core-bg:#dde6ef;
+  --emp:#3f6b45; --emp-bg:#e3ecdd;
+  --gap:#a4452f; --gap-bg:#f0ddd5;
+  --map:#9a6b1f; --map-bg:#f1e4cc;
+  --code-bg:#ece5d6; --code-ink:#3a352b;
+}
+@media (prefers-color-scheme: dark){
+  :root{
+    --paper:#1c1a16; --surface:#242119; --ink:#ece7db; --ink-soft:#b3ab98;
+    --line:#3c3830; --rule:#4a453a; --accent:#d08a5c;
+    --core:#8fb4d6; --core-bg:#22303c; --emp:#8fc09a; --emp-bg:#1e2a20;
+    --gap:#e08a6f; --gap-bg:#33231d; --map:#d4a95f; --map-bg:#302716;
+    --code-bg:#2a2620; --code-ink:#d8cfbc;
+  }
+}
+:root[data-theme="light"]{
+  --paper:#f3efe6; --surface:#faf7f0; --ink:#23211c; --ink-soft:#5d5848;
+  --line:#cfc7b4; --rule:#b8ae97; --accent:#7a3b2e;
+  --core:#3a5a78; --core-bg:#dde6ef; --emp:#3f6b45; --emp-bg:#e3ecdd;
+  --gap:#a4452f; --gap-bg:#f0ddd5; --map:#9a6b1f; --map-bg:#f1e4cc;
+  --code-bg:#ece5d6; --code-ink:#3a352b;
+}
+:root[data-theme="dark"]{
+  --paper:#1c1a16; --surface:#242119; --ink:#ece7db; --ink-soft:#b3ab98;
+  --line:#3c3830; --rule:#4a453a; --accent:#d08a5c;
+  --core:#8fb4d6; --core-bg:#22303c; --emp:#8fc09a; --emp-bg:#1e2a20;
+  --gap:#e08a6f; --gap-bg:#33231d; --map:#d4a95f; --map-bg:#302716;
+  --code-bg:#2a2620; --code-ink:#d8cfbc;
+}
+*{box-sizing:border-box;}
+body{
+  margin:0; background:var(--paper); color:var(--ink);
+  font-family:"Iowan Old Style","Palatino Linotype",Palatino,Georgia,serif;
+  line-height:1.6; font-size:16px;
+}
+.sheet{max-width:940px;margin:0 auto;padding:56px 40px 96px;}
+.eyebrow{
+  font-family:"SF Mono",ui-monospace,"Cascadia Mono",Menlo,monospace;
+  font-size:11.5px;letter-spacing:.22em;text-transform:uppercase;
+  color:var(--accent);margin:0 0 14px;
+}
+h1{font-size:36px;font-weight:600;line-height:1.14;margin:0 0 16px;letter-spacing:-.01em;max-width:24ch;text-wrap:balance;}
+.standfirst{font-size:18px;color:var(--ink-soft);margin:0;max-width:64ch;}
+.masthead{border-bottom:2px solid var(--ink);padding-bottom:28px;margin-bottom:8px;}
+.meta{font-family:"SF Mono",ui-monospace,Menlo,monospace;font-size:11px;letter-spacing:.04em;color:var(--ink-soft);margin-top:20px;display:flex;gap:26px;flex-wrap:wrap;}
+.meta span strong{color:var(--ink);font-weight:600;}
+
+.verdict{margin:34px 0 46px;padding:24px 28px;background:var(--emp-bg);border-left:4px solid var(--emp);border-radius:0 5px 5px 0;}
+.verdict .tag{font-family:"SF Mono",ui-monospace,Menlo,monospace;font-size:11px;letter-spacing:.15em;text-transform:uppercase;color:var(--emp);font-weight:700;}
+.verdict p{margin:8px 0 0;font-size:17px;}
+
+section{margin:0 0 52px;}
+.sec-head{display:flex;align-items:baseline;gap:14px;border-bottom:1px solid var(--rule);padding-bottom:10px;margin-bottom:22px;}
+.sec-num{font-family:"SF Mono",ui-monospace,Menlo,monospace;font-size:13px;color:var(--accent);font-weight:700;}
+h2{font-size:23px;font-weight:600;margin:0;letter-spacing:-.01em;text-wrap:balance;}
+h3{font-size:16.5px;font-weight:600;margin:26px 0 8px;}
+p{max-width:70ch;}
+.lede{color:var(--ink-soft);font-size:15.5px;margin:-8px 0 22px;max-width:72ch;}
+ul,ol{max-width:72ch;}
+li{margin-bottom:7px;}
+
+.eq{
+  font-family:"SF Mono",ui-monospace,"Cascadia Mono",Menlo,monospace;
+  background:var(--code-bg);color:var(--code-ink);
+  border-radius:6px;padding:14px 18px;margin:10px 0;font-size:13.5px;
+  overflow-x:auto;line-height:1.75;border:1px solid var(--line);
+}
+.eq .cm{color:var(--ink-soft);}
+.eqname{font-family:"SF Mono",ui-monospace,Menlo,monospace;font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--accent);font-weight:700;margin:22px 0 2px;}
+.note{font-size:14px;color:var(--ink-soft);margin:6px 0 18px;max-width:72ch;}
+.note b{color:var(--ink);font-weight:600;}
+
+/* before/after comparison */
+.ba{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin:16px 0;}
+@media(max-width:760px){.ba{grid-template-columns:1fr;}}
+.ba-col{border-radius:8px;padding:16px 20px;border:1px solid var(--line);}
+.ba-col.old{background:var(--map-bg);}
+.ba-col.new{background:var(--core-bg);}
+.ba-col h4{margin:0 0 8px;font-size:13px;font-family:"SF Mono",Menlo,monospace;letter-spacing:.08em;text-transform:uppercase;}
+.ba-col.old h4{color:var(--map);}
+.ba-col.new h4{color:var(--core);}
+.ba-col ul{margin:8px 0 0;padding-left:18px;}
+.ba-col li{font-size:13.5px;color:var(--ink-soft);}
+
+/* data callout */
+.data{display:flex;gap:16px;background:var(--core-bg);border-radius:8px;padding:18px 22px;margin:20px 0;align-items:baseline;}
+.data .big{font-size:28px;font-weight:600;color:var(--core);font-variant-numeric:tabular-nums;line-height:1;white-space:nowrap;}
+.data p{margin:0;font-size:14px;}
+
+/* warning / correction box */
+.warn{background:var(--gap-bg);border-left:4px solid var(--gap);border-radius:0 5px 5px 0;padding:18px 22px;margin:20px 0;}
+.warn h4{margin:0 0 6px;font-size:13px;font-family:"SF Mono",Menlo,monospace;letter-spacing:.08em;text-transform:uppercase;color:var(--gap);}
+.warn p{margin:6px 0 0;font-size:14.5px;}
+
+table{width:100%;border-collapse:collapse;margin-top:6px;font-size:14px;}
+th,td{text-align:left;padding:10px 12px;border-bottom:1px solid var(--line);vertical-align:top;}
+th{font-family:"SF Mono",ui-monospace,Menlo,monospace;font-size:10.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-soft);font-weight:600;}
+td.num{font-variant-numeric:tabular-nums;text-align:right;font-family:"SF Mono",monospace;}
+.tw{overflow-x:auto;}
+
+figure{margin:22px 0;}
+figure img{width:100%;height:auto;border:1px solid var(--line);border-radius:8px;background:#fff;}
+figcaption{font-size:12.5px;color:var(--ink-soft);margin-top:8px;font-family:"SF Mono",Menlo,monospace;}
+
+/* glossary */
+.gl{border-top:1px solid var(--line);padding:14px 0 0;margin:0;}
+.gl dt{font-weight:600;font-size:15px;margin:16px 0 4px;}
+.gl dt code{font-family:"SF Mono",Menlo,monospace;font-size:13px;background:var(--code-bg);padding:2px 6px;border-radius:3px;color:var(--code-ink);}
+.gl dd{margin:0;font-size:14.5px;color:var(--ink-soft);max-width:72ch;}
+.gl dd b{color:var(--ink);font-weight:600;}
+
+footer{margin-top:60px;padding-top:20px;border-top:1px solid var(--rule);font-size:12px;color:var(--ink-soft);font-family:"SF Mono",ui-monospace,Menlo,monospace;letter-spacing:.03em;}
+</style>
+
+<div class="sheet">
+
+<div class="masthead">
+  <p class="eyebrow">Modell-dokumentáció · euró/KKV DSGE · belső</p>
+  <h1>A v05 bővítés: a szegmentálás találkozik az euró-szcenárióval</h1>
+  <p class="standfirst">A KKV/nagyvállalat layer önmagában csak azt mutatta meg, hogy a mechanizmus <em>működik</em>. A v05 ezt ráülteti a <b>tényleges euró-belépési pályára</b> — innentől a modell a projekt valódi kérdésére válaszol: mennyit nyer a KKV és mennyit a nagyvállalat, ha bevezetjük az eurót?</p>
+  <div class="meta">
+    <span><strong>Modell</strong> jv_dsge_v05.mod</span>
+    <span><strong>Épít</strong> v04 (szegmentálás) + v03 (szcenárió)</span>
+    <span><strong>Módszer</strong> perfect foresight, 3 pálya</span>
+    <span><strong>Státusz</strong> fut · füstteszt 19/19</span>
+  </div>
+</div>
+
+<div class="verdict">
+  <span class="tag">A bővítés egy mondatban</span>
+  <p>A szuverén és banki prémium-csökkenés <b>szegmensenként eltérő súllyal</b> lép be a modellbe, a belépéskor <b>kamatunió-rezsimváltás</b> történik, és mindez <b>anticipált pályaként</b> fut — az eredmény: a KKV hitelfelára <b>100 bp-tal</b> javul a nagyvállalat <b>45 bp-jával</b> szemben.</p>
+</div>
+
+<!-- 01 -->
+<section>
+  <div class="sec-head"><span class="sec-num">01</span><h2>Miért kellett ez a bővítés</h2></div>
+  <p class="lede">A projektben két réteg épült egymástól függetlenül, és volt köztük egy rés — a v05 ezt zárja be.</p>
+  <div class="ba">
+    <div class="ba-col old">
+      <h4>Ami a v05 előtt volt</h4>
+      <ul>
+        <li><b>v04:</b> KKV/nagyvállalat szegmentálás + vertikális beszállítói link — <em>de csak általános tesztsokkokra</em> (monetáris, export, termelékenység).</li>
+        <li><b>v03:</b> euró-szcenárió (prémium-pálya, rezsimváltás, három forgatókönyv) — <em>de szegmentálás nélkül</em>, egyetlen reprezentatív vállalattal.</li>
+        <li><b>A rés:</b> nem volt olyan futás, ami megválaszolta volna a tényleges kutatási kérdést.</li>
+      </ul>
+    </div>
+    <div class="ba-col new">
+      <h4>Amit a v05 hoz</h4>
+      <ul>
+        <li>A szegmentált (KKV/nagyvállalat) szerkezet <b>a valós euró-pályán</b> fut.</li>
+        <li>A prémium-csökkenés <b>szegmensenként eltérő erővel</b> érkezik — az euró eleve jobban segíti a KKV-t.</li>
+        <li>Szegmensenkénti eredmény mindhárom forgatókönyvre: felár, beruházás, kibocsátás.</li>
+        <li>A 2. réteg (kalibrált leképezés) szerepe <b>zsugorodik</b>: a KKV/nagyvállalat különbség immár modell-eredmény.</li>
+      </ul>
+    </div>
+  </div>
+  <p class="note">Fontos, hogy ez <b>nem új mechanizmus</b>, hanem két meglévő réteg összekapcsolása. A v04 vertikális linkje (költség- és mennyiségi csatorna) változatlan; a v03 szcenárió-gépezete változatlan. Az újdonság az, hogy a prémium-sokkok most <em>szegmensenként</em> érkeznek.</p>
+</section>
+
+<!-- 02 -->
+<section>
+  <div class="sec-head"><span class="sec-num">02</span><h2>A három új elem — egyenletekkel</h2></div>
+  <p class="lede">Minden változó log-eltérés a hosszú távú egyensúlytól. A prémiumok negyedéves értékek (egy 200 bázispontos éves csökkenés = 0,005 negyedéves egységben).</p>
+
+  <h3>2.1 A prémium-csatornák szegmensenként (ez a bővítés lelke)</h3>
+  <p>A v04-ben a külső finanszírozási prémium csak a cég mérlegétől függött. A v05-ben megjelenik két <b>exogén, politikai eredetű</b> tag is: a szuverén (állampapír-) prémium és a banki forrásköltség csökkenése — <b>szegmensenként más súllyal</b>:</p>
+  <div class="eq">
+efp<sub>S</sub> = χ<sub>S</sub>·(q<sub>S</sub> + k<sub>S</sub> − nw<sub>S</sub>) <b>+ t<sup>sov</sup><sub>S</sub>·sov + t<sup>bank</sup><sub>S</sub>·bank</b>&nbsp;&nbsp;<span class="cm">// KKV</span><br>
+efp<sub>L</sub> = χ<sub>L</sub>·(q<sub>L</sub> + k<sub>L</sub> − nw<sub>L</sub>) <b>+ t<sup>sov</sup><sub>L</sub>·sov + t<sup>bank</sup><sub>L</sub>·bank</b>&nbsp;&nbsp;<span class="cm">// nagyvállalat</span><br><br>
+<span class="cm">t<sup>sov</sup><sub>S</sub> = 0,25&nbsp;&nbsp;&nbsp;t<sup>sov</sup><sub>L</sub> = 0,10&nbsp;&nbsp;&nbsp;(szuverén átgyűrűzés)</span><br>
+<span class="cm">t<sup>bank</sup><sub>S</sub> = 0,60&nbsp;&nbsp;&nbsp;t<sup>bank</sup><sub>L</sub> = 0,30&nbsp;&nbsp;&nbsp;(banki átgyűrűzés)</span>
+  </div>
+  <p class="note"><b>Mit mond:</b> ha az euró-belépés miatt az állampapír-prémium (<code>sov</code>) és a banki forrásköltség (<code>bank</code>) csökken, ez a KKV hitelfelárába <b>2–2,5-szer erősebben</b> gyűrűzik be, mint a nagyvállalatiba. <b>Miért így:</b> a nagyvállalat amúgy is közel van a legjobb finanszírozási feltételekhez (van hitelminősítése, anyavállalati háttere, akár közvetlen tőkepiaci hozzáférése) — nála kevesebb a „lefaragható" felár. A KKV viszont épp a hazai bankrendszer árazásának van kitéve, ezért a javulás nagy részét ő élvezi. <b>Mi lesz belőle:</b> a méret-aszimmetria immár <em>két</em> forrásból jön: az endogén akcelerátorból (χ) <em>és</em> az exogén átgyűrűzésből (t).</p>
+
+  <h3>2.2 A kamatunió-rezsimváltás</h3>
+  <p>Az euró-belépés nem csak árakat mozgat: <b>megváltoztatja a monetáris politika egész szabályát</b>. Ezt egy <code>uni</code> nevű kapcsolóval („dummy") oldjuk meg, ami a belépés előtt 0, utána 1:</p>
+  <div class="eq">
+(1−uni)·[ r − γ<sub>i</sub>·r(−1) − (1−γ<sub>i</sub>)·φ<sub>π</sub>·π − ε<sub>r</sub> ]&nbsp;<span class="cm">// belépés ELŐTT: Taylor-szabály</span><br>
+&nbsp;&nbsp;&nbsp;+ uni·[ r − z<sup>sov</sup>·sov + ν<sub>unió</sub>·b* ] = 0&nbsp;&nbsp;&nbsp;<span class="cm">// UTÁN: közös euró-kamat</span><br><br>
+(1−uni)·[ r − dep(+1) + ν<sub>b</sub>·b* − z<sup>sov</sup>·sov − ε<sup>pr</sup> ] + uni·dep = 0<br>
+<span class="cm">&nbsp;&nbsp;&nbsp;// előtte: UIP (árfolyam-paritás); utána: dep = 0, nincs önálló árfolyam</span>
+  </div>
+  <p class="note"><b>Mit mond:</b> a belépés előtt a jegybank saját Taylor-szabály szerint dönt a kamatról, és az árfolyam szabadon mozog (UIP). A belépés után a hazai kamat a közös euró-kamat lesz (plusz egy kis országfelár), és <b>az árfolyam megszűnik</b> mint önálló változó (<code>dep = 0</code>). <b>Miért így:</b> ez az euró-belépés valódi tartalma — nem „egy sokk", hanem rezsimváltás. <b>Technikai megjegyzés:</b> a dummy-szorzatok miatt a modell formálisan nemlineáris, ezért perfect foresight megoldóval fut (nem a szokásos linearizált módszerrel).</p>
+
+  <h3>2.3 Az anticipált pálya (nem sokk, hanem bejelentés)</h3>
+  <p>A prémium-csökkenés nem egyszerre robban be, hanem <b>előre bejelentett, fokozatos pálya</b> — és a szereplők ezt <b>előre tudják</b>, ezért már a bejelentéskor reagálnak:</p>
+  <div class="eq">
+<span class="cm">// alappálya, negyedévenként (negatív = prémium-csökkenés):</span><br>
+sov:&nbsp;&nbsp; q1..q12 fokozatosan −0,00025 → −0,003&nbsp;&nbsp;<span class="cm">(ERM-II konvergencia)</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;q13..q16: −0,0035 → <b>−0,005</b>&nbsp;&nbsp;<span class="cm">(belépés + normalizálódás)</span><br>
+bank: q1..q12 = 0&nbsp;&nbsp;<span class="cm">(a swap-bázis csak a belépéskor tűnik el)</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;q13..q16: 0 → <b>−0,001125</b><br>
+uni:&nbsp;&nbsp;q1..q12 = 0, majd q13-tól = 1&nbsp;&nbsp;<span class="cm">(a rezsimváltás pillanata)</span>
+  </div>
+  <p class="note"><b>Mit mond:</b> a szuverén prémium már az ERM-II szakaszban (a belépés előtti 3 év) csökkenni kezd, mert a piac beárazza a konvergenciát. A banki csatorna viszont <b>csak a belépéskor nyílik ki</b> — addig a bankoknak fedezni kell az árfolyamkockázatot (swap-bázis), ami az euróval egy csapásra eltűnik. <b>Miért fontos:</b> ez a különböző időzítés magyarázza, miért van a hatás csúcsa épp a 13. negyedévben.</p>
+
+  <h3>2.4 Amit NEM változtattunk</h3>
+  <p>A v04 vertikális linkje szó szerint változatlan — ez fontos a hitelesség szempontjából (nem „hangoltuk át" a mechanizmust a szcenárióhoz):</p>
+  <div class="eq">
+mcx = (1−s<sub>kkv</sub>)·(export saját ktsg) + s<sub>kkv</sub>·mc<sub>d</sub> − px&nbsp;&nbsp;<span class="cm">// költség-csatorna</span><br>
+h<sub>dx</sub> = xx − μ<sub>vert</sub>·(mc<sub>d</sub> − mcx)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="cm">// mennyiségi csatorna</span>
+  </div>
+</section>
+
+<!-- 03 -->
+<section>
+  <div class="sec-head"><span class="sec-num">03</span><h2>Az eredmények</h2></div>
+  <p class="lede">A csúcshatás a 13. negyedévben (a belépés pillanatában) jelentkezik, mert ekkor esik egybe a szuverén konvergencia vége a banki csatorna kinyílásával.</p>
+
+  <div class="data">
+    <span class="big">−100 vs. −45 bp</span>
+    <p>Az alappályán a <b>KKV hitelfelára 100,3 bázisponttal</b> csökken, a nagyvállalaté csak <b>45,1 bp-tal</b> — a KKV <b>több mint kétszeres</b> nyereséget realizál. Ez már <b>modell-eredmény</b>, nem utólagos leképezés.</p>
+  </div>
+
+  <div class="tw">
+  <table>
+    <thead><tr><th>Szcenárió</th><th>KKV-felár (csúcs)</th><th>Nagyvállalat</th><th>KKV-többlet</th><th>GDP (h. táv)</th><th>KKV-beruh.</th><th>Nagyváll. beruh.</th></tr></thead>
+    <tbody>
+      <tr><td>alap</td><td class="num">−100,3 bp</td><td class="num">−45,1 bp</td><td class="num">55,3 bp</td><td class="num">+0,80%</td><td class="num">+1,63%</td><td class="num">+1,33%</td></tr>
+      <tr><td>optimista</td><td class="num">−143,8 bp</td><td class="num">−64,0 bp</td><td class="num">79,8 bp</td><td class="num">+1,07%</td><td class="num">+2,18%</td><td class="num">+1,81%</td></tr>
+      <tr><td>pesszimista</td><td class="num">−56,8 bp</td><td class="num">−26,1 bp</td><td class="num">30,8 bp</td><td class="num">+0,53%</td><td class="num">+1,08%</td><td class="num">+0,85%</td></tr>
+    </tbody>
+  </table>
+  </div>
+
+  <figure>
+    <img src="../output/figures/f21_szegmens_lekepezes_v05.png" alt="A KKV és nagyvállalati hitelfelár-csökkenés a három euró-szcenárióban">
+    <figcaption>f21 — jobb: a modell natív KKV/nagyvállalat felár-differenciája; bal: a besoroláson belüli szóródás (kalibrált leképezés).</figcaption>
+  </figure>
+
+  <figure>
+    <img src="../output/figures/f20_jv_v05_szegmentalt_szcenario.png" alt="A szegmentált euró-szcenárió pályái">
+    <figcaption>f20 — bal: a KKV, az export és a vertikális link pályája az alappályán; jobb: a méret-aszimmetria mindhárom szcenárióban.</figcaption>
+  </figure>
+
+  <h3>Három megállapítás, amit érdemes kiemelni</h3>
+  <ol>
+    <li><b>A méret-aszimmetria mindhárom szcenárióban fennáll</b> — a KKV-beruházás tartósan a nagyvállalati fölött. Nem egy szerencsés paraméterezés eredménye.</li>
+    <li><b>A vertikális link kb. megduplázza az aggregált hatást:</b> a GDP-hatás +0,40% a link nélkül, +0,80% a linkkel. Vagyis a beszállítói kapcsolat nem díszítés, hanem a hatás felét adja.</li>
+    <li><b>Pozitív összeg:</b> a két szereplő egyetlen negyedévben sem mozog ellentétes irányba — nincs nyertes-vesztes reallokáció.</li>
+  </ol>
+
+  <p class="note"><b>Fontos a helyes értelmezéshez:</b> a felár-differencia a <b>csúcshatáson</b> él, nem a hosszú távú egyensúlyban. A pénzügyi akcelerátor átmeneti mechanizmus: a nettó vagyon hosszú távon visszaáll, ezért steady state-ben a két szegmens prémiuma matematikailag azonos szintre konvergál (mindkettő ~−13 bp, tisztán az exogén átgyűrűzésből). A szegmens-különbség tehát természeténél fogva az átmeneti szakaszban él — <em>és ott is a legfontosabb</em>: ez a belépés körüli 3–5 év, amikor a szakpolitikai döntések születnek.</p>
+</section>
+
+<!-- 04 -->
+<section>
+  <div class="sec-head"><span class="sec-num">04</span><h2>Egy hiba, amit elkaptunk — és miért érdemes elmondani</h2></div>
+  <p class="lede">Ez a szakasz szándékosan van benne: a modellezési munka hitelessége azon áll, hogy a hibákat megtaláljuk és dokumentáljuk, nem azon, hogy elsőre minden jó.</p>
+
+  <div class="warn">
+    <h4>⚠ Az első v05-futás implauzibilis volt</h4>
+    <p>Export <b>+12,9%</b>, reálárfolyam <b>+34,7%</b>, külső pozíció <b>−25% GDP</b>. Ezek egy euró-belépésnél nyilvánvalóan nem lehetnek helyes értékek — nem is fogadtuk el eredményként.</p>
+  </div>
+
+  <h3>A diagnózis</h3>
+  <p>A hiba forrása egy örökölt paraméter: a <b>külső egyensúly zárása</b> az unió-rezsimben (<code>ν<sub>unió</sub></code>). A korábbi, szegmentálás nélküli verzióból egy nagyon gyenge értéket (0,01) vittünk tovább. Ez azért lett most probléma, mert a szegmentált modellben a vertikális link <b>önerősítő kört</b> hoz létre:</p>
+  <div class="eq">
+KKV olcsóbb hitel → olcsóbb KKV-input → olcsóbb export → több export<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;→ több KKV-input-kereslet → <span class="cm">(vissza az elejére)</span>
+  </div>
+  <p>Egy ilyen kör mellett a gyenge külső horgony nem tartja meg a rendszert: a külkereskedelmi többlet és a reálárfolyam elszáll.</p>
+
+  <h3>A javítás és a validáció</h3>
+  <div class="tw">
+  <table>
+    <thead><tr><th>ν<sub>unió</sub></th><th>GDP</th><th>Reálárfolyam</th><th>Külső pozíció</th><th>Értékelés</th></tr></thead>
+    <tbody>
+      <tr><td class="num">0,01</td><td class="num">+4,53%</td><td class="num">+34,7%</td><td class="num">−25,0%</td><td>implauzibilis</td></tr>
+      <tr><td class="num">0,05</td><td class="num">+1,42%</td><td class="num">+9,2%</td><td class="num">−5,0%</td><td>még mindig sok</td></tr>
+      <tr><td class="num"><b>0,25</b></td><td class="num"><b>+0,80%</b></td><td class="num"><b>+4,1%</b></td><td class="num"><b>−1,0%</b></td><td><b>választott</b></td></tr>
+      <tr><td class="num">0,50</td><td class="num">+0,72%</td><td class="num">+3,5%</td><td class="num">−0,5%</td><td>alig változik</td></tr>
+    </tbody>
+  </table>
+  </div>
+  <p class="note"><b>Miért a 0,25:</b> mert a „platón" van — a 0,25 → 0,5 lépés már alig mozdít, tehát az eredmény <b>nem érzékeny</b> a paraméter pontos értékére. Ha a meredek szakaszon választanánk, az önkényes lenne.</p>
+  <p class="note"><b>A validáció, ami megnyugtató:</b> ha a vertikális linket <em>kikapcsoljuk</em>, a GDP-hatás <b>+1,07%</b> — ami szinte pontosan a szegmentálás nélküli korábbi modell eredménye (<b>+1,09%</b>). Vagyis a modell konzisztens, és a probléma kizárólag a zárás erőssége volt, nem a szegmentálás. A füstteszt mostantól <b>regressziós védőhálót</b> tartalmaz: ha valaki visszaállítaná a hibás értéket, a reálárfolyam-plauzibilitási teszt automatikusan elkapná.</p>
+</section>
+
+<!-- 05 -->
+<section>
+  <div class="sec-head"><span class="sec-num">05</span><h2>Mit jelent ez a tanulmány szerkezetére</h2></div>
+  <p class="lede">A v05 nem csak eredményt ad, hanem <b>átrendezi a rétegek közti munkamegosztást</b> — és ez módszertani előrelépés.</p>
+  <div class="ba">
+    <div class="ba-col old">
+      <h4>Korábban (s06 réteg)</h4>
+      <ul>
+        <li>A modell egyetlen reprezentatív vállalatot ismert.</li>
+        <li>A <b>teljes</b> KKV-hatást utólagos, kalibrált leképezéssel állítottuk elő.</li>
+        <li>Egy bíráló joggal kérdezte: „ez a modell eredménye, vagy a ti feltevésetek?"</li>
+      </ul>
+    </div>
+    <div class="ba-col new">
+      <h4>Most (s13 réteg)</h4>
+      <ul>
+        <li>A KKV/nagyvállalat <b>különbség modell-eredmény</b>.</li>
+        <li>Csak a besoroláson <b>belüli</b> szóródás (A/B/C/D kategóriák) marad kalibrált leképezés.</li>
+        <li>A „puha" réteg zsugorodott, a „kemény" nőtt — pontosan az, amit egy szakértői közönség szeret.</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- 06 -->
+<section>
+  <div class="sec-head"><span class="sec-num">06</span><h2>Korlátok és a következő lépés</h2></div>
+  <ul>
+    <li><b>Az átgyűrűzési súlyok kalibráltak, nem becsültek.</b> A t<sup>sov</sup> és t<sup>bank</sup> értékek (0,25/0,10 és 0,60/0,30) a modellválasztási javaslatból származó, irodalmi nagyságrendek. Az MNB új-szerződéses kamatstatisztikájából lehetne őket empirikusan megalapozni — ez nyitott.</li>
+    <li><b>A vertikális link erősségének izolálása.</b> Van előjelzésünk (a link kb. duplázza a hatást), de rendes érzékenységi protokollal (s<sub>kkv</sub> „be/ki" és fokozatosan) még nincs végigmérve. <b>Ez a következő lépés.</b></li>
+    <li><b>Az s<sub>kkv</sub> = 0,20 irodalmi becslés</b> — a pontos KKV-input arányt a KSH ágazati kapcsolatok mérlegéből (input-output tábla) kell pótolni.</li>
+    <li><b>A KKV teljes kibocsátásának hosszú távú útja</b> a reálárfolyam-csatorna miatt más irányú, mint a beszállítói csatorna. Diagnosztizáltuk (a fogyasztási tag dominál), a JV becslésének tulajdonsága — de a tanulmányban magyarázni kell, ha ezt a pályát is közöljük.</li>
+  </ul>
+</section>
+
+<!-- 07 -->
+<section>
+  <div class="sec-head"><span class="sec-num">07</span><h2>Fogalommagyarázat</h2></div>
+  <p class="lede">A v05-höz szükséges fogalmak — a szegmentálási layer fogalomtárát egészíti ki (nem ismétli).</p>
+
+  <dl class="gl">
+    <dt>Szuverén prémium <code>sov</code></dt>
+    <dd>Az állampapír-hozam felára a „biztonságos" referenciához (német Bund) képest. Ma ~350 bp; euró-belépéssel a szlovák/horvát szintre konvergálhat. <b>Miért érdekes:</b> a bankok forrásköltségének egyik horgonya — ha az állam drágán hitelez, a bank is drágábban.</dd>
+
+    <dt>Banki forrásköltség-csatorna <code>bank</code></dt>
+    <dd>Ha egy magyar bank forintban hitelez, de eurós forrást szerez, fedeznie kell az árfolyamkockázatot — ennek költsége a <b>swap-bázis</b> (ma 50–100 bp). Euró-bevezetéssel ez <b>egy csapásra eltűnik</b>, mert nincs mit fedezni. Ezért nyílik ez a csatorna csak a belépés pillanatában, nem előbb.</dd>
+
+    <dt>Átgyűrűzési súly (transzmisszió) <code>t<sup>sov</sup>, t<sup>bank</sup></code></dt>
+    <dd>Azt mondja meg, hogy egy 100 bp-os prémium-csökkenésből <b>mennyi érkezik meg</b> a vállalat hitelkamatába. Nem 100%, mert a bankrendszer marzsa, versenyhelyzete, kockázatkezelése közbeszól. Nálunk szegmensenként eltér — ez a v05 kulcsfeltevése.</dd>
+
+    <dt>Kamatunió-rezsimváltás <code>uni</code></dt>
+    <dd>Az euró-belépés monetáris tartalma: megszűnik az önálló kamatpolitika (a közös euró-kamat érvényes) és megszűnik az árfolyam mint alkalmazkodási eszköz. Modellben egy 0/1 kapcsoló, ami a belépés negyedévében váltja át a monetáris blokk egyenleteit.</dd>
+
+    <dt>Anticipált pálya (perfect foresight)</dt>
+    <dd>Olyan szimuláció, ahol a szereplők <b>előre ismerik</b> a jövőbeli események teljes pályáját, és emiatt már a bejelentéskor alkalmazkodnak. Ez az euró-belépés helyes modellezése — ellentétben egy „váratlan sokkal", amit senki nem látott előre. <b>Következmény:</b> a hatások egy része már a belépés <em>előtt</em> jelentkezik.</dd>
+
+    <dt>ERM-II szakasz</dt>
+    <dd>A belépést megelőző (legalább kétéves) árfolyam-mechanizmus, amikor a forint már szűk sávban mozog az euróhoz. A modellben ez a q1–q12 időszak, amikor a szuverén prémium fokozatosan csökken (a piac beárazza a konvergenciát), de a banki csatorna még zárva van.</dd>
+
+    <dt>Külső egyensúly zárása <code>ν<sub>unió</sub></code></dt>
+    <dd>Technikai, de fontos: egy kis nyitott gazdaság modelljében kell egy mechanizmus, ami megakadályozza, hogy az ország végtelenül eladósodjon a külföld felé. Ez jellemzően úgy működik, hogy a külső finanszírozás drágul, ha nő az eladósodás — a ν a „drágulás" érzékenységét méri. <b>Ha túl gyenge, a modell elszáll</b> (lásd 04. pont).</dd>
+
+    <dt>Csúcshatás vs. steady state</dt>
+    <dd>A <b>csúcshatás</b> az átmeneti pálya legnagyobb kilengése (nálunk a 13. negyedév). A <b>steady state</b> az új hosszú távú egyensúly, ahová a rendszer beáll. A pénzügyi akcelerátor csak az átmenetben működik, ezért a szegmens-különbséget a csúcson kell mérni — a steady state-ben definíció szerint elenyészik.</dd>
+
+    <dt>Bázispont (bp)</dt>
+    <dd>A százalékpont századrésze: 100 bp = 1 százalékpont. A kamat- és felárváltozásokat ebben szokás mérni. Egy 100 bp-os felár-csökkenés azt jelenti, hogy a cég 1 százalékponttal kedvezőbben hitelez.</dd>
+
+    <dt>Regressziós védőháló (füstteszt)</dt>
+    <dd>Automatikus ellenőrzések, amiket minden futás után lefuttatunk, hogy egy korábban javított hiba ne csúszhasson vissza észrevétlenül. A v05 után beépült egy plauzibilitási teszt a reálárfolyamra — ha valaki visszaállítaná a hibás zárást, azonnal kiderül. Jelenleg 19 ellenőrzés fut, mind zöld.</dd>
+  </dl>
+</section>
+
+<footer>
+  Belső modell-dokumentáció · Pécs-Baranyai KIK · euró/KKV DSGE projekt · jv_dsge_v05.mod · a számok a modell közvetlen kimenetéből (t21, t22 táblák) · Ctrl+P a nyomtatáshoz
+</footer>
+
+</div>
