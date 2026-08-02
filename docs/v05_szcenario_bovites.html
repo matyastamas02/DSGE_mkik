@@ -135,7 +135,7 @@ footer{margin-top:60px;padding-top:20px;border-top:1px solid var(--rule);font-si
 
 <div class="verdict">
   <span class="tag">A bővítés egy mondatban</span>
-  <p>A szuverén és banki prémium-csökkenés <b>szegmensenként eltérő súllyal</b> lép be a modellbe, a belépéskor <b>kamatunió-rezsimváltás</b> történik, és mindez <b>anticipált pályaként</b> fut — az eredmény: a KKV hitelfelára <b>100 bp-tal</b> javul a nagyvállalat <b>45 bp-jával</b> szemben.</p>
+  <p>A szuverén és banki prémium-csökkenés <b>szegmensenként eltérő súllyal</b> lép be a modellbe, a belépéskor <b>kamatunió-rezsimváltás</b> történik, és mindez <b>anticipált pályaként</b> fut — az eredmény: a KKV hitelfelára <b>44 bp-tal</b> javul a nagyvállalat <b>28 bp-jával</b> szemben, és a vertikális link a teljes GDP-hatás <b>42%-át</b> adja.</p>
 </div>
 
 <!-- 01 -->
@@ -215,20 +215,21 @@ h<sub>dx</sub> = xx − μ<sub>vert</sub>·(mc<sub>d</sub> − mcx)&nbsp;&nbsp;&
   <p class="lede">A csúcshatás a 13. negyedévben (a belépés pillanatában) jelentkezik, mert ekkor esik egybe a szuverén konvergencia vége a banki csatorna kinyílásával.</p>
 
   <div class="data">
-    <span class="big">−100 vs. −45 bp</span>
-    <p>Az alappályán a <b>KKV hitelfelára 100,3 bázisponttal</b> csökken, a nagyvállalaté csak <b>45,1 bp-tal</b> — a KKV <b>több mint kétszeres</b> nyereséget realizál. Ez már <b>modell-eredmény</b>, nem utólagos leképezés.</p>
+    <span class="big">−44 vs. −28 bp</span>
+    <p>Az alappályán a <b>KKV hitelfelára 43,6 bázisponttal</b> csökken, a nagyvállalaté <b>27,5 bp-tal</b> — a KKV <b>1,6-szoros</b> nyereséget realizál. Ez már <b>modell-eredmény</b>, nem utólagos leképezés.</p>
   </div>
 
   <div class="tw">
   <table>
     <thead><tr><th>Szcenárió</th><th>KKV-felár (csúcs)</th><th>Nagyvállalat</th><th>KKV-többlet</th><th>GDP (h. táv)</th><th>KKV-beruh.</th><th>Nagyváll. beruh.</th></tr></thead>
     <tbody>
-      <tr><td>alap</td><td class="num">−100,3 bp</td><td class="num">−45,1 bp</td><td class="num">55,3 bp</td><td class="num">+0,80%</td><td class="num">+1,63%</td><td class="num">+1,33%</td></tr>
-      <tr><td>optimista</td><td class="num">−143,8 bp</td><td class="num">−64,0 bp</td><td class="num">79,8 bp</td><td class="num">+1,07%</td><td class="num">+2,18%</td><td class="num">+1,81%</td></tr>
-      <tr><td>pesszimista</td><td class="num">−56,8 bp</td><td class="num">−26,1 bp</td><td class="num">30,8 bp</td><td class="num">+0,53%</td><td class="num">+1,08%</td><td class="num">+0,85%</td></tr>
+      <tr><td>alap</td><td class="num">−43,6 bp</td><td class="num">−27,5 bp</td><td class="num">16,1 bp</td><td class="num">+0,69%</td><td class="num">+1,51%</td><td class="num">+1,11%</td></tr>
+      <tr><td>optimista</td><td class="num">−62,7 bp</td><td class="num">−39,1 bp</td><td class="num">23,6 bp</td><td class="num">+0,93%</td><td class="num">+2,02%</td><td class="num">+1,53%</td></tr>
+      <tr><td>pesszimista</td><td class="num">−24,4 bp</td><td class="num">−15,8 bp</td><td class="num">8,6 bp</td><td class="num">+0,46%</td><td class="num">+1,00%</td><td class="num">+0,70%</td></tr>
     </tbody>
   </table>
   </div>
+  <p class="note"><b>Megjegyzés a számok korábbi verziójához:</b> egy korábbi futásban ennél nagyobb értékek szerepeltek (KKV −100 bp, nagyvállalat −45 bp). Az érzékenységi protokoll kiderítette, hogy azok egy <b>súly-inkonzisztenciából</b> származtak (lásd 04. pont), és a fenti, mérsékeltebb értékek a helyesek. A KKV-előny <em>irányát és tényét</em> a javítás nem érintette, csak a nagyságát.</p>
 
   <figure>
     <img src="../output/figures/f21_szegmens_lekepezes_v05.png" alt="A KKV és nagyvállalati hitelfelár-csökkenés a három euró-szcenárióban">
@@ -243,7 +244,7 @@ h<sub>dx</sub> = xx − μ<sub>vert</sub>·(mc<sub>d</sub> − mcx)&nbsp;&nbsp;&
   <h3>Három megállapítás, amit érdemes kiemelni</h3>
   <ol>
     <li><b>A méret-aszimmetria mindhárom szcenárióban fennáll</b> — a KKV-beruházás tartósan a nagyvállalati fölött. Nem egy szerencsés paraméterezés eredménye.</li>
-    <li><b>A vertikális link kb. megduplázza az aggregált hatást:</b> a GDP-hatás +0,40% a link nélkül, +0,80% a linkkel. Vagyis a beszállítói kapcsolat nem díszítés, hanem a hatás felét adja.</li>
+    <li><b>A vertikális link a hatás 42%-át adja:</b> a GDP-hatás +0,405% a link nélkül (s<sub>kkv</sub>=0 ellenpróba), +0,694% a linkkel. Vagyis a beszállítói kapcsolat nem díszítés — nélküle a becsült hatás bő harmadával kisebb lenne.</li>
     <li><b>Pozitív összeg:</b> a két szereplő egyetlen negyedévben sem mozog ellentétes irányba — nincs nyertes-vesztes reallokáció.</li>
   </ol>
 
@@ -282,6 +283,33 @@ KKV olcsóbb hitel → olcsóbb KKV-input → olcsóbb export → több export<b
   </div>
   <p class="note"><b>Miért a 0,25:</b> mert a „platón" van — a 0,25 → 0,5 lépés már alig mozdít, tehát az eredmény <b>nem érzékeny</b> a paraméter pontos értékére. Ha a meredek szakaszon választanánk, az önkényes lenne.</p>
   <p class="note"><b>A validáció, ami megnyugtató:</b> ha a vertikális linket <em>kikapcsoljuk</em>, a GDP-hatás <b>+1,07%</b> — ami szinte pontosan a szegmentálás nélküli korábbi modell eredménye (<b>+1,09%</b>). Vagyis a modell konzisztens, és a probléma kizárólag a zárás erőssége volt, nem a szegmentálás. A füstteszt mostantól <b>regressziós védőhálót</b> tartalmaz: ha valaki visszaállítaná a hibás értéket, a reálárfolyam-plauzibilitási teszt automatikusan elkapná.</p>
+
+  <h3>A második hiba: súly-inkonzisztencia (az érzékenységi teszt fogta meg)</h3>
+  <div class="warn">
+    <h4>⚠ Két súly ugyanazt írta le — egymástól függetlenül</h4>
+    <p>Az <code>s<sub>kkv</sub></code> (az export költségének mekkora része KKV-input) és a <code>shd<sub>v</sub></code> (a KKV-kibocsátás mekkora része megy az exportőrhöz) <b>ugyanazt a kereskedelmi kapcsolatot írja le két oldalról</b> — mégis külön-külön voltak megadva. Következmény: az alapkalibrációnál a KKV-kibocsátásnak <b>115%-át</b> az export-input tag adta, ami közgazdaságilag lehetetlen.</p>
+  </div>
+  <p><b>A javítás:</b> a <code>shd<sub>v</sub></code> mostantól <b>származtatott</b>: <code>shd<sub>v</sub> = s<sub>kkv</sub> × (export/KKV-kibocsátás arány)</code>, a többi felhasználási súly pedig arányosan igazodik. Ezért mérséklődtek a számok (a KKV-felár −100 → −44 bp), de a mechanizmus és az irány változatlan.</p>
+
+  <h3>Amit az érzékenységi teszt még feltárt: a modell érvényességi sávja</h3>
+  <p>Az <code>s<sub>kkv</sub></code>-t 0-tól felfelé végigmérve kiderült, hogy a modellnek <b>szingularitása (pólusa) van <code>s<sub>kkv</sub> ≈ 0,25</code>-nél</b>:</p>
+  <div class="tw">
+  <table>
+    <thead><tr><th>s<sub>kkv</sub></th><th>GDP</th><th>KKV-felár (csúcs)</th><th>Értékelés</th></tr></thead>
+    <tbody>
+      <tr><td class="num">0,00</td><td class="num">+0,405%</td><td class="num">−40,2 bp</td><td>link nélküli ellenpróba</td></tr>
+      <tr><td class="num">0,10</td><td class="num">+0,460%</td><td class="num">−37,9 bp</td><td>sima, monoton</td></tr>
+      <tr><td class="num"><b>0,20</b></td><td class="num"><b>+0,694%</b></td><td class="num"><b>−43,6 bp</b></td><td><b>alapkalibráció</b> (a pólus vonzásában)</td></tr>
+      <tr><td class="num">0,24</td><td class="num">+1,607%</td><td class="num">+501 bp</td><td>pólus-közeli, nem használható</td></tr>
+      <tr><td class="num">0,26</td><td class="num">−4,247%</td><td class="num">−509 bp</td><td>póluson túl, értelmezhetetlen</td></tr>
+    </tbody>
+  </table>
+  </div>
+  <p class="note"><b>Miért van pólus:</b> a vertikális link <em>kétirányú</em> visszacsatolást hoz létre — a KKV inputot ad az exportnak, az export kereslete pedig a KKV-kibocsátás része. Elég erős linknél ez a hurok „átfordul". <b>A megoldó egyébként mindenhol konvergál</b> (reziduum ~10<sup>−17</sup>), tehát nem numerikus hiba, hanem szerkezeti tulajdonság. <b>Következmény:</b> a KSH IO-tábla ellenőrzése <b>prioritás</b> — ha a valódi KKV-input arány 0,20 fölött lenne, a modellt át kell strukturálni (pl. explicit CES-input-aggregátorral, ami nem hoz be pólushoz vezető hurkot).</p>
+  <figure>
+    <img src="../output/figures/f22_sens_skkv.png" alt="Az s_kkv érzékenységi vizsgálat: a link hozzájárulása és a szegmens-aszimmetria">
+    <figcaption>f22 — bal: a vertikális link GDP-hozzájárulása az érvényes sávon; jobb: a szegmens-aszimmetria stabilitása. (src/model/sens_skkv_v05.m)</figcaption>
+  </figure>
 </section>
 
 <!-- 05 -->
@@ -313,8 +341,8 @@ KKV olcsóbb hitel → olcsóbb KKV-input → olcsóbb export → több export<b
   <div class="sec-head"><span class="sec-num">06</span><h2>Korlátok és a következő lépés</h2></div>
   <ul>
     <li><b>Az átgyűrűzési súlyok kalibráltak, nem becsültek.</b> A t<sup>sov</sup> és t<sup>bank</sup> értékek (0,25/0,10 és 0,60/0,30) a modellválasztási javaslatból származó, irodalmi nagyságrendek. Az MNB új-szerződéses kamatstatisztikájából lehetne őket empirikusan megalapozni — ez nyitott.</li>
-    <li><b>A vertikális link erősségének izolálása.</b> Van előjelzésünk (a link kb. duplázza a hatást), de rendes érzékenységi protokollal (s<sub>kkv</sub> „be/ki" és fokozatosan) még nincs végigmérve. <b>Ez a következő lépés.</b></li>
-    <li><b>Az s<sub>kkv</sub> = 0,20 irodalmi becslés</b> — a pontos KKV-input arányt a KSH ágazati kapcsolatok mérlegéből (input-output tábla) kell pótolni.</li>
+    <li><b>A vertikális link erősségének izolálása — ELVÉGEZVE.</b> Az érzékenységi protokoll (04. pont) lefutott: a link a hatás 42%-át adja, és két hibát is feltárt (súly-inkonzisztencia, szingularitás). A modell érvényességi sávja dokumentált.</li>
+    <li><b>Az s<sub>kkv</sub> = 0,20 irodalmi becslés — és most már tudjuk, hogy KRITIKUS.</b> A pontos KKV-input arányt a KSH ágazati kapcsolatok mérlegéből (input-output tábla) kell pótolni, mert a paraméter a pólus közelében van: ha a valódi érték 0,20 fölött van, a modell átstrukturálása szükséges. <b>Ez a legfontosabb nyitott feladat.</b></li>
     <li><b>A KKV teljes kibocsátásának hosszú távú útja</b> a reálárfolyam-csatorna miatt más irányú, mint a beszállítói csatorna. Diagnosztizáltuk (a fogyasztási tag dominál), a JV becslésének tulajdonsága — de a tanulmányban magyarázni kell, ha ezt a pályát is közöljük.</li>
   </ul>
 </section>

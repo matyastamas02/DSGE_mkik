@@ -248,18 +248,23 @@ három forgatókönyv). Az alappálya csúcshatásán (13. negyedév = a belép�
 
 | Szcenárió | KKV-felár | Nagyvállalat | KKV-többlet | GDP (h.táv) |
 |---|---|---|---|---|
-| alap | **−100,3 bp** | −45,1 bp | 55,3 bp | +0,80% |
-| optimista | **−143,8 bp** | −64,0 bp | 79,8 bp | +1,07% |
-| pesszimista | **−56,8 bp** | −26,1 bp | 30,8 bp | +0,53% |
+| alap | **−43,6 bp** | −27,5 bp | 16,1 bp | +0,69% |
+| optimista | **−62,7 bp** | −39,1 bp | 23,6 bp | +0,93% |
+| pesszimista | **−24,4 bp** | −15,8 bp | 8,6 bp | +0,46% |
 
-**A mondat, amit érdemes kétszer is elmondani:** *„A KKV hitelfelára több
-mint kétszer annyit javul, mint a nagyvállalaté — és ez már nem
+**A mondat, amit érdemes kétszer is elmondani:** *„A KKV hitelfelára
+másfélszer annyit javul, mint a nagyvállalaté — és ez már nem
 feltételezés, hanem a modell eredménye."*
 
 Továbbá: a **méret-aszimmetria mindhárom szcenárióban** fennáll (a
-KKV-beruházás tartósan a nagyvállalati fölött: alap +1,63% vs. +1,33%),
-és a **vertikális link kb. megduplázza az aggregált hatást** (GDP +0,40%
-link nélkül → +0,80% linkkel).
+KKV-beruházás tartósan a nagyvállalati fölött: alap +1,51% vs. +1,11%),
+és a **vertikális link a hatás 42%-át adja** (GDP +0,405% link nélkül →
++0,694% linkkel — érzékenységi protokollal mérve).
+
+> **Ha valaki korábbi számokat látott:** egy előző futásban nagyobb
+> értékek szerepeltek (KKV −100 bp). Az érzékenységi teszt kiderítette,
+> hogy azok súly-inkonzisztenciából jöttek; a fenti értékek a helyesek.
+> A KKV-előny *ténye és iránya* nem változott, csak a nagysága.
 
 **Módszertani előrelépés, amit érdemes kiemelni:** korábban a teljes
 KKV-hatást utólagos „kalibrált leképezéssel" állítottuk elő. Most a
@@ -282,14 +287,31 @@ természeténél fogva az átmeneti szakaszban él — és ott is a
 legfontosabb: ez a belépés körüli 3–5 év, amikor a szakpolitikai
 döntések születnek.
 
-**Egy hibát is elkaptunk, és ezt vállalni kell** (erősíti a hitelességet):
-a v05 első futása implauzibilis eredményt adott (export +12,9%,
-reálárfolyam +34,7%, külső pozíció −25% GDP), mert a korábbi verzióból
-örökölt külső-egyensúlyi zárás túl gyenge volt a vertikális link
-önerősítő köre mellett. Diagnosztikával újrakalibráltuk (a reálárfolyam
-így +4,1%), és **validáltuk**: a linket kikapcsolva a GDP +1,07%, ami
-egyezik a szegmentálás nélküli korábbi modell +1,09%-ával. A füstteszt
-mostantól regressziós védőhálót tartalmaz erre a paraméterre.
+**KÉT hibát is elkaptunk, és ezt vállalni kell** (ez erősíti a
+hitelességet — a modellezés minősége nem azon áll, hogy elsőre minden jó,
+hanem hogy megtaláljuk és dokumentáljuk a hibákat):
+
+1. **A külső egyensúly zárása** túl gyenge volt: a v05 első futása
+   implauzibilis eredményt adott (export +12,9%, reálárfolyam +34,7%,
+   külső pozíció −25% GDP). Diagnosztikával újrakalibráltuk (a
+   reálárfolyam így +4,1%), és **validáltuk**: a linket kikapcsolva a GDP
+   +1,07%, ami egyezik a szegmentálás nélküli korábbi modell +1,09%-ával.
+
+2. **Súly-inkonzisztencia** (ezt az érzékenységi teszt fogta meg): két
+   paraméter ugyanazt a kereskedelmi kapcsolatot írta le — az egyik azt,
+   hogy az export költségének mekkora része KKV-input, a másik azt, hogy
+   a KKV-kibocsátás mekkora része megy az exportőrhöz —, mégis
+   függetlenül voltak megadva. Emiatt a KKV-kibocsátás 115%-át adta az
+   export-input tag, ami lehetetlen. Javítva: a második paraméter most
+   **származtatott** az elsőből. Ezért mérséklődtek a számok
+   (KKV-felár −100 → −44 bp), de az irány és a mechanizmus változatlan.
+
+**És egy fontos korlát, amit ki kell mondani:** a modellnek
+**szingularitása van** a beszállítói arány ≈0,25-ös értékénél (a 0,24-nél
+a felár már +501 bp-ra ugrik, a 0,26-nál a GDP −4,2%). Az alapkalibráció
+(0,20) érvényes, de a pólus vonzásában van — ezért a **KSH input-output
+tábla ellenőrzése prioritás**. A füstteszt mostantól regressziós
+védőhálót tartalmaz mindkét javításra.
 
 ---
 
@@ -360,9 +382,17 @@ export-adat). A horizontális versenyt másodlagos elemként meg lehet
 tartani; a fő szerkezet a beszállítói lánc, mert azt mutatja az adat.
 
 **„Honnan a 0,20-as beszállítói arány?”**
-Irodalmi/becsült induló érték, tudatosan érzékenységi paraméterként —
-a pontosat a KSH ágazati kapcsolatok mérlegéből pótoljuk. A fő
-eredmények irányát nem az érték nagysága dönti el, hanem a link léte.
+Irodalmi/becsült induló érték, és **végigmértük érzékenységi
+protokollal**. Két dolgot tudunk: (a) a link a hatás 42%-át adja
+(0-tól 0,20-ig monoton nő a hatás), és (b) a modellnek **pólusa van
+0,25-nél**, ezért a 0,20 érvényes, de a pólus vonzásában van. Emiatt a
+KSH input-output tábla ellenőrzése **prioritás**: ha a valódi arány 0,20
+fölött van, a modellt át kell strukturálni. Ezt nyíltan vállaljuk.
+
+**„Mi történik, ha a link nélkül futtatod?”**
+GDP +0,405% a +0,694% helyett — vagyis a beszállítói kapcsolat nélkül a
+becsült hatás bő harmadával kisebb. Ez az `s_kkv=0` ellenpróba, amit
+külön lefuttattunk (a mennyiségi csatornát is kikapcsolva).
 
 **„Nem manipuláltátok, hogy pozitív jöjjön ki?”**
 Nem — épp azért választottuk ezt a szerkezetet, hogy az eredmény
@@ -383,7 +413,7 @@ egyszerűsítettünk a robusztus verzióra.
 A KKV-fókuszt teszi modellezhetővé, és egy pozitív összegű, szakpolitikai-
 lag használható üzenetet ad: az egészséges KKV-finanszírozás az egész
 exportláncot versenyképesebbé teszi. Számszerűen: a KKV hitelfelára
-100 bp-tal javul a nagyvállalat 45 bp-jával szemben (alappálya, csúcs).
+44 bp-tal javul a nagyvállalat 28 bp-jával szemben (alappálya, csúcs).
 
 **„Miért a csúcshatás, miért nem a hosszú táv?”**
 Mert a BGG-akcelerátor átmeneti mechanizmus: a nettó vagyon visszaáll,
@@ -414,8 +444,9 @@ paraméter-választás a „plató" elején van (nem érzékeny a pontos érték
    összegű eredményig. (6. pont)
 6. **(3 perc) Az eredmények.** Először az `f19` (mechanizmus működik:
    együttmozgás + aszimmetria), aztán az `f21` és a táblázat: **a KKV
-   hitelfelára −100 bp vs. a nagyvállalat −45 bp** a tényleges
-   euró-szcenárióban. Említsd a két árnyalatot proaktívan. (8.1–8.2)
+   hitelfelára −44 bp vs. a nagyvállalat −28 bp** a tényleges
+   euró-szcenárióban, és a **link a hatás 42%-át adja** (`f22`).
+   Említsd a két árnyalatot proaktívan. (8.1–8.2)
 7. **(2 perc) Az alternatívák.** Röviden az öt elvetett út — főleg a
    9.2 (kipróbáltuk, BK-n bukott) és a 9.5 (körkörös). Ez mutatja, hogy
    átgondolt a döntés. (9. pont)
@@ -428,6 +459,6 @@ győztest és vesztest csinál, hanem az egész exportláncot erősíti, ha a
 KKV olcsóbb hitelhez jut."*
 
 **És a számszerű alátámasztás egy mondatban:**
-*„A modell szerint a KKV hitelfelára 100 bázisponttal javul a
-nagyvállalat 45 bázispontjával szemben — több mint kétszeres nyereség —,
-és ez már nem feltételezés, hanem a modell eredménye."*
+*„A modell szerint a KKV hitelfelára 44 bázisponttal javul a
+nagyvállalat 28 bázispontjával szemben — másfélszeres nyereség —, és a
+beszállítói lánc a teljes hatás 42%-át adja."*
