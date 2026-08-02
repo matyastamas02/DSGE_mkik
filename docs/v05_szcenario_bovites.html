@@ -135,7 +135,7 @@ footer{margin-top:60px;padding-top:20px;border-top:1px solid var(--rule);font-si
 
 <div class="verdict">
   <span class="tag">A bővítés egy mondatban</span>
-  <p>A szuverén és banki prémium-csökkenés <b>szegmensenként eltérő súllyal</b> lép be a modellbe, a belépéskor <b>kamatunió-rezsimváltás</b> történik, és mindez <b>anticipált pályaként</b> fut — az eredmény: a KKV hitelfelára <b>44 bp-tal</b> javul a nagyvállalat <b>28 bp-jával</b> szemben, és a vertikális link a teljes GDP-hatás <b>42%-át</b> adja.</p>
+  <p>A szuverén és banki prémium-csökkenés <b>szegmensenként eltérő súllyal</b> lép be a modellbe, a belépéskor <b>kamatunió-rezsimváltás</b> történik, és mindez <b>anticipált pályaként</b> fut — az eredmény: a KKV hitelfelára <b>39 bp-tal</b> javul a nagyvállalat <b>26 bp-jával</b> szemben, a beruházásban pedig <b>1,64-szeres</b> az aszimmetria.</p>
 </div>
 
 <!-- 01 -->
@@ -215,21 +215,21 @@ h<sub>dx</sub> = xx − μ<sub>vert</sub>·(mc<sub>d</sub> − mcx)&nbsp;&nbsp;&
   <p class="lede">A csúcshatás a 13. negyedévben (a belépés pillanatában) jelentkezik, mert ekkor esik egybe a szuverén konvergencia vége a banki csatorna kinyílásával.</p>
 
   <div class="data">
-    <span class="big">−44 vs. −28 bp</span>
-    <p>Az alappályán a <b>KKV hitelfelára 43,6 bázisponttal</b> csökken, a nagyvállalaté <b>27,5 bp-tal</b> — a KKV <b>1,6-szoros</b> nyereséget realizál. Ez már <b>modell-eredmény</b>, nem utólagos leképezés.</p>
+    <span class="big">−39 vs. −26 bp</span>
+    <p>Az alappályán a <b>KKV hitelfelára 39,1 bázisponttal</b> csökken, a nagyvállalaté <b>25,6 bp-tal</b>. A beruházásban az aszimmetria még élesebb: <b>+1,35% vs. +0,82%</b>, azaz <b>1,64-szeres</b>. Ez már <b>modell-eredmény</b>, nem utólagos leképezés.</p>
   </div>
 
   <div class="tw">
   <table>
     <thead><tr><th>Szcenárió</th><th>KKV-felár (csúcs)</th><th>Nagyvállalat</th><th>KKV-többlet</th><th>GDP (h. táv)</th><th>KKV-beruh.</th><th>Nagyváll. beruh.</th></tr></thead>
     <tbody>
-      <tr><td>alap</td><td class="num">−43,6 bp</td><td class="num">−27,5 bp</td><td class="num">16,1 bp</td><td class="num">+0,69%</td><td class="num">+1,51%</td><td class="num">+1,11%</td></tr>
-      <tr><td>optimista</td><td class="num">−62,7 bp</td><td class="num">−39,1 bp</td><td class="num">23,6 bp</td><td class="num">+0,93%</td><td class="num">+2,02%</td><td class="num">+1,53%</td></tr>
-      <tr><td>pesszimista</td><td class="num">−24,4 bp</td><td class="num">−15,8 bp</td><td class="num">8,6 bp</td><td class="num">+0,46%</td><td class="num">+1,00%</td><td class="num">+0,70%</td></tr>
+      <tr><td>alap</td><td class="num">−39,1 bp</td><td class="num">−25,6 bp</td><td class="num">13,6 bp</td><td class="num">+0,43%</td><td class="num">+1,35%</td><td class="num">+0,82%</td></tr>
+      <tr><td>optimista</td><td class="num">−54,8 bp</td><td class="num">−35,7 bp</td><td class="num">19,1 bp</td><td class="num">+0,58%</td><td class="num">+1,81%</td><td class="num">+1,15%</td></tr>
+      <tr><td>pesszimista</td><td class="num">−23,5 bp</td><td class="num">−15,5 bp</td><td class="num">8,0 bp</td><td class="num">+0,27%</td><td class="num">+0,89%</td><td class="num">+0,50%</td></tr>
     </tbody>
   </table>
   </div>
-  <p class="note"><b>Megjegyzés a számok korábbi verziójához:</b> egy korábbi futásban ennél nagyobb értékek szerepeltek (KKV −100 bp, nagyvállalat −45 bp). Az érzékenységi protokoll kiderítette, hogy azok egy <b>súly-inkonzisztenciából</b> származtak (lásd 04. pont), és a fenti, mérsékeltebb értékek a helyesek. A KKV-előny <em>irányát és tényét</em> a javítás nem érintette, csak a nagyságát.</p>
+  <p class="note"><b>A számok útja — érdemes ismerni, mert kérdezhetik:</b> egy korai futásban jelentősen nagyobb értékek szerepeltek (KKV −100 bp, GDP +0,80%). Két javítás mérsékelte őket: (a) egy <b>súly-inkonzisztencia</b> (04. pont), majd (b) az <code>s<sub>kkv</sub></code> paraméter <b>empirikus megalapozása input-output adatból</b> (05. pont) — kiderült, hogy 4-szeresen túl volt kalibrálva. A fenti értékek az empirikusan megalapozott, védhető változat. <b>A KKV-előny ténye és iránya egyik javítás során sem változott</b> — sőt a beruházási aszimmetria erősödött.</p>
 
   <figure>
     <img src="../output/figures/f21_szegmens_lekepezes_v05.png" alt="A KKV és nagyvállalati hitelfelár-csökkenés a három euró-szcenárióban">
@@ -314,7 +314,62 @@ KKV olcsóbb hitel → olcsóbb KKV-input → olcsóbb export → több export<b
 
 <!-- 05 -->
 <section>
-  <div class="sec-head"><span class="sec-num">05</span><h2>Mit jelent ez a tanulmány szerkezetére</h2></div>
+  <div class="sec-head"><span class="sec-num">05</span><h2>Az <code>s<sub>kkv</sub></code> empirikus megalapozása — input-output adatból</h2></div>
+  <p class="lede">A legfontosabb kalibrációs paraméter eddig irodalmi becslés volt. Mivel az érzékenységi teszt kimutatta, hogy a modellnek pólusa van 0,25-nél, muszáj volt megnézni: <b>mennyi a valóságban?</b></p>
+
+  <p><b>Forrás:</b> Eurostat magyar input-output táblái (a KSH szolgáltatja be; a ksh.hu közvetlenül nem volt elérhető). Módszer: az IO-táblából a köztes felhasználás hazai–import megoszlása, a nemzeti számlákból az output szintje — script: <code>src/07_io_hazai_input_arany.py</code>.</p>
+
+  <div class="tw">
+  <table>
+    <thead><tr><th>Ágazat</th><th>Hazai arány a köztes felhasználásban</th><th>Köztes / output</th><th>s<sub>kkv</sub> felső korlát</th></tr></thead>
+    <tbody>
+      <tr><td><b>Autóipar</b></td><td class="num">6,0%</td><td class="num">0,846</td><td class="num"><b>0,050</b></td></tr>
+      <tr><td><b>Elektronika</b></td><td class="num">4,2%</td><td class="num">0,843</td><td class="num"><b>0,035</b></td></tr>
+      <tr><td>Elektromos berendezés</td><td class="num">9,6%</td><td class="num">0,813</td><td class="num">0,078</td></tr>
+      <tr><td>Gépgyártás</td><td class="num">9,2%</td><td class="num">—</td><td class="num">0,069</td></tr>
+      <tr><td>Fémfeldolgozás</td><td class="num">8,9%</td><td class="num">—</td><td class="num">0,059</td></tr>
+      <tr><td>Vegyipar</td><td class="num">27,1%</td><td class="num">0,736</td><td class="num">0,199</td></tr>
+      <tr><td>Teljes gazdaság</td><td class="num">10,1%</td><td class="num">0,572</td><td class="num">0,058</td></tr>
+      <tr><td colspan="3"><b>Export-mag átlaga (autó, elektronika, el. ber.)</b></td><td class="num"><b>0,054</b></td></tr>
+    </tbody>
+  </table>
+  </div>
+
+  <div class="data">
+    <span class="big">6% hazai</span>
+    <p>A magyar <b>autóipar</b> köztes felhasználásának mindössze <b>6,0%-a hazai</b> eredetű — az elektronikában 4,2%. Ez a „duális gazdaság" jelenség kvantitatív megjelenése: az FDI-vezérelt exportszektor <b>gyenge hazai beszállítói integrációval</b> működik.</p>
+  </div>
+
+  <h3>Mit jelent ez a modellre — két hír</h3>
+  <div class="ba">
+    <div class="ba-col new">
+      <h4>✓ Jó hír</h4>
+      <ul>
+        <li>A valós érték (0,035–0,05) <b>messze a pólus (0,25) alatt</b> van.</li>
+        <li>Tehát a <b>modell szerkezete érvényes</b> — nem kell átstrukturálni, ahogy a legrosszabb esetben kellett volna.</li>
+        <li>Bónusz: a realisztikus, gyengébb link mellett a KKV-kibocsátás pályája <b>pozitívba fordult</b> (+0,13%, korábban −0,16%) — eltűnt egy korábbi torzítás.</li>
+        <li>És a <b>beruházási aszimmetria erősödött</b>: 1,64-szeres (+1,35% vs. +0,82%).</li>
+      </ul>
+    </div>
+    <div class="ba-col old">
+      <h4>⚠ Kellemetlen hír</h4>
+      <ul>
+        <li>A korábbi 0,20-as kalibráció <b>4-szeresen túlbecsülte</b> a linket.</li>
+        <li>A vertikális link hozzájárulása így <b>nem a hatás 42%-a, hanem ~5%-a</b> (GDP +0,405% link nélkül → +0,426% a valós paraméterrel).</li>
+        <li>Az aggregált GDP-hatás +0,69% → <b>+0,43%</b>.</li>
+        <li>A „pozitív összegű lánc" mechanizmus <b>létezik, de vékony</b> — a magyar valóságban a beszállítói kapcsolat gyenge.</li>
+      </ul>
+    </div>
+  </div>
+
+  <p class="note"><b>Fontos módszertani pont:</b> az IO-tábla <b>ágazati, nem méret szerinti</b> bontású — a fenti számok tehát <em>minden cégméretre</em> vonatkoznak, és az <code>s<sub>kkv</sub></code> (kifejezetten a <b>KKV</b>-input) ennek csak egy része. A 0,05-ös kalibráció így már <b>konzervatív felső becslés</b>; a tényleges érték inkább 0,025 körül lehet.</p>
+
+  <p class="note"><b>És ez maga is eredmény, nem csak korrekció.</b> A tanulmány szempontjából érdemi megállapítás, hogy a magyar exportszektor hazai beszállítói integrációja ilyen gyenge — ez szakpolitikai üzenet: <em>a beszállítói lánc erősítése önálló, mérhető gazdaságpolitikai cél lehet, mert jelenleg az euró-hatás nem tud rajta érdemben tovagyűrűzni.</em></p>
+</section>
+
+<!-- 06 -->
+<section>
+  <div class="sec-head"><span class="sec-num">06</span><h2>Mit jelent ez a tanulmány szerkezetére</h2></div>
   <p class="lede">A v05 nem csak eredményt ad, hanem <b>átrendezi a rétegek közti munkamegosztást</b> — és ez módszertani előrelépés.</p>
   <div class="ba">
     <div class="ba-col old">
@@ -336,20 +391,21 @@ KKV olcsóbb hitel → olcsóbb KKV-input → olcsóbb export → több export<b
   </div>
 </section>
 
-<!-- 06 -->
+<!-- 07 -->
 <section>
-  <div class="sec-head"><span class="sec-num">06</span><h2>Korlátok és a következő lépés</h2></div>
+  <div class="sec-head"><span class="sec-num">07</span><h2>Korlátok és a következő lépés</h2></div>
   <ul>
-    <li><b>Az átgyűrűzési súlyok kalibráltak, nem becsültek.</b> A t<sup>sov</sup> és t<sup>bank</sup> értékek (0,25/0,10 és 0,60/0,30) a modellválasztási javaslatból származó, irodalmi nagyságrendek. Az MNB új-szerződéses kamatstatisztikájából lehetne őket empirikusan megalapozni — ez nyitott.</li>
-    <li><b>A vertikális link erősségének izolálása — ELVÉGEZVE.</b> Az érzékenységi protokoll (04. pont) lefutott: a link a hatás 42%-át adja, és két hibát is feltárt (súly-inkonzisztencia, szingularitás). A modell érvényességi sávja dokumentált.</li>
-    <li><b>Az s<sub>kkv</sub> = 0,20 irodalmi becslés — és most már tudjuk, hogy KRITIKUS.</b> A pontos KKV-input arányt a KSH ágazati kapcsolatok mérlegéből (input-output tábla) kell pótolni, mert a paraméter a pólus közelében van: ha a valódi érték 0,20 fölött van, a modell átstrukturálása szükséges. <b>Ez a legfontosabb nyitott feladat.</b></li>
+    <li><b>Az átgyűrűzési súlyok kalibráltak, nem becsültek.</b> A t<sup>sov</sup> és t<sup>bank</sup> értékek (0,25/0,10 és 0,60/0,30) a modellválasztási javaslatból származó, irodalmi nagyságrendek. Az MNB új-szerződéses kamatstatisztikájából lehetne őket empirikusan megalapozni — <b>ez most a legfontosabb nyitott feladat</b>, mert a fő eredményt (a KKV-előny méretét) közvetlenül ezek határozzák meg.</li>
+    <li><b>A vertikális link erősségének izolálása — ELVÉGEZVE</b> (04. pont): érzékenységi protokoll, két feltárt hiba, dokumentált érvényességi sáv.</li>
+    <li><b>Az s<sub>kkv</sub> empirikus megalapozása — ELVÉGEZVE</b> (05. pont): IO-adatból 0,05, a korábbi 0,20 helyett.</li>
+    <li><b>A KKV-rész leválasztása az IO-adatból</b> — az IO ágazati bontású, ezért a 0,05 felső korlát. Egy méret szerinti bontás (pl. az Opten-panel és a KSH méretstatisztika kombinálásával) pontosítaná, hogy ebből mennyi a valódi KKV-beszállítás. Ez már finomhangolás, nem érinti a fő következtetést.</li>
     <li><b>A KKV teljes kibocsátásának hosszú távú útja</b> a reálárfolyam-csatorna miatt más irányú, mint a beszállítói csatorna. Diagnosztizáltuk (a fogyasztási tag dominál), a JV becslésének tulajdonsága — de a tanulmányban magyarázni kell, ha ezt a pályát is közöljük.</li>
   </ul>
 </section>
 
-<!-- 07 -->
+<!-- 08 -->
 <section>
-  <div class="sec-head"><span class="sec-num">07</span><h2>Fogalommagyarázat</h2></div>
+  <div class="sec-head"><span class="sec-num">08</span><h2>Fogalommagyarázat</h2></div>
   <p class="lede">A v05-höz szükséges fogalmak — a szegmentálási layer fogalomtárát egészíti ki (nem ismétli).</p>
 
   <dl class="gl">
@@ -379,6 +435,12 @@ KKV olcsóbb hitel → olcsóbb KKV-input → olcsóbb export → több export<b
 
     <dt>Bázispont (bp)</dt>
     <dd>A százalékpont századrésze: 100 bp = 1 százalékpont. A kamat- és felárváltozásokat ebben szokás mérni. Egy 100 bp-os felár-csökkenés azt jelenti, hogy a cég 1 százalékponttal kedvezőbben hitelez.</dd>
+
+    <dt>Input-output (IO) tábla, ágazati kapcsolatok mérlege (ÁKM)</dt>
+    <dd>Az a statisztikai tábla, ami megmutatja, hogy melyik ágazat mennyit vásárol a másiktól (köztes felhasználás), és mennyi a hozzáadott értéke. Ebből derül ki, hogy egy exportáló ágazat inputja <b>hazai</b> vagy <b>import</b> eredetű-e. Ötévente részletes (120 ágazatos), évente aggregált formában készül. <b>Korlát:</b> ágazati bontású, <em>nem</em> cégméret szerinti — ezért csak felső korlátot ad a KKV-beszállítás arányára.</dd>
+
+    <dt>Duális gazdaság</dt>
+    <dd>Az a gazdasági szerkezet, amelyben egy magas termelékenységű, külföldi tulajdonú, exportáló szektor működik egymás mellett egy alacsonyabb termelékenységű, hazai tulajdonú, belföldi piacra termelő szektorral, <b>gyenge kapcsolattal közöttük</b>. A magyar IO-adat ezt számszerűen mutatja: az autóipar köztes felhasználásának csak 6%-a hazai. Ez a projekt szempontjából központi megállapítás — <em>ez az, ami korlátozza, hogy az euró-hatás mennyire gyűrűzik tovább a beszállítói láncon</em>.</dd>
 
     <dt>Regressziós védőháló (füstteszt)</dt>
     <dd>Automatikus ellenőrzések, amiket minden futás után lefuttatunk, hogy egy korábban javított hiba ne csúszhasson vissza észrevétlenül. A v05 után beépült egy plauzibilitási teszt a reálárfolyamra — ha valaki visszaállítaná a hibás zárást, azonnal kiderül. Jelenleg 19 ellenőrzés fut, mind zöld.</dd>
