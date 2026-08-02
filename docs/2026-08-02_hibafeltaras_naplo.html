@@ -1,0 +1,590 @@
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>2026-08-02 — Hibafeltárási napló: mit húzott keresztbe a felülvizsgálat</title>
+<style>
+:root{
+  --paper:#f3efe6; --surface:#faf7f0; --ink:#23211c; --ink-soft:#5d5848;
+  --line:#cfc7b4; --rule:#b8ae97; --accent:#7a3b2e;
+  --core:#3a5a78; --core-bg:#dde6ef;
+  --emp:#3f6b45; --emp-bg:#e3ecdd;
+  --gap:#a4452f; --gap-bg:#f0ddd5;
+  --map:#9a6b1f; --map-bg:#f1e4cc;
+  --code-bg:#ece5d6; --code-ink:#3a352b;
+}
+@media (prefers-color-scheme: dark){
+  :root{
+    --paper:#1c1a16; --surface:#242119; --ink:#ece7db; --ink-soft:#b3ab98;
+    --line:#3c3830; --rule:#4a453a; --accent:#d08a5c;
+    --core:#8fb4d6; --core-bg:#22303c; --emp:#8fc09a; --emp-bg:#1e2a20;
+    --gap:#e08a6f; --gap-bg:#33231d; --map:#d4a95f; --map-bg:#302716;
+    --code-bg:#2a2620; --code-ink:#d8cfbc;
+  }
+}
+:root[data-theme="light"]{
+  --paper:#f3efe6; --surface:#faf7f0; --ink:#23211c; --ink-soft:#5d5848;
+  --line:#cfc7b4; --rule:#b8ae97; --accent:#7a3b2e;
+  --core:#3a5a78; --core-bg:#dde6ef; --emp:#3f6b45; --emp-bg:#e3ecdd;
+  --gap:#a4452f; --gap-bg:#f0ddd5; --map:#9a6b1f; --map-bg:#f1e4cc;
+  --code-bg:#ece5d6; --code-ink:#3a352b;
+}
+:root[data-theme="dark"]{
+  --paper:#1c1a16; --surface:#242119; --ink:#ece7db; --ink-soft:#b3ab98;
+  --line:#3c3830; --rule:#4a453a; --accent:#d08a5c;
+  --core:#8fb4d6; --core-bg:#22303c; --emp:#8fc09a; --emp-bg:#1e2a20;
+  --gap:#e08a6f; --gap-bg:#33231d; --map:#d4a95f; --map-bg:#302716;
+  --code-bg:#2a2620; --code-ink:#d8cfbc;
+}
+*{box-sizing:border-box;}
+body{
+  margin:0; background:var(--paper); color:var(--ink);
+  font-family:"Iowan Old Style","Palatino Linotype",Palatino,Georgia,serif;
+  line-height:1.6; font-size:16px;
+}
+.sheet{max-width:940px;margin:0 auto;padding:56px 40px 96px;}
+.eyebrow{
+  font-family:"SF Mono",ui-monospace,"Cascadia Mono",Menlo,monospace;
+  font-size:11.5px;letter-spacing:.22em;text-transform:uppercase;
+  color:var(--accent);margin:0 0 14px;
+}
+h1{font-size:36px;font-weight:600;line-height:1.14;margin:0 0 16px;letter-spacing:-.01em;max-width:26ch;text-wrap:balance;}
+.standfirst{font-size:18px;color:var(--ink-soft);margin:0;max-width:64ch;}
+.masthead{border-bottom:2px solid var(--ink);padding-bottom:28px;margin-bottom:8px;}
+.meta{font-family:"SF Mono",ui-monospace,Menlo,monospace;font-size:11px;letter-spacing:.04em;color:var(--ink-soft);margin-top:20px;display:flex;gap:26px;flex-wrap:wrap;}
+.meta span strong{color:var(--ink);font-weight:600;}
+
+.verdict{margin:34px 0 46px;padding:24px 28px;background:var(--gap-bg);border-left:4px solid var(--gap);border-radius:0 5px 5px 0;}
+.verdict .tag{font-family:"SF Mono",ui-monospace,Menlo,monospace;font-size:11px;letter-spacing:.15em;text-transform:uppercase;color:var(--gap);font-weight:700;}
+.verdict p{margin:8px 0 0;font-size:17px;}
+
+nav.toc{background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:18px 24px;margin:0 0 46px;}
+nav.toc h4{margin:0 0 10px;font-size:11px;font-family:"SF Mono",Menlo,monospace;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);}
+nav.toc ol{margin:0;padding-left:22px;columns:2;column-gap:34px;max-width:none;}
+@media(max-width:700px){nav.toc ol{columns:1;}}
+nav.toc li{font-size:14px;margin-bottom:5px;}
+nav.toc a{color:var(--ink);text-decoration:none;border-bottom:1px solid var(--line);}
+nav.toc a:hover{border-bottom-color:var(--accent);color:var(--accent);}
+
+section{margin:0 0 52px;}
+.sec-head{display:flex;align-items:baseline;gap:14px;border-bottom:1px solid var(--rule);padding-bottom:10px;margin-bottom:22px;}
+.sec-num{font-family:"SF Mono",ui-monospace,Menlo,monospace;font-size:13px;color:var(--accent);font-weight:700;}
+h2{font-size:23px;font-weight:600;margin:0;letter-spacing:-.01em;text-wrap:balance;}
+h3{font-size:16.5px;font-weight:600;margin:26px 0 8px;}
+p{max-width:70ch;}
+.lede{color:var(--ink-soft);font-size:15.5px;margin:-8px 0 22px;max-width:72ch;}
+ul,ol{max-width:72ch;}
+li{margin-bottom:7px;}
+
+.eq{
+  font-family:"SF Mono",ui-monospace,"Cascadia Mono",Menlo,monospace;
+  background:var(--code-bg);color:var(--code-ink);
+  border-radius:6px;padding:14px 18px;margin:10px 0;font-size:13.5px;
+  overflow-x:auto;line-height:1.75;border:1px solid var(--line);
+}
+.eq .cm{color:var(--ink-soft);}
+.eqname{font-family:"SF Mono",ui-monospace,Menlo,monospace;font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--accent);font-weight:700;margin:22px 0 2px;}
+.note{font-size:14px;color:var(--ink-soft);margin:6px 0 18px;max-width:72ch;}
+.note b{color:var(--ink);font-weight:600;}
+code{font-family:"SF Mono",ui-monospace,Menlo,monospace;font-size:13px;background:var(--code-bg);padding:2px 5px;border-radius:3px;color:var(--code-ink);}
+
+.ba{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin:16px 0;}
+@media(max-width:760px){.ba{grid-template-columns:1fr;}}
+.ba-col{border-radius:8px;padding:16px 20px;border:1px solid var(--line);}
+.ba-col.old{background:var(--map-bg);}
+.ba-col.new{background:var(--core-bg);}
+.ba-col h4{margin:0 0 8px;font-size:13px;font-family:"SF Mono",Menlo,monospace;letter-spacing:.08em;text-transform:uppercase;}
+.ba-col.old h4{color:var(--map);}
+.ba-col.new h4{color:var(--core);}
+.ba-col ul{margin:8px 0 0;padding-left:18px;}
+.ba-col li{font-size:13.5px;color:var(--ink-soft);}
+
+.data{display:flex;gap:16px;background:var(--core-bg);border-radius:8px;padding:18px 22px;margin:20px 0;align-items:baseline;}
+.data .big{font-size:28px;font-weight:600;color:var(--core);font-variant-numeric:tabular-nums;line-height:1;white-space:nowrap;}
+.data p{margin:0;font-size:14px;}
+
+.warn{background:var(--gap-bg);border-left:4px solid var(--gap);border-radius:0 5px 5px 0;padding:18px 22px;margin:20px 0;}
+.warn h4{margin:0 0 6px;font-size:13px;font-family:"SF Mono",Menlo,monospace;letter-spacing:.08em;text-transform:uppercase;color:var(--gap);}
+.warn p{margin:6px 0 0;font-size:14.5px;max-width:72ch;}
+
+.ok{background:var(--emp-bg);border-left:4px solid var(--emp);border-radius:0 5px 5px 0;padding:18px 22px;margin:20px 0;}
+.ok h4{margin:0 0 6px;font-size:13px;font-family:"SF Mono",Menlo,monospace;letter-spacing:.08em;text-transform:uppercase;color:var(--emp);}
+.ok p{margin:6px 0 0;font-size:14.5px;max-width:72ch;}
+
+table{width:100%;border-collapse:collapse;margin-top:6px;font-size:14px;}
+th,td{text-align:left;padding:10px 12px;border-bottom:1px solid var(--line);vertical-align:top;}
+th{font-family:"SF Mono",ui-monospace,Menlo,monospace;font-size:10.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-soft);font-weight:600;}
+td.num{font-variant-numeric:tabular-nums;text-align:right;font-family:"SF Mono",monospace;}
+.tw{overflow-x:auto;}
+.pill{display:inline-block;font-family:"SF Mono",Menlo,monospace;font-size:10.5px;letter-spacing:.06em;text-transform:uppercase;padding:2px 8px;border-radius:20px;font-weight:700;white-space:nowrap;}
+.pill.dead{background:var(--gap-bg);color:var(--gap);}
+.pill.live{background:var(--emp-bg);color:var(--emp);}
+.pill.hold{background:var(--map-bg);color:var(--map);}
+
+.gl{border-top:1px solid var(--line);padding:14px 0 0;margin:0;}
+.gl dt{font-weight:600;font-size:15px;margin:16px 0 4px;}
+.gl dt code{font-size:13px;}
+.gl dd{margin:0;font-size:14.5px;color:var(--ink-soft);max-width:72ch;}
+.gl dd b{color:var(--ink);font-weight:600;}
+
+footer{margin-top:60px;padding-top:20px;border-top:1px solid var(--rule);font-size:12px;color:var(--ink-soft);font-family:"SF Mono",ui-monospace,Menlo,monospace;letter-spacing:.03em;}
+</style>
+
+<div class="sheet">
+
+<header class="masthead">
+  <p class="eyebrow">DSGE_mkik · hibafeltárási napló</p>
+  <h1>A nap, amikor a saját cáfolatunkról is kiderült, hogy hibás</h1>
+  <p class="standfirst">A <code>t_sov</code>/<code>t_bank</code> súlyok empirikus megalapozásából indultunk, és három szinten találtunk hibát: a projekt hipotézisében, a saját tesztünkben, és — a legsúlyosabb — magában a modell szerkezetében.</p>
+  <div class="meta">
+    <span><strong>Dátum:</strong> 2026-08-02</span>
+    <span><strong>Érintett fájlok:</strong> jv_dsge_v05.mod, sens_tsuly_v05.m, 3 doksi</span>
+    <span><strong>Commit:</strong> c316732</span>
+    <span><strong>Füstteszt:</strong> 19/19</span>
+  </div>
+</header>
+
+<div class="verdict">
+  <span class="tag">A nap egy mondatban</span>
+  <p>A projekt fő állítása („a KKV többet nyer az euróból, mert érzékenyebb a prémium-csökkenésre") <b>nem áll</b> — de nem azért, amiért reggel gondoltuk: <b>az adat nem cáfolja, hanem nem tudja eldönteni</b>, és közben kiderült, hogy a modell <b>fő mechanizmusaként bemutatott csatorna a hosszú távon ellentétes előjellel működik</b>.</p>
+</div>
+
+<nav class="toc">
+  <h4>Tartalom</h4>
+  <ol>
+    <li><a href="#s1">Honnan indultunk</a></li>
+    <li><a href="#s2">1. hiba: a saját cáfolatunk</a></li>
+    <li><a href="#s3">2. hiba: két kódhiba</a></li>
+    <li><a href="#s4">3. hiba: a modell szerkezete</a></li>
+    <li><a href="#s5">Mit húzott keresztbe — összegzés</a></li>
+    <li><a href="#s6">Mit csináltunk újra, mi lett az eredménye</a></li>
+    <li><a href="#s7">Hol tartunk: mi közölhető</a></li>
+    <li><a href="#s8">Az opciók</a></li>
+    <li><a href="#s9">A két elemzés ütközése</a></li>
+    <li><a href="#s10">Döntések és következő lépések</a></li>
+    <li><a href="#s11">Fogalmak</a></li>
+  </ol>
+</nav>
+
+<section id="s1">
+  <div class="sec-head"><span class="sec-num">01</span><h2>Honnan indultunk: a szingularitás-gyanú</h2></div>
+  <p class="lede">A nap nem hibakeresésnek indult, hanem kalibrációs megalapozásnak. A lánc, ami idevezetett, viszont már előző nap elkezdődött.</p>
+
+  <p>Az <code>s_kkv</code> (beszállítói input-arány) érzékenységi vizsgálata <b>szingularitást</b> talált 0,25 körül: a felár előjelet váltott, 0,35-nél −573 bp-ra szaladt. A megoldó reziduuma 1e-17 volt, tehát <b>nem numerikus hiba</b>, hanem szerkezeti. Mivel az akkori alapkalibráció 0,20 volt — a pólus közvetlen vonzásában —, felmerült a kérdés: <b>lehet, hogy rossz a modell?</b></p>
+
+  <p>Ezért ellenőriztük az input-output táblát. Az eredmény megnyugtató és kellemetlen egyszerre volt:</p>
+
+  <div class="tw">
+  <table>
+    <thead><tr><th>Szektor</th><th>Hazai köztes-input arány</th><th>Implikált s_kkv</th></tr></thead>
+    <tbody>
+      <tr><td>Autóipar</td><td class="num">6,0%</td><td class="num">0,050</td></tr>
+      <tr><td>Elektronika</td><td class="num">4,2%</td><td class="num">0,035</td></tr>
+      <tr><td>Vegyipar</td><td class="num">27,1%</td><td class="num">0,199</td></tr>
+      <tr><td>Teljes gazdaság</td><td class="num">10,1%</td><td class="num">0,058</td></tr>
+      <tr><td><b>Export-mag átlag</b></td><td class="num"><b>—</b></td><td class="num"><b>0,054</b></td></tr>
+    </tbody>
+  </table>
+  </div>
+
+  <p><b>Megnyugtató:</b> a valós érték (0,05) messze a pólus alatt van, tehát a modell szerkezete érvényes. <b>Kellemetlen:</b> a paraméter <b>4-szeresen túl volt kalibrálva</b>. Ez a magyar duális gazdaság kvantifikálása — és önmagában publikálható eredmény —, de azt is jelenti, hogy a vertikális link nem a fő mechanizmus.</p>
+
+  <p>Ebből következett a mai kérdés: ha az <code>s_kkv</code>-t adatból alapoztuk meg, akkor <b>a <code>t_sov</code>/<code>t_bank</code> súlyokat is meg kell.</b> Ezek mondják meg, mennyire gyűrűzik át a szuverén és banki prémium-csökkenés az egyes szegmensek hitelfelárába — és a modellben a KKV-ra 2,00–2,50-szeres súllyal.</p>
+</section>
+
+<section id="s2">
+  <div class="sec-head"><span class="sec-num">02</span><h2>Az első hiba: a saját cáfolatunk volt túl erős</h2></div>
+  <p class="lede">Reggel megbecsültük a transzmissziót, negatív eredményt kaptunk, és megírtuk a figyelmeztetést. Délután kiderült, hogy a becslés rossz sorozaton futott és a magyarázatunk téves volt.</p>
+
+  <h3>Amit reggel állítottunk</h3>
+  <p>Az ECB MIR magyar kamatstatisztikán becsült kumulált pass-through: KKV 0,299 vs. nagyvállalat 0,652 (bankközi), 0,206 vs. 0,800 (10 éves állampapír). Ebből azt a következtetést vontuk le, hogy <b>„az adat gyengén az ellenkezőjét támogatja"</b>, és hogy ez azért van, mert <b>a KKV-hitelek fixek vagy támogatottak, ezért nem követik a piaci kamatot.</b></p>
+
+  <div class="warn">
+    <h4>⚠ A magyarázat téves — három okból</h4>
+    <p><b>(1)</b> Az MNB kamatstatisztikai módszertana szerint <b>a támogatott hitelek kamata a támogatás összegét is tartalmazza</b> — vagyis a statisztikába a <b>bruttó, piaci szintű</b> kamat kerül, nem a kedvezményes. Az adat tehát nincs „szennyezve".</p>
+    <p><b>(2)</b> Az <code>A2A</code> kategória <b>kizárja a folyószámla- és rulírozó hitelt</b>, azaz a Széchenyi Kártya legnagyobb terméke eleve nincs a mintában.</p>
+    <p><b>(3)</b> Számtani ellenőrzés: 2023-ban az 1–5 éves fixálású KKV új hitel átlagkamata <b>13,66%</b> volt (BUBOR-éves átlag 12,05%, NHP/Széchenyi ráták 2–5%). Ha az állomány fele 3%-on lenne <b>nettó</b> módon jelentve, ez az átlag matematikailag lehetetlen.</p>
+  </div>
+
+  <p>Ehhez tartozik egy fogalmi keverés, amit tisztázni kellett: a <code>t12</code> ~80%-os támogatott aránya az Opten <b>állomány-alapú implicit rátájára</b> vonatkozik (legacy NHP-vintage-ekkel), és <b>nem vihető át</b> az ECB MIR <b>új-szerződéses flow</b> adatára. A két szám nem ugyanazt méri.</p>
+
+  <h3>A becslés valódi hibája: kamatfixálási kompozíció-elsodródás</h3>
+  <p>A script a <em>Total initial rate fixation</em> sorozatot használta, amely két <b>nem összemérhető terméket</b> takar — és az arány a mintán belül drámaian változik:</p>
+
+  <div class="tw">
+  <table>
+    <thead><tr><th>Év</th><th>KKV ≤1 év fix</th><th>KKV 1–5 év</th><th>Nagyváll. ≤1 év fix</th><th>Nagyváll. 1–5 év</th></tr></thead>
+    <tbody>
+      <tr><td>2018</td><td class="num">81,4%</td><td class="num">9,0%</td><td class="num">90,2%</td><td class="num">6,4%</td></tr>
+      <tr><td>2021</td><td class="num">31,3%</td><td class="num">45,7%</td><td class="num">49,4%</td><td class="num">17,0%</td></tr>
+      <tr><td>2023</td><td class="num">21,8%</td><td class="num">56,9%</td><td class="num">46,3%</td><td class="num">38,6%</td></tr>
+      <tr><td>2026</td><td class="num">18,8%</td><td class="num"><b>61,0%</b></td><td class="num">82,2%</td><td class="num"><b>8,2%</b></td></tr>
+    </tbody>
+  </table>
+  </div>
+
+  <p>2018-ban mindkét szegmens túlnyomóan változó kamatozású volt; 2026-ban viszont <b>a KKV a hosszabb fixálású</b> (61% vs. 8%). Ez két dolgot jelent. Egyrészt a becslés két különböző terméket hasonlított össze. Másrészt <b>egy népszerű érvet is kiüt:</b> „a KKV rövidebb lejáratra hitelez, ezért gyakrabban árazódik át" — <b>a magyar adaton ez nem áll.</b></p>
+
+  <h3>Újrabecslés az összemérhető szegmensen</h3>
+  <p>≤1 év fixálás, 2010–2026 (198 hónap — a hosszabb minta nyereség is, mert a „Total" sorozat csak 2017-08-tól létezik), HAC standard hibák, 0–3 késés:</p>
+
+  <div class="tw">
+  <table>
+    <thead><tr><th>Referencia</th><th>KKV</th><th>Nagyvállalat</th><th>Különbség</th></tr></thead>
+    <tbody>
+      <tr><td>3M bankközi</td><td class="num"><b>0,714</b> (0,120)</td><td class="num"><b>0,951</b> (0,245)</td><td class="num">−0,238 (0,183), t = −1,30</td></tr>
+      <tr><td>10 éves állampapír</td><td class="num">0,863 (0,317)</td><td class="num">1,296 (0,415)</td><td class="num">−0,433 (0,222), t = −1,95</td></tr>
+      <tr><td>ECM, hosszú táv</td><td class="num"><b>0,990</b></td><td class="num"><b>1,211</b></td><td>mindkettő ≈ teljes</td></tr>
+    </tbody>
+  </table>
+  </div>
+
+  <p>A KKV pass-through <b>0,299 → 0,714</b>-re emelkedik, a rés −0,353 → −0,238-ra zsugorodik, és <b>hosszú távon mindkét szegmens átgyűrűzése gyakorlatilag teljes.</b></p>
+
+  <h3>És a döntő: a sorrend nem robusztus</h3>
+  <p>A modell szerkezete <code>efp = t_bank·bank + t_sov·sov</code>, tehát a helyes becslés <b>együttes</b> regresszió. (A reggeli script két <em>univariáns</em> becslést futtatott erősen korrelált referenciákra — kihagyott-változó torzítás, és nem négy független teszt, hanem kettő.)</p>
+
+  <div class="tw">
+  <table>
+    <thead><tr><th>Specifikáció</th><th>t_bank_S / t_bank_L</th><th>t_sov_S / t_sov_L</th></tr></thead>
+    <tbody>
+      <tr><td><b>A modell feltevése</b></td><td class="num"><b>2,00</b></td><td class="num"><b>2,50</b></td></tr>
+      <tr><td>Total fixáció, együttes <em>(= a reggeli minta)</em></td><td class="num">1,26 ← KKV magasabb</td><td class="num">0,26</td></tr>
+      <tr><td>≤1 év fixáció, együttes</td><td class="num">0,76</td><td class="num">0,51</td></tr>
+      <tr><td><b>Fedezettel/garanciával (A2AC)</b></td><td class="num"><b>2,75</b> ← a feltevés irányába</td><td class="num">0,83</td></tr>
+      <tr><td>1–5 év fixáció</td><td class="num">0,62</td><td class="num">2,18</td></tr>
+    </tbody>
+  </table>
+  </div>
+
+  <div class="ok">
+    <h4>✓ A helyes verdikt</h4>
+    <p>A becsült arány <b>0,26 és 2,75 között szóródik, és egyetlen különbség sem szignifikáns 5%-on.</b> A fedezet-kontrollált mintában az előjel <b>megfordul</b> és éppen a feltevést támogatja. Vagyis: <b>a <code>t_S &gt; t_L</code> feltevésre nincs empirikus fedezet — de az ellenkezőjére sem. Ez azonosítási kudarc, nem cáfolat.</b> Ez a megfogalmazás korrekten publikálható, és nem igényli, hogy bármit állítsunk arról, melyik szegmens érzékenyebb.</p>
+  </div>
+
+  <h3>További technikai hibák, amiket javítani kell a 08-as scriptben</h3>
+  <ul>
+    <li><b>A szint-regressziók spuriózusak</b> (β = 1,657 és 1,772 &gt; 1) — nem stacionárius sorozatok statikus regressziója kointegrációs teszt nélkül. Ki kell venni.</li>
+    <li><b>A 10 éves állampapír rossz referencia ezen a mintán:</b> 2023-ban BUBOR 12,05% vs. 10Y 7,51% — a 2022–23-as monetáris epizódban a két horgony szétszakadt, ezért a 10Y-ra vetített regresszió mechanikusan &gt;1 együtthatót ad. A <code>t_sov</code> erre a mintára gyakorlatilag <b>nem azonosítható</b>.</li>
+    <li><b>A különbség standard hibája rossz volt:</b> <code>sqrt(se_S²+se_L²)</code> függetlenséget tételez, miközben a két reziduum erősen korrelált. (Érdekes: ez a hiba a <em>reggeli</em> következtetés ellen dolgozott — de a helyes SE-vel sem szignifikáns semmi.)</li>
+    <li><b>Túl rövid késleltetés</b> (0+1 hónap). 0–3 késéssel már a reggeli mintán is 0,541 vs. 0,727 (t = −0,41), nem 0,299 vs. 0,652.</li>
+  </ul>
+</section>
+
+<section id="s3">
+  <div class="sec-head"><span class="sec-num">03</span><h2>A második hiba: két kódhiba</h2></div>
+  <p class="lede">Mindkettő javítva, mindkettő ellenőrizve.</p>
+
+  <h3>(a) A felár-oszlopok különböző dátumokon mért értékeket tartalmaztak</h3>
+  <p>A <code>sens_tsuly_v05.m</code> a csúcs-időpontot <b>csak a KKV-görbéből</b> választotta, de a nagyvállalati értéket is azon a dátumon olvasta:</p>
+  <div class="eq">[~, ic] = max(abs(eS));      <span class="cm">% a csucs-idopontot CSAK az efp_S-bol valasztja</span>
+... eS(ic), eL(ic) ...        <span class="cm">% de eL-t is ezen a datumon olvassa</span></div>
+  <p>A csúcs-index szcenárióról szcenárióra változik (17, 21, 18), miközben az <code>efp_L</code> mindig a 17. periódusban tetőzik. A két oszlop tehát <b>soronként nem volt összehasonlítható.</b></p>
+  <p><b>Javítás:</b> fix összehasonlítási dátum + mindkét szegmens saját csúcsa külön oszlopban. <b>Ellenőrzés:</b> a felár-oszlopok most már megfelelnek a modell <code>t</code>-beli linearitásának (korábban +1,70 és −2,37 bp-tal tértek el tőle) — ez független bizonyíték arra, hogy a javítás helyes.</p>
+
+  <h3>(b) A hazai jószág beruházási keresletében szegmens-változó szerepelt</h3>
+  <div class="eq"><span class="cm">// HIBÁS (v04-ből örökölt):</span>
+y_d = shd_c*c + shd_i*<b>i_S</b> + shd_g*g + shd_v*h_dx;
+
+<span class="cm">// JAVÍTVA:</span>
+y_d = shd_c*c + shd_i*<b>ii</b>  + shd_g*g + shd_v*h_dx;</div>
+  <p>A v03-ban még helyesen <code>si*ii</code> (aggregált beruházás) volt; a v04-ben elírás miatt <code>i_S</code>-re cserélődött, és a v05 ezt örökölte. Így <b>a legkevésbé megbízható szegmens-változó 0,177-es súllyal folyt közvetlenül a jelentett KKV-kibocsátásba.</b> Az aggregált GDP-hatásra ez alig hatott (+0,426%), a KKV-kibocsátás pályájára igen.</p>
+</section>
+
+<section id="s4">
+  <div class="sec-head"><span class="sec-num">04</span><h2>A harmadik és legsúlyosabb hiba: a modell szerkezete</h2></div>
+  <p class="lede">Ez az, ami nem javítható egy sor átírásával — és ez húzta keresztbe a legtöbbet.</p>
+
+  <h3>(A) A χ-aszimmetria a hosszú távon a KKV ELLEN dolgozik</h3>
+  <p>A terminális steady state zárt formulájából levezethető, hogy a prémium-ék hatása a beruházásra:</p>
+  <div class="eq">∂i_ss / ∂F = −1/χ        <span class="cm">ahol F = tsov·sov + tbank·bank</span>
+
+1/χ_S = 1/0,06 = <b>16,7</b>
+1/χ_L = 1/0,02 = <b>50,0</b></div>
+  <p><b>A nagyvállalati beruházás 3-szor érzékenyebb ugyanarra a prémium-csökkenésre — éppen mert χ_L &lt; χ_S.</b> Dynare-rel igazolva (egyenlő t-súlyok):</p>
+
+  <div class="tw">
+  <table>
+    <thead><tr><th>χ_S / χ_L</th><th>i_S,ss</th><th>i_L,ss</th><th>Melyik nyer?</th></tr></thead>
+    <tbody>
+      <tr><td>0,06 / 0,02 <em>(alapkalibráció)</em></td><td class="num">−0,13%</td><td class="num">+2,51%</td><td>nagyvállalat</td></tr>
+      <tr><td>0,04 / 0,04 <em>(szimmetrikus)</em></td><td class="num">+1,19%</td><td class="num">+1,00%</td><td><b>KKV — megfordul</b></td></tr>
+      <tr><td>0,02 / 0,06 <em>(fordított)</em></td><td class="num">+3,09%</td><td class="num">−0,16%</td><td>KKV</td></tr>
+    </tbody>
+  </table>
+  </div>
+
+  <div class="warn">
+    <h4>⚠ Miért ez a legsúlyosabb</h4>
+    <p>A <code>χ_S &gt; χ_L</code> feltevést — „a KKV mérlege érzékenyebb, ezért a pénzügyi akcelerátor nála erősebb" — <b>a layer fő mechanizmusaként mutattuk be.</b> A modell hosszú távú algebrájában ez <b>megfordul.</b> Nem arról van szó, hogy „a BGG-akcelerátor önmagában nem elég" (ezt állítottuk reggel), hanem hogy <b>a BGG-aszimmetria aktívan a KKV ellen dolgozik.</b></p>
+  </div>
+
+  <p>Ehhez tartozik: <b>steady state-ben <code>efp_S</code> ≡ <code>efp_L</code> mindig</b>, mert <code>q_S = q_L = 0</code> mellett a két <code>ret</code> egyenlet ugyanarra a közös <code>rk</code>-ra vezet. A <code>t21</code> tábla ezt közvetlenül mutatja: mindkettő <code>−0,000399060713094788</code>, tizenöt értékes jegyig azonos. <b>A modellben nincs hosszú távú szegmens-prémium-differencia</b> — a KKV-előny per definitionem tisztán átmeneti jelenség.</p>
+
+  <h3>(B) A szegmens-tőke reallokációs maradék</h3>
+  <p>Az aggregált <code>k</code>-t a tőkepiaci egyenlet lekötözi, ezért a <code>k = om_S·k_S + (1−om_S)·k_L</code> bontásban a szegmens-tőke közel nulla-összegű maradék. A számok beszédesek: az <b>aggregált</b> beruházás 1,09–1,29% között mozog, miközben a <b>szegmens-rés +0,53 → −5,80 pp-ot ugrál.</b></p>
+  <div class="warn">
+    <h4>⚠ Következmény a közlésre</h4>
+    <p><b>Szegmens-szintű beruházást vagy tőkét ebből a modellből nem szabad eredményként közölni.</b> A „KKV-beruházás +1,33% vs. nagyvállalati +0,79%" típusú számok <b>diagnosztikák, nem eredmények</b>. Feloldás csak szegmens-specifikus termeléssel és tőkekereslettel lenne — a v04 első kísérlete pontosan ezen bukott meg (Blanchard–Kahn-sértés).</p>
+  </div>
+
+  <h3>(C) A TSCEN=3 nem független teszt</h3>
+  <p><code>tsov</code>/<code>tbank</code> kizárólag exogén változók együtthatóiként jelennek meg, az átmeneti mátrixot nem érintik — a modell tehát <b>exaktul lineáris</b> ezekben a paraméterekben. Dynare-rel ellenőrizve: <b>a TSCEN=3 minden kimenete a TSCEN=1 és 2 exakt átlaga, 1e-15 pontossággal.</b></p>
+  <p>Ezért a reggeli 3. következtetés („még a legsemlegesebb feltevéssel sem áll az állítás") <b>nem önálló bizonyíték</b> — mechanikus számtani keverék, mert a TSCEN=2 a TSCEN=1 tükörképe. És a TSCEN=2-t <b>nem szabad „empirikusnak" nevezni.</b></p>
+
+  <h3>(D) Egy dokumentálatlan, torzító paraméterválasztás</h3>
+  <p><code>psi_i_S = 8,0 &lt; psi_i_L = 13,0</code> — a KKV beruházási alkalmazkodási költsége <em>alacsonyabb</em>, azaz a KKV-beruházás rugalmasabb. Empirikusan ez <b>visszafelé van</b> (a KKV-beruházás lumpier és korlátozottabb), dokumentálatlan volt, és <b>a KKV-előny irányába torzít.</b> Újrakalibrálandó vagy érzékenységgel kísérendő.</p>
+</section>
+
+<section id="s5">
+  <div class="sec-head"><span class="sec-num">05</span><h2>Mit húzott keresztbe — összegzés</h2></div>
+  <p class="lede">A feltevéseink státusza a nap végén.</p>
+
+  <div class="tw">
+  <table>
+    <thead><tr><th>Feltevés</th><th>Mi történt vele</th><th>Státusz</th></tr></thead>
+    <tbody>
+      <tr>
+        <td><b>t_S &gt; t_L</b><br><em>a KKV felára érzékenyebb</em></td>
+        <td>Az adat nem azonosítja (arány 0,26–2,75, semmi sem szignifikáns). Elméletileg sem támogatja a BGG, mert a BGG a <code>χ</code>-ről szól, nem a <code>t</code>-ről.</td>
+        <td><span class="pill hold">nem azonosított</span></td>
+      </tr>
+      <tr>
+        <td><b>χ_S &gt; χ_L</b><br><em>a BGG-akcelerátor a KKV-nak dolgozik</em></td>
+        <td>A hosszú távon <b>fordítva</b> működik: ∂i/∂F = −1/χ, tehát a nagyvállalat 3× érzékenyebb. Szimmetrikus χ-vel az előjel megfordul.</td>
+        <td><span class="pill dead">megfordult</span></td>
+      </tr>
+      <tr>
+        <td><b>„A KKV-beruházás aszimmetriája modell-eredmény"</b></td>
+        <td>A szegmens-tőke reallokációs maradék; az aggregált tőkét a tőkepiaci egyenlet lekötözi.</td>
+        <td><span class="pill dead">nem közölhető</span></td>
+      </tr>
+      <tr>
+        <td><b>„Erős beszállítói lánc"</b><br><em>s_kkv = 0,20</em></td>
+        <td>Az IO-adat 0,05-öt ad — <b>4-szeres túlkalibrálás</b>. A link hozzájárulása 42% helyett <b>4,4%</b>.</td>
+        <td><span class="pill hold">valós, de kicsi</span></td>
+      </tr>
+      <tr>
+        <td><b>„A támogatott hitelek nem követik a piacot"</b><br><em>a reggeli magyarázat</em></td>
+        <td>Az MNB bruttó kamatot jelent; az A2A kizárja a folyószámlahitelt; a 13,66%-os átlag kizárja a nettó jelentést.</td>
+        <td><span class="pill dead">téves</span></td>
+      </tr>
+      <tr>
+        <td><b>„A KKV rövidebb lejáratra hitelez, ezért gyakrabban árazódik át"</b></td>
+        <td>2026-ban a KKV 61%-a 1–5 év fixálású, a nagyvállalatoknak 8%-a — <b>a KKV a hosszabb fixálású.</b></td>
+        <td><span class="pill dead">téves</span></td>
+      </tr>
+      <tr>
+        <td><b>Aggregált GDP-hatás</b></td>
+        <td>+0,43% (sáv +0,27% … +0,58%). Robusztus a <code>t</code>-súlyokra és a link ki-be kapcsolására is.</td>
+        <td><span class="pill live">áll</span></td>
+      </tr>
+      <tr>
+        <td><b>Duális gazdaság (IO)</b></td>
+        <td>Autóipar 6,0% hazai köztes-input, elektronika 4,2%. Adatolt, önálló eredmény.</td>
+        <td><span class="pill live">áll</span></td>
+      </tr>
+      <tr>
+        <td><b>Hozzáférési heterogenitás</b></td>
+        <td>6,7% mikro vs. 41,6% közép. A projekt legerősebb empirikus eredménye — <b>de a modellben nincs benne.</b></td>
+        <td><span class="pill live">áll</span></td>
+      </tr>
+    </tbody>
+  </table>
+  </div>
+</section>
+
+<section id="s6">
+  <div class="sec-head"><span class="sec-num">06</span><h2>Mit csináltunk újra, mit máshogy, és mi lett az eredménye</h2></div>
+
+  <h3>Amit újrafuttattunk</h3>
+  <ul>
+    <li><b>A transzmisszió-becslés</b> — összemérhető fixálási szegmensen, hosszabb mintán, HAC standard hibákkal, együttes regresszióval, ECM-mel, és a különbséget közvetlen differencia-regresszióval (nem két univariáns becslés kivonásával).</li>
+    <li><b>A t-súly érzékenységi teszt</b> — javított felár-méréssel.</li>
+    <li><b>A teljes v05 szcenárió-lánc</b> (<code>t21</code>, <code>t22</code>, <code>f20</code>, <code>f21</code>) — a <code>y_d</code> javítás után, hogy az output reprodukálható legyen.</li>
+    <li><b>A link-hozzájárulás mérése</b> (<code>-DNOVERT=1</code>) — mert a doksikban még a túlkalibrált érték szerepelt.</li>
+    <li><b>χ-scan</b> — szimmetrikus és fordított kalibrációval, hogy kiderüljön, az előjel-probléma valós-e.</li>
+  </ul>
+
+  <h3>Számok: előtte / utána</h3>
+  <div class="tw">
+  <table>
+    <thead><tr><th>Mennyiség</th><th>Reggel</th><th>Este</th><th>Miért változott</th></tr></thead>
+    <tbody>
+      <tr><td>KKV-felár (alap, csúcs)</td><td class="num">−39,1 bp</td><td class="num">−37,2 bp</td><td>felár-mérési hiba javítva</td></tr>
+      <tr><td>Nagyvállalati felár</td><td class="num">−25,6 bp</td><td class="num">−24,7 bp</td><td>ugyanaz</td></tr>
+      <tr><td>Aggregált GDP (alap)</td><td class="num">+0,43%</td><td class="num">+0,426%</td><td>gyakorlatilag változatlan</td></tr>
+      <tr><td>KKV pass-through (bankközi)</td><td class="num">0,299</td><td class="num">0,714</td><td>összemérhető szegmens</td></tr>
+      <tr><td>Vertikális link hozzájárulása</td><td class="num">42%</td><td class="num">4,4%</td><td>s_kkv 0,20 → 0,05</td></tr>
+      <tr><td>Szegmens-beruházási arány</td><td class="num">1,64×</td><td>—</td><td><b>kivéve: nem közölhető</b></td></tr>
+    </tbody>
+  </table>
+  </div>
+
+  <div class="ok">
+    <h4>✓ A jó hír, amit érdemes kimondani</h4>
+    <p><b>Az aggregált eredmény alig mozdult</b> — a hibák a <em>szegmens-szintű</em> állításokat érintették, nem az aggregált GDP-hatást. A +0,43% (sáv +0,27% … +0,58%) átment minden ellenőrzésen: a <code>t</code>-súlyok megválasztására, a vertikális link ki-be kapcsolására, és a <code>y_d</code> javításra is érzéketlen. <b>Ez a projekt közölhető magja.</b></p>
+  </div>
+
+  <h3>Amit máshogy csináltunk — módszertani tanulság</h3>
+  <ul>
+    <li><b>Két irányban kritikus felülvizsgálat.</b> Nem csak azt kérdeztük, hogy „áll-e a hipotézis", hanem hogy „áll-e a cáfolatunk". Ez fogta el a téves magyarázatot.</li>
+    <li><b>Linearitás-ellenőrzés mint hibadetektor.</b> Mivel a modell exaktul lineáris a <code>t</code>-ben, minden kimenetnek teljesítenie kell az átlagolási tulajdonságot. A felár-oszlopok ezt megsértették — <b>így derült ki a kódhiba</b>, mielőtt bárki a számokat kifogásolta volna. Ezt érdemes állandó ellenőrzésként megtartani.</li>
+    <li><b>Zárt formula a numerika mellé.</b> A <code>∂i_ss/∂F = −1/χ</code> levezetés adta meg a χ-probléma <em>magyarázatát</em>; a puszta szimuláció csak azt mutatta volna, hogy „a nagyvállalat nyer", és megint rossz okot találtunk volna ki hozzá.</li>
+  </ul>
+</section>
+
+<section id="s7">
+  <div class="sec-head"><span class="sec-num">07</span><h2>Hol tartunk: mi közölhető és mi nem</h2></div>
+
+  <div class="ba">
+    <div class="ba-col new">
+      <h4>✓ Közölhető</h4>
+      <ul>
+        <li><b>Aggregált GDP-hatás:</b> +0,43% (sáv +0,27% … +0,58%) — robusztus.</li>
+        <li><b>Felár-pályák</b> fix összehasonlítási dátumon, a t-súly-sáv megjelölésével.</li>
+        <li><b>A duális gazdaság kvantifikálása</b> (IO): autóipar 6,0%, elektronika 4,2%, vegyipar 27,1% hazai köztes-input.</li>
+        <li><b>Hozzáférési heterogenitás:</b> 6,7% mikro vs. 41,6% közép.</li>
+        <li><b>A támogatási ék nagyságrendje</b> — de nem költségvetési tételként.</li>
+        <li><b>A módszertan maga:</b> a szegmentálás felépítése és az elvetett alternatívák.</li>
+      </ul>
+    </div>
+    <div class="ba-col old">
+      <h4>✘ Nem közölhető</h4>
+      <ul>
+        <li><b>Szegmens-szintű beruházás vagy tőke</b> (reallokációs maradék).</li>
+        <li><b>„A KKV érzékenyebb a prémium-csökkenésre"</b> mint eredmény.</li>
+        <li><b>„Az adat az ellenkezőjét mutatja"</b> mint eredmény.</li>
+        <li><b>„A beszállítói lánc a hatás 42%-át adja"</b> — valójában 4,4%.</li>
+        <li><b>Az 557–665 Mrd Ft/év ék költségvetési számként</b> — az implicit ráta zajos, a rés egy része fix vintage-árazás, és az NHP-éket az MNB viselte.</li>
+      </ul>
+    </div>
+  </div>
+
+  <p class="note"><b>Gyakorlati következmény a hétfői előadásra:</b> az előadói jegyzet elejére bekerült egy figyelmeztetés arról, mit ne adj elő. Konkrétan a jegyzet két helyen javasolta, hogy <em>„érdemes kétszer is elmondani"</em> az 1,64-szeres beruházási aszimmetriát — <b>ez a mondat nem hangozhat el.</b> A módszertan, az aggregált hatás és az IO-eredmény viszont teljes mértékben előadható.</p>
+</section>
+
+<section id="s8">
+  <div class="sec-head"><span class="sec-num">08</span><h2>Az opciók</h2></div>
+  <p class="lede">Öt irány, amelyek nem zárják ki egymást — de a fő szálat választani kell.</p>
+
+  <h3>1. Szintbeli hatás rugalmasság helyett <span class="pill live">legtisztább</span></h3>
+  <p>2017–19-ben a KKV új-hitel kamata <b>167–238 bp-tal</b> volt a nagyvállalati fölött (2017: 3,35% vs. 0,97%). <b>Azonos</b> (<code>t_S = t_L</code>) <em>arányos</em> prémium-csökkenés is nagyobb <b>forintban mért</b> megtakarítást ad a KKV-nak. Ez <b>nem igényel semmilyen paraméter-aszimmetriát</b>, csak a szintbeli különbséget — ami adatolt és nem vitatható. A legkisebb ráfordítású védhető átfogalmazás.</p>
+
+  <h3>2. Támogatás-kivezetés: „az euró nem hozam, hanem biztosítás" <span class="pill hold">POC megvan</span></h3>
+  <p>A hipotézis: a magyar KKV kettős árazási rendszerben él, ez nem tartható fenn határozatlan ideig, és a kérdés az, hogy a kivezetéskor <b>milyen piaci szintre esik vissza</b>. A mért objektum egy feltételes differencia:</p>
+  <div class="eq">BIZTOSÍTÁSI ÉRTÉK ≡ X(kivezetés | euró) − X(kivezetés | nincs euró)</div>
+  <p>Működő POC készült (5 szcenárió, 12 pontos rács). Két valódi technikai felfedezéssel:</p>
+  <ul>
+    <li><b>A keverési formulát nem lehet log-linearizálni.</b> <code>R_eff = (1−s)·R_mkt + s·R_sub</code> elsőrendű közelítése kidobja a <code>−ds·dR_mkt = −5,6 pp</code> interakciós tagot, azaz <b>az euró-előny ~90%-át</b> — pontosan azt, ami a hipotézis. Megoldás: <code>s_sub</code> és a rés <b>varexo</b>, így a szorzat a perfect foresight megoldóban exakt.</li>
+    <li><b>A JV Euler-egyenlete β-hoz köti a hazai reálkamatot</b>, ezért a modell magától <em>nem</em> tudja előállítani, hogy „a piaci szint 13%-ról 6%-ra megy". A rést exogén, rezsimfüggő pályaként kell megadni.</li>
+  </ul>
+  <p>POC-eredmények: biztosítási érték <b>+0,96% GDP</b> tartósan, KKV-tőkében +6,24%. A becsületes üzenet: <b>az euró nem nyertessé teszi a KKV-t, hanem túlélhetővé teszi az elkerülhetetlen alkalmazkodást</b> (KKV-tőke −9,6% → −3,3%). Plusz egy jól használható kamarai állítás: <b>a sorrendezés önmagában 0,099% GDP-t ér</b> 10 éven — tisztán ütemezési költség, mert a hosszú táv azonos.</p>
+
+  <div class="warn">
+    <h4>⚠ Az irány Achilles-sarka — és a megoldása</h4>
+    <p>A kamatrés euróval és euró nélkül <b>nem azonosított, hanem feltevés.</b> Nyersen: ez ugyanaz a betegség, mint a <code>t_S &gt; t_L</code> — egy nem azonosított paramétert cserélnénk egy másikra.</p>
+    <p><b>A megoldás nem a paraméter jobb megalapozása, hanem a küszöbforma.</b> Ne azt közöljük, hogy „a biztosítási érték +0,96% GDP" (ehhez tudni kell a rést), hanem hogy <b>„a biztosítási érték meghaladja a program költségét, ha a kamatrés-különbség &gt; X pp"</b> — és X-et a modell adja meg. Így a nem azonosított paraméter <b>a bemenetből a kimenetbe kerül</b>, és a kritika („ezt beírtad, nem levezetted") értelmét veszti. A 12 pontos rács szerint az irány minden kombinációban <b>pozitív és monoton</b>: a szint nem robusztus, az irány igen — épp az a helyzet, amire a küszöbforma való.</p>
+  </div>
+
+  <h3>3. Extenzív margó / hozzáférés <span class="pill live">a legerősebb adat</span></h3>
+  <p>A projekt legerősebb empirikus eredménye, és a nemzetközi irodalom is itt robusztus: szigorodáskor a bankok <b>a kicsiktől a nagyokhoz tolják a hitelkínálatot</b>, a kicsik rövidebb lejáratra, több fedezet mellett, drágábban kapnak hitelt. Ami az irodalomban robusztus, az <b>nem az ár, hanem a mennyiség.</b> <b>De a modellben ez nincs benne</b> — a jelenlegi DSGE csak árazást ismer, hitelkínálati korlátot nem.</p>
+
+  <h3>4. Devizakitettség <span class="pill hold">tiszta, kidolgozatlan</span></h3>
+  <p>A nagyvállalat/exportőr természetes EUR-bevétellel és EUR-hitellel fedezett; a KKV forintban adósodik és fedezetlenül viseli az input-árfolyam-átgyűrűzést. Az euró ezt az aszimmetrikus kockázatot <b>a KKV-nál</b> szünteti meg. Elméletileg tiszta KKV-előny-csatorna, és nem ütközik a kamatstatisztikával — de még nincs modellezve.</p>
+
+  <h3>5. χ-eredmény explicit vállalása <span class="pill hold">merész</span></h3>
+  <p>A 04(A) pont fordított előjelét nem elrejteni, hanem <b>eredményként kimondani:</b> a magyar KKV magasabb mérleg-érzékenysége <em>csökkenti</em> a prémium-sokkra adott tőkeválaszát. Ez érdekes és publikálható — de a projekt megbízói narratívájával szemben megy, ezért csapatdöntés.</p>
+</section>
+
+<section id="s9">
+  <div class="sec-head"><span class="sec-num">09</span><h2>A két elemzés ütközése — amit nem lehet elhallgatni</h2></div>
+
+  <p>A támogatás-kivezetési irány legelegánsabb érve az volt, hogy a mechanizmus <b>önmagát azonosítja</b>. Alapállapotban <code>rc_S = (1−s̄)·piaci kamat</code>, tehát a modell-implikált KKV pass-through <b>endogénul (1−s̄)</b>. És „két független forrás egyezik": a mért pass-through 0,21–0,30 → s̄ = 0,70–0,79, az Opten alulárazott-arány 0,726–0,785.</p>
+
+  <div class="warn">
+    <h4>⚠ Ezt a 02. szakasz eredménye aláásja</h4>
+    <p>Ha az MNB a támogatott hitelt <b>bruttó, piaci szintű kamaton</b> jelenti, akkor az alacsony mért pass-through <b>nem a támogatás miatt van</b> — így az „egyezés" nem mechanizmus-azonosítás. És ami rosszabb: a <b>javított</b> pass-through-becslés 0,714, ami <b>s̄ = 0,29</b>-et implikálna, nem 0,70-et. A két szám így <b>nem egyezik, hanem ellentmond.</b></p>
+    <p><b>Egy védelem létezik:</b> a ≤1 év fixálású részminta épp a <em>piaci árazású</em> szegmens (a támogatott programok hosszabb fixálásúak), tehát a teljes minta alacsonyabb átlaga részben valós kompozíciós hatás. Az érv tehát <b>meggyengült, nem halott</b> — de <b>nem lehet úgy előadni, hogy „két független forrás igazolja".</b></p>
+  </div>
+
+  <div class="ok">
+    <h4>✓ Amiben viszont a két elemzés egymástól függetlenül egyetért</h4>
+    <p><b>Az extenzív margó.</b> Az egyik szerint ez a projekt legerősebb empirikus eredménye és az irodalom is itt robusztus; a másik önként felteszi a kérdést, hogy <em>nem az extenzív margó lenne-e a fő szál, a DSGE-vel csak másodlagos rétegként.</em> Két, egymást nem ismerő elemzés ugyanoda futott ki — <b>ez a legerősebb jelzés a napból</b>, és ez a kérdés nagyobb, mint a hipotézis-váltás.</p>
+  </div>
+
+  <h3>Két figyelmeztetés, amit a v06-nál nem szabad elfelejteni</h3>
+  <ul>
+    <li><b>A jóléti metrika a POC-ban fordítva működik:</b> a legrosszabb szcenárió adja a legnagyobb jólétet (CE +5,4%), mert a munka-disutility tag dominál — a KKV-tőke leépülése visszafogja a munkakeresletet, és a „több szabadidő" túlkompenzálja a fogyasztás-veszteséget. Ráadásul a 25% nem-Ricardiánus háztartás mellett <b>az aggregált jólét eleve nem jól definiált</b> (kinek a hasznosságát maximalizáljuk?). A jólét legyen <b>másodlagos</b> eredmény.</li>
+    <li><b>A kivezetés nem tiszta KKV-aszimmetria:</b> a Széchenyi Kártya 2025 októberétől egységes fix 3%-on fut, a Baross Gábor program pedig <b>már nagyvállalatokra is</b> kiterjed.</li>
+  </ul>
+</section>
+
+<section id="s10">
+  <div class="sec-head"><span class="sec-num">10</span><h2>Döntések és következő lépések</h2></div>
+
+  <h3>Amit ma megtettünk (commit <code>c316732</code>)</h3>
+  <ul>
+    <li>Két kódhiba javítva, ellenőrizve, füstteszt 19/19.</li>
+    <li>Három strukturális figyelmeztetés a <code>.mod</code> fejlécébe.</li>
+    <li>A <code>FIGYELMEZTETES_fo_allitas.md</code> átírva a helyes verdiktre.</li>
+    <li>Három doksi összehangolva a friss számokkal; a szegmens-beruházási oszlopok kivéve; belső inkonzisztencia feloldva (a 02–03. szakasz még a régi 42%-ot állította, az 05. már a javítottat).</li>
+    <li>Az előadói jegyzet elejére figyelmeztetés arról, mit ne adj elő.</li>
+  </ul>
+
+  <h3>Amit el kell dönteni</h3>
+  <ol>
+    <li><b>A fő szál:</b> DSGE-központú (v06, támogatás-kivezetés) vagy extenzív-margó-központú történet? <b>Ezt a v06-ba fektetett munka előtt kell eldönteni</b>, nem utána.</li>
+    <li><b>Alapkalibráció:</b> váltunk-e <code>TSCEN=3</code>-ra (egyenlő súlyok, strukturálisan semleges), a <code>TSCEN=1/2</code> párral érzékenységi sávként? A <code>.mod</code>-ban az alapérték <b>változatlanul 1</b>, mert ez csapatdöntés.</li>
+    <li><b>A χ előjel-problémája:</b> elfogadjuk és kimondjuk eredményként, vagy átépítjük a szegmens-blokkot szegmens-specifikus termeléssel?</li>
+    <li><b>Ha v06:</b> küszöbformában, ne pontbecslésként — ez az egyetlen mód, hogy a rés-feltevés ne legyen ugyanaz a hiba, mint a <code>t_S &gt; t_L</code>.</li>
+  </ol>
+
+  <h3>Konkrét munkatételek</h3>
+  <div class="tw">
+  <table>
+    <thead><tr><th>Teendő</th><th>Ráfordítás</th><th>Miért ez</th></tr></thead>
+    <tbody>
+      <tr><td><b>Állomány-súlyozott s̄ az Opten-panelből</b></td><td>fél nap</td><td>A jelenlegi <code>t12</code>/<code>t14</code> <b>cég-év arány</b>, nem állomány-súlyozott, és a mikrocégek (&lt;10 fő) hiányoznak a panelből — pedig ott koncentráltabb a Széchenyi Kártya. Legkisebb ráfordítás, legnagyobb hozam.</td></tr>
+      <tr><td><b>A 08-as script javítása</b></td><td>fél nap</td><td>Szint-regressziók kivétele, <code>"F"</code> fixálási sorozat, együttes regresszió, HAC, ECM, közvetlen differencia-becslés.</td></tr>
+      <tr><td><b>MNB méret szerinti új-szerződéses kamatstatisztika kérése</b></td><td>e-mail + várakozás</td><td>Ez dönti el, van-e <em>egyáltalán</em> szegmens-különbség a transzmisszióban. Az összeg-kategória csak proxy.</td></tr>
+      <tr><td><b>A kivezetés intézményi exogenitásának dokumentálása</b></td><td>1 nap</td><td>Lucas-kritika: ha a kormány azért vezeti ki a programot, mert az euró feleslegessé tette, az ellentétes-tényes pálya a reakciófunkción kívül van. Konkrét EU-s állami támogatási határidők és EDP-menetrend kell hozzá.</td></tr>
+      <tr><td><b>psi_i_S / psi_i_L újrakalibrálása</b></td><td>fél nap</td><td>Jelenleg dokumentálatlan és a KKV-előny irányába torzít.</td></tr>
+    </tbody>
+  </table>
+  </div>
+</section>
+
+<section id="s11">
+  <div class="sec-head"><span class="sec-num">11</span><h2>Fogalmak</h2></div>
+  <dl class="gl">
+    <dt>Azonosítási kudarc <em>(identification failure)</em></dt>
+    <dd>Amikor az adat <b>nem tudja megkülönböztetni</b> két rivális hipotézist — nem azért, mert az egyik hamis, hanem mert a becslés szórása túl nagy vagy a specifikáció nem stabil. Élesen különbözik a <b>cáfolattól</b>: ott az adat az egyik hipotézist elvetné. Nálunk ez a helyzet a <code>t_S</code> vs. <code>t_L</code> kérdésben: az arány 0,26 és 2,75 között szóródik, tehát bármelyik állítás mellé lehet specifikációt találni — és ez pontosan azt jelenti, hogy <b>egyik sem publikálható eredményként.</b></dd>
+
+    <dt>Kompozíció-elsodródás <em>(composition drift)</em></dt>
+    <dd>Amikor egy aggregált időszak-sorozat összetétele változik, és a mért változás részben ezt tükrözi, nem a vizsgált mechanizmust. Nálunk: a „Total initial rate fixation" sorozat átlagolja a változó és a fixált kamatozású hiteleket, és ez az arány 2018 és 2026 között teljesen átalakult (a KKV-nál 81% → 19% változó). Az így becsült „pass-through" tehát részben <b>terméken belüli</b>, részben <b>termékek közti</b> mozgást mér.</dd>
+
+    <dt>Pass-through <em>(átgyűrűzés)</em></dt>
+    <dd>Mekkora része jelenik meg a referenciakamat (bankközi vagy állampapírhozam) elmozdulásának a banki hitelkamatban. 1,0 = teljes átgyűrűzés. A modellben ez a <code>t_bank</code> és <code>t_sov</code> paraméter. <b>Fontos elhatárolás:</b> a mért pass-through egy <em>redukált formájú</em> mennyiség, ami keveri a banki árazást, a termék-összetételt és a kockázati kompozíciót — a modell <code>t</code>-je viszont strukturális paraméter. A kettő azonosítása feltevés, nem definíció.</dd>
+
+    <dt>Reallokációs maradék</dt>
+    <dd>Olyan modell-változó, amely nem önálló gazdasági mennyiség, hanem egy lekötözött aggregátum belső felosztásából adódik. Nálunk a szegmens-tőke: mivel a tőkepiaci egyenlet az <b>aggregált</b> <code>k</code>-t meghatározza, a <code>k_S</code> és <code>k_L</code> csak azt mondja meg, hogyan oszlik meg a — kívülről adott — összes tőke. Ezért a szegmens-rés nagyot mozdulhat úgy, hogy az aggregátum alig változik: <b>a rés nem hatás, hanem átrendeződés.</b> Az ilyen változót diagnosztikaként lehet használni, eredményként nem.</dd>
+
+    <dt>Külső finanszírozási prémium <em>(EFP)</em> és a <code>χ</code> paraméter</dt>
+    <dd>A BGG-akcelerátorban a hitelfelár a tőkeáttétellel nő: <code>efp = χ·(tőkeáttétel)</code>. A <code>χ</code> ennek az <b>érzékenysége</b>. Az intuíció szerint a KKV magasabb <code>χ</code>-vel bír (rosszabb információs helyzet, kevesebb fedezet) — de ahogy a 04(A) pont megmutatta, a <b>modell hosszú távú algebrájában ez a beruházási válaszra fordítva üt ki</b>, mert a magasabb <code>χ</code> egyszerre erősebb felnagyítást és erősebb fékezést jelent, és a steady state-ben a fékezés győz (<code>∂i/∂F = −1/χ</code>).</dd>
+
+    <dt>Küszöbforma <em>(threshold / equivalence format)</em></dt>
+    <dd>Eredményközlési mód, amely nem pontbecslést ad, hanem azt mondja meg, <b>mekkorának kellene lennie egy nem azonosított paraméternek ahhoz, hogy a következtetés megfordul</b>. Példa: „a biztosítási érték meghaladja a program költségét, ha a kamatrés-különbség &gt; X pp." Előnye, hogy a bizonytalanságot <b>a bemenetből a kimenetbe teszi</b> — a döntéshozó a saját becslését behelyettesítheti, és a modell így akkor is hasznos, ha a paraméter nem ismert. A Szabó Bakos-disszertáció 4.7 alfejezete pontosan ezt a formát használja.</dd>
+
+    <dt>Extenzív vs. intenzív margó</dt>
+    <dd><b>Intenzív:</b> a már hitelezett cégek <em>mennyit</em> és <em>milyen áron</em> kapnak. <b>Extenzív:</b> <em>kap-e egyáltalán</em> hitelt. A jelenlegi modell csak az intenzív margót ismeri (árazást), ezért ha a valódi hatás a hozzáférésen fut, <b>rossz csatornát nagyítunk fel.</b> A projekt empirikus része viszont épp itt a legerősebb: 6,7% mikro vs. 41,6% közép hitelhez jutási arány.</dd>
+
+    <dt>Lucas-kritika <em>(a v06 kontextusában)</em></dt>
+    <dd>Ha egy politikai döntés (a támogatási program kivezetése) maga is reagál a környezetre (arra, hogy lett-e euró), akkor a „kivezetés euró nélkül" ellentétes-tényes pálya nincs a kormány reakciófunkcióján, és a szcenárió önkényes. Ellenérv: <b>intézményi exogenitás</b> — EU-s állami támogatási keretek, EDP-menetrend, a programok saját lejárata. Ezeket dokumentálni kell, különben a szcenárió védhetetlen.</dd>
+  </dl>
+</section>
+
+<footer>
+  DSGE_mkik · 2026-08-02 · hibafeltárási napló · commit c316732 · füstteszt 19/19<br>
+  Hivatkozott fájlok: <code>docs/FIGYELMEZTETES_fo_allitas.md</code> · <code>src/model/jv_dsge_v05.mod</code> · <code>src/model/sens_tsuly_v05.m</code> · <code>src/08_mnb_transzmisszio.py</code> · <code>output/tables/t21</code>, <code>t22</code>, <code>t24</code>, <code>t25</code>, <code>t26</code>
+</footer>
+
+</div>
