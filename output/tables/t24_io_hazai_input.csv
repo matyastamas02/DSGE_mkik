@@ -1,0 +1,9 @@
+﻿agazat_kod,agazat,hazai_koztes_MEUR,import_koztes_MEUR,hazai_arany_a_koztesben,koztes_per_output,hazai_koztes_per_output,s_kkv_felso_korlat,polus_alatt
+C29,Autóipar,23,369,0.0596,0.8458,0.0504,0.0504,True
+C26,"Elektronika, számítástechnika",8,175,0.0417,0.8429,0.0351,0.0351,True
+C27,Elektromos berendezés,16,150,0.0955,0.8126,0.0776,0.0776,True
+C28,Gépgyártás,11,109,0.0915,0.754,0.069,0.069,True
+C20,Vegyipar,44,118,0.2707,0.736,0.1992,0.1992,True
+C22,"Gumi, plasztik",23,118,0.1608,0.7228,0.1162,0.1162,True
+C25,Fémfeldolgozás,10,102,0.0888,0.6623,0.0588,0.0588,True
+TOTAL,Teljes gazdaság,1519,13524,0.101,0.5723,0.0578,0.0578,True

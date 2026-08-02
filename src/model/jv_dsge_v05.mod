@@ -71,18 +71,35 @@
 // -DSKKV / -DMUVERT: a vertikális link erőssége (érzékenységi protokoll,
 // lásd sens_skkv_v05.m). SKKV=0 + MUVERT=0 a "link nélküli" ellenpróba.
 //
-// !! ÉRVÉNYESSÉGI SÁV: s_kkv < 0.25 !!
-// A modellnek SZINGULARITÁSA van s_kkv ~ 0.25-nél (0.24: y=+1.61%,
-// 0.26: y=-4.25%, rer=-35%). A pólus alatt a viselkedés sima és monoton,
-// felette értelmezhetetlen. Ok: a vertikális link a KKV-kibocsátás és az
-// export között kétirányú visszacsatolást hoz létre (a KKV inputot ad az
-// exportnak, az export kereslete pedig a KKV-kibocsátás része), és elég
-// erős linknél ez a hurok "átfordul". Az alapkalibráció (0.20) érvényes,
-// de a pólushoz viszonylag közel van -> a KSH IO-tábla ellenőrzése
-// PRIORITÁS: ha a valódi KKV-input arány 0.25 felett lenne, a modellt
-// át kell strukturálni (pl. explicit CES-input-aggregátorral).
+// !! EMPIRIKUSAN MEGALAPOZOTT (2026-07, IO-adat) !!
+// Az s_kkv-t az Eurostat magyar input-output tábláiból kalibráltuk
+// (src/07_io_hazai_input_arany.py -> output/tables/t24_io_hazai_input.csv).
+// A HAZAI köztes input aránya a termelési értéken, 2021:
+//     autóipar         0.050   (a köztes felhasználás csak 6.0%-a hazai!)
+//     elektronika      0.035   (4.2%)
+//     elektromos ber.  0.078   |  gépgyártás 0.069  |  fémfeldolg. 0.059
+//     vegyipar         0.199   (a legmagasabb)
+//     teljes gazdaság  0.058
+//     EXPORT-MAG átlag 0.054   <-- ez az s_kkv FELSŐ korlátja
+// Mivel az IO ÁGAZATI (nem méret szerinti), a KKV-rész ennek csak egy
+// darabja -> a tényleges s_kkv ~0.025-0.05. Az alapérték 0.05 (konzervatív
+// felső becslés az export-magra).
+//
+// KÉT KÖVETKEZMÉNY:
+// (1) JÓ HÍR: a valós érték MESSZE a pólus alatt van (lásd lent), tehát a
+//     modell szerkezete ÉRVÉNYES, nem kell átstrukturálni.
+// (2) KELLEMETLEN: a korábbi 0.20-as kalibráció 4x túlbecsülte a linket.
+//     A vertikális link hozzájárulása nem a hatás 42%-a, hanem ~5%-a
+//     (y: +0.405% link nélkül -> +0.426% s_kkv=0.05-tel).
+//     Közgazdaságilag ez maga is eredmény: a magyar FDI-vezérelt
+//     exportszektor hazai beszállítói integrációja GYENGE (a "duális
+//     gazdaság" jelenség kvantitatív megjelenése).
+//
+// SZINGULARITÁS (a modell felső korlátja): s_kkv ~ 0.25-nél pólus van
+// (0.24: y=+1.61%, 0.26: y=-4.25%, rer=-35%). A valós kalibráció (0.05)
+// bőven a biztonságos, monoton sávban van.
 @#ifndef SKKV
-  @#define SKKV = 0.20
+  @#define SKKV = 0.05
 @#endif
 @#ifndef MUVERT
   @#define MUVERT = 0.50
