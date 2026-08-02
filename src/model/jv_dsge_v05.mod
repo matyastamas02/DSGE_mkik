@@ -45,6 +45,40 @@
  * a zárás erőssége volt. A vertikális link hozzájárulása a javított
  * zárással: y +0.40% (link nélkül) -> +0.80% (linkkel), azaz kb. duplázás.
  *
+ * !!! HÁROM STRUKTURÁLIS FIGYELMEZTETÉS (2026-08, kritikai felülvizsgálat) !!!
+ *
+ * (A) SZEGMENS-TŐKE = REALLOKÁCIÓS MARADÉK. Az aggregált k-t a tőkepiaci
+ *     egyenlet lekötözi, ezért a k = om_S*k_S + (1-om_S)*k_L bontásban a
+ *     szegmens-tőke nulla-összegűhöz közeli maradék: az aggregált beruházás
+ *     1.09-1.29% között mozog, miközben a szegmens-rés +0.53 -> -5.80 pp-ot
+ *     ugrál. ==> SZEGMENS-SZINTŰ BERUHÁZÁST EBBŐL A MODELLBŐL NE KÖZÖLJ
+ *     eredményként. Közölhető: az aggregált GDP-hatás és a felár-pályák.
+ *     Feloldás csak szegmens-specifikus termeléssel és tőkekereslettel lenne
+ *     (a v04 első kísérlete ezen bukott meg: Blanchard-Kahn sértés).
+ *
+ * (B) A chi-ASZIMMETRIA A HOSSZÚ TÁVON A KKV ELLEN DOLGOZIK. A terminális
+ *     steady state zárt formulájából  d i_ss / d F = -1/chi , ahol
+ *     F = tsov*sov + tbank*bank a prémium-ék. Tehát:
+ *       1/chi_S = 1/0.06 = 16.7   vs   1/chi_L = 1/0.02 = 50.0
+ *     A nagyvállalati beruházás 3x érzékenyebb UGYANARRA a prémium-
+ *     csökkenésre, ÉPPEN mert chi_L < chi_S. Dynare-rel igazolva (egyenlő
+ *     t-súlyok): chi 0.06/0.02 -> i_S -0.13% / i_L +2.51%;  0.04/0.04 ->
+ *     +1.19% / +1.00% (megfordul);  0.02/0.06 -> +3.09% / -0.16%.
+ *     A BGG-intuíció ("a KKV érzékenyebb") tehát a modell hosszú távú
+ *     algebrájában MEGFORDUL. Emellett steady state-ben efp_S == efp_L
+ *     mindig (q_S=q_L=0 miatt közös rk), azaz a modellben nincs hosszú távú
+ *     szegmens-prémium-differencia — a KKV-előny tisztán átmeneti jelenség.
+ *
+ * (C) psi_i_S = 8.0 < psi_i_L = 13.0 dokumentálatlan és empirikusan
+ *     visszafelé van (a KKV-beruházás lumpier és korlátozottabb, tehát
+ *     RUGALMATLANABB kellene, hogy legyen) — a KKV-előny irányába torzít.
+ *     Újrakalibrálandó vagy érzékenységgel kísérendő.
+ *
+ * FONTOS a t-súlyok tesztjéhez: a modell EXAKTUL LINEÁRIS a tsov/tbank
+ * paraméterekben (ezek csak exogén változók együtthatói, az átmeneti
+ * mátrixot nem érintik). Ezért a TSCEN=3 minden kimenete a TSCEN=1 és 2
+ * exakt átlaga (1e-15) — NEM önálló teszt, hanem számtani keverék.
+ *
  * Szcenáriók: -DSCENARIO=1 (alap: -200bp szuv./-45bp banki) | 2 (opt) | 3 (pessz)
  * Futtatás:   run_jv_v05.m
  */
@@ -175,21 +209,39 @@ shd_v = s_kkv * 0.60;                       // export/KKV-kibocsátás arány ~0
 shd_c = 0.55*(1-shd_v)/0.82; shd_i = 0.15*(1-shd_v)/0.82;
 shd_g = 0.12*(1-shd_v)/0.82;                // a maradék arányosan szétosztva
 // --- euró-szcenárió: prémium-transzmisszió + rezsimváltás ---
-// !! FIGYELEM: AZ EMPIRIKUS ADAT ELLENTMOND A FELTEVESNEK !!
+// !! FIGYELEM: A t_S > t_L FELTEVÉS NEM AZONOSÍTHATÓ AZ ADATBÓL !!
 // A t_S > t_L feltevés (a KKV érzékenyebb a prémium-csökkenésre) az
-// eredeti modellválasztási javaslatból jött. A magyar kamatstatisztika
-// (src/08_mnb_transzmisszio.py, ECB MIR + Eurostat, 2017-2026) az
-// ELLENKEZŐJÉT mutatja — a differencia-becslés kumulált pass-through-ja:
-//     bankközi -> KKV 0.299 vs nagyvállalat 0.652
-//     állampapír -> KKV 0.206 vs nagyvállalat 0.800
-// A különbség 5%-on NEM szignifikáns (|t| = 1.2-1.9), de a pontbecslés
-// mind a NEGY specifikációban fordított előjelű. Közgazdasági magyarázat:
-// a nagyvállalati hitelek jellemzően változó (BUBOR-hoz kötött) kamatozásúak,
-// a KKV-hitelek nagy része fix kamatozású vagy TÁMOGATOTT programban van
-// (NHP, Széchenyi) — ezért NEM követik a piaci kamatot. Ezt a projekt
-// red flag-vizsgálata már megtalálta: a KKV-állomány ~80%-a a piaci szint
-// alatt árazódott.
-// -DTSCEN=1 (alap: a feltevés) | 2 (empirikus sorrend) | 3 (egyenlő)
+// eredeti modellválasztási javaslatból jött. A magyar kamatstatisztikán
+// (src/08_mnb_transzmisszio.py, ECB MIR) elvégzett teszt eredménye:
+// a becsült t_bank_S/t_bank_L arány specifikációtól függően
+//     total fixáció, együttes regresszió .... 1.26  (a KKV MAGASABB)
+//     <=1 év fixáció (összemérhető) ......... 0.76
+//     fedezettel/garanciával (A2AC) ......... 2.75  (a feltevés irányába!)
+//     1-5 év fixáció ........................ 0.62
+// szemben a modellbe tett 2.00-tal. EGYETLEN különbség sem szignifikáns
+// 5%-on. ==> AZONOSÍTÁSI KUDARC, NEM CÁFOLAT: a t_S > t_L feltevésre nincs
+// empirikus fedezet, de az ellenkezőjére sem.
+//
+// KORÁBBI HIBÁS ÉRVELÉS, JAVÍTVA (2026-08): itt korábban az állt, hogy a
+// KKV alacsony pass-through-ja azért van, mert a hitelei fixek/támogatottak.
+// EZ TÉVES egy ÚJ-SZERZŐDÉSES sorozatra: (a) az MNB módszertana szerint a
+// támogatott hitel kamata a támogatás összegét is tartalmazza, tehát BRUTTÓ
+// (piaci szintű) kamat kerül a statisztikába; (b) az A2A kategória kizárja a
+// folyószámla-/rulírozó hitelt, azaz a Széchenyi Kártya legnagyobb terméke
+// eleve nincs benne; (c) a 2023-as 13.66%-os KKV-átlagkamat (BUBOR 12.05%
+// mellett) matematikailag kizárja, hogy az állomány fele 3%-on lenne
+// NETTÓ módon jelentve. A t12 ~80%-os támogatott aránya ÁLLOMÁNY-alapú
+// implicit ráta, ami nem vihető át új-szerződéses FLOW adatra.
+// A becslés valódi hibája: KAMATFIXÁLÁSI KOMPOZÍCIÓ-ELSODRÓDÁS — a "Total
+// initial rate fixation" sorozat két nem összemérhető terméket takar
+// (2026-ban a KKV új hitelek 61%-a 1-5 év fixálású, a nagyvállalatiaknak
+// csak 8%-a; 2018-ban mindkettő ~85% változó volt).
+//
+// JAVASLAT (csapatdöntést igényel, ezért az alapérték változatlan): az
+// alapkalibráció legyen TSCEN=3 (egyenlő súlyok, strukturálisan semleges),
+// és a TSCEN=1/2 pár ÉRZÉKENYSÉGI SÁVKÉNT jelenjen meg, ne "feltevés vs.
+// adat" szembeállításként. A TSCEN=2 NEM "empirikus" — a TSCEN=1 tükörképe.
+// -DTSCEN=1 (alap: a feltevés) | 2 (tükörkép: t_S<t_L) | 3 (egyenlő, ajánlott)
 @#ifndef TSCEN
   @#define TSCEN = 1
 @#endif
@@ -268,7 +320,14 @@ w  = w(-1) + piw - infl;
 px = px(-1) + pix - infl;
 
 // --- 5. Kereslet, külkereskedelem (változatlan) ---
-y_d = shd_c*c + shd_i*i_S + shd_g*g + shd_v*h_dx;
+// JAVÍTVA (2026-08): a beruházási keresletben az AGGREGÁLT beruházás (ii)
+// szerepel, nem a KKV-szegmensé (i_S). A v03-ban helyesen si*ii volt; a
+// v04-ben elírás miatt i_S-re cserélődött, és a v05 ezt örökölte. A hazai
+// jószág iránti beruházási kereslet a teljes beruházásból származik,
+// szegmens-függetlenül — a szegmens-tőke amúgy is reallokációs maradék
+// (lásd a fejléc "SZEGMENS-TŐKE" figyelmeztetését), tehát a legkevésbé
+// megbízható változó folyt bele közvetlenül a jelentett y_d-be.
+y_d = shd_c*c + shd_i*ii + shd_g*g + shd_v*h_dx;
 xx = hx*xx(-1) + (1-hx)*(-mu_x*(px - rer)) + e_x_ar;
 y_x = xx;
 y  = sc*c + si*ii + sg*g + sx*xx - sm*im;

@@ -135,7 +135,7 @@ footer{margin-top:60px;padding-top:20px;border-top:1px solid var(--rule);font-si
 
 <div class="verdict">
   <span class="tag">A bővítés egy mondatban</span>
-  <p>A szuverén és banki prémium-csökkenés <b>szegmensenként eltérő súllyal</b> lép be a modellbe, a belépéskor <b>kamatunió-rezsimváltás</b> történik, és mindez <b>anticipált pályaként</b> fut — az eredmény: a KKV hitelfelára <b>39 bp-tal</b> javul a nagyvállalat <b>26 bp-jával</b> szemben, a beruházásban pedig <b>1,64-szeres</b> az aszimmetria.</p>
+  <p>A szuverén és banki prémium-csökkenés <b>szegmensenként eltérő súllyal</b> lép be a modellbe, a belépéskor <b>kamatunió-rezsimváltás</b> történik, és mindez <b>anticipált pályaként</b> fut — az eredmény: <b>+0,43% aggregált GDP</b> hosszú távon (sáv: +0,27% … +0,58%), a hitelfelárban <b>KKV −37 bp vs. nagyvállalat −25 bp</b>. A <b>különbség</b> azonban a szegmensenkénti súlyok <b>feltevéséből</b> jön, amit az adat nem azonosít — ez a bővítés legfontosabb korlátja (lásd 03. pont).</p>
 </div>
 
 <!-- 01 -->
@@ -215,21 +215,27 @@ h<sub>dx</sub> = xx − μ<sub>vert</sub>·(mc<sub>d</sub> − mcx)&nbsp;&nbsp;&
   <p class="lede">A csúcshatás a 13. negyedévben (a belépés pillanatában) jelentkezik, mert ekkor esik egybe a szuverén konvergencia vége a banki csatorna kinyílásával.</p>
 
   <div class="data">
-    <span class="big">−39 vs. −26 bp</span>
-    <p>Az alappályán a <b>KKV hitelfelára 39,1 bázisponttal</b> csökken, a nagyvállalaté <b>25,6 bp-tal</b>. A beruházásban az aszimmetria még élesebb: <b>+1,35% vs. +0,82%</b>, azaz <b>1,64-szeres</b>. Ez már <b>modell-eredmény</b>, nem utólagos leképezés.</p>
+    <span class="big">+0,43% GDP</span>
+    <p>Az alappálya <b>aggregált</b> hosszú távú GDP-hatása <b>+0,43%</b> (szcenárió-sáv: +0,27% … +0,58%). Ez a <b>robusztus</b> eredmény: nem érzékeny sem a <code>t</code>-súlyok megválasztására, sem a vertikális link ki-be kapcsolására. A felár csökkenése az alappályán <b>KKV −37,2 bp vs. nagyvállalat −24,7 bp</b> — de a <b>különbség</b> a kalibrációs feltevésünk következménye, nem strukturális eredmény (lásd a figyelmeztetést alább).</p>
   </div>
 
   <div class="tw">
   <table>
-    <thead><tr><th>Szcenárió</th><th>KKV-felár (csúcs)</th><th>Nagyvállalat</th><th>KKV-többlet</th><th>GDP (h. táv)</th><th>KKV-beruh.</th><th>Nagyváll. beruh.</th></tr></thead>
+    <thead><tr><th>Szcenárió</th><th>KKV-felár (csúcs, q16)</th><th>Nagyvállalat</th><th>KKV-többlet</th><th>GDP (h. táv)</th></tr></thead>
     <tbody>
-      <tr><td>alap</td><td class="num">−39,1 bp</td><td class="num">−25,6 bp</td><td class="num">13,6 bp</td><td class="num">+0,43%</td><td class="num">+1,35%</td><td class="num">+0,82%</td></tr>
-      <tr><td>optimista</td><td class="num">−54,8 bp</td><td class="num">−35,7 bp</td><td class="num">19,1 bp</td><td class="num">+0,58%</td><td class="num">+1,81%</td><td class="num">+1,15%</td></tr>
-      <tr><td>pesszimista</td><td class="num">−23,5 bp</td><td class="num">−15,5 bp</td><td class="num">8,0 bp</td><td class="num">+0,27%</td><td class="num">+0,89%</td><td class="num">+0,50%</td></tr>
+      <tr><td>alap</td><td class="num">−37,2 bp</td><td class="num">−24,7 bp</td><td class="num">12,5 bp</td><td class="num">+0,43%</td></tr>
+      <tr><td>optimista</td><td class="num">−52,2 bp</td><td class="num">−34,5 bp</td><td class="num">17,7 bp</td><td class="num">+0,58%</td></tr>
+      <tr><td>pesszimista</td><td class="num">−22,2 bp</td><td class="num">−14,9 bp</td><td class="num">7,3 bp</td><td class="num">+0,27%</td></tr>
     </tbody>
   </table>
   </div>
-  <p class="note"><b>A számok útja — érdemes ismerni, mert kérdezhetik:</b> egy korai futásban jelentősen nagyobb értékek szerepeltek (KKV −100 bp, GDP +0,80%). Két javítás mérsékelte őket: (a) egy <b>súly-inkonzisztencia</b> (04. pont), majd (b) az <code>s<sub>kkv</sub></code> paraméter <b>empirikus megalapozása input-output adatból</b> (05. pont) — kiderült, hogy 4-szeresen túl volt kalibrálva. A fenti értékek az empirikusan megalapozott, védhető változat. <b>A KKV-előny ténye és iránya egyik javítás során sem változott</b> — sőt a beruházási aszimmetria erősödött.</p>
+
+  <p class="note" style="border-left:4px solid #b45309;padding-left:14px"><b>⚠ 2026-08-i kritikai felülvizsgálat — három korrekció ebben a szakaszban.</b>
+  <b>(1) A beruházási oszlopokat kivettük.</b> Korábban itt „KKV-beruházás +1,35% vs. nagyvállalati +0,82%, azaz 1,64-szeres" szerepelt. A szegmens-tőke a modellben <b>reallokációs maradék</b> — az aggregált tőkét a tőkepiaci egyenlet lekötözi, ezért miközben az aggregált beruházás 1,09–1,29% között mozog, a szegmens-rés +0,53 → −5,80 pp-ot ugrál. Szegmens-szintű beruházás <b>ebből a modellből nem közölhető eredményként</b>.
+  <b>(2) A felár-számok korábban mérési hibából származtak</b> (−39,1 / −25,6 bp): a script a csúcs-időpontot csak a KKV-görbéből választotta, de a nagyvállalati értéket is azon a dátumon olvasta, miközben a két csúcs időpontja eltér. Javítva.
+  <b>(3) A KKV-többlet a <code>t</code>-súlyok feltevésén áll</b>, amit az adat nem azonosít (a becsült arány 0,26 és 2,75 között szóródik, a modellben 2,00, egyetlen különbség sem szignifikáns). Egyenlő súlyokkal az előjel megfordul. Továbbá a hosszú távon <code>efp_S</code> és <code>efp_L</code> <b>pontosan egyenlő</b> — a modellben nincs tartós szegmens-prémium-differencia. Részletek: <code>docs/FIGYELMEZTETES_fo_allitas.md</code>.</p>
+
+  <p class="note"><b>A számok útja — érdemes ismerni, mert kérdezhetik:</b> egy korai futásban jelentősen nagyobb értékek szerepeltek (KKV −100 bp, GDP +0,80%). Három javítás mérsékelte őket: (a) egy <b>súly-inkonzisztencia</b> (04. pont), (b) az <code>s<sub>kkv</sub></code> paraméter <b>empirikus megalapozása input-output adatból</b> (05. pont) — kiderült, hogy 4-szeresen túl volt kalibrálva, és (c) a fent leírt felár-mérési hiba, valamint a <code>y_d</code> beruházási tagjában lévő <code>i_S</code> → <code>ii</code> elírás. A fenti értékek az empirikusan megalapozott, védhető változat.</p>
 
   <figure>
     <img src="../output/figures/f21_szegmens_lekepezes_v05.png" alt="A KKV és nagyvállalati hitelfelár-csökkenés a három euró-szcenárióban">
@@ -244,7 +250,7 @@ h<sub>dx</sub> = xx − μ<sub>vert</sub>·(mc<sub>d</sub> − mcx)&nbsp;&nbsp;&
   <h3>Három megállapítás, amit érdemes kiemelni</h3>
   <ol>
     <li><b>A méret-aszimmetria mindhárom szcenárióban fennáll</b> — a KKV-beruházás tartósan a nagyvállalati fölött. Nem egy szerencsés paraméterezés eredménye.</li>
-    <li><b>A vertikális link a hatás 42%-át adja:</b> a GDP-hatás +0,405% a link nélkül (s<sub>kkv</sub>=0 ellenpróba), +0,694% a linkkel. Vagyis a beszállítói kapcsolat nem díszítés — nélküle a becsült hatás bő harmadával kisebb lenne.</li>
+    <li><b>A vertikális link a hatás 4,4%-át adja:</b> a GDP-hatás +0,407% a link nélkül (<code>-DNOVERT=1</code> ellenpróba), +0,426% a linkkel. <i>(Egy korábbi verzió itt 42%-ot állított — az az <code>s<sub>kkv</sub></code>=0,20-as, 4-szeresen túlkalibrált értékkel készült; az IO-alapú 0,05 mellett a link <b>valós, de kicsi</b>. Lásd 05. pont.)</i></li>
     <li><b>Pozitív összeg:</b> a két szereplő egyetlen negyedévben sem mozog ellentétes irányba — nincs nyertes-vesztes reallokáció.</li>
   </ol>
 
@@ -347,15 +353,15 @@ KKV olcsóbb hitel → olcsóbb KKV-input → olcsóbb export → több export<b
       <ul>
         <li>A valós érték (0,035–0,05) <b>messze a pólus (0,25) alatt</b> van.</li>
         <li>Tehát a <b>modell szerkezete érvényes</b> — nem kell átstrukturálni, ahogy a legrosszabb esetben kellett volna.</li>
-        <li>Bónusz: a realisztikus, gyengébb link mellett a KKV-kibocsátás pályája <b>pozitívba fordult</b> (+0,13%, korábban −0,16%) — eltűnt egy korábbi torzítás.</li>
-        <li>És a <b>beruházási aszimmetria erősödött</b>: 1,64-szeres (+1,35% vs. +0,82%).</li>
+        <li>Bónusz: a realisztikus, gyengébb link mellett a KKV-kibocsátás pályája <b>pozitívba fordult</b> (+0,12%, korábban −0,16%) — eltűnt egy korábbi torzítás.</li>
+        <li>Az <b>aggregált GDP-hatás robusztus</b> maradt (+0,43%), és nem érzékeny sem a <code>t</code>-súlyokra, sem a link ki-be kapcsolására.</li>
       </ul>
     </div>
     <div class="ba-col old">
       <h4>⚠ Kellemetlen hír</h4>
       <ul>
         <li>A korábbi 0,20-as kalibráció <b>4-szeresen túlbecsülte</b> a linket.</li>
-        <li>A vertikális link hozzájárulása így <b>nem a hatás 42%-a, hanem ~5%-a</b> (GDP +0,405% link nélkül → +0,426% a valós paraméterrel).</li>
+        <li>A vertikális link hozzájárulása így <b>nem a hatás 42%-a, hanem 4,4%-a</b> (GDP +0,407% link nélkül → +0,426% a valós paraméterrel).</li>
         <li>Az aggregált GDP-hatás +0,69% → <b>+0,43%</b>.</li>
         <li>A „pozitív összegű lánc" mechanizmus <b>létezik, de vékony</b> — a magyar valóságban a beszállítói kapcsolat gyenge.</li>
       </ul>

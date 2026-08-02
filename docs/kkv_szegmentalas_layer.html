@@ -276,24 +276,31 @@ y<sub>d</sub> = sh<sub>c</sub>·c + sh<sub>i</sub>·i<sub>S</sub> + sh<sub>g</su
     <figcaption>f21 — jobb: a modell natív KKV/nagyvállalat felár-differenciája; bal: a besoroláson belüli szóródás. (src/s13_szegmens_lekepezes_v05.m)</figcaption>
   </figure>
   <div class="data">
-    <span class="big">−44 vs. −28 bp</span>
-    <p>Az alappálya csúcshatásán a <b>KKV hitelfelára 43,6 bázisponttal</b> csökken, a nagyvállalaté <b>27,5 bp-tal</b> — a KKV <b>1,6-szoros</b> nyereséget realizál. Ez már a <b>modell kimenete</b>, nem utólagos leképezés.</p>
+    <span class="big">+0,43% GDP</span>
+    <p>Az alappálya <b>aggregált</b> hosszú távú GDP-hatása <b>+0,43%</b> (sáv: +0,27% … +0,58%) — ez a <b>robusztus</b> eredmény. A felár csökkenése <b>KKV −37,2 bp vs. nagyvállalat −24,7 bp</b>, de a <b>különbség</b> a <code>t</code>-súly-feltevés következménye, nem strukturális eredmény.</p>
   </div>
   <div style="overflow-x:auto;">
   <table>
-    <thead><tr><th>Szcenárió</th><th>KKV-felár (csúcs)</th><th>Nagyvállalat</th><th>KKV-többlet</th><th>GDP (h. táv)</th><th>KKV-beruh.</th><th>Nagyváll. beruh.</th></tr></thead>
+    <thead><tr><th>Szcenárió</th><th>KKV-felár (csúcs, q16)</th><th>Nagyvállalat</th><th>KKV-többlet</th><th>GDP (h. táv)</th></tr></thead>
     <tbody>
-      <tr><td>alap</td><td>−43,6 bp</td><td>−27,5 bp</td><td>16,1 bp</td><td>+0,69%</td><td>+1,51%</td><td>+1,11%</td></tr>
-      <tr><td>optimista</td><td>−62,7 bp</td><td>−39,1 bp</td><td>23,6 bp</td><td>+0,93%</td><td>+2,02%</td><td>+1,53%</td></tr>
-      <tr><td>pesszimista</td><td>−24,4 bp</td><td>−15,8 bp</td><td>8,6 bp</td><td>+0,46%</td><td>+1,00%</td><td>+0,70%</td></tr>
+      <tr><td>alap</td><td>−37,2 bp</td><td>−24,7 bp</td><td>12,5 bp</td><td>+0,43%</td></tr>
+      <tr><td>optimista</td><td>−52,2 bp</td><td>−34,5 bp</td><td>17,7 bp</td><td>+0,58%</td></tr>
+      <tr><td>pesszimista</td><td>−22,2 bp</td><td>−14,9 bp</td><td>7,3 bp</td><td>+0,27%</td></tr>
     </tbody>
   </table>
   </div>
+
+  <p class="note" style="border-left:4px solid #b45309;padding-left:14px"><b>⚠ 2026-08-i kritikai felülvizsgálat — négy korrekció ebben a szakaszban.</b>
+  <b>(1)</b> A táblázat korábban az <code>s<sub>kkv</sub></code> <b>IO-alapú újrakalibrálása előtti</b> számokat tartalmazta (−43,6 / −27,5 bp, GDP +0,69%), amikor a paraméter 4-szeresen túl volt kalibrálva (0,20 a valós 0,05 helyett).
+  <b>(2)</b> A felár-számok emellett <b>mérési hibából</b> származtak: a script a csúcs-időpontot csak a KKV-görbéből választotta, de a nagyvállalati értéket is azon a dátumon olvasta.
+  <b>(3) A beruházási oszlopokat kivettük.</b> A szegmens-tőke a modellben <b>reallokációs maradék</b> (az aggregált tőkét a tőkepiaci egyenlet lekötözi): az aggregált beruházás 1,09–1,29% között mozog, miközben a szegmens-rés +0,53 → −5,80 pp-ot ugrál. Szegmens-szintű beruházás <b>nem közölhető eredményként</b>.
+  <b>(4) A KKV-többlet a <code>t</code>-súlyok feltevésén áll</b>, amit az adat nem azonosít (a becsült arány 0,26–2,75 között szóródik, a modellben 2,00, egyetlen különbség sem szignifikáns); egyenlő súlyokkal az előjel megfordul. A hosszú távon továbbá <code>efp_S</code> ≡ <code>efp_L</code>. Részletek: <code>docs/FIGYELMEZTETES_fo_allitas.md</code>.</p>
+
   <ul>
-    <li><b>A méret-aszimmetria mindhárom szcenárióban fennáll</b> — a KKV-beruházás tartósan a nagyvállalati fölött.</li>
-    <li><b>A vertikális link a hatás 42%-át adja:</b> GDP +0,405% (link nélkül) → +0,694% (linkkel) — érzékenységi protokollal mérve (lásd `docs/v05_szcenario_bovites.html`).</li>
+    <li><b>A szcenárió-sorrend konzisztens</b> (optimista &gt; alap &gt; pesszimista), arányosan a prémium-sokk méretével.</li>
+    <li><b>A vertikális link a hatás 4,4%-át adja:</b> GDP +0,407% (link nélkül) → +0,426% (linkkel), <code>-DNOVERT=1</code> érzékenységi protokollal mérve. <b>Ez a korábbi 42%-os érték helyes, javított változata</b> — a különbséget az <code>s<sub>kkv</sub></code> IO-alapú újrakalibrálása okozza (0,20 → 0,05). A link tehát <b>valós, de kicsi</b>: a modell fő csatornája nem ő.</li>
     <li><b>Pozitív összeg:</b> a KKV-t javító hitelfeltétel a láncon át az exportőr költségét is csökkenti — a két szereplő egyetlen negyedévben sem mozog ellentétes irányba.</li>
-    <li><b>Módszertani előrelépés:</b> a "kalibrált leképezés" réteg zsugorodott — a KKV/nagyvállalat különbség modell-eredmény, csak a besoroláson <em>belüli</em> szóródás marad leképezés.</li>
+    <li><b>Módszertani előrelépés:</b> a "kalibrált leképezés" réteg zsugorodott — a KKV/nagyvállalat különbség modell-eredmény (ha a <code>t</code>-súlyokat adottnak vesszük), csak a besoroláson <em>belüli</em> szóródás marad leképezés.</li>
   </ul>
   <p class="note"><b>Fontos a helyes értelmezéshez:</b> a felár-differencia a <b>csúcshatáson</b> él, nem a hosszú távú egyensúlyban — a BGG-akcelerátor átmeneti mechanizmus (a nettó vagyon visszaáll, ezért steady state-ben efp_S = efp_L). A leképezés ezért tudatosan a csúcsra és a 10 éves pontra épül, és a teljes kamat helyett a <b>hitelfelárra</b> (a kamat az átmenetben a rezsimváltás miatt nagyot leng).</p>
 </section>

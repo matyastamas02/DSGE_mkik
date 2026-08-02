@@ -1,5 +1,31 @@
 ﻿# Előadói jegyzet — a KKV/nagyvállalat szegmentálási layer
 
+> ## ⚠⚠ OLVASD EL ELŐADÁS ELŐTT (2026-08-i kritikai felülvizsgálat) ⚠⚠
+>
+> **Ez a jegyzet a felülvizsgálat ELŐTT készült, és három ponton javításra vár.
+> Amíg a csapat nem döntött, a 8.2 táblázat KKV-előny-számait NE add elő
+> eredményként.** Részletek: [`FIGYELMEZTETES_fo_allitas.md`](FIGYELMEZTETES_fo_allitas.md).
+>
+> 1. **Szegmens-szintű beruházást nem szabad közölni.** A szegmens-tőke a
+>    modellben reallokációs maradék (az aggregált tőkét a tőkepiaci egyenlet
+>    lekötözi): az aggregált beruházás 1,09–1,29% között mozog, miközben a
+>    szegmens-rés +0,53 → −5,80 pp-ot ugrál. A „+1,35% vs. +0,82%" **diagnosztika,
+>    nem eredmény** — és az „1,64-szeres" mondat, amit a jegyzet kétszer is
+>    javasol elmondani, **nem hangozhat el.**
+> 2. **A KKV-felár előnye a `t`-súlyok feltevésén áll, amit az adat nem
+>    azonosít.** A becsült arány specifikációtól függően 0,26 és 2,75 között
+>    szóródik (a modellben 2,00), egyetlen különbség sem szignifikáns.
+>    Ha közlöd, jelöld: *„ez a kalibrációs feltevésünk következménye."*
+> 3. **A `chi_S > chi_L` a hosszú távon a KKV ELLEN dolgozik** (`∂i_ss/∂F = −1/chi`,
+>    azaz 1/chi_S = 16,7 vs. 1/chi_L = 50). A layer fő mechanizmusaként bemutatott
+>    csatorna a modell hosszú távú algebrájában megfordul.
+>
+> **Amit biztonsággal elő tudsz adni:** a szegmentálás *módszertanát* (miért
+> kell, hogyan épül fel, milyen alternatívákat vetettünk el), az **aggregált**
+> GDP-hatást (+0,43% … +0,62%), a felár-pályákat a feltevés megjelölésével,
+> és a duális gazdaság IO-alapú kvantifikálását (autóipar 6,0% hazai
+> köztes-input) — ez utóbbi önálló, adatolt, publikálható eredmény.
+
 *Csapat-prezentációhoz, hétfőre. Alapoktól, lépésről lépésre — úgy
 felépítve, hogy alapképzéses közgazdász-háttérrel is követhető legyen.
 Minden lépésnél: mi a cél, miért így csináljuk, mi az intuíció.
@@ -246,25 +272,42 @@ A v04 még csak tesztsokkokra futott. A v05 a szegmentálást **a valós
 euró-belépési pályára** teszi (prémium-csökkenés + kamatunió-rezsimváltás,
 három forgatókönyv). Az alappálya csúcshatásán (13. negyedév = a belépés):
 
-| Szcenárió | KKV-felár | Nagyvállalat | KKV-többlet | GDP (h.táv) | KKV-beruh. | Nagyváll. |
-|---|---|---|---|---|---|---|
-| alap | **−39,1 bp** | −25,6 bp | 13,6 bp | +0,43% | **+1,35%** | +0,82% |
-| optimista | **−54,8 bp** | −35,7 bp | 19,1 bp | +0,58% | **+1,81%** | +1,15% |
-| pesszimista | **−23,5 bp** | −15,5 bp | 8,0 bp | +0,27% | **+0,89%** | +0,50% |
+*Az alábbi számok a 2026-08-i javítások utáni állapot (`t21`, `t22`).
+A korábbi verzió felár-számai (−39,1 / −25,6 bp) egy mérési hibából
+származtak: a script a csúcs-időpontot csak a KKV-görbéből választotta, de
+a nagyvállalati értéket is azon a dátumon olvasta.*
 
-**A mondat, amit érdemes kétszer is elmondani:** *„Ugyanaz az euró-hatás
-a KKV beruházását 1,64-szer annyira mozdítja meg, mint a nagyvállalatét —
-és ez már nem feltételezés, hanem a modell eredménye."*
+| Szcenárió | KKV-felár (csúcs, q16) | Nagyvállalat | KKV-többlet | GDP (h. táv) |
+|---|---|---|---|---|
+| alap | **−37,2 bp** | −24,7 bp | 12,5 bp | **+0,43%** |
+| optimista | **−52,2 bp** | −34,5 bp | 17,7 bp | **+0,58%** |
+| pesszimista | **−22,2 bp** | −14,9 bp | 7,3 bp | **+0,27%** |
 
-A **méret-aszimmetria mindhárom szcenárióban** fennáll, és a
-**beruházásban erősebb, mint a felárban** (1,64× vs. 1,53×) — mert a
-pénzügyi akcelerátor és a rugalmasság hatása összeadódik.
+> **⚠ Amit ez a táblázat NEM tartalmaz, és miért.** Korábban itt szerepelt
+> egy „KKV-beruházás +1,35% vs. nagyvállalati +0,82%, azaz 1,64-szeres"
+> oszlop-pár, és az a javaslat, hogy ezt a mondatot érdemes kétszer is
+> elmondani. **Ezt kivettük** — a szegmens-beruházás a modellben reallokációs
+> maradék, nem eredmény (lásd a jegyzet elején lévő figyelmeztetést).
+> Ráadásul a hosszú távon `efp_S` és `efp_L` **pontosan egyenlő** (a `t21`
+> táblában 15 értékes jegyig), mert `q_S = q_L = 0` mellett mindkettő
+> ugyanarra a közös `rk`-ra vezet: **a modellben nincs hosszú távú
+> szegmens-prémium-differencia**, a KKV-előny tisztán átmeneti jelenség.
+>
+> A **felár-többlet is a `t`-súlyok feltevésének következménye**, nem
+> strukturális eredmény: egyenlő súlyokkal az előjel megfordul (a
+> nagyvállalat nyer 7,6 bp-tal). Ha előadod, ezt mondd hozzá.
+
+**Amit a táblázatból biztonsággal el lehet mondani:** a **szcenárió-sorrend
+konzisztens** (optimista > alap > pesszimista, arányosan a prémium-sokkal),
+és az **aggregált GDP-hatás +0,27% … +0,58%** — ez robusztus a `t`-súlyokra
+és a vertikális link ki-be kapcsolására is.
 
 > **Ha valaki korábbi számokat látott** (KKV −100 bp, GDP +0,80%): két
 > javítás mérsékelte őket — egy súly-inkonzisztencia, majd az
-> `s_kkv` paraméter empirikus megalapozása IO-adatból (lásd 8.3).
-> **A KKV-előny ténye és iránya egyik javítás során sem változott**,
-> sőt a beruházási aszimmetria erősödött.
+> `s_kkv` paraméter empirikus megalapozása IO-adatból (lásd 8.3). Egy
+> harmadik javítás (2026-08) a felár-mérés hibáját és a `y_d`-ben lévő
+> `i_S` → `ii` elírást hozta rendbe; ezek a számokat alig mozdították
+> (−39,1 → −37,2 bp), a **KKV-előny értelmezését viszont igen** (lásd fent).
 
 **Módszertani előrelépés, amit érdemes kiemelni:** korábban a teljes
 KKV-hatást utólagos „kalibrált leképezéssel" állítottuk elő. Most a
@@ -300,10 +343,11 @@ inputot** — a köztes felhasználásának 94–96%-a import.
 1. **Jó hír a modellre:** a valós érték (0,035–0,05) **messze a pólus
    alatt** van, tehát a modell szerkezete érvényes — nem kell átírni.
    Ráadásul a realisztikus, gyengébb link mellett a KKV-kibocsátás
-   pályája pozitívba fordult, és a beruházási aszimmetria erősödött.
+   pályája pozitívba fordult.
 2. **Kellemetlen hír:** a korábbi kalibrációnk (0,20) **négyszeresen
    túlbecsülte** a linket. A vertikális csatorna hozzájárulása így nem a
-   hatás 42%-a, hanem **~5%-a**. Az aggregált GDP-hatás +0,69% → +0,43%.
+   hatás 42%-a, hanem **4,4%-a** (GDP +0,407% link nélkül → +0,426% a
+   valós paraméterrel). Az aggregált GDP-hatás +0,69% → +0,43%.
 
 **És ami ebből a legérdekesebb — ez már szakpolitikai üzenet:**
 > *„A beszállítói lánc mint mechanizmus létezik, de Magyarországon
@@ -423,18 +467,24 @@ Versenyeznek is, de Magyarországon a *domináns* viszony vertikális (70/6
 export-adat). A horizontális versenyt másodlagos elemként meg lehet
 tartani; a fő szerkezet a beszállítói lánc, mert azt mutatja az adat.
 
-**„Honnan a 0,20-as beszállítói arány?”**
-Irodalmi/becsült induló érték, és **végigmértük érzékenységi
-protokollal**. Két dolgot tudunk: (a) a link a hatás 42%-át adja
-(0-tól 0,20-ig monoton nő a hatás), és (b) a modellnek **pólusa van
-0,25-nél**, ezért a 0,20 érvényes, de a pólus vonzásában van. Emiatt a
-KSH input-output tábla ellenőrzése **prioritás**: ha a valódi arány 0,20
-fölött van, a modellt át kell strukturálni. Ezt nyíltan vállaljuk.
+**„Honnan a beszállítói arány?”**
+Kezdetben 0,20 volt (irodalmi/becsült induló érték), és **végigmértük
+érzékenységi protokollal**. Két dolog derült ki: (a) a modellnek **pólusa
+van 0,25-nél**, tehát a 0,20 a pólus vonzásában volt, és (b) az **IO-tábla
+ellenőrzése után** (amit emiatt prioritásként elvégeztünk) a valós érték
+**0,05 körül van**: az autóipar hazai köztes-input aránya 6,0%, az
+elektronikáé 4,2%, az export-mag átlaga 5,4%. **A paraméter tehát
+4-szeresen túl volt kalibrálva** — ezt javítottuk, és a 0,05 messze a
+pólus alatt van, vagyis a modell szerkezete érvényes.
 
 **„Mi történik, ha a link nélkül futtatod?”**
-GDP +0,405% a +0,694% helyett — vagyis a beszállítói kapcsolat nélkül a
-becsült hatás bő harmadával kisebb. Ez az `s_kkv=0` ellenpróba, amit
-külön lefuttattunk (a mennyiségi csatornát is kikapcsolva).
+GDP **+0,407%** a +0,426% helyett — vagyis a link **a hatás 4,4%-át adja**.
+Ez a `-DNOVERT=1` ellenpróba (a mennyiségi csatornát is kikapcsolva).
+**Figyelem:** egy korábbi verzió itt 42%-ot állított (+0,405% → +0,694%) —
+az az `s_kkv`=0,20-as, túlkalibrált értékkel készült. **A link tehát valós,
+de kicsi: nem ő a modell fő csatornája.** Ezt vállalni kell, mert a
+duális gazdaság kvantifikálása (a 6,0%-os hazai input-arány) önmagában
+is publikálható eredmény — csak nem az, aminek szántuk.
 
 **„Nem manipuláltátok, hogy pozitív jöjjön ki?”**
 Nem — épp azért választottuk ezt a szerkezetet, hogy az eredmény
@@ -484,24 +534,35 @@ paraméter-választás a „plató" elején van (nem érzékeny a pontos érték
    vertikális link — intuícióval, az egyenletek nélkül. (5. pont)
 5. **(2 perc) A mechanizmus.** A hat lépés az euró-sokktól a pozitív
    összegű eredményig. (6. pont)
-6. **(3 perc) Az eredmények.** Először az `f19` (mechanizmus működik:
-   együttmozgás + aszimmetria), aztán az `f21` és a táblázat: **a KKV
-   hitelfelára −44 bp vs. a nagyvállalat −28 bp** a tényleges
-   euró-szcenárióban, és a **link a hatás 42%-át adja** (`f22`).
-   Említsd a két árnyalatot proaktívan. (8.1–8.2)
+6. **(3 perc) Az eredmények.** Először az `f19` (a mechanizmus működik:
+   együttmozgás + aszimmetria), aztán az `f21` és a táblázat: **az
+   aggregált GDP-hatás +0,43%** (sáv: +0,27% … +0,58%), a felárban
+   **KKV −37 bp vs. nagyvállalat −25 bp**. **A különbséghez mondd hozzá,
+   hogy a szegmensenkénti súlyok feltevéséből jön, amit az adat nem
+   azonosít** — és hogy szegmens-beruházást nem közlünk. (8.1–8.2)
 7. **(2 perc) Az alternatívák.** Röviden az öt elvetett út — főleg a
    9.2 (kipróbáltuk, BK-n bukott) és a 9.5 (körkörös). Ez mutatja, hogy
    átgondolt a döntés. (9. pont)
-8. **Zárás + Q&A.** A korlátok kimondása (10.), és a következő lépés
-   (IO-tábla, érzékenységi futás).
+8. **(3 perc) A korlátok — ez most a legfontosabb rész.** A három
+   strukturális figyelmeztetés (szegmens-tőke = reallokációs maradék;
+   `chi_S > chi_L` a hosszú távon a KKV ellen dolgozik; a `t`-súlyok nem
+   azonosítottak), és hogy ebből mi a következő lépés. Ez nem kudarc-
+   beismerés, hanem az, ami a munkát auditálhatóvá teszi.
+9. **Zárás + Q&A.**
 
-**A prezentáció egy mondatos üzenete, amit érdemes kétszer is elmondani:**
-*„A KKV a nagyvállalat beszállítója, nem versenytársa — ezért az euró nem
-győztest és vesztest csinál, hanem az egész exportláncot erősíti, ha a
-KKV olcsóbb hitelhez jut."*
+**A prezentáció egy mondatos módszertani üzenete:**
+*„A KKV a nagyvállalat beszállítója, nem versenytársa — ezért a helyes
+kérdés nem az, hogy ki győz, hanem hogy hogyan terjed a hatás a láncon."*
 
-**És a számszerű alátámasztás egy mondatban:**
-*„A modell szerint a KKV hitelfelára 44 bázisponttal javul a
-nagyvállalat 28 bázispontjával szemben — másfélszeres nyereség —, és a
-beszállítói lánc a teljes hatás 42%-át adja."*
+**És a számszerű alátámasztás — óvatosan fogalmazva:**
+*„A modell aggregált GDP-hatása +0,43%, ami robusztus. A szegmensek közti
+különbség viszont a kalibrációs feltevésünkön áll, nem az adaton — és az
+IO-tábla azt mutatja, hogy a beszállítói integráció jóval gyengébb (az
+autóiparban 6% hazai köztes-input), mint amit feltételeztünk."*
+
+> **⚠ Amit a korábbi verzió javasolt elmondani, és amit NE mondj:**
+> *„a KKV hitelfelára 44 bp-tal javul a nagyvállalat 28 bp-jával szemben —
+> másfélszeres nyereség —, és a beszállítói lánc a teljes hatás 42%-át adja."*
+> Mindhárom szám elavult vagy félrevezető: a felár-értékek mérési hibából és
+> a túlkalibrált `s_kkv`-ból származtak, a 42% pedig valójában **4,4%**.
 
