@@ -1,0 +1,5 @@
+﻿nev,n,szint_beta,szint_se,diff_kumulalt_beta,diff_kumulalt_se,csatorna,szegmens
+t_bank (bankkozi) -> KKV,104,0.851,0.025,0.299,0.095,t_bank (bankkozi),KKV
+t_bank (bankkozi) -> nagyvallalat,104,0.922,0.029,0.652,0.222,t_bank (bankkozi),nagyvallalat
+t_sov (allampapir) -> KKV,107,1.657,0.062,0.206,0.184,t_sov (allampapir),KKV
+t_sov (allampapir) -> nagyvallalat,107,1.772,0.076,0.8,0.431,t_sov (allampapir),nagyvallalat

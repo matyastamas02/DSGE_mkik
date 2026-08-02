@@ -174,8 +174,32 @@ sh_ld = 0.70; sh_kd = 0.65; sh_imd = 0.30;
 shd_v = s_kkv * 0.60;                       // export/KKV-kibocsátás arány ~0.6
 shd_c = 0.55*(1-shd_v)/0.82; shd_i = 0.15*(1-shd_v)/0.82;
 shd_g = 0.12*(1-shd_v)/0.82;                // a maradék arányosan szétosztva
-// --- euró-szcenárió: prémium-transzmisszió + rezsimváltás (mint v03) ---
+// --- euró-szcenárió: prémium-transzmisszió + rezsimváltás ---
+// !! FIGYELEM: AZ EMPIRIKUS ADAT ELLENTMOND A FELTEVESNEK !!
+// A t_S > t_L feltevés (a KKV érzékenyebb a prémium-csökkenésre) az
+// eredeti modellválasztási javaslatból jött. A magyar kamatstatisztika
+// (src/08_mnb_transzmisszio.py, ECB MIR + Eurostat, 2017-2026) az
+// ELLENKEZŐJÉT mutatja — a differencia-becslés kumulált pass-through-ja:
+//     bankközi -> KKV 0.299 vs nagyvállalat 0.652
+//     állampapír -> KKV 0.206 vs nagyvállalat 0.800
+// A különbség 5%-on NEM szignifikáns (|t| = 1.2-1.9), de a pontbecslés
+// mind a NEGY specifikációban fordított előjelű. Közgazdasági magyarázat:
+// a nagyvállalati hitelek jellemzően változó (BUBOR-hoz kötött) kamatozásúak,
+// a KKV-hitelek nagy része fix kamatozású vagy TÁMOGATOTT programban van
+// (NHP, Széchenyi) — ezért NEM követik a piaci kamatot. Ezt a projekt
+// red flag-vizsgálata már megtalálta: a KKV-állomány ~80%-a a piaci szint
+// alatt árazódott.
+// -DTSCEN=1 (alap: a feltevés) | 2 (empirikus sorrend) | 3 (egyenlő)
+@#ifndef TSCEN
+  @#define TSCEN = 1
+@#endif
+@#if TSCEN == 1
 tsov_S = 0.25; tsov_L = 0.10; tbank_S = 0.60; tbank_L = 0.30;
+@#elseif TSCEN == 2
+tsov_S = 0.10; tsov_L = 0.25; tbank_S = 0.30; tbank_L = 0.60;
+@#else
+tsov_S = 0.175; tsov_L = 0.175; tbank_S = 0.45; tbank_L = 0.45;
+@#endif
 zsov = 0.5;
 // az unió-ág technikai zárása (lásd jv_dsge_v03: a JV becsült nu_b=0.001
 // az unió-rezsimben túl gyenge horgony, -250% GDP-s NFA-hoz vezetne)
