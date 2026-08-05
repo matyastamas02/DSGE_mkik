@@ -11,6 +11,81 @@ tanulmány KERETEZÉSÉT módosította, nem a DSGE szerepét.
 
 ### JV-vonal (fő):
 
+- **`jv_dsge_v06.mod`** — A TERMELÉSI OLDAL SZEGMENTÁLÁSA (csapattag
+  észrevétele, 2026-08). A v01–v05-ben a KKV/nagyvállalat szétválasztás
+  **kizárólag a pénzügyi blokkban élt** (chi, efp, k_S/L a BGG-ben); a
+  termelés a hazai/export (d/x) felbontást használta, ami **független volt
+  a szegmenstől**. Bizonyíték a v05-ből, szó szerint: `k = om_S*k_S +
+  (1-om_S)*k_L` (om_S=0.50) **VS** `k(-1) = sh_kd*(...) + (1-sh_kd)*(...)`
+  (sh_kd=0.65) — két különböző szám ugyanarra a felosztásra, és semmi nem
+  kötötte össze őket. Fix: (1) közös `rk` → `rk_S`/`rk_L`; (2) d/x
+  átnevezés S/L-re (azonos Cobb–Douglas-paraméterek); (3) a régi,
+  sh_kd-súlyozott aggregált tőkepiaci azonosítás **törölve**, helyette
+  `k_S(-1) = z_S - ...` és `k_L(-1) = z_L - ...` — a BGG-ben felhalmozott
+  szegmens-tőke **közvetlenül a saját termelését hajtja**; (4) `sh_kd`
+  paraméter törölve, `om_S` az egyetlen partíciós súly. Futtatás:
+  `check_v06_ss`, `stress_v06`.
+  **Eredmény:** a v05 két dokumentált patológiája EGYSZERRE oldódott meg —
+  ugyanaz volt a gyökerük. (a) a szegmens-tőke **többé nem reallokációs
+  maradék**; (b) `efp_S ≠ efp_L` **már steady state-ben is** (TSCEN=3:
+  0.0247 pp, `rk_S`=−0.84% vs `rk_L`=−1.46% valódi eltéréséből), tehát
+  megszűnt a "közös rk ⇒ nincs hosszú távú szegmens-prémium-differencia"
+  probléma. Aggregált GDP a v05-tel azonos nagyságrendben (TSCEN=1:
+  +0.428% vs. v05 +0.426%; szcenárió-sáv +0.275%…+0.581%) — az átalakítás
+  tehát **nem mozdította el az aggregált eredményt**, csak a szegmens-
+  szintű állítások alapját tette legitimmé.
+  **BK-tanulság — a v04-es lecke PONTOSÍTÁSA (fontos, újrahasznosítható):**
+  a v04 fejléce azt rögzítette, hogy „a szektor-specifikus tőke (külön
+  rk_S/rk_L) + CPI-szétválasztás megbontotta a Blanchard–Kahn feltételt".
+  A v06 megmutatja, hogy **nem a szegmens-specifikus tőkehozam volt a
+  hibás, hanem a KOMBINÁCIÓ a CPI/árszint-szétválasztással**: `rk_S`/`rk_L`
+  önmagában, változatlan `px`/CPI-blokk mellett, **18 kombinációban
+  (3 SCENARIO × 3 TSCEN × 2 NOVERT) mind konvergál, BK sehol nem sérül**
+  (`stress_v06.m`). A jövőbeli bővítéseknél tehát a tiltás nem a szektor-
+  specifikus tőkére, hanem az egyszerre végzett árszint-szétválasztásra áll.
+  **Nyitott, mielőtt eredménynek számít:** teljes euró-szcenárió tábla
+  (t21-ekvivalens) v06-ra; dedikált füstteszt; és a `psi_i_S=8 < psi_i_L=13`
+  dokumentálatlan/torzító kalibráció újragondolása — ennek most már
+  **valódi termelési hatása** van, nem csak pénzügyi maradéka.
+
+- **`jv_dsge_v05.mod`** — szegmentált euró-szcenárió: a v04 vertikális
+  szegmentálása RÁFUTTATVA a v03 valós euró-belépési pályájára (UIP-
+  országprémium + kamatunió-rezsimváltás + 3 anticipált forgatókönyv,
+  perfect foresight). Futtatás: `run_jv_v05` → `t21`, `s13_szegmens_
+  lekepezes_v05` → `t22`, ábrák `f20`/`f21`. Érzékenység: `sens_skkv_v05`,
+  `sens_tsuly_v05`, `diag_nuuni_v05`.
+  **Három kalibrációs javítás, mindegyik lefelé:** (1) `nu_uni` 0.01→0.25
+  (a v03-ból örökölt zárás a vertikális link önerősítő köre mellett túl
+  gyenge horgony volt: export +12.9%, rer +34.7% — implauzibilis; a 0.25 a
+  plató elején van, tehát az eredmény nem érzékeny a pontos értékre);
+  (2) `shd_v` mostantól **`s_kkv`-ból származtatott** (a független megadás
+  ugyanazt a kereskedelmi kapcsolatot írta le két oldalról, és az
+  alapkalibrációnál a KKV-kibocsátás 115%-át adta az export-input tag);
+  (3) **`s_kkv` 0.20→0.05 az Eurostat IO-táblából** (`t24`) — a korábbi
+  érték **4-szeresen túlkalibrált** volt, és a modell 0.25-nél lévő
+  pólusának vonzásában állt.
+  **Eredmények:** hosszú távú GDP alap **+0.426%** (opt +0.578 / pessz
+  +0.274); felár alap KKV −37.2 bp vs. nagyvállalat −24.7 bp. A vertikális
+  link hozzájárulása **4.4%** (+0.407% link nélkül → +0.426%) — **nem a
+  korábban közölt 42%**, az a túlkalibrált s_kkv-val készült. Ez maga is
+  eredmény: a magyar FDI-vezérelt exportszektor hazai beszállítói
+  integrációja gyenge (autóipar 6.0%, elektronika 4.2% hazai köztes input)
+  — a "duális gazdaság" kvantifikálása.
+  **⚠ Három strukturális figyelmeztetés (2026-08-i felülvizsgálat, a .mod
+  fejlécében részletesen):** (A) a szegmens-tőke **reallokációs maradék**
+  (az aggregált beruházás 1.09–1.29% között mozog, a szegmens-rés
+  +0.53→−5.80 pp-ot ugrál) ⇒ **szegmens-szintű beruházást ebből a modellből
+  nem szabad közölni**; (B) `∂i_ss/∂F = −1/chi`, azaz 1/chi_S=16.7 vs.
+  1/chi_L=50 ⇒ a **chi_S>chi_L aszimmetria a hosszú távon a KKV ELLEN
+  dolgozik**, és steady state-ben `efp_S ≡ efp_L` (közös rk miatt);
+  (C) a modell **exaktul lineáris** a tsov/tbank paraméterekben, ezért a
+  TSCEN=3 a TSCEN=1 és 2 exakt átlaga (1e-15) — **nem önálló teszt**.
+  Az (A) és (B) pont gyökere ugyanaz, és a **v06 mindkettőt megoldja**.
+  Emellett a `t_S > t_L` feltevés **nem azonosítható** az adatból (a becsült
+  arány 0.26–2.75 között szóródik, semmi sem szignifikáns) — lásd
+  `docs/FIGYELMEZTETES_fo_allitas.md` és `docs/2026-08-02_hibafeltaras_
+  naplo.html`.
+
 - **`jv_dsge_v04.mod`** — KÖZGAZDASÁGILAG TARTALMAS KKV/nagyvállalat
   szegmentálás (csapatdöntés 2026-07): **KKV=hazai szektor** (magas EFP,
   rugalmas), **nagyvállalat=export szektor** (alacsony EFP, merev), és a
@@ -25,9 +100,17 @@ tanulmány KERETEZÉSÉT módosította, nem a DSGE szerepét.
   szektor-specifikus tőke (külön rk_S/rk_L) + CPI-szétválasztásos első
   változat MEGBONTOTTA a Blanchard–Kahn feltételt; a robusztus verzió a
   v02 közös-rk szerkezetére épít, a KKV-input árát a KKV határköltsége
-  (mc_d) adja. Kalibráció (2-es döntés): s_kkv=0.20, mu_vert=0.50,
+  (mc_d) adja. **→ PONTOSÍTVA a v06-ban (2026-08): nem az `rk_S`/`rk_L`
+  volt a hibás, hanem a KOMBINÁCIÓ a CPI-szétválasztással** — a
+  szegmens-specifikus tőkehozam önmagában, változatlan CPI-blokk mellett
+  18 kombinációban stabil. Lásd a v06 bejegyzést.
+  Kalibráció (2-es döntés): s_kkv=0.20, mu_vert=0.50,
   psi_i_S=8/psi_i_L=13 IRODALMI/ÉRZÉKENYSÉGI induló — a pontos KKV-input
-  arány a KSH IO-táblából pótolandó.
+  arány a KSH IO-táblából pótolandó. **→ s_kkv PÓTOLVA a v05-ben** (IO-adat,
+  `t24`): a valós érték 0.05, a 0.20 négyszeres túlkalibrálás volt.
+  A `psi_i_S=8 < psi_i_L=13` viszont **továbbra is dokumentálatlan és a
+  KKV-előny irányába torzít** — a v06 után ez sürgetőbb, mert már valódi
+  termelési hatása van.
 
 - **`jv_dsge_v01.mod`** — a JV log-linearizált magja (Appendix A.4–A.9)
   az IT-rezsim poszterior-átlag paramétereivel: hazai+export szektor
