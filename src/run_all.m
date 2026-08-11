@@ -52,7 +52,10 @@ s10_irf_panelek;
 lep_('11/12: Fázis-idővonal + csatorna-dekompozíció');
 s11_fazis_es_dekompozicio;
 
-lep_('12/12: Füstteszt');
+lep_('12/13: Access-paraméterek empirikus horgonyzása (v07_access)');
+s14_access_horgonyzas;
+
+lep_('13/13: Füstteszt');
 smoke_test;
 
 fprintf('\nTELJES LÁNC KÉSZ: %.1f perc\n', toc(t_ossz_)/60);
