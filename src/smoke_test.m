@@ -135,6 +135,38 @@ if exist(v6_sens, 'file') == 2
         't35: chi forditasa MEGFORDITJA a szegmens-sorrendet', ok, hiba);
 end
 
+% --- v07_access (Samu, 2026-08-10; atveve 2026-08-12) --------------------
+v7_ht = fullfile(repo, 'output', 'tables', 't29_v07_access_hosszutav.csv');
+[ok, hiba] = ell(exist(v7_ht, 'file') == 2, 't29 v07_access hosszutav letezik', ...
+    ok, hiba);
+if exist(v7_ht, 'file') == 2
+    W = readtable(v7_ht);
+    wa = W(string(W.szcenario) == "alap", :);
+    [ok, hiba] = ell(wa.y > 0.002 && wa.y < 0.03, ...
+        sprintf('v07 alap GDP plauzibilis (%.3f%%)', 100*wa.y), ok, hiba);
+    % REPLIKACIOS GUARD: a szerzo altal kozolt alap-szamok (TSCEN=3,
+    % ACCSCALE=100). Ha valaki hozzanyul a modellhez, ennek el kell buknia.
+    [ok, hiba] = ell(abs(100*wa.y_D - 0.870) < 0.01 && ...
+        abs(100*wa.y_L - 0.772) < 0.01, ...
+        sprintf(['v07 replikacio: y_D=%.3f%% (kozolt 0.870), ' ...
+        'y_L=%.3f%% (kozolt 0.772)'], 100*wa.y_D, 100*wa.y_L), ok, hiba);
+end
+
+v7_kuszob = fullfile(repo, 'output', 'tables', 't33_v07_access_threshold_summary.csv');
+[ok, hiba] = ell(exist(v7_kuszob, 'file') == 2, 't33 v07 kuszob-osszefoglalo letezik', ...
+    ok, hiba);
+if exist(v7_kuszob, 'file') == 2
+    Th = readtable(v7_kuszob);
+    % A projekt fo szama: a sulyozott KKV-blokk ACCSCALE~101-nel elozi meg
+    % az L-t. FIGYELEM: a baseline 100 -- azaz a kvalitativ valasz PONTOSAN
+    % a valasztott kalibracios pontban fordul at (borotvael). Lasd
+    % docs/2026-08-12_access_horgonyzas_eredmeny.md.
+    v = Th{:, end};
+    [ok, hiba] = ell(any(abs(v - 101.0) < 1.0), ...
+        't33 replikacio: a KKV>=L kuszob ~101 (a baseline 100 -- borotvael!)', ...
+        ok, hiba);
+end
+
 % --- Összegzés ----------------------------------------------------------
 fprintf('\nFUSTTESZT: %d rendben, %d hiba\n', ok, hiba);
 if hiba > 0
