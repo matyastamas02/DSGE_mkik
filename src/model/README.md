@@ -11,8 +11,25 @@ tanulmány KERETEZÉSÉT módosította, nem a DSGE szerepét.
 
 ### JV-vonal (fő):
 
-- **`jv_dsge_v06.mod`** — A TERMELÉSI OLDAL SZEGMENTÁLÁSA (csapattag
-  észrevétele, 2026-08). A v01–v05-ben a KKV/nagyvállalat szétválasztás
+- **`jv_dsge_v06.mod`** — ⚠ **ÁTCÍMKÉZVE (2026-08-11):** a v05 **BELSŐ
+  javítása**, NEM a méret/piac szétválasztása. Eredetileg "a termelési
+  oldal szegmentálása" néven készült, de a fix úgy működik, hogy
+  **azonosítja** a hazai/export (d/x) felbontást a KKV/nagyvállalat (S/L)
+  felbontással — márpedig **pontosan ez az összecsúsztatás a szerkezeti
+  alapprobléma**. A `jv_v05_szerkezeti_tanulsagok` jegyzet (Samu; lokális
+  repo, GitHubra nem volt feltöltve, ezért nem ismertük) explicit kimondja:
+  *„nem ez lenne a leképezés: KKV = hazai, nagyvállalat = export — hanem
+  ez: KKV: hazai + export értékesítés, nagyvállalat: hazai + export
+  értékesítés"*. Ebben a fájlban tehát minden „méret"-eredmény valójában
+  „piaci orientáció"-eredmény; az összecsúsztatás nem szűnt meg, csak
+  implicitből **strukturálissá** vált. **A helyes irány:**
+  `kkv_dsge_v06_3type` / `kkv_dsge_v07_access` (E/D/L, a KKV is exportál).
+  *Amit viszont valóban megold és megmarad:* a szegmens-tőke nem
+  reallokációs maradék többé, megszűnik a „közös rk ⇒ efp_S ≡ efp_L"
+  patológia, és az aggregált GDP nem mozdul (+0,426% → +0,428%). Ezt a
+  verziót a **v05 karbantartott változataként** kezeld.
+  *(Az alábbi eredeti leírás ezzel a korlátozással olvasandó.)*
+  A v01–v05-ben a KKV/nagyvállalat szétválasztás
   **kizárólag a pénzügyi blokkban élt** (chi, efp, k_S/L a BGG-ben); a
   termelés a hazai/export (d/x) felbontást használta, ami **független volt
   a szegmenstől**. Bizonyíték a v05-ből, szó szerint: `k = om_S*k_S +

@@ -373,7 +373,29 @@ ez **azonosítási kudarc, nem cáfolat**.
 
 ---
 
-## v06 — A termelési oldal szegmentálása
+## v06 — A v05 belső javítása *(átcímkézve 2026-08-11)*
+
+> **⚠ EZ A SZAKASZ EREDETILEG „A termelési oldal szegmentálása" CÍMEN
+> KÉSZÜLT, ÉS A CÍM FÉLREVEZETŐ VOLT.** A v06 fixe úgy működik, hogy
+> **azonosítja** a hazai/export (`d`/`x`) felbontást a KKV/nagyvállalat
+> (`S`/`L`) felbontással — márpedig pontosan ez az összecsúsztatás a
+> szerkezeti alapprobléma, amit a kritika felvetett. A `jv_v05_szerkezeti_
+> tanulsagok` jegyzet (Samu; lokális repóban volt, GitHubra nem került fel,
+> ezért a v06 írásakor nem ismertük) explicit kimondja: *„nem ez lenne a
+> leképezés: KKV = hazai, nagyvállalat = export — hanem ez: KKV: hazai +
+> export értékesítés, nagyvállalat: hazai + export értékesítés"*.
+>
+> **Következmény:** ebben a verzióban minden „méret"-eredmény valójában
+> „piaci orientáció"-eredmény. Az összecsúsztatás nem szűnt meg, csak
+> implicitből **strukturálissá** vált. A méret/piac szétválasztás valódi
+> megoldása a `kkv_dsge_v06_3type` / `kkv_dsge_v07_access` vonal (E = export-
+> KKV, D = hazai KKV, L = nagyvállalat; a KKV is exportál, a nagyvállalat is
+> értékesít itthon).
+>
+> **Amit a v06 valóban megold, és ami megmarad:** a szegmens-tőke nem
+> reallokációs maradék többé, megszűnik a „közös rk ⇒ `efp_S ≡ efp_L`"
+> patológia, és az aggregált eredmény nem mozdul. Ezért a v06 a **v05
+> karbantartott, javított változata** — nem a szegmentálási kérdés válasza.
 
 ### Lépések és érvelés
 A kiinduló észrevétel (csapattag, 2026-08): a szétválasztás eddig csak a

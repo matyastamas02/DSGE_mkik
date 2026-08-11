@@ -84,6 +84,57 @@ if exist(jv_lek, 'file') == 2
         ok, hiba);
 end
 
+% --- v06: a termelesi oldalon is szegmentalt modell -----------------------
+v6_ht = fullfile(repo, 'output', 'tables', 't34_jv_v06_hosszutav.csv');
+[ok, hiba] = ell(exist(v6_ht, 'file') == 2, 't34 jv_v06 hosszutav letezik', ...
+    ok, hiba);
+if exist(v6_ht, 'file') == 2
+    V = readtable(v6_ht);
+    va = V(string(V.szcenario) == "alap", :);
+    [ok, hiba] = ell(va.y > 0.002 && va.y < 0.03, ...
+        sprintf('v06 alap GDP plauzibilis (%.3f%%)', 100*va.y), ok, hiba);
+    % REGRESSZIOS GUARD 1 — a v06 LENYEGE: a szegmens-premium-differencia
+    % a hosszu tavon NEM nulla. A v05-ben pontosan 0 volt (kozos rk miatt),
+    % es ha valaki visszaallitja a kozos rk-t, ennek el kell buknia.
+    [ok, hiba] = ell(all(abs(V.efp_S - V.efp_L) > 1e-7), ...
+        sprintf(['v06: efp_S =/= efp_L a hosszu tavon (%.2f bp) - a ' ...
+        'kozos-rk patologia megoldva'], 10000*(va.efp_S - va.efp_L)), ok, hiba);
+    % REGRESSZIOS GUARD 2 — rk_S es rk_L genuinen eltér (ez hajtja az 1-est)
+    [ok, hiba] = ell(all(abs(V.rk_S - V.rk_L) > 1e-6), ...
+        sprintf('v06: rk_S =/= rk_L (%.2f pp) - szegmens-specifikus tokehozam', ...
+        100*(va.rk_S - va.rk_L)), ok, hiba);
+    % REGRESSZIOS GUARD 3 — az atalakitas NEM mozdithatja el az aggregalt
+    % eredmenyt: a v06 GDP-nek a v05-ossel egyeznie kell 0.05 pp-on belul.
+    if exist(jv_ht, 'file') == 2
+        y5 = j.y(string(j.szcenario) == "alap");
+        [ok, hiba] = ell(abs(va.y - y5) < 0.0005, ...
+            sprintf(['v06 aggregalt GDP = v05 (%.3f%% vs %.3f%%) - a ' ...
+            'termelesi atalakitas nem mozditotta el'], 100*va.y, 100*y5), ...
+            ok, hiba);
+    end
+end
+
+% --- v06 dekompozicio: a szegmens-eredmenyt a chi-valasztas hajtja --------
+v6_sens = fullfile(repo, 'output', 'tables', 't35_sens_chi_psi_v06.csv');
+[ok, hiba] = ell(exist(v6_sens, 'file') == 2, 't35 v06 chi/psi dekompozicio letezik', ...
+    ok, hiba);
+if exist(v6_sens, 'file') == 2
+    D = readtable(v6_sens);
+    [ok, hiba] = ell(all(D.konvergalt == 1), ...
+        sprintf('t35: mind a %d eset konvergalt', height(D)), ok, hiba);
+    % A psi_i a STEADY STATE-et nem erintheti (q=0 ott) — ha ez elbukik,
+    % valaki elrontotta a beruhazasi Euler-egyenletet.
+    psi_sorok = D(contains(string(D.eset), 'psi '), :);
+    alap_ss = D.ss_KKV_elony_pp(1);
+    [ok, hiba] = ell(all(abs(psi_sorok.ss_KKV_elony_pp - alap_ss) < 1e-9), ...
+        't35: a psi_i a steady state-et nem erinti (q=0) - Euler OK', ok, hiba);
+    % A chi FORDITASA fordit a szegmens-sorrenden — ez a fo dekompozicios
+    % allitas: a nagyvallalati elony a chi-valasztas kovetkezmenye.
+    ford = D(contains(string(D.eset), 'FORDITVA'), :);
+    [ok, hiba] = ell(~isempty(ford) && ford.ss_KKV_elony_pp(1) > 0, ...
+        't35: chi forditasa MEGFORDITJA a szegmens-sorrendet', ok, hiba);
+end
+
 % --- Összegzés ----------------------------------------------------------
 fprintf('\nFUSTTESZT: %d rendben, %d hiba\n', ok, hiba);
 if hiba > 0

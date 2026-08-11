@@ -1,5 +1,51 @@
 /*
- * jv_dsge_v06.mod — Termelési oldal szegmentálása (KKV/nagyvállalat)
+ * jv_dsge_v06.mod — A v05 BELSŐ javítása (NEM a méret/piac szétválasztása)
+ * =====================================================================
+ *
+ * !!!!! FONTOS ÁTCÍMKÉZÉS (2026-08-11) — OLVASD EL, MIELŐTT HASZNÁLOD !!!!!
+ *
+ * Ez a fájl eredetileg "a termelési oldal szegmentálása" néven készült, és
+ * a fejléce azt állította, hogy megoldja a KKV/nagyvállalat szétválasztás
+ * hiányát a termelési oldalon. EZ A CÍMKE FÉLREVEZETŐ VOLT, és a fájlt
+ * ezért átcímkéztük. Amit valójában csinál:
+ *
+ *   AMIT MEGOLD (valós, mérhető, megmarad):
+ *     - a szegmens-tőke többé nem reallokációs maradék (a BGG-tőke
+ *       közvetlenül a saját szegmens termelési tőkekeresletét elégíti ki);
+ *     - megszűnik a "közös rk => efp_S == efp_L a steady state-ben"
+ *       patológia (v05 fejléc (B) pontja);
+ *     - az aggregált GDP-t nem mozdítja el (+0.426% -> +0.428%).
+ *
+ *   AMIT NEM OLD MEG (és amit korábban erényként tüntettünk fel):
+ *     A fix úgy működik, hogy AZONOSÍTJA a hazai/export (d/x) felbontást a
+ *     KKV/nagyvállalat (S/L) felbontással. De pontosan ez az összecsúsztatás
+ *     a projekt szerkezeti alapproblémája. A "jv_v05_szerkezeti_tanulsagok"
+ *     jegyzet (Samu, lokális repo, GitHubra nem volt feltöltve) ezt explicit
+ *     ki is mondja:
+ *
+ *       "nem ez lenne a leképezés: KKV = hazai, nagyvállalat = export --
+ *        hanem ez: KKV: hazai + export ertekesites, nagyvallalat: hazai +
+ *        export ertekesites"
+ *
+ *     Vagyis ebben a fájlban minden "méret"-eredmény valójában "piaci
+ *     orientáció"-eredmény. A méret- és a piacdimenzió nincs szétválasztva,
+ *     csak az összecsúsztatás lett STRUKTURÁLIS a korábbi implicit helyett.
+ *
+ *   MI A HELYES IRÁNY HELYETTE:
+ *     kkv_dsge_v06_3type.mod / kkv_dsge_v07_access.mod (Samu, 2026-08-10):
+ *     három külön termelőegység (E = export-KKV, D = hazai KKV, L =
+ *     nagyvállalat), mindegyik saját termeléssel, árazással, BGG-vel ÉS
+ *     saját exportkeresletttel -- tehát a KKV is exportál, a nagyvállalat
+ *     is értékesít itthon. Az a fájl a méret/piac szétválasztás valódi
+ *     megoldása; EZ a fájl nem az.
+ *
+ *   HASZNÁLATI JAVASLAT: ezt a verziót a v05 karbantartott/javított
+ *   változataként kezeld (a két patológia nélkül), NEM a szegmentálási
+ *   kérdés válaszaként. Szegmens-szintű MÉRET-állításhoz a 3type/access
+ *   vonalat használd.
+ *
+ * =====================================================================
+ * Az eredeti fejléc innen folytatódik (a fenti korlátozással olvasandó):
  * =====================================================================
  * KIINDULÓ KRITIKA (csapattag észrevétele, 2026-08): a v01-v05-ben a
  * KKV/nagyvállalat szétválasztás KIZÁRÓLAG a pénzügyi blokkban élt
@@ -18,12 +64,15 @@
  * (lásd v05 fejléc (B) pontja). A két korábban talált hiba UGYANAZ a
  * gyökérprobléma, csak két tünete.
  *
- * A FIX: nem egy harmadik, új dimenziót építünk a meglévő d/x mellé,
- * hanem AZONOSÍTJUK a két felosztást — a hazai jószágot termelő szektor
- * = KKV, az exportáló szektor = nagyvállalat (ez egyébként is a projekt
- * "Audi"-narratívája: a nagyvállalat exportál, a KKV a hazai piacot
- * szolgálja ki ÉS beszállít az exportőrnek, lásd a meglévő s_kkv/mu_vert
- * vertikális linket, ami VÁLTOZATLAN marad).
+ * A FIX (a fenti átcímkézés fényében olvasandó!): nem egy harmadik, új
+ * dimenziót építünk a meglévő d/x mellé, hanem AZONOSÍTJUK a két
+ * felosztást — a hazai jószágot termelő szektor = KKV, az exportáló
+ * szektor = nagyvállalat.
+ * >>> EZ A LÉPÉS A BELSŐ KONZISZTENCIÁT HELYREÁLLÍTJA, DE A MÉRET/PIAC
+ * >>> ÖSSZECSÚSZTATÁST NEM SZÜNTETI MEG — sőt strukturálissá teszi.
+ * >>> A valós megoldás a három külön termelőegység (E/D/L), ahol a KKV is
+ * >>> exportál és a nagyvállalat is értékesít itthon: kkv_dsge_v06_3type.
+ * A vertikális link (s_kkv/mu_vert) VÁLTOZATLAN marad.
  *
  * KONKRÉT VÁLTOZTATÁSOK a v05-höz képest:
  *   1. rk (közös tőkehozam) -> rk_S, rk_L (szegmensenkénti). Ez oldja fel
@@ -78,6 +127,33 @@
   @#define MUVERT = 0.50
 @#endif
 
+// -DCHIS/-DCHIL, -DPSIS/-DPSIL, -DZETAS/-DZETAL: a szegmens-aszimmetria
+// HAROM forrasa, kulon kapcsolhato (sens_chi_psi_v06.m). Azert macro-kent
+// es nem set_param_value-val, mert igy MINDEN eset teljes, tiszta Dynare-
+// megoldas (steady state + perfect foresight), nem utolagos parameter-
+// felulirás egy mar megoldott modellen.
+// FONTOS: a psi_i a STEADY STATE-et NEM erinti (ott q_S=q_L=0, tehat a
+// q/psi tag kiesik) -- csak az ATMENETET. A psi-hatast ezert a csucson es
+// a 10 eves erteken kell merni, nem a hosszu tavon.
+@#ifndef CHIS
+  @#define CHIS = 0.06
+@#endif
+@#ifndef CHIL
+  @#define CHIL = 0.02
+@#endif
+@#ifndef PSIS
+  @#define PSIS = 8.0
+@#endif
+@#ifndef PSIL
+  @#define PSIL = 13.0
+@#endif
+@#ifndef ZETAS
+  @#define ZETAS = 0.17
+@#endif
+@#ifndef ZETAL
+  @#define ZETAL = 0.14
+@#endif
+
 var
     c_o c_no c ii k
     rk_S rk_L w piw infl pix px
@@ -111,7 +187,7 @@ parameters
 beta = 0.99; delta = 0.025;
 // zeta_S/zeta_L = a v05 zeta_d/zeta_x értékei, VÁLTOZATLAN kalibráció —
 // csak a szegmens-címke más, a tőkehányad ugyanaz marad.
-zeta_S = 0.17; zeta_L = 0.14; rho_kz = 0.80; rho_z = 0.50;
+zeta_S = @{ZETAS}; zeta_L = @{ZETAL}; rho_kz = 0.80; rho_z = 0.50;
 theta_w = 3.0; nu_b = 0.001; om_no = 0.25; fii = 2.0;
 a_S = 0.80; a_L = 0.45;
 sigma = 1.814; habit = 0.646;
@@ -122,10 +198,10 @@ mu_x = 0.534; hx = 0.507; gam_i = 0.761; phi_pi = 1.379;
 lam_p = (1-xi_p)*(1-beta*xi_p)/xi_p;
 lam_x = (1-xi_x)*(1-beta*xi_x)/xi_x;
 lam_w = (1-xi_w)*(1-beta*xi_w)/(xi_w*(1+theta_w*fii));
-chi_S = 0.06; chi_L = 0.02;
+chi_S = @{CHIS}; chi_L = @{CHIL};
 eps_qw = 0.96; omega_nw = 0.95;
 lev_S = 1.6; lev_L = 1.85; om_S = 0.50;
-psi_i_S = 8.0; psi_i_L = 13.0;
+psi_i_S = @{PSIS}; psi_i_L = @{PSIL};
 @#if NOVERT == 1
 s_kkv   = 0.0001;
 mu_vert = 0.0001;
