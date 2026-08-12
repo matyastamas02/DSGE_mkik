@@ -26,8 +26,15 @@ tanulmány KERETEZÉSÉT módosította, nem a DSGE szerepét.
   `kkv_dsge_v06_3type` / `kkv_dsge_v07_access` (E/D/L, a KKV is exportál).
   *Amit viszont valóban megold és megmarad:* a szegmens-tőke nem
   reallokációs maradék többé, megszűnik a „közös rk ⇒ efp_S ≡ efp_L"
-  patológia, és az aggregált GDP nem mozdul (+0,426% → +0,428%). Ezt a
-  verziót a **v05 karbantartott változataként** kezeld.
+  patológia, és az aggregált GDP nem mozdul (+0,426% → +0,428%).
+  **⊕ ÉS AMIT AZ ELSŐ ÁTCÍMKÉZÉS ALÁBECSÜLT (2026-08-12):** a v07-specifikáció
+  (Samu, 2026-08-05, 6.3 szakasz) nyitva hagyott egy tételt — *„Analitikus
+  sejtés (ellenőrizendő): ez… nagyrészt a KÖZÖS `rk` következménye"* —, és
+  **ez a fájl pontosan azt a sejtést igazolta**: `rk_S`/`rk_L` mellett
+  `efp_S ≠ efp_L` már steady state-ben is (−1,01 bp), 18/18 kombinációban
+  stabilan. A v06 tehát nem puszta karbantartás, hanem egy nyitott
+  analitikus sejtés kísérleti eldöntése. Lásd
+  `docs/2026-08-12_zip_osszevetes_hibanaploval.md`.
   *(Az alábbi eredeti leírás ezzel a korlátozással olvasandó.)*
   A v01–v05-ben a KKV/nagyvállalat szétválasztás
   **kizárólag a pénzügyi blokkban élt** (chi, efp, k_S/L a BGG-ben); a

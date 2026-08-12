@@ -44,6 +44,19 @@
  *   kérdés válaszaként. Szegmens-szintű MÉRET-állításhoz a 3type/access
  *   vonalat használd.
  *
+ *   !! AMIT AZ ELSŐ ÁTCÍMKÉZÉS ALÁBECSÜLT (pótolva 2026-08-12) !!
+ *   A v07-specifikáció (Samu, 2026-08-05) 6.3 szakasza a chi-előjel
+ *   problémára nyitva hagyott egy tételt:
+ *     "Analitikus sejtes (ellenorizendo): ez a keresztmetszeti
+ *      osszehasonlitas nagyreszt a KOZOS rk kovetkezmenye. Ha rk kozos,
+ *      akkor steady state-ben efp_j mindenkire azonos..."
+ *   EZ A FÁJL PONTOSAN EZT A SEJTÉST IGAZOLTA. rk_S/rk_L bevezetésével
+ *   efp_S != efp_L már steady state-ben is (-1.01 bp), és 18/18
+ *   kombinációban stabil. Tehát a v06 nem csak karbantartás, hanem egy
+ *   nyitva hagyott analitikus sejtés kísérleti eldöntése: IGEN, a
+ *   chi-patológia nagyrészt a közös rk következménye volt.
+ *   Részletek: docs/2026-08-12_zip_osszevetes_hibanaploval.md
+ *
  * =====================================================================
  * Az eredeti fejléc innen folytatódik (a fenti korlátozással olvasandó):
  * =====================================================================
