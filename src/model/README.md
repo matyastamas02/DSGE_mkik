@@ -9,6 +9,60 @@ sor (EAGLE-alap) referencia/robusztussági vonalként marad meg.
 A DSGE a projekt gerince és kötelező leadandó; a red flag-vizsgálat a
 tanulmány KERETEZÉSÉT módosította, nem a DSGE szerepét.
 
+> ## ⚠ 2026-08-12: az `s_kkv` / `t24` IO-mérés NEM használható
+> A `t24_io_hazai_input.csv` (és vele az `s_kkv = 0,05`, a „42% → 4,4%"
+> link-korrekció, és a „duális gazdaság: autóipar 6% hazai köztes input"
+> eredmény) **hibás mérésen áll**: a döntő azonosság-teszt szerint az
+> összegzett köztes felhasználás a nemzeti számlák P2-jének csak **1,8–8,6%-a**.
+> A gyökérok még nyitott, és **az sem tudjuk, melyik irányba téves**.
+> Részletek és teendők: `docs/FIGYELMEZTETES_io_tabla_gyanus.md`.
+> **Amit nem érint:** az aggregált GDP-hatás (robusztus a link ki-be
+> kapcsolására), és a `v06_3type`/`v07_access` vonal (nem használ `s_kkv`-t).
+
+### EAGLE-vonal, ÚJ háromtípusos ág (Samu, 2026-08-10; átvéve 2026-08-12):
+
+- **`kkv_dsge_v07_access.mod`** — a 3type váz + **hitelhozzáférési (extenzív)
+  margó** a KKV-knál: `acc_j = rho_acc·acc_j(-1) − lambda_acc_j·efp_j`, és a
+  jobb hozzáférés extra beruházási keresletet enged be a Tobin-Q-n keresztül.
+  A nagyvállalatnak **nincs** access-margója (`acc_L` nem létezik) — ez a
+  feltevés viszi a szektorális átfordulást. 64 egyenlet, BK teljesül.
+  Futtatás: `run_v07_access`, `run_v07_access_tscen_sens`,
+  `run_v07_access_scale_sens`, `run_v07_access_threshold` →
+  `t29`–`t33`, `f24`. **Replikálva (2026-08-12): minden közölt szám
+  pontosan kijött** (alap: y +0,764% / E +0,525% / D +0,870% / L +0,772%;
+  küszöbök: D≥L 93,6 · KKV≥L **101,0** · E≥L 118,3).
+  **⚠ BOROTVAÉL:** a küszöb 101,0, az alapkalibráció 100 — a súlyozott
+  KKV-blokk a baseline-on még **−0,015 pp-tal az L alatt van**. A `D`
+  szegmens önmagában viszont megelőzi (küszöbe 93,6). Füstteszt-őr rögzíti.
+  Az `ACCSCALE` **magyar adatból nem horgonyozható** (lásd
+  `docs/2026-08-12_access_horgonyzas_eredmeny.md`) → küszöbként közölni.
+
+- **`kkv_dsge_v06_3type.mod`** — az első explicit háromtípusos váz:
+  `E` = export-orientált KKV, `D` = hazai orientációjú KKV, `L` = aggregált
+  nagyvállalat. **Szándékosan nem a `jv_dsge_v05.mod` átírása:** a JV-vonalban
+  a méretdimenzió és a hazai/export dimenzió összecsúszik, itt viszont
+  típusonként külön termelés, ár, tőke, beruházás, nettó vagyon és BGG-lite
+  felárblokk van — és a szektorok **külön `x_E`/`x_D`/`x_L` exportkeresletet**
+  kapnak, nem közös shiftert. 62 egyenlet, BK teljesül.
+  Futtatás: `run_v06_3type`, `run_v06_3type_tscen_sens` → `t27`, `t28`, `f23`.
+  **Replikálva (2026-08-12):** semleges transzmisszió mellett a nagyvállalat
+  egyértelműen nyer (y_L +1,143% vs. E +0,047% / D +0,144%) — vagyis a
+  KKV-előny **nem** a szerkezetből jön. Ez a `v07_access` diagnosztikai
+  baseline-ja; azonos számokat ad, mint a `v07_access` `ACCSCALE=0`-nál.
+
+- **`jv_dsge_v06_stoch.mod`** — a v05 **sztochasztikus ikerfájlja** (Samu,
+  2026-08-05): az `uni` fordítási idejű makró (`-DUNI=0|1`), így mindkét
+  rezsim külön lineáris modell, amin megy a `stoch_simul`. Célja a
+  **stabilizációs költség** mérése (OCA-kérdés: mennyit ér az önálló
+  monetáris politika elvesztése) — ez a v05-ből elvileg sem jöhet ki, mert
+  ott az `uni` endogén változókkal szorzódik. A fájl fejléce két kötelező
+  ellenőrzést ír elő: (1) **közös zárás** mindkét rezsimben (`nu_fx`), mert
+  eltérő `nu` mellett a mért volatilitás-különbség a záró eszköz műterméke
+  lenne; (2) **`check;` előbb**, mert az `UNI=1` ágon nincs Taylor-szabály,
+  tehát nominális határozatlanság kockázata áll fenn.
+  ⚠ **Futtató még nincs hozzá**, és a JV-vonalon a „v06" szám foglalt
+  (`jv_dsge_v06.mod`) — a névtér tisztázása csapatdöntés.
+
 ### JV-vonal (fő):
 
 - **`jv_dsge_v06.mod`** — ⚠ **ÁTCÍMKÉZVE (2026-08-11):** a v05 **BELSŐ

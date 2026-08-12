@@ -1,0 +1,1027 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Irodalomkatalógus — DSGE KKV/nagyvállalat euróbevezetési modell</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,400;8..60,600;8..60,700&family=IBM+Plex+Mono:wght@400;500;600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#f7f5f0;
+    --paper-card:#fffdf8;
+    --ink:#211f1a;
+    --ink-soft:#5a564c;
+    --rule:#ddd7c8;
+    --rule-strong:#c8c0aa;
+    --verified:#2f5233;
+    --verified-bg:#eaf0e7;
+    --partial:#8a5a17;
+    --partial-bg:#f5ecd9;
+    --none:#726d61;
+    --none-bg:#eae7dd;
+    --accent:#233c53;
+    --accent-soft:#5c7690;
+  }
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    margin:0;
+    background:var(--paper);
+    color:var(--ink);
+    font-family:'Inter', system-ui, -apple-system, sans-serif;
+    font-size:15.5px;
+    line-height:1.55;
+  }
+  .wrap{max-width:980px; margin:0 auto; padding:0 28px 120px;}
+
+  /* ---------- Header ---------- */
+  header{
+    padding:64px 0 40px;
+    border-bottom:2px solid var(--ink);
+    margin-bottom:8px;
+  }
+  .eyebrow{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:12px;
+    letter-spacing:0.14em;
+    text-transform:uppercase;
+    color:var(--accent-soft);
+    margin-bottom:14px;
+  }
+  h1{
+    font-family:'Source Serif 4', Georgia, serif;
+    font-weight:700;
+    font-size:clamp(28px, 4vw, 42px);
+    line-height:1.12;
+    margin:0 0 18px;
+    letter-spacing:-0.01em;
+  }
+  .lede{
+    font-size:16.5px;
+    color:var(--ink-soft);
+    max-width:66ch;
+    margin:0 0 22px;
+  }
+  .meta-row{
+    display:flex;
+    flex-wrap:wrap;
+    gap:10px 28px;
+    font-family:'IBM Plex Mono', monospace;
+    font-size:12px;
+    color:var(--ink-soft);
+    padding-top:18px;
+    border-top:1px solid var(--rule);
+  }
+  .meta-row b{color:var(--ink); font-weight:600;}
+
+  /* ---------- Legend ---------- */
+  .legend{
+    display:flex;
+    flex-wrap:wrap;
+    gap:10px;
+    margin:26px 0 6px;
+  }
+  .legend-item{
+    display:flex;
+    align-items:center;
+    gap:8px;
+    font-size:12.5px;
+    color:var(--ink-soft);
+    background:var(--paper-card);
+    border:1px solid var(--rule);
+    padding:7px 12px;
+    border-radius:3px;
+  }
+
+  /* ---------- Controls ---------- */
+  .controls{
+    position:sticky;
+    top:0;
+    z-index:20;
+    background:var(--paper);
+    padding:18px 0 16px;
+    border-bottom:1px solid var(--rule);
+    margin-bottom:6px;
+  }
+  .controls-inner{display:flex; flex-wrap:wrap; gap:10px; align-items:center;}
+  #search{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:13px;
+    padding:9px 13px;
+    border:1px solid var(--rule-strong);
+    border-radius:3px;
+    background:var(--paper-card);
+    color:var(--ink);
+    min-width:230px;
+    flex:1 1 230px;
+  }
+  #search:focus{outline:2px solid var(--accent-soft); outline-offset:1px;}
+  .chip{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:12px;
+    padding:7px 12px;
+    border:1px solid var(--rule-strong);
+    border-radius:999px;
+    background:var(--paper-card);
+    color:var(--ink-soft);
+    cursor:pointer;
+    user-select:none;
+    transition:all .15s ease;
+  }
+  .chip:hover{border-color:var(--accent-soft); color:var(--accent);}
+  .chip.active{background:var(--ink); color:var(--paper); border-color:var(--ink);}
+  .count-note{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:11.5px;
+    color:var(--ink-soft);
+    margin-left:auto;
+    white-space:nowrap;
+  }
+
+  /* ---------- Section (drawer) ---------- */
+  .drawer{margin-top:52px;}
+  .drawer-head{
+    display:flex;
+    align-items:baseline;
+    gap:14px;
+    border-bottom:1.5px solid var(--ink);
+    padding-bottom:10px;
+    margin-bottom:6px;
+  }
+  .drawer-num{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:13px;
+    color:var(--accent-soft);
+    font-weight:600;
+  }
+  .drawer-title{
+    font-family:'Source Serif 4', serif;
+    font-weight:600;
+    font-size:22px;
+    margin:0;
+  }
+  .drawer-sub{
+    font-size:13px;
+    color:var(--ink-soft);
+    margin:10px 0 22px;
+    max-width:72ch;
+  }
+
+  /* ---------- Card ---------- */
+  .card{
+    display:grid;
+    grid-template-columns:78px 1fr;
+    gap:0 20px;
+    background:var(--paper-card);
+    border:1px solid var(--rule);
+    border-radius:4px;
+    padding:20px 22px;
+    margin-bottom:14px;
+    transition:border-color .15s ease;
+  }
+  .card:hover{border-color:var(--rule-strong);}
+  .card.hidden{display:none;}
+
+  .callno{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:11px;
+    color:var(--ink-soft);
+    line-height:1.5;
+    padding-top:2px;
+    border-right:1px dashed var(--rule-strong);
+  }
+  .callno .yr{display:block; font-size:15px; color:var(--ink); font-weight:600;}
+
+  .card-body{min-width:0;}
+  .card-top{
+    display:flex;
+    justify-content:space-between;
+    align-items:flex-start;
+    gap:14px;
+    flex-wrap:wrap;
+  }
+  .card-title{
+    font-family:'Source Serif 4', serif;
+    font-weight:600;
+    font-size:17.5px;
+    margin:0 0 4px;
+    line-height:1.3;
+  }
+  .card-cite{
+    font-size:13px;
+    color:var(--ink-soft);
+    font-style:italic;
+    margin:0 0 12px;
+  }
+  .card-cite .src{font-style:normal; font-family:'IBM Plex Mono',monospace; font-size:11.5px;}
+
+  .stamp{
+    flex:0 0 auto;
+    font-family:'IBM Plex Mono', monospace;
+    font-size:10.5px;
+    font-weight:600;
+    letter-spacing:0.05em;
+    text-transform:uppercase;
+    padding:6px 10px;
+    border-radius:3px;
+    border:1.5px solid;
+    white-space:nowrap;
+  }
+  .stamp.v-full{color:var(--verified); background:var(--verified-bg); border-color:var(--verified);}
+  .stamp.v-partial{color:var(--partial); background:var(--partial-bg); border-color:var(--partial); border-style:dashed;}
+  .stamp.v-none{color:var(--none); background:var(--none-bg); border-color:var(--rule-strong); border-style:dotted;}
+
+  .card-use{
+    font-size:14.5px;
+    margin:0 0 12px;
+  }
+  .card-use b{font-weight:600;}
+  .card-use code{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:12.5px;
+    background:var(--paper);
+    border:1px solid var(--rule);
+    padding:1px 5px;
+    border-radius:2px;
+  }
+
+  .card-foot{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:12px;
+    flex-wrap:wrap;
+    margin-top:14px;
+    padding-top:12px;
+    border-top:1px solid var(--rule);
+  }
+  .card-foot a{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:12px;
+    color:var(--accent);
+    text-decoration:none;
+    word-break:break-all;
+  }
+  .card-foot a:hover{text-decoration:underline;}
+  .card-foot .noURL{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:12px;
+    color:var(--ink-soft);
+    font-style:italic;
+  }
+  .tag{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:10.5px;
+    color:var(--ink-soft);
+    background:var(--paper);
+    border:1px solid var(--rule);
+    padding:3px 8px;
+    border-radius:999px;
+  }
+
+  .note{
+    background:var(--partial-bg);
+    border-left:3px solid var(--partial);
+    padding:10px 14px;
+    font-size:13px;
+    color:#5c3d10;
+    margin-top:12px;
+    border-radius:0 3px 3px 0;
+  }
+  .note b{color:var(--partial);}
+
+  /* ---------- Footer ---------- */
+  footer{
+    margin-top:70px;
+    padding-top:26px;
+    border-top:2px solid var(--ink);
+    font-size:12.5px;
+    color:var(--ink-soft);
+  }
+  footer p{max-width:70ch;}
+
+  @media (max-width:640px){
+    .card{grid-template-columns:1fr;}
+    .callno{border-right:none; border-bottom:1px dashed var(--rule-strong); padding-bottom:8px; margin-bottom:10px; display:flex; gap:8px; align-items:baseline;}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <div class="eyebrow">DSGE_mkik &middot; kkv / nagyvállalat euróbevezetési modell &middot; 2026-08-06</div>
+    <h1>Irodalomkatalógus</h1>
+    <p class="lede">
+      Minden forrás, amit a modellspecifikáció (<code>2026-08-05_modell_specifikacio_v07.md</code>)
+      hivatkozik, egy helyen: mit mond a forrás, mit veszünk át belőle konkrétan, és —
+      ez itt a lényeg — <b>ténylegesen elolvastuk-e teljes szöveggel, vagy csak
+      absztraktból/keresési találatból ismerjük.</b> A megkülönböztetés azért fontos,
+      mert csak a teljes szöveggel ellenőrzött állításokra lehet számot vagy egyenletet
+      építeni; a nem ellenőrzött tételek névből hivatkozott kiindulópontok, amiket
+      fel kell tölteni, ha a tanulmányba kerülnek.
+    </p>
+    <div class="meta-row">
+      <span><b>21</b> tétel (19 irodalom + 2 implementációs erőforrás)</span>
+      <span><b>14</b> teljes szöveggel ellenőrizve</span>
+      <span><b>3</b> csak absztrakt/összefoglaló</span>
+      <span><b>4</b> nem ellenőrizve (feltöltésre vár)</span>
+      <span>Kiindulópont: <code style="font-family:'IBM Plex Mono',monospace">1785848825897_dsge_kkv_uj_modell_irodalmi_kiindulopont.md</code></span>
+    </div>
+  </header>
+
+  <div class="legend">
+    <div class="legend-item"><span class="stamp v-full" style="padding:3px 8px;">✔ Teljes szöveg</span> a tool eredményéből konkrét szám/egyenlet átvéve</div>
+    <div class="legend-item"><span class="stamp v-partial" style="padding:3px 8px;">○ Részleges</span> csak absztrakt vagy keresési találat</div>
+    <div class="legend-item"><span class="stamp v-none" style="padding:3px 8px;">— Nem ellenőrizve</span> csak névből hivatkozva, fel kell tölteni</div>
+  </div>
+
+  <div class="controls">
+    <div class="controls-inner">
+      <input type="text" id="search" placeholder="Keresés szerző, cím vagy kulcsszó szerint&hellip;">
+      <button class="chip active" data-filter="all">Mind</button>
+      <button class="chip" data-filter="v-full">✔ Teljes szöveg</button>
+      <button class="chip" data-filter="v-partial">○ Részleges</button>
+      <button class="chip" data-filter="v-none">— Nem ellenőrizve</button>
+      <span class="count-note" id="countNote"></span>
+    </div>
+  </div>
+
+  <!-- ================= A. SOE-VÁZ ================= -->
+  <section class="drawer" data-section="soe">
+    <div class="drawer-head">
+      <span class="drawer-num">A</span>
+      <h2 class="drawer-title">SOE-váz, log-linearizált egyenletekkel</h2>
+    </div>
+    <p class="drawer-sub">A kis nyitott gazdaság kanonikus szerkezete és a piaci
+      szegmensenkénti (hazai/import/export) árazási blokk mintája — a specifikáció
+      2. és 5. szakaszához.</p>
+
+    <div class="card" data-status="v-partial" data-tags="soe galí monacelli new keynesian kanonikus">
+      <div class="callno">SOE&nbsp;01<span class="yr">2005</span></div>
+      <div class="card-body">
+        <div class="card-top">
+          <div>
+            <h3 class="card-title">Monetary Policy and Exchange Rate Volatility in a Small Open Economy</h3>
+            <p class="card-cite">Jordi Galí &amp; Tommaso Monacelli &middot; <span class="src">Review of Economic Studies, 2005</span></p>
+          </div>
+          <span class="stamp v-partial">○ Részleges</span>
+        </div>
+        <p class="card-use"><b>Mire használjuk:</b> a kanonikus kis nyitott gazdaság
+          New Keynesi vázaként hivatkozzuk — ez az elméleti kiindulópont, amihez
+          a saját szerkezetünket viszonyítjuk. Dynare-implementációja megvan a
+          Pfeifer <code>DSGE_mod</code> repóban (<code>Gali_Monacelli_2005</code>),
+          de sem a papert, sem a repó kódját nem néztük át tételesen.</p>
+        <div class="note"><b>Teendő:</b> ha a specifikáció bármely állítása
+          direktben erre a modellre hivatkozna (nem csak "kanonikus SOE" címkeként),
+          a papert vagy a Dynare-kódot előbb el kell olvasni.</div>
+        <div class="card-foot">
+          <span class="noURL">Nincs ellenőrzött URL — csak névből ismert</span>
+          <span class="tag">nem sürgős</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="card" data-status="v-full" data-tags="soe adolfson lasseen linde villani bayesi árazás calvo import export markup">
+      <div class="callno">SOE&nbsp;02<span class="yr">2007</span></div>
+      <div class="card-body">
+        <div class="card-top">
+          <div>
+            <h3 class="card-title">Bayesian Estimation of an Open Economy DSGE Model with Incomplete Pass-Through</h3>
+            <p class="card-cite">Malin Adolfson, Stefan Laséen, Jesper Lindé &amp; Mattias Villani &middot; <span class="src">Journal of International Economics, 72 (2007) 481&ndash;511</span></p>
+          </div>
+          <span class="stamp v-full">✔ Teljes szöveg</span>
+        </div>
+        <p class="card-use"><b>Mire használjuk:</b> <b>direkt sablon a spec 5.
+          szakaszához.</b> Négy külön Calvo-blokk — hazai, import-fogyasztási,
+          import-beruházási, export — pontosan a mi piaci-szegmens szerkezetünk
+          mintája. Két konkrét, átvett szám: az import/export árragadósság
+          <code>2&ndash;3 negyedév</code>, a hazai <code>8</code>; és a
+          <b>perzisztens (autokorrelált) import/export markup-sokk
+          nélkülözhetetlen</b> a reálárfolyam volatilitásának és
+          perzisztenciájának illesztéséhez &mdash; fehér zajjal a modellezett
+          szórás 7,85-ről 5,99-re esik. Egy megoldatlan feszültséget is jelez:
+          a hazai/import helyettesítési rugalmasságot (<code>η_c</code>) nem
+          tudták becsülni, végül kalibrálták (<code>η_c=5</code>), mert a
+          becslés a magas importvolatilitás &ndash; sima fogyasztás
+          ellentmondás miatt implauzibilis értékre futott.</p>
+        <div class="card-foot">
+          <a href="https://users.ssc.wisc.edu/~cengel/IMF/AdolfsonLasseenLindeVilliani2007.pdf" target="_blank" rel="noopener">users.ssc.wisc.edu/~cengel/IMF/AdolfsonLasseenLindeVilliani2007.pdf</a>
+          <span class="tag">spec &sect;5, &sect;9.1</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="card" data-status="v-none" data-tags="jakab világi mnb magyar becsült core">
+      <div class="callno">SOE&nbsp;03<span class="yr">2008</span></div>
+      <div class="card-body">
+        <div class="card-top">
+          <div>
+            <h3 class="card-title">A DSGE modell Magyarországra (a repó JV-magjának alapja)</h3>
+            <p class="card-cite">Jakab M. Zoltán &amp; Világi Balázs &middot; <span class="src">MNB Working Paper 2008/9</span></p>
+          </div>
+          <span class="stamp v-none">&mdash; Nem ellenőrizve</span>
+        </div>
+        <p class="card-use"><b>Mire használjuk:</b> ez a <code>jv_dsge_v05.mod</code>
+          becsült paramétereinek (<code>ξ_p</code>, <code>ψ_i</code>,
+          <code>γ_i</code>, <code>φ_π</code> stb.) elméleti forrása &mdash; a
+          repóban implementálva van, de magát a papert nem néztük át
+          függetlenül. A specifikáció priorjai (9.1 szakasz) erre a
+          poszteriorra épülnek, mint prior-közép.</p>
+        <div class="note"><b>Teendő:</b> ha a JV-poszterior pontos értékeit
+          (nem csak a repóban kódolt számokat) ellenőrizni kell, a papert fel
+          kell tölteni.</div>
+        <div class="card-foot">
+          <span class="noURL">Nincs ellenőrzött URL — a repóból ismert másodkézből</span>
+          <span class="tag">spec &sect;9.1</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="card" data-status="v-none" data-tags="justiniano preston soe becslés figyelmeztetés">
+      <div class="callno">SOE&nbsp;04<span class="yr">2010</span></div>
+      <div class="card-body">
+        <div class="card-top">
+          <div>
+            <h3 class="card-title">Small Open Economy DSGE Models: Specification, Estimation and Model Fit</h3>
+            <p class="card-cite">Alejandro Justiniano &amp; Bruce Preston &middot; <span class="src">Journal of International Economics, 2010</span></p>
+          </div>
+          <span class="stamp v-none">&mdash; Nem ellenőrizve</span>
+        </div>
+        <p class="card-use"><b>Mire használjuk:</b> csak névből hivatkozott
+          figyelmeztetésként &mdash; arra emlékeztet, hogy a SOE-modellosztály
+          rendszeresen nem tudja illeszteni bizonyos momentumokat (pl. a
+          kereskedelmi mérleg és a reálárfolyam együttmozgását). Nincs belőle
+          átvett szám vagy egyenlet.</p>
+        <div class="card-foot">
+          <span class="noURL">Nincs ellenőrzött URL</span>
+          <span class="tag">nem sürgős</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= B. PÉNZÜGYI AKCELERÁTOR ================= -->
+  <section class="drawer" data-section="financial">
+    <div class="drawer-head">
+      <span class="drawer-num">B</span>
+      <h2 class="drawer-title">Pénzügyi akcelerátor és árfolyamrezsim</h2>
+    </div>
+    <p class="drawer-sub">A modell gerince és a BGG-típusú pénzügyi blokk —
+      a specifikáció 6. szakaszához.</p>
+
+    <div class="card" data-status="v-none" data-tags="bgg bernanke gertler gilchrist eredeti financial accelerator">
+      <div class="callno">FIN&nbsp;01<span class="yr">1999</span></div>
+      <div class="card-body">
+        <div class="card-top">
+          <div>
+            <h3 class="card-title">The Financial Accelerator in a Quantitative Business Cycle Framework</h3>
+            <p class="card-cite">Ben S. Bernanke, Mark Gertler &amp; Simon Gilchrist &middot; <span class="src">Handbook of Macroeconomics, 1999</span></p>
+          </div>
+          <span class="stamp v-none">&mdash; Nem ellenőrizve</span>
+        </div>
+        <p class="card-use"><b>Mire használjuk:</b> az eredeti BGG-cikk, csak a
+          származékain (GGN 2007, CMR 2014) keresztül ismert. A 6.1 szakasz
+          reduktált formájának ("efp_j = χ_j·(...)") legmélyebb gyökere, de
+          közvetlenül nem olvastuk.</p>
+        <div class="card-foot">
+          <span class="noURL">Nincs ellenőrzött URL — másodkézből (GGN, CMR)</span>
+          <span class="tag">alap-referencia</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="card" data-status="v-full" data-tags="ggn gertler gilchrist natalucci gerinc árfolyamrezsim devizaadósság mérlegcsatorna">
+      <div class="callno">FIN&nbsp;02<span class="yr">2007</span></div>
+      <div class="card-body">
+        <div class="card-top">
+          <div>
+            <h3 class="card-title">External Constraints on Monetary Policy and the Financial Accelerator</h3>
+            <p class="card-cite">Mark Gertler, Simon Gilchrist &amp; Filippo Natalucci &middot; <span class="src">NBER Working Paper 10128</span></p>
+          </div>
+          <span class="stamp v-full">✔ Teljes szöveg</span>
+        </div>
+        <p class="card-use"><b>Mire használjuk:</b> <b>a modell gerince.</b>
+          Kis nyitott gazdaság + pénzügyi akcelerátor + árfolyamrezsim-váltás
+          egyben — pontosan ez a projekt fő kérdése. A 4.3. szakasza
+          (foreign-denominated debt) a devizakitettségi blokkunk (spec 6.2)
+          formális forrása: az árfolyam-átértékelési tag a nettó vagyon
+          egyenletében. A fix/lebegő rezsim összevetésük a mi
+          sztochasztikus rétegünk (<code>v06</code>) mintája.</p>
+        <div class="card-foot">
+          <a href="https://www.nber.org/system/files/working_papers/w10128/w10128.pdf" target="_blank" rel="noopener">nber.org/system/files/working_papers/w10128/w10128.pdf</a>
+          <span class="tag">spec &sect;6.2, &sect;8</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="card" data-status="v-full" data-tags="gilchrist hairault kempf valutaunió akcelerátor heterogenitás">
+      <div class="callno">FIN&nbsp;03<span class="yr">2002</span></div>
+      <div class="card-body">
+        <div class="card-top">
+          <div>
+            <h3 class="card-title">Monetary Policy and the Financial Accelerator in a Monetary Union</h3>
+            <p class="card-cite">Simon Gilchrist, Jean-Olivier Hairault &amp; Hubert Kempf &middot; <span class="src">Fed IFDP 750</span></p>
+          </div>
+          <span class="stamp v-full">✔ Teljes szöveg</span>
+        </div>
+        <p class="card-use"><b>Mire használjuk:</b> akcelerátor valutaunióban,
+          de <i>ország</i>-heterogenitásra, nem méret-heterogenitásra. A
+          logika &mdash; a közös monetáris politika hatása attól függ, hol
+          erősebbek a pénzügyi súrlódások &mdash; közvetlenül átvihető
+          KKV/nagyvállalat összevetésre; ez indokolja, hogy a modellünkben a
+          típusonkénti <code>χ_j</code> aszimmetria miért releváns kérdés
+          valutaunióban, függetlenül attól, hogy országok vagy vállalattípusok
+          között áll fenn.</p>
+        <div class="card-foot">
+          <a href="https://www.federalreserve.gov/econres/ifdp/monetary-policy-and-the-financial-accelerator-in-a-monetary-union.htm" target="_blank" rel="noopener">federalreserve.gov/econres/ifdp/&hellip;monetary-union.htm</a>
+          <span class="tag">spec &sect;0, &sect;6</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="card" data-status="v-full" data-tags="christiano motto rostagno risk shocks kockázat cmr bgg teljes szerződés pénzügyi változók">
+      <div class="callno">FIN&nbsp;04<span class="yr">2014</span></div>
+      <div class="card-body">
+        <div class="card-top">
+          <div>
+            <h3 class="card-title">Risk Shocks</h3>
+            <p class="card-cite">Lawrence J. Christiano, Roberto Motto &amp; Massimo Rostagno &middot; <span class="src">American Economic Review, 104(1), 2014</span></p>
+          </div>
+          <span class="stamp v-full">✔ Teljes szöveg</span>
+        </div>
+        <p class="card-use"><b>Mire használjuk:</b> a spec 6.1 szakaszának
+          <code>efp_j = χ_j·(...)</code> redukált formája mögötti <b>teljes,
+          nem-linearizált BGG-szerződés</b> forrása: idioszinkratikus
+          <code>ω</code> sokk, csőd-küszöb <code>ω̄</code>, zárófeltétel
+          <code>Γ(ω̄) − μ·G(ω̄) = (L−1)/L · R/R^k</code>. Ennél fontosabb egy
+          <b>módszertani figyelmeztetés</b>: ha a becslésből kihagyják a
+          pénzügyi megfigyelt változókat (hitel, felár, tőzsdei érték,
+          hozamgörbe), a pénzügyi sokk fontossága eltűnik, és egy hamis,
+          countercyclicus implikációjú sokk veszi át a helyét. Ez direkt
+          hatással van a spec 9.1 becslési tervére: típusonkénti pénzügyi
+          változó kell a megfigyelt listába.</p>
+        <div class="card-foot">
+          <a href="https://faculty.wcas.northwestern.edu/lchrist/research/ECB/risk_shocks/AER_RISK_SHOCKS.pdf" target="_blank" rel="noopener">faculty.wcas.northwestern.edu/&hellip;/AER_RISK_SHOCKS.pdf</a>
+          <span class="tag">spec &sect;6.1, &sect;9.1</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="card" data-status="v-full" data-tags="ottonello winberry vállalati heterogenitás beruházás chi">
+      <div class="callno">FIN&nbsp;05<span class="yr">2020</span></div>
+      <div class="card-body">
+        <div class="card-top">
+          <div>
+            <h3 class="card-title">Financial Heterogeneity and the Investment Channel of Monetary Policy</h3>
+            <p class="card-cite">Pablo Ottonello &amp; Thomas Winberry &middot; <span class="src">Econometrica, 88(6), 2020</span></p>
+          </div>
+          <span class="stamp v-full">✔ Teljes szöveg</span>
+        </div>
+        <p class="card-use"><b>Mire használjuk:</b> vállalati pénzügyi
+          heterogenitás és beruházási csatorna &mdash; innen a
+          <code>χ_j</code>-differenciálás közgazdasági megalapozása. Fő
+          tanulság: nem mindig a legkorlátozottabb vagy legkockázatosabb
+          vállalat reagál a legerősebben egy monetáris sokkra &mdash; ez az
+          intuíció áll a spec 6.3 pontosított diagnózisa mögött, ahol a
+          <code>χ</code>-előjel megfordulását nem egyszerű intuícióval, hanem
+          a közös <code>rk</code> szerkezeti következményeként magyarázzuk.</p>
+        <div class="card-foot">
+          <a href="https://www.thomaswinberry.com/research/ottonello_winberry_2020_main_text.pdf" target="_blank" rel="noopener">thomaswinberry.com/research/&hellip;main_text.pdf</a>
+          <span class="tag">spec &sect;6.3</span>
+          <span class="tag">a hivatalos verzió fizetős</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= C. EXPORT MARGÓ ================= -->
+  <section class="drawer" data-section="export">
+    <div class="drawer-head">
+      <span class="drawer-num">C</span>
+      <h2 class="drawer-title">Export margó és heterogenitás</h2>
+    </div>
+    <p class="drawer-sub">A piac dimenzió, a belépés/kilépés formalizmusa, és
+      az <code>f_x</code>-tárcsa kalibrációs horgonya — a specifikáció 4. és
+      7. szakaszához. <b>Ez a csoport hozta a legnagyobb korrekciót</b>: lásd
+      a Baldwin-tételpárt lent.</p>
+
+    <div class="card" data-status="v-full" data-tags="ghironi melitz export belépés kilépés két ország szimmetrikus">
+      <div class="callno">EXP&nbsp;01<span class="yr">2005</span></div>
+      <div class="card-body">
+        <div class="card-top">
+          <div>
+            <h3 class="card-title">International Trade and Macroeconomic Dynamics with Heterogeneous Firms</h3>
+            <p class="card-cite">Fabio Ghironi &amp; Marc J. Melitz &middot; <span class="src">Quarterly Journal of Economics, 120(3), 2005</span></p>
+          </div>
+          <span class="stamp v-full">✔ Teljes szöveg</span>
+        </div>
+        <p class="card-use"><b>Mire használjuk:</b> <b>csak ihlet, nem átvett
+          szerkezet</b> &mdash; teljes olvasás után kiderült, hogy a modell
+          két <i>szimmetrikus</i> országot ír le, nincs benne méretaszimmetria,
+          nincs nominális merevség, nincs pénzügyi súrlódás (flexibilis árú,
+          reál modell). Amit ténylegesen átveszünk: a belépési/kilépési
+          formalizmus &mdash; a szabad belépési feltétel
+          <code>v&#771;=w·f_E/Z</code>, a zéró-profit exportküszöb, és a
+          cégtömeg mozgásegyenlete <code>N_D,t=(1−δ)(N_D,t−1+N_E,t−1)</code>
+          &mdash; ez a mintája a spec 7.2 szakasz endogén belépés/kilépés
+          egyenletének.</p>
+        <div class="card-foot">
+          <a href="https://faculty.washington.edu/ghiro/GhiroMeliQJE0805.pdf" target="_blank" rel="noopener">faculty.washington.edu/ghiro/GhiroMeliQJE0805.pdf</a>
+          <span class="tag">spec &sect;7.2</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="card" data-status="v-full" data-tags="manova hitelkorlát export belépés volumen credit constraints">
+      <div class="callno">EXP&nbsp;02<span class="yr">2008/2013</span></div>
+      <div class="card-body">
+        <div class="card-top">
+          <div>
+            <h3 class="card-title">Credit Constraints, Heterogeneous Firms, and International Trade</h3>
+            <p class="card-cite">Kalina Manova &middot; <span class="src">NBER Working Paper 14531 (2008, rev. 2011) → Review of Economic Studies, 2013</span></p>
+          </div>
+          <span class="stamp v-full">✔ Teljes szöveg</span>
+        </div>
+        <p class="card-use"><b>Mire használjuk:</b> a hitelkorlát nem csak
+          kamatfelárként hat, hanem az exportba lépésen és az exportvolumenen
+          keresztül is &mdash; a frikció hatásának 75&ndash;80%-a
+          "termelésen túli", és ennek kb. egyharmada belépés, kétharmada
+          volumen. Ez a mi "méret vs. piac" kettéválasztásunk empirikus
+          alátámasztása: a hitelhez jutás (méret) és az exportkitettség
+          (piac) elméletileg is elválasztható csatorna. <i>Csak a
+          2008/2011-es working paper verziót olvastuk</i>, a megjelent
+          RESTUD-cikket nem &mdash; a számok eltérhetnek.</p>
+        <div class="card-foot">
+          <a href="https://www.nber.org/system/files/working_papers/w14531/w14531.pdf" target="_blank" rel="noopener">nber.org/system/files/working_papers/w14531/w14531.pdf</a>
+          <span class="tag">spec &sect;0, &sect;7</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="card" data-status="v-full" data-tags="baldwin skudelny taglioni beachhead volatilitás rose hatás felülírva">
+      <div class="callno">EXP&nbsp;03a<span class="yr">2005</span></div>
+      <div class="card-body">
+        <div class="card-top">
+          <div>
+            <h3 class="card-title">Trade Effects of the Euro: Evidence from Sectoral Data</h3>
+            <p class="card-cite">Richard Baldwin, Frauke Skudelny &amp; Daria Taglioni &middot; <span class="src">ECB Working Paper 446, 2005</span></p>
+          </div>
+          <span class="stamp v-full">✔ Teljes szöveg</span>
+        </div>
+        <p class="card-use"><b>Mire használjuk:</b> az eredeti beachhead-modell
+          (Baldwin 1988 nyomán): a bizonytalanság csökkenése konvex módon hat
+          a kereskedelemre, mert (i) a volatilitás a kis cégeket
+          négyzetesen jobban sújtja, (ii) a cégméret-eloszlás erősen a kicsik
+          felé torz. Ez a hiszterézis-modul elméleti váza (spec 7.2). A
+          pooled becslésük 70&ndash;140%-os "Rose-hatást" adott az euróra.</p>
+        <div class="note"><b>Fontos:</b> ezt a becslést a szerző <i>saját maga</i>
+          írta felül egy évvel később &mdash; lásd a következő tételt.
+          A modellezésre alkalmas elméleti vázat megtartjuk, a 70&ndash;140%-os
+          számot nem használjuk kalibrációra.</div>
+        <div class="card-foot">
+          <a href="https://www.ecb.europa.eu/pub/pdf/scpwps/ecbwp446.pdf" target="_blank" rel="noopener">ecb.europa.eu/pub/pdf/scpwps/ecbwp446.pdf</a>
+          <span class="tag">spec &sect;7.2 (elméleti váz)</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="card" data-status="v-full" data-tags="baldwin 2006 önkorrekció rose hatás módszertani kritika konszenzus 5-10 százalék">
+      <div class="callno">EXP&nbsp;03b<span class="yr">2006</span></div>
+      <div class="card-body">
+        <div class="card-top">
+          <div>
+            <h3 class="card-title">The Euro's Trade Effects</h3>
+            <p class="card-cite">Richard Baldwin &amp; Jacques Melitz &middot; <span class="src">ECB Working Paper 594, 2006</span></p>
+          </div>
+          <span class="stamp v-full">✔ Teljes szöveg</span>
+        </div>
+        <p class="card-use"><b>Mire használjuk: a 7.3 szakasz <code>f_x</code>-sávjának
+          alsó szélének pontos forrása.</b> Ugyanaz a Baldwin, aki a WP446-ot
+          írta &mdash; itt <b>lebontja a saját korábbi módszertanát</b>. Három
+          torzítási forrást azonosít: (i) hiányzó multilaterális
+          ellenállás-tag, ami a valutaunió-dummyval korrelál; (ii)
+          pár-specifikus fix hatásokkal a hatás statisztikailag <b>nem
+          különbözik nullától</b> (Pakko&ndash;Wall 2001: &minus;0,38, nem
+          szignifikáns); (iii) a régi (euró előtti) valutaunió-párok
+          szisztematikusan kicsi, szegény, extrém nyitott országok &mdash;
+          ezeknek "gyakorlatilag nulla informatív tartalmuk van az
+          eurózónára". Saját végkövetkeztetése: <b>az euró 5&ndash;10%-kal
+          növelte az euróövezeti kereskedelmet</b>, nem 70&ndash;140%-kal.</p>
+        <div class="note"><b>Ez nem érvényteleníti a Lalinsky&ndash;Meriküll
+          horgonyt</b> (lásd lent) &mdash; az ő cégszintű, panel fix hatásos
+          szerkezetük kevésbé sújtott ugyanezektől a torzításoktól. De a
+          sáv alsó végét mostantól erre a számra, nem kerekítésre kell
+          alapozni.</div>
+        <div class="card-foot">
+          <a href="https://www.ecb.europa.eu/pub/pdf/scpwps/ecbwp594.pdf" target="_blank" rel="noopener">ecb.europa.eu/pub/pdf/scpwps/ecbwp594.pdf</a>
+          <span class="tag">spec &sect;7.3 — kritikus revízió</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="card" data-status="v-full" data-tags="lalinsky meriküll szlovákia észtország cégszintű fő horgony f_x">
+      <div class="callno">EXP&nbsp;04<span class="yr">2021</span></div>
+      <div class="card-body">
+        <div class="card-top">
+          <div>
+            <h3 class="card-title">The Effect of a Single Currency on Exports: Comparative Firm-Level Evidence</h3>
+            <p class="card-cite">Tibor Lalinsky &amp; Jaanika Meriküll &middot; <span class="src">International Journal of Central Banking, 17(3), 2021</span></p>
+          </div>
+          <span class="stamp v-full">✔ Teljes szöveg</span>
+        </div>
+        <p class="card-use"><b>Mire használjuk: az <code>f_x</code>-tárcsa fő
+          külső horgonya.</b> Szlovákia (lebegő árfolyamról, egyedül belépő)
+          vs. Észtország (valutatanácsi rögzítésről) &mdash; a szlovák eset a
+          magyar helyzet közeli párja. Az euró <code>+18%</code>-kal növelte
+          az euróövezeti exportot, ebből az intenzív margó ~80%; a kis és
+          közepes exportőrök nyertek a legtöbbet (feltétel nélküli kvantilis
+          regresszió, 40. percentilis körül +40%); a köztes termékek exportja
+          nőtt a leginkább. Panel fix hatásokkal, cégszintű vámadaton &mdash;
+          kevésbé sújtott a Baldwin (2006) által azonosított torzításoktól,
+          mint a pooled ország-dummy becslések.</p>
+        <div class="card-foot">
+          <a href="https://www.ijcb.org/sites/default/files/journal/v17n3/ijcb-v17n3-effect-single-currency-exports-comparative-firm-level-evidence.pdf" target="_blank" rel="noopener">ijcb.org/&hellip;/effect-single-currency-exports&hellip;pdf</a>
+          <span class="tag">spec &sect;7.3 — fő horgony</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="card" data-status="v-none" data-tags="baldwin krugman dixit hiszterézis opciós érték klasszikus">
+      <div class="callno">EXP&nbsp;05<span class="yr">1989</span></div>
+      <div class="card-body">
+        <div class="card-top">
+          <div>
+            <h3 class="card-title">Persistent Trade Effects of Large Exchange Rate Shocks &middot; Hysteresis, Import Penetration, and Exchange Rate Pass-Through</h3>
+            <p class="card-cite">Richard Baldwin &amp; Paul Krugman (QJE, 1989) &middot; Avinash Dixit (QJE, 1989)</p>
+          </div>
+          <span class="stamp v-none">&mdash; Nem ellenőrizve</span>
+        </div>
+        <p class="card-use"><b>Mire használjuk:</b> a hiszterézis/opciós érték
+          klasszikus elmélete &mdash; csak Baldwin (2006) irodalomjegyzékéből
+          ismert, másodkézből. Egyik cikket sem olvastuk közvetlenül.</p>
+        <div class="note"><b>Teendő, ha a hiszterézis-modul (spec 7.2) élesedik:</b>
+          mindkét cikk fel kell töltésre kerüljön, mielőtt a modul formális
+          levezetése ezekre hivatkozna.</div>
+        <div class="card-foot">
+          <span class="noURL">Nincs ellenőrzött URL — másodkézből (Baldwin 2006)</span>
+          <span class="tag">csak ha a hiszterézis-modul élesedik</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= D. TERMELÉSI HÁLÓZAT ================= -->
+  <section class="drawer" data-section="network">
+    <div class="drawer-head">
+      <span class="drawer-num">D</span>
+      <h2 class="drawer-title">Termelési hálózat</h2>
+    </div>
+    <p class="drawer-sub">A <code>Γ</code>-mátrix (köztes input háló) elméleti
+      forrásai — a specifikáció 3. és 4. szakaszához.</p>
+
+    <div class="card" data-status="v-full" data-tags="pasten schoenle weber production network calvo sektor nincs tőke">
+      <div class="callno">NET&nbsp;01<span class="yr">2020</span></div>
+      <div class="card-body">
+        <div class="card-top">
+          <div>
+            <h3 class="card-title">The Propagation of Monetary Policy Shocks in a Heterogeneous Production Economy</h3>
+            <p class="card-cite">Ernesto Pasten, Raphael Schoenle &amp; Michael Weber &middot; <span class="src">Journal of Monetary Economics, 116 (2020) 1&ndash;22</span></p>
+          </div>
+          <span class="stamp v-full">✔ Teljes szöveg</span>
+        </div>
+        <p class="card-use"><b>Mire használjuk:</b> N-szektoros New Keynesi
+          modell input-output kapcsolatokkal, szektorspecifikus Calvóval és
+          méretaránnyal &mdash; ez a mintája a spec 4. szakasz
+          <code>Γ</code>-mátrixának árazási blokkjához
+          (<code>pm_j = Σγ_jk·p_k</code>). <b>Egy régóta nyitott kérdést zár
+          le:</b> a termelési függvényükben <code>Y=L^(1&minus;δ)·Z^δ</code>
+          formában <b>nincs tőke</b>, csak munka és köztes input. Ez azt
+          jelenti, hogy a tőke&ndash;köztesinput kölcsönhatást nekünk kell
+          felírni; PSW csak az input-output árazási mechanizmushoz ad kész
+          mintát, a beruházási/akcelerátor blokkhoz nem.</p>
+        <div class="card-foot">
+          <a href="https://par.nsf.gov/servlets/purl/10387677" target="_blank" rel="noopener">par.nsf.gov/servlets/purl/10387677</a>
+          <span class="tag">spec &sect;4 — lezárt nyitott kérdés</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="card" data-status="v-partial" data-tags="altinoglu credit network supplier credit vertikális link">
+      <div class="callno">NET&nbsp;02<span class="yr">2018/2021</span></div>
+      <div class="card-body">
+        <div class="card-top">
+          <div>
+            <h3 class="card-title">The Origins of Aggregate Fluctuations in a Credit Network Economy</h3>
+            <p class="card-cite">Levent Altinoglu &middot; <span class="src">Fed FEDS Working Paper 2018-031 → Journal of Monetary Economics, 2021</span></p>
+          </div>
+          <span class="stamp v-partial">○ Részleges</span>
+        </div>
+        <p class="card-use"><b>Mire használjuk:</b> ihlet a beszállítói
+          hitelkapcsolat (supplier credit) hálózati modellezéséhez &mdash; a
+          hitelkapcsolatok kb. 30%-kal erősítik fel a pénzügyi sokkokat a
+          becslésük szerint. Csak absztraktot és modell-vázlatot láttunk
+          több keresési forrásból, a teljes egyenletrendszert nem néztük át.</p>
+        <div class="note"><b>Teendő, ha a beszállítói-hitel csatorna
+          (nem csak a mennyiségi <code>Γ</code>-link) modellbe kerülne:</b>
+          a teljes cikket fel kell tölteni.</div>
+        <div class="card-foot">
+          <a href="https://www.federalreserve.gov/econres/feds/files/2018031pap.pdf" target="_blank" rel="noopener">federalreserve.gov/econres/feds/files/2018031pap.pdf</a>
+          <span class="tag">csak inspiráció, nem átvett egyenlet</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="card" data-status="v-full" data-tags="su pénzügyi frikció input output capital misallocation influence vektor n=2">
+      <div class="callno">NET&nbsp;03<span class="yr">2019/2024</span></div>
+      <div class="card-body">
+        <div class="card-top">
+          <div>
+            <h3 class="card-title">Financial Frictions, Capital Misallocation, and Input-Output Linkages</h3>
+            <p class="card-cite">Yuchen Su &middot; <span class="src">Working paper 2019 → American Economic Journal: Macroeconomics, 2024</span></p>
+          </div>
+          <span class="stamp v-full">✔ Teljes szöveg</span>
+        </div>
+        <p class="card-use"><b>Mire használjuk:</b> pénzügyi frikciók +
+          input-output kapcsolatok egy modellben, szektoronként eltérő
+          csődköltséggel (<code>μ</code>) és bizonytalansággal
+          (<code>σ</code>). Az <code>N=2</code> esetre a Long&ndash;Plosser
+          influence-vektor zárt alakja (<code>v=[I&minus;Γ]&#8315;&sup1;β</code>)
+          a mi <code>Γ</code>-kalibrációnk (spec 4.5) spektrálsugár-tesztjének
+          elméleti alapja. <i>Csak a 2019-es working paper verziót
+          olvastuk</i> &mdash; a megjelent AEJ:Macro cikkben a számok
+          eltérhetnek (a WP TFP-esési aránya 1,7, a publikált absztraktban
+          1,58&ndash;1,7 tartomány).</p>
+        <div class="card-foot">
+          <a href="https://ungated-research.s3.amazonaws.com/pdf/5453-AEJ%20Macro-2024-2-Financial_Frictions,_Capital_Misallocation,_and_Input-Output_Linkages.pdf" target="_blank" rel="noopener">ungated-research.s3.amazonaws.com/&hellip;.pdf</a>
+          <span class="tag">spec &sect;4.5</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= E. MÓDSZERTAN ================= -->
+  <section class="drawer" data-section="method">
+    <div class="drawer-head">
+      <span class="drawer-num">E</span>
+      <h2 class="drawer-title">Módszertan — a SOE lezárása</h2>
+    </div>
+    <p class="drawer-sub">A modell stacionaritásának technikai alapja — a
+      specifikáció 8. szakaszához, a <code>v06</code> sztochasztikus réteghez.</p>
+
+    <div class="card" data-status="v-full" data-tags="schmitt-grohe uribe zárás closing stacionaritás nu_fx debt elastic">
+      <div class="callno">MET&nbsp;01<span class="yr">2003</span></div>
+      <div class="card-body">
+        <div class="card-top">
+          <div>
+            <h3 class="card-title">Closing Small Open Economy Models</h3>
+            <p class="card-cite">Stephanie Schmitt-Grohé &amp; Martín Uribe &middot; <span class="src">Journal of International Economics, 61 (2003) 163&ndash;185 (NBER WP 9270)</span></p>
+          </div>
+          <span class="stamp v-full">✔ Teljes szöveg</span>
+        </div>
+        <p class="card-use"><b>Mire használjuk:</b> öt lezárási módszer
+          (endogén diszkontfaktor, adósságfüggő kamatprémium, portfólió-
+          alkalmazkodási költség, teljes piac, nincs lezárás) rendszeres
+          összevetése. Megerősíti, hogy a mi <code>ν_fx</code>-lezárásunk az
+          ő <b>"Model 2"</b>-jük (<code>r_t = r + p(d_t)</code>, adósságfüggő
+          kamatprémium). Fő eredményük: mind az öt módszer <b>gyakorlatilag
+          azonos</b> konjunktúraciklus-dinamikát ad &mdash; ez alátámasztja,
+          hogy a lezárás <i>módja</i> önmagában nem számít, de éppen ezért a
+          <i>konzisztenciája</i> (ugyanaz a <code>ν</code> mindkét rezsimben)
+          igen, mert csak ez maradna forrása a mért különbségnek.</p>
+        <div class="card-foot">
+          <a href="https://www.nber.org/system/files/working_papers/w9270/w9270.pdf" target="_blank" rel="noopener">nber.org/system/files/working_papers/w9270/w9270.pdf</a>
+          <span class="tag">spec &sect;8 — v06 lezárása</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= F. IMPLEMENTÁCIÓS ERŐFORRÁSOK ================= -->
+  <section class="drawer" data-section="impl">
+    <div class="drawer-head">
+      <span class="drawer-num">F</span>
+      <h2 class="drawer-title">Implementációs erőforrások (nem irodalom, hanem kód)</h2>
+    </div>
+    <p class="drawer-sub">Nem publikációk, hanem Dynare-kód-gyűjtemények és a
+      saját repó — a teljesség kedvéért.</p>
+
+    <div class="card" data-status="v-partial" data-tags="pfeifer dsge_mod dynare kód repó ghironi melitz gali monacelli sgu">
+      <div class="callno">IMPL&nbsp;01<span class="yr">él&#337;</span></div>
+      <div class="card-body">
+        <div class="card-top">
+          <div>
+            <h3 class="card-title">DSGE_mod — replikációs Dynare-kódok gyűjteménye</h3>
+            <p class="card-cite">Johannes Pfeifer (karbantartó) &middot; <span class="src">GitHub, github.com/JohannesPfeifer/DSGE_mod</span></p>
+          </div>
+          <span class="stamp v-partial">○ Részleges</span>
+        </div>
+        <p class="card-use"><b>Mire használjuk:</b> klónozva, a
+          mappaszerkezetet átnéztük (<code>Ghironi_Melitz_2005</code>,
+          <code>Gali_Monacelli_2005</code>, <code>SGU_2003</code>,
+          <code>Jermann_Quadrini_2012</code>, <code>GarciaCicco_et_al_2010</code>
+          megvan), de a kódok tartalmát tételesen nem néztük át. <b>Fontos
+          negatív eredmény:</b> nincs benne kész BGG-féle financial
+          accelerator <code>.mod</code> fájl &mdash; azt kézzel kell
+          megírni.</p>
+        <div class="card-foot">
+          <a href="https://github.com/JohannesPfeifer/DSGE_mod" target="_blank" rel="noopener">github.com/JohannesPfeifer/DSGE_mod</a>
+          <span class="tag">implementációs minta, nem elmélet</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="card" data-status="v-full" data-tags="dsge_mkik saját repó jv kkv v05 v06">
+      <div class="callno">IMPL&nbsp;02<span class="yr">él&#337;</span></div>
+      <div class="card-body">
+        <div class="card-top">
+          <div>
+            <h3 class="card-title">DSGE_mkik — a projekt saját repója</h3>
+            <p class="card-cite">matyastamas02 &middot; <span class="src">GitHub, github.com/matyastamas02/DSGE_mkik</span></p>
+          </div>
+          <span class="stamp v-full">✔ Teljes szöveg</span>
+        </div>
+        <p class="card-use"><b>Mire használjuk:</b> a jelenlegi
+          <code>jv_dsge_v05.mod</code>, a <code>kkv_dsge_v01&ndash;v05.mod</code>
+          sorozat, a <code>docs/</code> alatti kritikai jegyzetek
+          (<code>red_flag_vizsgalat.md</code>,
+          <code>FIGYELMEZTETES_fo_allitas.md</code>) és a
+          <code>src/</code> alatti adat-előkészítő scriptek &mdash; ez maga
+          a projekt, nem külső irodalom, de a diagnózis és a specifikáció
+          minden állítása erre a repóra hivatkozik konkrét sor- és
+          fájlszámmal.</p>
+        <div class="card-foot">
+          <span class="noURL">Privát/projekt repó — nem publikus hivatkozás</span>
+          <span class="tag">a projekt alapja</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <p><b>Hogyan készült ez a katalógus.</b> A kiindulópont az eredetileg
+      feltöltött <code>1785848825897_dsge_kkv_uj_modell_irodalmi_kiindulopont.md</code>
+      jegyzet hét tétele volt. Ez a beszélgetés során bővült: egyrészt a
+      felmerülő új kérdésekhez (SOE-becslési sablon, a teljes BGG-szerződés,
+      a SOE-zárás módszertana) kerestünk további forrásokat, másrészt a
+      felhasználó közvetlenül feltöltött négy PDF-et (Baldwin&ndash;Skudelny&ndash;
+      Taglioni, Baldwin&ndash;Melitz, Adolfson et al., Christiano&ndash;Motto&ndash;Rostagno).
+      Minden "✔ Teljes szöveg" jelölés azt jelenti, hogy a forrás tartalma
+      ténylegesen megjelent egy tool-eredményben, és abból konkrét szám vagy
+      egyenlet került át a specifikációba &mdash; nem puszta névismertség.</p>
+    <p>Ez a fájl statikus pillanatkép, 2026-08-06-i állapot szerint. Ha új
+      forrás kerül elő vagy egy "nem ellenőrizve" tétel teljes szöveggel
+      megérkezik, ezt a katalógust és a
+      <code>2026-08-05_modell_specifikacio_v07.md</code> 10. szakaszát
+      egyszerre kell frissíteni.</p>
+  </footer>
+
+</div>
+
+<script>
+(function(){
+  const search = document.getElementById('search');
+  const chips = document.querySelectorAll('.chip');
+  const cards = document.querySelectorAll('.card');
+  const drawers = document.querySelectorAll('.drawer');
+  const countNote = document.getElementById('countNote');
+  let activeFilter = 'all';
+
+  function applyFilters(){
+    const q = search.value.trim().toLowerCase();
+    let visible = 0;
+    cards.forEach(card => {
+      const status = card.getAttribute('data-status');
+      const tags = (card.getAttribute('data-tags') || '') + ' ' +
+                   card.querySelector('.card-title').textContent.toLowerCase() + ' ' +
+                   card.querySelector('.card-cite').textContent.toLowerCase();
+      const statusOK = (activeFilter === 'all' || status === activeFilter);
+      const textOK = (q === '' || tags.toLowerCase().includes(q));
+      const show = statusOK && textOK;
+      card.classList.toggle('hidden', !show);
+      if (show) visible++;
+    });
+    drawers.forEach(drawer => {
+      const anyVisible = drawer.querySelectorAll('.card:not(.hidden)').length > 0;
+      drawer.style.display = anyVisible ? '' : 'none';
+    });
+    countNote.textContent = visible + ' / ' + cards.length + ' forrás látszik';
+  }
+
+  search.addEventListener('input', applyFilters);
+  chips.forEach(chip => {
+    chip.addEventListener('click', () => {
+      chips.forEach(c => c.classList.remove('active'));
+      chip.classList.add('active');
+      activeFilter = chip.getAttribute('data-filter');
+      applyFilters();
+    });
+  });
+
+  applyFilters();
+})();
+</script>
+
+</body>
+</html>

@@ -1,0 +1,551 @@
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Mi történt a csomag beküldése óta — lépésről lépésre</title>
+<style>
+:root{
+  --paper:#f3efe6; --surface:#faf7f0; --ink:#23211c; --ink-soft:#5d5848;
+  --line:#cfc7b4; --rule:#b8ae97; --accent:#7a3b2e;
+  --core:#3a5a78; --core-bg:#dde6ef;
+  --emp:#3f6b45; --emp-bg:#e3ecdd;
+  --gap:#a4452f; --gap-bg:#f0ddd5;
+  --map:#9a6b1f; --map-bg:#f1e4cc;
+  --code-bg:#ece5d6; --code-ink:#3a352b;
+}
+@media (prefers-color-scheme: dark){
+  :root{
+    --paper:#1c1a16; --surface:#242119; --ink:#ece7db; --ink-soft:#b3ab98;
+    --line:#3c3830; --rule:#4a453a; --accent:#d08a5c;
+    --core:#8fb4d6; --core-bg:#22303c; --emp:#8fc09a; --emp-bg:#1e2a20;
+    --gap:#e08a6f; --gap-bg:#33231d; --map:#d4a95f; --map-bg:#302716;
+    --code-bg:#2a2620; --code-ink:#d8cfbc;
+  }
+}
+:root[data-theme="light"]{
+  --paper:#f3efe6; --surface:#faf7f0; --ink:#23211c; --ink-soft:#5d5848;
+  --line:#cfc7b4; --rule:#b8ae97; --accent:#7a3b2e;
+  --core:#3a5a78; --core-bg:#dde6ef; --emp:#3f6b45; --emp-bg:#e3ecdd;
+  --gap:#a4452f; --gap-bg:#f0ddd5; --map:#9a6b1f; --map-bg:#f1e4cc;
+  --code-bg:#ece5d6; --code-ink:#3a352b;
+}
+:root[data-theme="dark"]{
+  --paper:#1c1a16; --surface:#242119; --ink:#ece7db; --ink-soft:#b3ab98;
+  --line:#3c3830; --rule:#4a453a; --accent:#d08a5c;
+  --core:#8fb4d6; --core-bg:#22303c; --emp:#8fc09a; --emp-bg:#1e2a20;
+  --gap:#e08a6f; --gap-bg:#33231d; --map:#d4a95f; --map-bg:#302716;
+  --code-bg:#2a2620; --code-ink:#d8cfbc;
+}
+*{box-sizing:border-box;}
+body{margin:0;background:var(--paper);color:var(--ink);
+  font-family:"Iowan Old Style","Palatino Linotype",Palatino,Georgia,serif;
+  line-height:1.62;font-size:16px;}
+.sheet{max-width:940px;margin:0 auto;padding:56px 40px 96px;}
+.eyebrow{font-family:"SF Mono",ui-monospace,"Cascadia Mono",Menlo,monospace;
+  font-size:11.5px;letter-spacing:.22em;text-transform:uppercase;
+  color:var(--accent);margin:0 0 14px;}
+h1{font-size:35px;font-weight:600;line-height:1.15;margin:0 0 16px;
+  letter-spacing:-.01em;max-width:26ch;text-wrap:balance;}
+.standfirst{font-size:18px;color:var(--ink-soft);margin:0;max-width:64ch;}
+.masthead{border-bottom:2px solid var(--ink);padding-bottom:28px;margin-bottom:8px;}
+.meta{font-family:"SF Mono",ui-monospace,Menlo,monospace;font-size:11px;
+  letter-spacing:.04em;color:var(--ink-soft);margin-top:20px;display:flex;
+  gap:26px;flex-wrap:wrap;}
+.meta span strong{color:var(--ink);font-weight:600;}
+
+.verdict{margin:34px 0 40px;padding:24px 28px;background:var(--core-bg);
+  border-left:4px solid var(--core);border-radius:0 5px 5px 0;}
+.verdict .tag{font-family:"SF Mono",ui-monospace,Menlo,monospace;font-size:11px;
+  letter-spacing:.15em;text-transform:uppercase;color:var(--core);font-weight:700;}
+.verdict p{margin:8px 0 0;font-size:17px;}
+
+nav.toc{background:var(--surface);border:1px solid var(--line);border-radius:8px;
+  padding:18px 24px;margin:0 0 46px;}
+nav.toc h4{margin:0 0 10px;font-size:11px;font-family:"SF Mono",Menlo,monospace;
+  letter-spacing:.14em;text-transform:uppercase;color:var(--accent);}
+nav.toc ol{margin:0;padding-left:22px;columns:2;column-gap:34px;max-width:none;}
+@media(max-width:700px){nav.toc ol{columns:1;}}
+nav.toc li{font-size:14px;margin-bottom:5px;}
+nav.toc a{color:var(--ink);text-decoration:none;border-bottom:1px solid var(--line);}
+nav.toc a:hover{border-bottom-color:var(--accent);color:var(--accent);}
+
+section{margin:0 0 50px;}
+.sec-head{display:flex;align-items:baseline;gap:14px;border-bottom:1px solid var(--rule);
+  padding-bottom:10px;margin-bottom:20px;}
+.sec-num{font-family:"SF Mono",ui-monospace,Menlo,monospace;font-size:13px;
+  color:var(--accent);font-weight:700;white-space:nowrap;}
+h2{font-size:22.5px;font-weight:600;margin:0;letter-spacing:-.01em;text-wrap:balance;}
+h3{font-size:16.5px;font-weight:600;margin:24px 0 8px;}
+p{max-width:70ch;}
+.lede{color:var(--ink-soft);font-size:15.5px;margin:-6px 0 20px;max-width:72ch;}
+ul,ol{max-width:72ch;}
+li{margin-bottom:7px;}
+code{font-family:"SF Mono",ui-monospace,Menlo,monospace;font-size:13px;
+  background:var(--code-bg);padding:2px 5px;border-radius:3px;color:var(--code-ink);}
+.eq{font-family:"SF Mono",ui-monospace,"Cascadia Mono",Menlo,monospace;
+  background:var(--code-bg);color:var(--code-ink);border-radius:6px;
+  padding:14px 18px;margin:12px 0;font-size:13.5px;overflow-x:auto;
+  line-height:1.75;border:1px solid var(--line);}
+.eq .cm{color:var(--ink-soft);}
+.note{font-size:14px;color:var(--ink-soft);margin:8px 0 18px;max-width:72ch;}
+.note b{color:var(--ink);font-weight:600;}
+
+.who{display:inline-block;font-family:"SF Mono",Menlo,monospace;font-size:10px;
+  letter-spacing:.08em;text-transform:uppercase;padding:3px 9px;border-radius:20px;
+  font-weight:700;white-space:nowrap;vertical-align:middle;}
+.who.samu{background:var(--map-bg);color:var(--map);}
+.who.mi{background:var(--core-bg);color:var(--core);}
+.who.egyutt{background:var(--emp-bg);color:var(--emp);}
+
+.warn{background:var(--gap-bg);border-left:4px solid var(--gap);
+  border-radius:0 5px 5px 0;padding:18px 22px;margin:20px 0;}
+.warn h4{margin:0 0 6px;font-size:13px;font-family:"SF Mono",Menlo,monospace;
+  letter-spacing:.08em;text-transform:uppercase;color:var(--gap);}
+.warn p{margin:6px 0 0;font-size:14.5px;max-width:72ch;}
+.ok{background:var(--emp-bg);border-left:4px solid var(--emp);
+  border-radius:0 5px 5px 0;padding:18px 22px;margin:20px 0;}
+.ok h4{margin:0 0 6px;font-size:13px;font-family:"SF Mono",Menlo,monospace;
+  letter-spacing:.08em;text-transform:uppercase;color:var(--emp);}
+.ok p{margin:6px 0 0;font-size:14.5px;max-width:72ch;}
+
+.data{display:flex;gap:16px;background:var(--core-bg);border-radius:8px;
+  padding:18px 22px;margin:20px 0;align-items:baseline;}
+.data .big{font-size:27px;font-weight:600;color:var(--core);
+  font-variant-numeric:tabular-nums;line-height:1;white-space:nowrap;}
+.data p{margin:0;font-size:14px;}
+
+table{width:100%;border-collapse:collapse;margin-top:6px;font-size:14px;}
+th,td{text-align:left;padding:9px 12px;border-bottom:1px solid var(--line);
+  vertical-align:top;}
+th{font-family:"SF Mono",ui-monospace,Menlo,monospace;font-size:10.5px;
+  letter-spacing:.06em;text-transform:uppercase;color:var(--ink-soft);font-weight:600;}
+td.num{font-variant-numeric:tabular-nums;text-align:right;
+  font-family:"SF Mono",monospace;}
+.tw{overflow-x:auto;}
+tr.hi td{background:var(--gap-bg);}
+
+figure{margin:24px 0;}
+figure svg{width:100%;height:auto;display:block;}
+figcaption{font-size:12.5px;color:var(--ink-soft);margin-top:10px;
+  font-family:"SF Mono",Menlo,monospace;max-width:72ch;}
+.svgwrap{background:var(--surface);border:1px solid var(--line);
+  border-radius:8px;padding:18px;overflow-x:auto;}
+
+footer{margin-top:60px;padding-top:20px;border-top:1px solid var(--rule);
+  font-size:12px;color:var(--ink-soft);
+  font-family:"SF Mono",ui-monospace,Menlo,monospace;letter-spacing:.03em;}
+</style>
+
+<div class="sheet">
+
+<header class="masthead">
+  <p class="eyebrow">DSGE_mkik · haladási napló</p>
+  <h1>Mi történt a csomag beküldése óta</h1>
+  <p class="standfirst">Lépésről lépésre: mit hozott újat a csapattárs anyaga, mit építettünk be belőle, és mi derült ki közben. Minden lépésnél az a kérdés, hogy <em>miért</em> számít.</p>
+  <div class="meta">
+    <span><strong>Dátum:</strong> 2026-08-12</span>
+    <span><strong>Kiindulás:</strong> forrásanyag-csomag, 2026-08-10</span>
+    <span><strong>Commitok:</strong> 0b674aa → 923e9d1</span>
+    <span><strong>Füstteszt:</strong> 33/33</span>
+  </div>
+</header>
+
+<div class="verdict">
+  <span class="tag">A lényeg egy mondatban</span>
+  <p>A csapattárs anyaga <b>szerkezetileg megoldotta</b> azt a problémát, amit én csak elfedtem, és bevezetett egy új csatornát (hitelhozzáférés), amivel a KKV-előny <b>először lett elvi lehetőség, nem feltevés</b> — a mi hozzájárulásunk pedig az, hogy ezt <b>replikáltuk, bekötöttük, és megpróbáltuk adattal lehorgonyozni</b>. Az utolsó lépés nem sikerült, és épp ez a legtanulságosabb.</p>
+</div>
+
+<p class="note">
+<span class="who samu">Samu</span> = a csapattárs új munkája &nbsp;·&nbsp;
+<span class="who mi">mi</span> = amit ebben a munkamenetben tettünk &nbsp;·&nbsp;
+<span class="who egyutt">együtt</span> = ahol a kettő összeér
+</p>
+
+
+<div class="warn" style="margin-top:24px">
+  <h4>Utolag: az IO-alapu 6%-os szam sem all (2026-08-12)</h4>
+  <p>A dokumentum tobb helyen hivatkozik a <b>&bdquo;autoipar 6,0% hazai kozetes input&rdquo;</b> eredmenyre. Idokozben kiderult, hogy az ezt ado <code>t24</code> meres <b>hibas</b>: a dontő azonossag-teszt szerint az osszegzett kozetes felhasznalas a nemzeti szamlak P2-jenek csak <b>1,8&ndash;8,6%-a</b>. A gyokerok meg nyitott, es <b>azt sem tudjuk, melyik iranyba tevés</b> &mdash; tehat sem a 6%, sem az ellenkezoje nem allithato. Reszletek es teendok: <code>docs/FIGYELMEZTETES_io_tabla_gyanus.md</code>.</p>
+  <p>Amit ez <b>nem</b> erint: az aggregalt GDP-hatas (robusztus a link ki-be kapcsolasara), es a <code>v06_3type</code>/<code>v07_access</code> vonal (nem hasznal <code>s_kkv</code>-t).</p>
+</div>
+<nav class="toc">
+  <h4>A kilenc lépés</h4>
+  <ol>
+    <li><a href="#l1">A kritika: a méret nem ugyanaz, mint a piac</a></li>
+    <li><a href="#l2">Két válasz ugyanarra — az enyém rossz alakú volt</a></li>
+    <li><a href="#l3">Amit a v06 mégis bizonyított</a></li>
+    <li><a href="#l4">A háromtípusos szerkezet</a></li>
+    <li><a href="#l5">Az új csatorna: hitelhozzáférés</a></li>
+    <li><a href="#l6">A küszöbforma — és a borotvaél</a></li>
+    <li><a href="#l7">Megpróbáltuk lehorgonyozni adattal</a></li>
+    <li><a href="#l8">Harmadszor ugyanabba a falba</a></li>
+    <li><a href="#l9">Hol tartunk, mit lehet állítani</a></li>
+  </ol>
+</nav>
+
+<section id="l1">
+  <div class="sec-head"><span class="sec-num">1</span><h2>A kritika: a méret nem ugyanaz, mint a piac <span class="who samu">Samu</span></h2></div>
+  <p class="lede">Ez a csomag legértékesebb egyetlen dokumentuma, és nem volt fent a GitHubon — ezért nem ismertük.</p>
+
+  <p>A régi modellünkben két különböző felosztás <b>egymásra csúszott</b>:</p>
+  <ul>
+    <li><b>Méret:</b> KKV vs. nagyvállalat — ez a <em>pénzügyi</em> blokkban élt (kinek milyen a hitelfelára).</li>
+    <li><b>Piac:</b> hazai értékesítés vs. export — ez a <em>termelési</em> blokkban élt.</li>
+  </ul>
+
+  <p>A modell hallgatólagosan azt tette, hogy <code>KKV = hazai</code> és <code>nagyvállalat = export</code>. Ez nem eredmény volt, hanem <b>beépített azonosítás</b>. A következménye viszont súlyos:</p>
+
+  <div class="warn">
+    <h4>Miért baj ez</h4>
+    <p>Ha a modellben a KKV <em>definíció szerint</em> a hazai szektor, akkor bármilyen „méret szerinti" különbséget találunk, az valójában <b>hazai-vs-export különbség</b>. A kérdésre, hogy „másképp hat-e az euró a KKV-kra", a modell szerkezetileg nem tud tisztán válaszolni — mert nincs benne KKV mint önálló <em>reálgazdasági</em> termelőegység: nincs saját KKV-kibocsátás, KKV-munkakereslet, KKV-árazás, és nincs KKV-export.</p>
+  </div>
+
+  <p>És a valóság nem ilyen: <b>a magyar KKV-k egy része exportál</b>, a nagyvállalatok pedig itthon is értékesítenek. A helyes szerkezet tehát két <em>független</em> dimenzió.</p>
+
+  <figure>
+    <div class="svgwrap">
+    <svg viewBox="0 0 860 300" xmlns="http://www.w3.org/2000/svg" role="img"
+         aria-label="Bal oldal: a régi modell egyetlen átlós tengelye, ahol a KKV azonos a hazai szektorral. Jobb oldal: a helyes szerkezet, méret és piac két külön dimenzióként, három használt sejttel.">
+      <style>
+        .ttl{font:600 13px/1.2 system-ui,sans-serif;fill:currentColor}
+        .lbl{font:11px/1.2 system-ui,sans-serif;fill:currentColor;opacity:.72}
+        .cell{font:600 12px/1.2 system-ui,sans-serif;fill:currentColor}
+        .sub{font:10px/1.2 system-ui,sans-serif;fill:currentColor;opacity:.6}
+      </style>
+      <!-- BAL: regi -->
+      <text class="ttl" x="10" y="18">RÉGI (v01–v06): egy tengely</text>
+      <rect x="10" y="34" width="170" height="88" rx="6" fill="var(--map-bg)" stroke="var(--map)" stroke-width="1.5"/>
+      <text class="cell" x="26" y="62">KKV</text>
+      <text class="sub" x="26" y="80">= hazai szektor</text>
+      <text class="sub" x="26" y="96">= magas felár</text>
+      <text class="sub" x="26" y="112">nincs exportja</text>
+      <rect x="200" y="34" width="170" height="88" rx="6" fill="var(--map-bg)" stroke="var(--map)" stroke-width="1.5"/>
+      <text class="cell" x="216" y="62">Nagyvállalat</text>
+      <text class="sub" x="216" y="80">= export szektor</text>
+      <text class="sub" x="216" y="96">= alacsony felár</text>
+      <text class="sub" x="216" y="112">nincs hazai piaca</text>
+      <line x1="180" y1="78" x2="200" y2="78" stroke="currentColor" stroke-width="1.2" opacity=".4"/>
+      <text class="lbl" x="10" y="150">A méret és a piac ugyanannak a felosztásnak</text>
+      <text class="lbl" x="10" y="166">két neve — ezért összekeverednek.</text>
+      <text class="lbl" x="10" y="196" style="opacity:.9;font-weight:600">Bármely „méret"-eredmény valójában</text>
+      <text class="lbl" x="10" y="212" style="opacity:.9;font-weight:600">„piaci orientáció"-eredmény.</text>
+
+      <!-- valaszto -->
+      <line x1="420" y1="10" x2="420" y2="285" stroke="currentColor" stroke-width="1" opacity=".22"/>
+
+      <!-- JOBB: uj -->
+      <text class="ttl" x="452" y="18">HELYES (v06_3type / v07_access): két dimenzió</text>
+      <text class="lbl" x="452" y="44" transform="rotate(-90 452 44)"></text>
+      <!-- tengelyfeliratok -->
+      <text class="lbl" x="600" y="42">piac →</text>
+      <text class="lbl" x="470" y="60">hazai</text>
+      <text class="lbl" x="640" y="60">export</text>
+      <text class="lbl" x="452" y="112" >méret</text>
+      <text class="lbl" x="452" y="126" >↓ KKV</text>
+      <text class="lbl" x="452" y="212">↓ nagy</text>
+      <!-- cellak -->
+      <rect x="520" y="68" width="140" height="76" rx="6" fill="var(--emp-bg)" stroke="var(--emp)" stroke-width="1.6"/>
+      <text class="cell" x="534" y="96">D</text>
+      <text class="sub" x="534" y="114">hazai KKV</text>
+      <text class="sub" x="534" y="130">4,8% hitelhez jut</text>
+      <rect x="676" y="68" width="140" height="76" rx="6" fill="var(--emp-bg)" stroke="var(--emp)" stroke-width="1.6"/>
+      <text class="cell" x="690" y="96">E</text>
+      <text class="sub" x="690" y="114">export-KKV</text>
+      <text class="sub" x="690" y="130">61,9% hitelhez jut</text>
+      <rect x="520" y="158" width="296" height="76" rx="6" fill="var(--core-bg)" stroke="var(--core)" stroke-width="1.6"/>
+      <text class="cell" x="534" y="186">L — aggregált nagyvállalat</text>
+      <text class="sub" x="534" y="204">hazai értékesítés ÉS export együtt</text>
+      <text class="sub" x="534" y="220">43,4% hitelhez jut</text>
+      <text class="lbl" x="452" y="262">Mindhárom típusnak SAJÁT termelése, árazása, beruházása,</text>
+      <text class="lbl" x="452" y="278">pénzügyi akcelerátora és exportkereslete van.</text>
+    </svg>
+    </div>
+    <figcaption>A szerkezetváltás lényege. A hozzáférési arányok a saját Opten-panelünkből (s14) — figyeljük meg, hogy az export-KKV (E) és a hazai KKV (D) között 13-szoros a különbség, ami önmagában igazolja a szétválasztásukat.</figcaption>
+  </figure>
+</section>
+
+<section id="l2">
+  <div class="sec-head"><span class="sec-num">2</span><h2>Két válasz ugyanarra — az enyém rossz alakú volt <span class="who egyutt">együtt</span></h2></div>
+  <p class="lede">Ugyanezt a kritikát szóban is megkaptuk, és én azonnal neki is estem — csak a legrosszabb módon.</p>
+
+  <p>Az én megoldásom (<code>jv_dsge_v06.mod</code>) az volt, hogy <b>összekötöm</b> a két felosztást: a hazai szektor <em>legyen</em> a KKV, az exportáló <em>legyen</em> a nagyvállalat, és így a pénzügyi blokkban felhalmozott tőke végre valódi termelést hajt. A fejlécembe ezt erényként írtam le.</p>
+
+  <div class="warn">
+    <h4>Ez pontosan az, amit a kritika elutasít</h4>
+    <p>A csapattárs jegyzete szó szerint ezt írja: <em>„nem ez lenne a leképezés: KKV = hazai, nagyvállalat = export — hanem ez: KKV: hazai + export értékesítés, nagyvállalat: hazai + export értékesítés."</em></p>
+    <p>Vagyis az összecsúszást <b>nem szüntettem meg, hanem strukturálissá tettem</b>. A modell belsőleg konzisztensebb lett, a méret-kérdésre viszont továbbra sem tud válaszolni. A csapattárs modellje ezzel szemben <em>szándékosan</em> nem a mi fájlunkat írta át — a fejléce ki is mondja, hogy a JV-vonalban a két dimenzió össze van csúsztatva.</p>
+  </div>
+
+  <p><b>Amit ebből tettünk:</b> a v06-ot átcímkéztem arra, ami valójában („a v05 belső javítása"), a `.mod` fejlécében, a changelogban és a verzió-összefoglalóban is. Emellett <b>átszámoztam a saját tábláimat</b> (<code>t27/t28/f23</code> → <code>t34/t35/f25</code>), mert ugyanazokat a számokat használtuk más tartalommal, és az ő számaira a leadott jelentés hivatkozik.</p>
+</section>
+
+<section id="l3">
+  <div class="sec-head"><span class="sec-num">3</span><h2>Amit a v06 mégis bizonyított <span class="who egyutt">együtt</span></h2></div>
+  <p class="lede">Ez akkor derült ki, amikor a csomagot módszeresen összevetettem a hibanaplónkkal — és ez javította a saját korábbi ítéletemet.</p>
+
+  <p>A csapattárs v07-specifikációja (2026-08-05) nyitva hagyott egy tételt a korábban feltárt χ-problémáról:</p>
+
+  <div class="eq"><span class="cm">// v07-specifikáció, 6.3 szakasz:</span>
+"Analitikus sejtés (<b>ellenőrizendő</b>): ez a keresztmetszeti összehasonlítás
+ nagyrészt a KÖZÖS rk következménye. Ha rk közös, akkor steady state-ben
+ efp_j mindenkire azonos..."</div>
+
+  <p>Emlékeztetőül: a régi modellben a hosszú távon a KKV és a nagyvállalat hitelfelára <b>pontosan egyenlő</b> volt — 15 értékes jegyig —, mert mindkettő ugyanarra a közös tőkehozamra (<code>rk</code>) vezetett. Ez tette a szegmens-eredményeket műtermékké.</p>
+
+  <div class="ok">
+    <h4>A v06 eldöntötte a sejtést</h4>
+    <p>A <code>jv_dsge_v06.mod</code> szegmensenkénti tőkehozamot vezetett be (<code>rk_S</code> ≠ <code>rk_L</code>), és ezzel <b>a felárak eltérése már steady state-ben is megjelent (−1,01 bp)</b>, 18/18 paraméter-kombinációban stabilan. Vagyis: <b>igen, a χ-patológia nagyrészt a közös <code>rk</code> következménye volt.</b></p>
+    <p>Amikor a v06-ot átcímkéztem, ezt alábecsültem: nem puszta karbantartás, hanem <b>egy nyitva hagyott analitikus sejtés kísérleti eldöntése.</b> Ez most javítva a fejlécben és a changelogban.</p>
+  </div>
+
+  <p class="note"><b>Miért érdemes ezt tudni:</b> a modell két rétege így oszlik meg — az ő 3type/access vonala a <em>helyes szerkezetet</em> adja, a mi v06-unk pedig <em>megmutatta, mi okozta a régi szerkezet hibáját</em>. A kettő nem versengő válasz, hanem diagnózis és terápia.</p>
+</section>
+
+<section id="l4">
+  <div class="sec-head"><span class="sec-num">4</span><h2>A háromtípusos szerkezet <span class="who samu">Samu</span></h2></div>
+  <p class="lede">Nem 2×2 = négy típus, hanem három — és ez tudatos egyszerűsítés.</p>
+
+  <p>A <code>kkv_dsge_v06_3type.mod</code> három vállalattípust különít el: <b>E</b> = export-orientált KKV, <b>D</b> = hazai orientációjú KKV, <b>L</b> = aggregált nagyvállalat. Mindhárom kap saját termelési, árazási, beruházási és pénzügyi-akcelerátor blokkot, és <b>saját exportkeresletet</b> — az aggregált export ezek súlyozott átlaga. 62 egyenlet, Blanchard–Kahn teljesül.</p>
+
+  <p>A nagyvállalatot azért nem bontja tovább hazai/export szerint, mert ott a méret a domináns tulajdonság; a KKV-nál viszont az export-státusz <em>az</em> érdemi választóvonal — és ezt a mi adatunk erősen alátámasztja (61,9% vs. 4,8% hitelhez jutás).</p>
+
+  <h3>És mit ad ki ez a szerkezet?</h3>
+  <p>Semleges pénzügyi transzmisszió mellett (vagyis amikor <em>nem</em> tesszük bele azt a feltevést, hogy a KKV érzékenyebb):</p>
+
+  <div class="tw">
+  <table>
+    <thead><tr><th>Transzmisszió</th><th>Aggregált GDP</th><th>export-KKV (E)</th><th>hazai KKV (D)</th><th>nagyvállalat (L)</th></tr></thead>
+    <tbody>
+      <tr><td>KKV-erősebb</td><td class="num">+0,496%</td><td class="num">+0,694%</td><td class="num">+0,550%</td><td class="num">+0,372%</td></tr>
+      <tr><td>nagyvállalat-erősebb</td><td class="num">+0,695%</td><td class="num">−0,462%</td><td class="num">−0,125%</td><td class="num">+1,832%</td></tr>
+      <tr class="hi"><td><b>semleges</b></td><td class="num">+0,576%</td><td class="num">+0,047%</td><td class="num">+0,144%</td><td class="num"><b>+1,143%</b></td></tr>
+    </tbody>
+  </table>
+  </div>
+
+  <p><b>A semleges sorban a nagyvállalat egyértelműen nyer.</b> Ez nem modellhiba és nem meglepetés: a nagyvállalati blokk exportkitettsége nagyobb, és a pénzügyi akcelerátor algebrája miatt ugyanakkora felárcsökkenésre erősebben reagál (ez a korábban levezetett <code>∂i/∂F = −1/χ</code> hatás).</p>
+
+  <div class="ok">
+    <h4>Miért jó hír ez, pedig „rossz" eredmény</h4>
+    <p>Mert most már <b>tudjuk, hogy nem a szerkezet hozza a KKV-előnyt</b>. A régi modellben ez össze volt keverve. Innen kezdve minden KKV-előny, ami megjelenik, egy <em>megnevezhető és tesztelhető</em> csatornából jön — nem a szerkezet mellékhatása.</p>
+  </div>
+</section>
+
+<section id="l5">
+  <div class="sec-head"><span class="sec-num">5</span><h2>Az új csatorna: hitelhozzáférés <span class="who samu">Samu</span></h2></div>
+  <p class="lede">Ez a projekt fogalmi fordulata. Eddig azt kérdeztük, mennyivel lesz olcsóbb a hitel; most azt, hogy egyáltalán kap-e valaki hitelt.</p>
+
+  <p>Eddig a modell csak azt tudta, hogy a már hitelezett cégek a kamatcsökkenésre többet fektetnek be (ez az <b>intenzív margó</b>). A <code>kkv_dsge_v07_access.mod</code> hozzáteszi az <b>extenzív margót</b>: ha csökken a felár, akkor <em>korábban hitelkorlátos</em> cégek is bekerülnek a beruházási körbe.</p>
+
+  <div class="eq"><span class="cm">// a hozzáférési állapot javul, ha a felár csökken:</span>
+acc_E = rho_acc*acc_E(-1) - lambda_acc_E*efp_E
+acc_D = rho_acc*acc_D(-1) - lambda_acc_D*efp_D
+
+<span class="cm">// és a jobb hozzáférés extra beruházási keresletet enged be:</span>
+q_E   = phi_i*(i_E - k_E(-1) - omega_acc_E*acc_E)
+q_D   = phi_i*(i_D - k_D(-1) - omega_acc_D*acc_D)</div>
+
+  <p class="note"><b>Intuíció köznyelven:</b> a felár csökkenése nemcsak azt jelenti, hogy a hitelező cég olcsóbban kap pénzt, hanem azt is, hogy a bank <em>több cégre mondja azt, hogy „igen"</em>. A második hatás egy olyan cégnél jelentkezik, ahol előtte nulla beruházás volt — ezért aránytalanul nagy.</p>
+
+  <p>És miért csak a KKV-nál? Mert a nagyvállalatnál a modell szerint <b>nincs</b> hozzáférési margó — az L blokk egyáltalán nem kap <code>acc</code> változót. Ez a feltevés viszi a teljes szektorális átfordulást (erre visszatérünk a 9. lépésben).</p>
+
+  <h3>Az eredmény: a hozzáférési margó át tudja fordítani a képet</h3>
+  <div class="tw">
+  <table>
+    <thead><tr><th>Euró-szcenárió</th><th>Aggregált GDP</th><th>export-KKV (E)</th><th>hazai KKV (D)</th><th>nagyvállalat (L)</th></tr></thead>
+    <tbody>
+      <tr class="hi"><td><b>alap</b></td><td class="num">+0,764%</td><td class="num">+0,525%</td><td class="num"><b>+0,870%</b></td><td class="num">+0,772%</td></tr>
+      <tr><td>optimista</td><td class="num">+1,040%</td><td class="num">+0,714%</td><td class="num">+1,185%</td><td class="num">+1,051%</td></tr>
+      <tr><td>pesszimista</td><td class="num">+0,487%</td><td class="num">+0,335%</td><td class="num">+0,555%</td><td class="num">+0,493%</td></tr>
+    </tbody>
+  </table>
+  </div>
+
+  <p>Az alapszcenárióban a <b>hazai KKV lesz a legnagyobb nyertes</b> (+0,870% vs. a nagyvállalat +0,772%) — pontosan az a szegmens, amelyik a legkevésbé jut hitelhez, tehát ahol a legtöbb tér van az extenzív margónak.</p>
+
+  <div class="ok">
+    <h4>Mit építettünk be ebből <span class="who mi">mi</span></h4>
+    <p>A modellt bevettük a repóba és <b>lefuttattuk. Minden közölt számuk pontosan kijött</b> — a fenti tábla, a küszöbök, mind. A modellfájlhoz nem nyúltunk; egyetlen dolgot javítottunk, a kimeneti útvonalat (az eredeti a szerző MATLAB Drive-elrendezését feltételezte, ezért a <code>src/model/output</code>-ba írt). Blanchard–Kahn mind a 3 szcenárióban és mind a 16 rácsponton teljesül. A replikációt <b>füstteszt-őrként rögzítettük</b>, hogy ha bárki hozzányúl a modellhez, azonnal kiderüljön.</p>
+    <p>Kellemes felfedezés: <code>ACCSCALE=0</code>-nál a v07 <b>pontosan a v06_3type számait adja</b>, tehát a diagnosztikai baseline is reprodukálható ebből az egy fájlból.</p>
+  </div>
+</section>
+
+<section id="l6">
+  <div class="sec-head"><span class="sec-num">6</span><h2>A küszöbforma — és a borotvaél <span class="who egyutt">együtt</span></h2></div>
+  <p class="lede">A projekt legelegánsabb módszertani lépése, és közvetlenül a hibanaplónkból származik.</p>
+
+  <p>A hozzáférési csatorna erősségét egy <code>ACCSCALE</code> nevű skálázó adja meg: 0 = kikapcsolva, 100 = a választott alapkalibráció, 150 = erősebb. A kérdés nem az, hogy „mennyi az igazi érték" (nem tudjuk), hanem hogy <b>mekkorának kellene lennie ahhoz, hogy a KKV megelőzze a nagyvállalatot</b>.</p>
+
+  <p>Ez a <b>küszöbforma</b>, és a v07-specifikáció maga attribuálja a hibanaplónknak: <em>„A küszöbforma a napló saját megoldása (2. opció, »Achilles-sarok«): a nem azonosított paraméter a bemenetből a kimenetbe kerül, és a kritika (»ezt beírtad, nem levezetted«) értelmét veszti."</em></p>
+
+  <div class="tw">
+  <table>
+    <thead><tr><th>Feltétel</th><th>Küszöb (ACCSCALE)</th></tr></thead>
+    <tbody>
+      <tr><td>a hazai KKV megelőzi a nagyvállalatot (<code>y_D ≥ y_L</code>)</td><td class="num">93,6</td></tr>
+      <tr class="hi"><td><b>a súlyozott KKV-blokk megelőzi (<code>y_KKV ≥ y_L</code>)</b></td><td class="num"><b>101,0</b></td></tr>
+      <tr><td>az export-KKV megelőzi (<code>y_E ≥ y_L</code>)</td><td class="num">118,3</td></tr>
+    </tbody>
+  </table>
+  </div>
+
+  <div class="warn">
+    <h4>Amit a rács futtatásakor észrevettünk <span class="who mi">mi</span></h4>
+    <p>A <b>súlyozott</b> KKV-blokk küszöbe <b>101,0</b>, az alapkalibráció pedig <b>100</b>. A baseline-on tehát a súlyozott KKV-blokk <b>−0,015 százalékponttal még a nagyvállalat alatt van</b> — gyakorlatilag döntetlen. A kvalitatív válasz („nyer-e a KKV?") pontosan a választott kalibrációs pontban fordul át.</p>
+    <p>Ez nem hiba, és a doksijuk korrektül jelzi is, hogy a modul nem becsült — de a megfogalmazást pontosítani kell: <b>a hazai KKV (D) önmagában megelőzi</b> a nagyvállalatot (a küszöbe 93,6), a <b>súlyozott KKV-blokk viszont nem</b>. Egy bíráló ezt azonnal észreveszi, ezért jobb, ha mi mondjuk ki előbb.</p>
+  </div>
+
+  <figure>
+    <div class="svgwrap">
+    <svg viewBox="0 0 860 210" xmlns="http://www.w3.org/2000/svg" role="img"
+         aria-label="Számegyenes az ACCSCALE paraméterre nullától 150-ig. Az adatból becsült sáv 0 és 16 között van, az alapkalibráció 100-nál, a KKV-előny küszöbe 101-nél. A becsült sáv és a küszöb messze van egymástól.">
+      <style>
+        .ax{stroke:currentColor;stroke-width:1.4;opacity:.55}
+        .tk{stroke:currentColor;stroke-width:1;opacity:.35}
+        .num2{font:10px/1 "SF Mono",monospace;fill:currentColor;opacity:.65}
+        .cap{font:600 12px/1.2 system-ui,sans-serif;fill:currentColor}
+        .cap2{font:11px/1.3 system-ui,sans-serif;fill:currentColor;opacity:.72}
+      </style>
+      <!-- tengely: 0..150 -> x 60..800 -->
+      <line class="ax" x1="60" y1="120" x2="810" y2="120"/>
+      <g>
+        <line class="tk" x1="60"  y1="114" x2="60"  y2="126"/><text class="num2" x="55"  y="140">0</text>
+        <line class="tk" x1="207" y1="114" x2="207" y2="126"/><text class="num2" x="198" y="140">30</text>
+        <line class="tk" x1="355" y1="114" x2="355" y2="126"/><text class="num2" x="346" y="140">60</text>
+        <line class="tk" x1="503" y1="114" x2="503" y2="126"/><text class="num2" x="494" y="140">90</text>
+        <line class="tk" x1="650" y1="114" x2="650" y2="126"/><text class="num2" x="638" y="140">120</text>
+        <line class="tk" x1="798" y1="114" x2="798" y2="126"/><text class="num2" x="786" y="140">150</text>
+      </g>
+      <!-- adatbol becsult sav 0..16 -->
+      <rect x="60" y="104" width="79" height="32" rx="4" fill="var(--gap-bg)" stroke="var(--gap)" stroke-width="1.6"/>
+      <text class="cap" x="60" y="94" fill="var(--gap)">amit az adat ad: 0–16</text>
+      <text class="cap2" x="60" y="172">Opten-panel, s14 — de</text>
+      <text class="cap2" x="60" y="188">NEM azonosított (7–8. lépés)</text>
+      <!-- baseline 100 es kuszob 101 -->
+      <line x1="553" y1="70" x2="553" y2="136" stroke="var(--core)" stroke-width="2.2"/>
+      <circle cx="553" cy="120" r="4.5" fill="var(--core)"/>
+      <text class="cap" x="470" y="62" fill="var(--core)">alapkalibráció: 100</text>
+      <line x1="558" y1="88" x2="558" y2="136" stroke="var(--emp)" stroke-width="2.2" stroke-dasharray="4 3"/>
+      <text class="cap" x="576" y="94" fill="var(--emp)">küszöb: 101,0</text>
+      <text class="cap2" x="576" y="112">itt fordul át a válasz</text>
+      <!-- D kuszob 93.6 -->
+      <line x1="522" y1="120" x2="522" y2="152" stroke="var(--map)" stroke-width="1.8" stroke-dasharray="3 3"/>
+      <text class="cap2" x="430" y="168" fill="var(--map)">D-küszöb: 93,6</text>
+      <!-- res jelolo -->
+      <line x1="139" y1="120" x2="515" y2="120" stroke="var(--gap)" stroke-width="1" stroke-dasharray="2 4" opacity=".7"/>
+      <text class="cap2" x="230" y="112" fill="var(--gap)">≈ 6-szoros szakadék</text>
+    </svg>
+    </div>
+    <figcaption>A projekt nyitott kérdése egy ábrán. A küszöb (101) és az alapkalibráció (100) egymáson van — ezért borotvaél. Amit az adatból ki tudtunk hozni (0–16), az nagyságrenddel kisebb — de nem azonosított, tehát nem cáfolat.</figcaption>
+  </figure>
+</section>
+
+<section id="l7">
+  <div class="sec-head"><span class="sec-num">7</span><h2>Megpróbáltuk lehorgonyozni adattal <span class="who mi">mi</span></h2></div>
+  <p class="lede">Ezt a lépést a saját doksijuk nevezte meg következő feladatként — és nekünk volt hozzá adatunk.</p>
+
+  <p>A kérdés élesen: <b>egy 100 bázispontos felárcsökkenés mennyivel növeli a KKV-k hitelhez jutási arányát?</b> Ha ezt tudjuk, az <code>ACCSCALE</code> nem tipp többé.</p>
+
+  <p>Az Opten-panelben megvan minden, ami kell: <code>van_hitel</code> (kap-e hitelt), <code>exportor</code> (ez adja az E/D bontást), méretkategória, beruházás. 148 225 cég-év, 37 805 cég, 2021–2024. És a periódus <b>ideálisnak tűnt</b>: a BUBOR ezalatt 1,46%-ról 14,30%-ra ment, majd vissza 7,30%-ra — 12,8 százalékpontos mozgás.</p>
+
+  <div class="data">
+    <span class="big">12,8 pp vs. &lt; 1 pp</span>
+    <p>Ennyit mozgott a kamat, és ennyit a hozzáférés. <b>A hozzáférési arányok gyakorlatilag mozdulatlanok</b> a teljes kamatciklus alatt.</p>
+  </div>
+
+  <div class="tw">
+  <table>
+    <thead><tr><th>Szegmens</th><th>2021</th><th>2022</th><th>2023</th><th>2024</th><th>sávszélesség</th></tr></thead>
+    <tbody>
+      <tr><td>export-KKV (E)</td><td class="num">61,7%</td><td class="num">63,0%</td><td class="num">62,2%</td><td class="num">60,8%</td><td class="num">2,2 pp</td></tr>
+      <tr><td>hazai KKV (D)</td><td class="num">4,5%</td><td class="num">4,7%</td><td class="num">5,1%</td><td class="num">5,1%</td><td class="num">0,6 pp</td></tr>
+      <tr><td>nagyvállalat (L)</td><td class="num">44,1%</td><td class="num">43,8%</td><td class="num">43,0%</td><td class="num">43,4%</td><td class="num">1,1 pp</td></tr>
+      <tr class="hi"><td><b>BUBOR (éves átlag)</b></td><td class="num">1,46%</td><td class="num">9,97%</td><td class="num">14,30%</td><td class="num">7,30%</td><td class="num"><b>12,8 pp</b></td></tr>
+    </tbody>
+  </table>
+  </div>
+
+  <p>Névértéken véve ez <code>ACCSCALE ≈ 0–16</code>-ot adna a szükséges 101 helyett — vagyis a KKV-előny meg sem közelítené a nagyvállalatit.</p>
+</section>
+
+<section id="l8">
+  <div class="sec-head"><span class="sec-num">8</span><h2>Harmadszor ugyanabba a falba <span class="who mi">mi</span></h2></div>
+  <p class="lede">És itt jön a fordulat, ami miatt ez a lépés nem kudarc, hanem eredmény.</p>
+
+  <p>Nézzük meg a hazai KKV (D) sorát még egyszer: <b>4,5% → 4,7% → 5,1% → 5,1%</b>. A hozzáférés <b>monoton NŐ</b> — pontosan akkor a legmagasabb, amikor a BUBOR 14,3%-on tetőzik. Ez közgazdaságilag visszafelé van… hacsak nem valami más tartotta fenn.</p>
+
+  <div class="warn">
+    <h4>Amit valójában mérünk</h4>
+    <p>A támogatott programok (NHP, Széchenyi) <b>épp akkor bővültek, amikor a piaci kamat tetőzött</b> — pontosan ez volt a céljuk. Vagyis nem a hozzáférés piaci reakcióját látjuk, hanem a <b>politikával stabilizált</b> hozzáférést. A piaci kamat varianciája ebben az időszakban <b>nem azonosítja</b> a piaci kamatra vett rugalmasságot.</p>
+  </div>
+
+  <p><b>Ez ugyanaz a betegség, ami már kétszer megállított minket:</b></p>
+  <ol>
+    <li>A <code>t_S &gt; t_L</code> transzmissziós teszt — a támogatott/programvezérelt árazás miatt a becsült arány 0,26 és 2,75 között szóródott, semmi sem volt szignifikáns.</li>
+    <li>A támogatási ék mérése — az implicit ráta zajos, és a rés egy része fix vintage-árazás, nem támogatás.</li>
+    <li><b>Most az access-margó</b> — a programok kiiktatták a kamatciklust a KKV-hozzáférésből.</li>
+  </ol>
+
+  <div class="ok">
+    <h4>Háromszor ugyanaz már nem véletlen, hanem eredmény</h4>
+    <p>Ez a magyar KKV-hitelpiac <b>szerkezeti tulajdonsága</b>: annyira programvezérelt, hogy a piaci árváltozásból nem lehet piaci rugalmasságot becsülni. Ez önmagában publikálható megállapítás — és egyben megmagyarázza, miért nem tudta eddig egyetlen csatorna sem „adatból" előállítani a KKV-előnyt.</p>
+    <p><b>És megfordítja a releváns kérdést:</b> ha a programok a kamatciklus ellenére is tartják a KKV-hozzáférést, akkor nem az a fontos, hogy az euró mennyivel viszi lejjebb a piaci kamatot, hanem hogy <b>mi történik a programok kifutásakor</b>.</p>
+  </div>
+</section>
+
+<section id="l9">
+  <div class="sec-head"><span class="sec-num">9</span><h2>Hol tartunk, mit lehet állítani <span class="who egyutt">együtt</span></h2></div>
+
+  <h3>Az összevetés a hibanaplóval: átment</h3>
+  <p>Módszeresen átvizsgáltam a csomag mind a 44 fájlját a hibanaplónk minden megállapítása ellen. <b>Egyetlen dokumentált hibánk sem él tovább</b> — a hibás felár-számok, a nem közölhető szegmens-beruházás, a túl erős „az adat az ellenkezőjét mutatja" verdikt, a téves támogatott-hitel magyarázat: egyik sincs benne. A 42%-os link-hozzájárulás és az <code>s_kkv=0,20</code> <em>csak korrekcióként</em> szerepel. A v07-specifikáció gyakorlatilag válasz a naplóra.</p>
+
+  <h3>A visszatérő mintázat — és a szabály, amit ebből érdemes csinálni</h3>
+  <p>A jelentésük 3.2 szakasza a <b>saját új modelljében</b> szúrja ki ugyanazt a problémát, amit mi a régiben: <code>lambda_acc_D = 2,5 &gt; lambda_acc_E = 2,0</code> horgony nélkül van, és <em>pont ez adja a fő eredményt</em>. Ebből általános szabályt javasolnak — és ez helyes. Végigvezetve viszont <b>három</b> ilyen aszimmetria van a v07-ben, nem egy:</p>
+
+  <div class="tw">
+  <table>
+    <thead><tr><th>#</th><th>Aszimmetria</th><th>Van rá adat?</th><th>Jelezve?</th></tr></thead>
+    <tbody>
+      <tr><td>1</td><td><code>lambda_acc_D = 2,5 &gt; lambda_acc_E = 2,0</code></td><td>nincs</td><td>igen, ők</td></tr>
+      <tr><td>2</td><td><code>omega_acc_D = 0,45 &gt; omega_acc_E = 0,35</code></td><td>nincs</td><td><b>nem volt</b></td></tr>
+      <tr class="hi"><td>3</td><td><b><code>acc_L</code> egyáltalán nem létezik</b> — a nagyvállalatnak nincs hozzáférési margója</td><td>részben</td><td><b>nem volt</b></td></tr>
+    </tbody>
+  </table>
+  </div>
+
+  <p>A 3-as a legnagyobb egyetlen feltevés, mert <b>ez viszi a teljes szektorális átfordulást</b>. A szokásos indoklása, hogy a nagyvállalat nincs hitelkorlátozva — de a saját adatunk ezt csak részben támogatja: a nagyvállalati hozzáférés <b>43,4%</b>, ami <em>alacsonyabb</em>, mint az export-KKV-k 61,9%-a. Valószínűbb, hogy a nagyvállalat nem is <em>kér</em> hitelt — de a „nagyvállalatnak mindig van hitele" egyszerű történet nincs benne az adatban. Amit az adat <em>erősen</em> támogat, az az <b>E/D szétválasztás</b> (13-szoros különbség).</p>
+
+  <h3>Amit most állíthatunk</h3>
+  <div class="ok">
+    <h4>✓ Védhető</h4>
+    <p><b>1.</b> Semleges pénzügyi transzmisszió mellett az euró közvetlen reálgazdasági nyeresége <b>a nagyvállalati blokkban koncentrálódik</b> (+1,143% vs. E +0,047% / D +0,144%).<br>
+    <b>2.</b> A KKV-előny akkor jelenik meg, ha a felárcsökkenés a <b>hitelhozzáférési küszöbön is átlök cégeket</b> — és megvan a pontos küszöb (súlyozott KKV-blokk: <code>ACCSCALE ≈ 101</code>).<br>
+    <b>3.</b> Az aggregált GDP-hatás <b>+0,49% … +1,04%</b> a szcenáriókon és a paraméterezéseken.<br>
+    <b>4.</b> Az <b>E/D szétválasztás</b> adatolt: 61,9% vs. 4,8% hitelhez jutás.<br>
+    <b>5.</b> A magyar KKV-hitelpiac <b>programvezérelt</b>, ezért a piaci árváltozásból nem becsülhető piaci rugalmasság.</p>
+  </div>
+
+  <div class="warn">
+    <h4>✘ Amit NEM állíthatunk</h4>
+    <p><b>1.</b> „A KKV nyer az euróval" — a súlyozott KKV-blokk a baseline-on még nem előzi meg az L-t (−0,015 pp).<br>
+    <b>2.</b> Hogy a hozzáférési reakció eléri a szükséges nagyságrendet — ezt <b>magyar adatból jelenleg nem tudjuk megmondani</b>.<br>
+    <b>3.</b> Szegmens-szintű beruházást a régi JV-vonalból (reallokációs maradék).</p>
+  </div>
+
+  <h3>A következő három lépés, prioritás szerint</h3>
+  <ol>
+    <li><b>MNB méret szerinti új-szerződéses kamatstatisztika bekérése.</b> Ez a hiányzó adat, ami mindhárom falat egyszerre bonthatja — mert a programhitelektől külön látszik a piaci árazás.</li>
+    <li><b>A 2021 előtti minta megvizsgálása.</b> A programvezéreltség az NHP/Széchenyi-bővítés előtt gyengébb volt; ott a piaci variancia többet azonosíthat.</li>
+    <li><b>Az <code>omega_acc</code> és az <code>acc_L</code>-hiány megjelölése</b> a saját szabályuk szerint — plusz egy <code>ACCSCALE</code>-szerű scan az <code>acc_L</code>-re, hogy lássuk, mennyire érzékeny rá az átfordulás.</li>
+  </ol>
+
+  <p class="note"><b>És egy praktikus tétel:</b> a csapattárs új modelljei (<code>v06_3type</code>, <code>v07_access</code>, <code>jv_dsge_v06_stoch</code>) <b>nem voltak fent a GitHubon</b> — a <code>v07_access</code>-t most bevittük, a másik kettő még csak nála van. Érdemes feltölteni, mert a <code>jv_v05_szerkezeti_tanulsagok</code> jegyzet is emiatt maradt ismeretlen előttünk hat napig, és épp az volt a legfontosabb dokumentum a csomagban.</p>
+</section>
+
+<footer>
+  DSGE_mkik · 2026-08-12 · haladási napló a 2026-08-10-i csomag óta<br>
+  Kapcsolódó: <code>docs/2026-08-12_zip_osszevetes_hibanaploval.md</code> ·
+  <code>docs/2026-08-12_access_horgonyzas_eredmeny.md</code> ·
+  <code>docs/2026-08-02_hibafeltaras_naplo.html</code> ·
+  <code>docs/FIGYELMEZTETES_fo_allitas.md</code><br>
+  Outputok: <code>t29–t33</code> (v07_access), <code>t34–t35</code> (v06), <code>t36–t37</code> (access-horgonyzás), <code>f24</code>, <code>f25</code>, <code>f26</code>
+</footer>
+
+</div>

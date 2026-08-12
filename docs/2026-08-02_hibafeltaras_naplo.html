@@ -147,6 +147,12 @@ footer{margin-top:60px;padding-top:20px;border-top:1px solid var(--rule);font-si
   <p>A projekt fő állítása („a KKV többet nyer az euróból, mert érzékenyebb a prémium-csökkenésre") <b>nem áll</b> — de nem azért, amiért reggel gondoltuk: <b>az adat nem cáfolja, hanem nem tudja eldönteni</b>, és közben kiderült, hogy a modell <b>fő mechanizmusaként bemutatott csatorna a hosszú távon ellentétes előjellel működik</b>.</p>
 </div>
 
+
+<div class="warn" style="margin-top:24px">
+  <h4>Utolag: az IO-alapu 6%-os szam sem all (2026-08-12)</h4>
+  <p>A dokumentum tobb helyen hivatkozik a <b>&bdquo;autoipar 6,0% hazai kozetes input&rdquo;</b> eredmenyre. Idokozben kiderult, hogy az ezt ado <code>t24</code> meres <b>hibas</b>: a dontő azonossag-teszt szerint az osszegzett kozetes felhasznalas a nemzeti szamlak P2-jenek csak <b>1,8&ndash;8,6%-a</b>. A gyokerok meg nyitott, es <b>azt sem tudjuk, melyik iranyba tevés</b> &mdash; tehat sem a 6%, sem az ellenkezoje nem allithato. Reszletek es teendok: <code>docs/FIGYELMEZTETES_io_tabla_gyanus.md</code>.</p>
+  <p>Amit ez <b>nem</b> erint: az aggregalt GDP-hatas (robusztus a link ki-be kapcsolasara), es a <code>v06_3type</code>/<code>v07_access</code> vonal (nem hasznal <code>s_kkv</code>-t).</p>
+</div>
 <nav class="toc">
   <h4>Tartalom</h4>
   <ol>
