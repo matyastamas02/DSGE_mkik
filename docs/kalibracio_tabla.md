@@ -12,7 +12,7 @@ horgonyzatlan.*
 
 ---
 
-## ⚠ Két dolog, ami a kigyűjtés közben derült ki
+## ⚠ Négy dolog, ami a kigyűjtés közben derült ki
 
 ### 1. A legbővebb modell az EAGLE-vonal *kalibrált* értékeit használja, nem a JV *becsült* értékeit
 
@@ -46,7 +46,55 @@ a JV csak aggregált benchmark. A mostani állapot — hogy a fő vonal érve a
 becsült paraméterekre hivatkozik, de a legbővebb modell kalibrált értékeken
 fut — **nem védhető bírálóval szemben.**
 
-### 2. Amit a saját adatunkból *azonnal* meg lehetne csinálni, de még nem tettük
+### 3. MEGMÉRTÜK: a JV-becsült készlettel a szektorális sorrend MEGFORDUL
+
+*2026-08-12 · `-DCALIB=1|2` kapcsoló a `v07_access`-ben; `sens_calib_v07.m`
+→ `t38`, `sens_calib_kuszob_v07.m` → `t39`/`t39b`.*
+
+Nem elég a konfliktust jelölni — megmértük. Ugyanaz a modell, két
+paraméterkészlet, minden más változatlan (TSCEN=3, ACCSCALE=100):
+
+| Paraméterkészlet | GDP | y_E | y_D | y_L | **KKV−L** |
+|---|---:|---:|---:|---:|---:|
+| EAGLE-HU kalibrált | +0,764% | +0,525% | +0,870% | +0,772% | **−0,015 pp** |
+| **JV becsült** | +0,591% | +0,394% | +0,750% | +0,539% | **+0,095 pp** |
+
+**Két következmény:**
+
+1. **A tartós GDP-hatás 0,173 pp-tal KISEBB** a becsült készlettel
+   (+0,591% vs +0,764%). Ez előre látható volt: az `om_nr` 0,75 → 0,25
+   csökkenti a hatást (a korábbi EAGLE-tanulság szerint a nem-Ricardiánus
+   blokk másfélszeresére emelte).
+2. **A szektorális sorrend MEGFORDUL.** Az EAGLE-készlettel a súlyozott
+   KKV-blokk a nagyvállalat *alatt* van (−0,015 pp, borotvaél); a
+   JV-készlettel **fölé kerül** (+0,095 pp).
+
+### És a küszöb is lejjebb megy — a borotvaél feloldódik
+
+| Küszöb (ACCSCALE) | EAGLE kalibrált | **JV becsült** |
+|---|---:|---:|
+| hazai KKV ≥ nagyvállalat (`y_D ≥ y_L`) | 93,6 | **87,8** |
+| **súlyozott KKV ≥ nagyvállalat** | **101,0** | **94,2** |
+| export-KKV ≥ nagyvállalat (`y_E ≥ y_L`) | 118,3 | 109,6 |
+
+*(Az EAGLE-oszlop pontosan reprodukálja a szerző közölt küszöbeit —
+93,6 / 101,0 / 118,3 —, tehát a scan módszere azonos.)*
+
+**A döntő szám: 101,0 → 94,2.** Az EAGLE-készlettel a küszöb 1 ponttal a
+baseline (100) **fölött** volt, tehát a KKV hajszállal veszített. A
+JV-készlettel 5,8 ponttal **alatta** van, tehát a KKV nyer, ráhagyással.
+
+> **⚠ Amit ez NEM jelent.** Az `ACCSCALE` továbbra is **horgonyzatlan** (az
+> `s14` szerint magyar 2021–24 adatból nem is horgonyozható). A KKV-előny
+> tehát **nem bizonyított** — csak annyi történt, hogy **kevesebb**
+> horgonyzatlan hozzáférési reakciót igényel. Ez valódi javulás a
+> védhetőségben, de nem bizonyíték.
+>
+> **Amit viszont jelent:** a kalibrációs készlet megválasztása **nem
+> technikai részlet** — a fő kvalitatív eredmény előjelét fordítja. Ezért a
+> csapatdöntés (a) vagy (b) nem elhalasztható.
+
+### 4. Amit a saját adatunkból *azonnal* meg lehetne csinálni, de még nem tettük
 
 **Kilenc szegmens-súly** (`sy_*`, `sn_*`, `si_*`) és **hat exportkitettségi
 paraméter** (`phi_*`, `sx_*`) az Opten-panelből **közvetlenül számolható** —

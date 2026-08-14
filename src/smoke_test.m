@@ -167,6 +167,25 @@ if exist(v7_kuszob, 'file') == 2
         ok, hiba);
 end
 
+% --- CALIB: EAGLE-kalibralt vs JV-becsult parameterkeszlet ---------------
+v7_cal = fullfile(repo, 'output', 'tables', 't39b_calib_kuszob_osszegzes.csv');
+[ok, hiba] = ell(exist(v7_cal, 'file') == 2, 't39b calib-kuszob osszegzes letezik', ...
+    ok, hiba);
+if exist(v7_cal, 'file') == 2
+    C = readtable(v7_cal);
+    e = C.kuszob_KKV_L(strcmp(string(C.kalibracio), "EAGLE_kalibralt"));
+    j = C.kuszob_KKV_L(strcmp(string(C.kalibracio), "JV_becsult"));
+    % REGRESSZIOS GUARD: az EAGLE-oszlopnak reprodukalnia kell a szerzo
+    % kozolt kuszobet (101.0) -- ha nem, a CALIB-kapcsolo elrontotta az alapot.
+    [ok, hiba] = ell(abs(e - 101.0) < 1.0, ...
+        sprintf('t39b: a CALIB=1 ag reprodukalja a kozolt kuszobet (%.1f)', e), ...
+        ok, hiba);
+    % A JV-keszlettel a kuszobnek 100 ALATT kell lennie (a borotvael feloldodik).
+    [ok, hiba] = ell(j < 100, ...
+        sprintf(['t39b: JV-keszlettel a kuszob 100 ALATT (%.1f) - a ' ...
+        'szektoralis sorrend megfordul'], j), ok, hiba);
+end
+
 % --- Összegzés ----------------------------------------------------------
 fprintf('\nFUSTTESZT: %d rendben, %d hiba\n', ok, hiba);
 if hiba > 0

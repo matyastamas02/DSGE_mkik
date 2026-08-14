@@ -142,6 +142,71 @@ eta_w = 4.33;
 kap_w = (1-theta_w)*(1-beta*theta_w)/(theta_w*(1+sigma_n*eta_w));
 rho_a = 0.90; rho_g = 0.85; rho_ystar = 0.85; rho_rstar = 0.85;
 
+// =====================================================================
+// -DCALIB=1 (alap: EAGLE-HU kalibralt) | 2 (Jakab-Vilagi BECSULT)
+// =====================================================================
+// MIERT KELL. A csapat 2026-07-13-an azzal az ervvel dontott a
+// Jakab-Vilagi alapmodell mellett, hogy annak parameterei MAGYAR ADATON
+// BAYES-I MODSZERREL BECSULTEK. Ez a fajl viszont az EAGLE-vonalon epult,
+// es a makro-magban EAGLE-kalibralt ertekeket visz -- vagyis a fo vonal
+// indoklasa es a legbovebb modell kalibracioja nem all ossze.
+// Ez a kapcsolo teszi a kerdest MERHETOVE: ugyanaz a modell, ket
+// parameterkeszlet. Az alapertek VALTOZATLANUL 1, hogy a szerzo altal
+// kozolt szamok (es a smoke_test replikacios orei) tovabbra is jojjenek.
+//
+// !!! CSAK AZT CSERELJUK, AMI UGYANAZ AZ OBJEKTUM !!!
+// A JV-ertekek a JV modellszerkezeten BELUL becsult poszterior atlagok,
+// tehat nem "szabad tenyek". Egyenletenkent osszevetve HAROM parametert
+// NEM szabad atplantalni, mert mas fogalom:
+//   alpha (0.30) : itt ketinputos Cobb-Douglas tokehanyad
+//                  (y = a + alpha*k + (1-alpha)*n); a JV zeta_d=0.17
+//                  HAROMINPUTOS (toke / munka+import kompozit) -> NEM ez.
+//   phi_i (6.0)  : itt q = phi_i*(i - k(-1)); a JV-ben FORDITVA,
+//                  i = ... + 1/((1+beta)*psi_i)*q -> invertalt spec.
+//   eta_x (1.0)  : itt kulon eta_x (reálarfolyam) es eps_ces (sajat ar);
+//                  a JV mu_x=0.534 a kettot EGYBEN viszi, plusz van
+//                  reszleges alkalmazkodasa (hx=0.507) -> nem parosithato.
+//
+// !!! NEVCSAPDA, amit ki kell kerulni !!!
+// A "theta_w" MINDKET modellben szerepel, de MAS a jelentese:
+//   itt   theta_w = 0.75  = Calvo-ber ragadossag      <- JV xi_w    = 0.657
+//   itt   eta_w   = 4.33  = ber-markup rugalmassag    <- JV theta_w = 3.0
+// Aki naivan "theta_w <- 3.0"-t irna, a Calvo-parametert allitana 3.0-ra
+// (nem ertelmezheto, [0,1) kellene) es eltorne a modellt.
+//
+// Ami MAR EGYEZIK a ket vonalon, tehat nincs mit cserelni:
+//   sigma_n = fii = 2.0 | beta = 0.99 | delta = 0.025 | zsov = 0.5
+//   chi_* / lev_* / eps_q / omega_nw : azonos ertekek
+//
+// A kozeltes, amit vallalunk: a sigma es a habit a JV-ben EGYUTT
+// azonositott, es a JV habit-specifikacioja quasi-differencia alaku
+// (c(-1) es c(+1) is szerepel), mig itt lam = -sigma/(1-habit)*(...).
+// Az atplantalas tehat kozelites, nem exakt -- ezt a t38 tablaban jelezzuk.
+@#ifndef CALIB
+  @#define CALIB = 1
+@#endif
+@#if CALIB == 2
+sigma  = 1.814;      // JV poszterior atlag (EAGLE: 0.4)
+habit  = 0.646;      // JV (EAGLE: 0.7)
+kappa  = 0.00530;    // JV-implikalt NKPC-meredekseg:
+                     //   lam_p/(1+beta*vth_p), ahol
+                     //   lam_p=(1-xi_p)(1-beta*xi_p)/xi_p, xi_p=0.921,
+                     //   vth_p=0.431  ->  0.00757/1.4267 = 0.00530
+                     // (EAGLE: 0.01 -- azonos nagysagrend)
+rho_r   = 0.761;     // JV gam_i (EAGLE: 0.87)
+phi_pi  = 1.379;     // JV (EAGLE: 1.70)
+// phi_y: a JV Taylor-szabalyaban NINCS kibocsatasi res tag -> 0
+phi_y   = 0.0;
+chiw    = 0.185;     // JV vth_w, ber CPI-indexalas (EAGLE: 0.75)
+eta_w   = 3.0;       // JV theta_w, ber-markup rugalmassag (EAGLE: 4.33)
+theta_w = 0.657;     // JV xi_w, Calvo-ber (EAGLE: 0.75) -- lasd NEVCSAPDA
+om_nr   = 0.25;      // JV om_no, survey-alapu (EAGLE HU: 0.75) -- 3x elteres!
+rho_a   = 0.552;     // JV (EAGLE: 0.90)
+rho_g   = 0.80;      // JV (EAGLE: 0.85)
+// theta_w es sigma_n valtozott -> a bér-NKPC meredekseget UJRA kell szamolni
+kap_w = (1-theta_w)*(1-beta*theta_w)/(theta_w*(1+sigma_n*eta_w));
+@#endif
+
 model;
 
 // --- Haztartasok: Ricardianus + nem-Ricardianus
