@@ -1,6 +1,6 @@
 # Kalibrációs tábla — `kkv_dsge_v07_access` (a legbővebb modell)
 
-*2026-08-12 · a `src/model/kkv_dsge_v07_access.mod` mind a **60** deklarált
+*2026-08-12 · a `src/model/kkv_dsge_v07_access.mod` mind a **66** deklarált
 paramétere, forrás szerint osztályozva. A cél: eldönteni, mi kalibrálható a
 saját adatunkból, mihez kell szakirodalom, és mi az, ami jelenleg
 horgonyzatlan.*
@@ -58,7 +58,7 @@ Ez 15 paraméter, és fél napos munka. Lásd a lenti **A** kategóriát.
 ## A. Saját adatunkból kalibrálható — MOST megcsinálható
 
 *Opten-panel (148 225 cég-év, 37 805 cég, 2021–2024). Ez a legnagyobb
-azonnali hozam: 17 paraméter horgonyzatlanból adatoltba.*
+azonnali hozam: 19 paraméter horgonyzatlanból adatoltba.*
 
 | Paraméter | Jelenlegi érték | Forrás jelenleg | Miből számolható | Panel-oszlop |
 |---|---:|---|---|---|
@@ -141,16 +141,16 @@ egyikükre sincs elfogadható horgony.*
 
 | Kategória | Paraméterek száma | Megjegyzés |
 |---|---:|---|
-| **A.** saját adatunkból kalibrálható | **17** | fél–egy napos munka, azonnali hozam |
-| **B.** nyilvános magyar makroadatból | 14 | könnyű, de külső adatgyűjtés |
-| **C.** szakirodalom kell | 12 | ebből **4 konfliktus** a JV-vonallal |
-| **D.** nem azonosított / több adat | 13 | **ezek hordozzák a fő eredményt** |
+| **A.** saját adatunkból kalibrálható | **19** | fél–egy napos munka, azonnali hozam |
+| **B.** nyilvános magyar makroadatból | **15** | könnyű, de külső adatgyűjtés; ebből 3 konfliktus (`rho_r`, `phi_pi`, `rho_a`/`rho_g`) |
+| **C.** szakirodalom kell | **13** | ebből **5 konfliktus** a JV-vonallal (`sigma`, `habit`, `eta_x`/`eta_m`, `chiw`, `om_nr`) |
+| **D.** nem azonosított / több adat | **15** | **ezek hordozzák a fő eredményt** |
 | **E.** konvenció / származtatott | 4 | — |
-| **Összesen** | **60** | |
+| **Összesen** | **66** | minden deklarált paraméter hozzárendelve, egy sem maradt ki (scripttel ellenőrizve) |
 
 ## Javasolt sorrend
 
-1. **Az A-kategória lefuttatása** (17 paraméter az Opten-panelből). Ez a
+1. **Az A-kategória lefuttatása** (19 paraméter az Opten-panelből). Ez a
    legnagyobb hozam a legkisebb ráfordítással, és a `.mod` maga kéri.
    Ide tartozik a `rho_acc` is a `van_hitel` átmenet-mátrixból.
 2. **Csapatdöntés az EAGLE/JV kalibrációs konfliktusról** (különösen az
