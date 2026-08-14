@@ -81,6 +81,18 @@
  *
  * Szcenáriók: -DSCENARIO=1 (alap: -200bp szuv./-45bp banki) | 2 (opt) | 3 (pessz)
  * Futtatás:   run_jv_v05.m
+
+ * !!!!! FIGYELMEZTETES (2026-08-12): AZ IO-ALAPU s_kkv NEM ALL !!!!!
+ * A lenti IO-hivatkozasok (t24; autoipar 6,0% / elektronika 4,2% hazai
+ * kozetes input; s_kkv = 0,05; a "link-hozzajarulas 42% helyett 4,4%"
+ * korrekcio) HIBAS MERESEN allnak. A dontő azonossag-teszt (dom+imp = P2)
+ * szerint az osszegzett kozetes felhasznalas a nemzeti szamlak P2-jenek
+ * csak 1,8-8,6%-a; a szurt valtozat NEGATIV hazai aranyt ad; es a
+ * TOTAL x CPA_TOTAL sarok 0-t ad, pedig annak kellene a legnagyobbnak
+ * lennie. A GYOKEROK MEG NYITOTT, es azt sem tudjuk, melyik iranyba
+ * tevés -- tehat sem a 6%, sem az ellenkezoje nem allithato.
+ * NEM ERINTI: az aggregalt GDP-hatast (robusztus a -DNOVERT=1 ellenprobara).
+ * Reszletek es teendok: docs/FIGYELMEZTETES_io_tabla_gyanus.md
  */
 
 @#ifndef SCENARIO

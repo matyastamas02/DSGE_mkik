@@ -1,5 +1,23 @@
 # Modellverziók összefoglalója
 
+> ## ⚠ 2026-08-12: az IO-alapú számok (s_kkv, 6% hazai input, 42%→4,4%) NEM állnak
+>
+> Ez a dokumentum több helyen hivatkozik az input-output táblából számolt `t24`
+> eredményre — az **autóipar 6,0% hazai köztes input** számra, az ebből kalibrált
+> **`s_kkv` = 0,05** értékre, és az ezen alapuló **„a vertikális link a hatás 42%-a
+> helyett csak 4,4%-a”** korrekcióra. **A mérés hibás:** a döntő azonosság-teszt
+> (`dom + imp = P2`) szerint az összegzett köztes felhasználás a nemzeti számlák
+> P2-jének csak **1,8–8,6%-a**; a szűrt változat **negatív** hazai arányt ad; és a
+> `TOTAL × CPA_TOTAL` sarok 0, pedig annak kellene a legnagyobbnak lennie.
+>
+> **A gyökérok még nyitott, és azt sem tudjuk, melyik irányba téves** — tehát sem a
+> 6%, sem az ellenkezője nem állítható. Amit ez **nem** érint: az aggregált
+> GDP-hatás (robusztus a link ki-be kapcsolására), és a `v06_3type`/`v07_access`
+> vonal, amely nem használ `s_kkv`-t. Részletek és teendők:
+> `docs/FIGYELMEZTETES_io_tabla_gyanus.md`.
+
+
+
 > **FRISSÍTÉS (2026-07-13): alapcikk-váltás.** Csapatdöntés: az alap a
 > **Jakab–Világi (MNB WP 2008/9)** — magyar adaton becsült DSGE —, nem az
 > EAGLE-HU. A lenti v0.1–v0.5 (EAGLE-alapú) sor referencia/robusztussági

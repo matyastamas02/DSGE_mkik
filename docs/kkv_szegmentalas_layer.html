@@ -127,6 +127,12 @@ li{margin-bottom:7px;}
   </div>
 </div>
 
+
+<div class="warn" style="margin-top:24px">
+  <h4>&#9888; 2026-08-12: az IO-alapu szamok (s_kkv, 6% hazai input, 42%&rarr;4,4%) NEM allnak</h4>
+  <p>Ez a dokumentum tobb helyen hivatkozik az input-output tablabol szamolt <code>t24</code> eredmenyre &mdash; az <b>autoipar 6,0% hazai kozetes input</b> szamra, az ebbol kalibralt <b><code>s_kkv</code> = 0,05</b> ertekre, es az ezen alapulo <b>&bdquo;a vertikalis link a hatas 42%-a helyett csak 4,4%-a&rdquo;</b> korrekcióra. <b>A meres hibas:</b> a dontő azonossag-teszt (<code>dom + imp = P2</code>) szerint az osszegzett kozetes felhasznalas a nemzeti szamlak P2-jenek csak <b>1,8&ndash;8,6%-a</b>; a szurt valtozat <b>negativ</b> hazai aranyt ad; es a <code>TOTAL &times; CPA_TOTAL</code> sarok 0, pedig annak kellene a legnagyobbnak lennie.</p>
+  <p><b>A gyokerok meg nyitott, es azt sem tudjuk, melyik iranyba tevés</b> &mdash; tehat sem a 6%, sem az ellenkezoje nem allithato. Amit ez <b>nem</b> erint: az aggregalt GDP-hatas (robusztus a link ki-be kapcsolasara, <code>-DNOVERT=1</code>), es a <code>v06_3type</code>/<code>v07_access</code> vonal, amely nem hasznal <code>s_kkv</code>-t. Reszletek es teendok: <code>docs/FIGYELMEZTETES_io_tabla_gyanus.md</code>.</p>
+</div>
 <div class="verdict">
   <span class="tag">A döntés egy mondatban</span>
   <p>A KKV a <b>hazai</b>, a nagyvállalat az <b>export</b> szektor; a kettőt egy <b>vertikális beszállítói lánc</b> köti össze (a KKV inputot ad az exportőrnek), méretfüggő pénzügyi akcelerátorral. Így az euró-hitelsokk <b>pozitív összegű</b>: a KKV egészsége az exportőrt is segíti — nem „a gyengébb meghal" mechanika.</p>
