@@ -74,6 +74,44 @@ tanulmány KERETEZÉSÉT módosította, nem a DSGE szerepét.
 
 ### JV-vonal (fő):
 
+- **`jv_dsge_v09_access.mod`** — 🟢 **A FŐ MODELL.** Háromtípusos JV-mag +
+  **hitelhozzáférési (extenzív) margó**. Ezzel a JV-vonal mindent tud, amit
+  a `kkv_dsge_v07_access`, de becsült paramétereken és gazdagabb termelési
+  oldalon. **A fordítás nem másolás volt:** az EAGLE-ben az `acc` a
+  Tobin-Q-n át hat (`q = phi_i·(i − k − ω·acc)`), a JV-ben viszont a
+  beruházás kiigazítási-költséges **Euler-egyenletből** jön — ezért az `acc`
+  additív forcing tagként lép be oda. **Következmény: az `ACCSCALE` skálája
+  a két magon NEM összevethető.** Futtatás: `stress_jv_access_v09` →
+  `t44`, `t45`, `t45b`. **Eredmény:** BK 18/18 · nesting `ACCSCALE=0` →
+  **pontosan** a v08 (0,0e+00) · előjel helyes · küszöbök a JV-magon:
+  `y_D≥y_L` **22,6** · súlyozott KKV **36,3** · `y_E≥y_L` **61,9**.
+
+- **`jv_dsge_v08_3type_arak.mod`** — 3. lépcső: **típusonkénti ár és
+  kereslet**, ez oldja fel a v07_3type mechanikus-kibocsátás korlátját.
+  A **v01-es egységgyök-csapdát** (*„a relatívár-identitások naiv felírása
+  egységgyököt hagy"*) a súlyozott relatívár-összeg explicit nullára kötése
+  kerüli ki. **Eredmény:** BK 18/18 — tehát a v04-es kudarc **nem volt
+  elkerülhetetlen**, ott a *kombináció* volt a baj; a korlát feloldva
+  (0,4455 pp eltérés a mechanikus jóslattól).
+  ⚠ **Új horgonyzatlan paraméter:** `eps_ces` (a JV-ben nincs ilyen), és az
+  `y_E` **előjele ezen fordul** ~2,3-nál. Az aggregált GDP érzéketlen rá
+  (0,008 pp sáv).
+
+- **`jv_dsge_v07_3type.mod`** — 2. lépcső: **három típus** (E/D/L) a
+  JV-magon, közös árszinttel. Minden típus mindkét piacon értékesít, tehát
+  a méret/piac szétválasztás követelménye már itt teljesül. BK 18/18.
+  ⚠ **Dokumentált korlát:** közös ár mellett a típus-kibocsátás
+  **mechanikus** (`y_j = (1−phi_j)·y_d + phi_j·y_x`, bitre) — szegmens-szintű
+  kibocsátást ebből a lépcsőből **nem szabad közölni**. Ugyanaz a hibatípus,
+  mint a v05-ben a „szegmens-tőke reallokációs maradék".
+
+- **Független verifikáció** (`ellenorzes_3type.m` → `t43`): a BK-teszten túl
+  **17 azonosság-ellenőrzés**, mind átment — szimmetria (1e−16), aggregációs
+  azonosságok (1e−19), nulla-sokk kontroll (`-DSCENARIO=4`, pontosan 0),
+  egymásba ágyazás (`eps_ces`→0 monoton). Ezek olyan hibát fognak el
+  (elgépelt index, felcserélt súly), amit a BK-teszt nem.
+
+
 - **`jv_dsge_v06.mod`** — ⚠ **ÁTCÍMKÉZVE (2026-08-11):** a v05 **BELSŐ
   javítása**, NEM a méret/piac szétválasztása. Eredetileg "a termelési
   oldal szegmentálása" néven készült, de a fix úgy működik, hogy
@@ -86,7 +124,10 @@ tanulmány KERETEZÉSÉT módosította, nem a DSGE szerepét.
   értékesítés"*. Ebben a fájlban tehát minden „méret"-eredmény valójában
   „piaci orientáció"-eredmény; az összecsúsztatás nem szűnt meg, csak
   implicitből **strukturálissá** vált. **A helyes irány:**
-  `kkv_dsge_v06_3type` / `kkv_dsge_v07_access` (E/D/L, a KKV is exportál).
+  a JV-vonal háromtípusos ága (`jv_dsge_v07_3type` → `v08_3type_arak` →
+  `v09_access`), lásd lentebb. *(Ez eredetileg a `kkv_dsge_v06_3type`/
+  `v07_access`-re mutatott — akkor az volt az egyetlen helyes
+  architektúra; 2026-08-12 óta a JV-magon is megvan.)*
   *Amit viszont valóban megold és megmarad:* a szegmens-tőke nem
   reallokációs maradék többé, megszűnik a „közös rk ⇒ efp_S ≡ efp_L"
   patológia, és az aggregált GDP nem mozdul (+0,426% → +0,428%).
