@@ -125,12 +125,21 @@ EAGLE-vonalból átvett irodalmi szám (6,0 = 20% markup).
 **Amit kellene:** magyar markup- vagy helyettesítésirugalmasság-becslés
 (vállalati panelből is becsülhető lenne). Amíg nincs: **küszöbforma**.
 
-### 3.2 A többi irodalmi paraméter
+---
 
-`sigma`, `habit`, `fii`, `xi_p`/`vth_p`, `xi_x`/`vth_x`, `xi_w`/`vth_w`,
-`theta_w`, `mu_x`, `hx`, `gam_i`, `phi_pi`, `rho_*` — ezek **a JV becsült
-poszterior átlagai**, tehát magyar adaton becsültek. Ezekhez nem kell
-tenni semmit; ez volt az egész alapcikk-döntés lényege.
+## 3.b AMIVEL NEM KELL TENNI SEMMIT — 28 paraméter, már horgonyzott
+
+**Ez a lista azért van itt, hogy senki ne kezdje el keresni hozzájuk a
+forrást.** `sigma`, `habit`, `xi_p`/`vth_p`, `xi_x`/`vth_x`, `xi_w`/`vth_w`,
+`mu_x`, `hx`, `gam_i`, `phi_pi`, `nu_b`, `rho_a`/`rho_x`/`rho_c`/`rho_w`/
+`rho_i`/`rho_pr`/`rho_mx`/`rho_g` — **a Jakab–Világi magyar adaton becsült
+poszterior átlagai** (MNB WP 2008/9). Plusz `fii`, `theta_w`, `rho_kz`,
+`rho_z`, `om_no` (JV-strukturális/survey), és `eps_qw`, `omega_nw`
+(BGG 1999 konvenció).
+
+**Ez a 2026-07-13-i alapcikk-döntés konkrét hozadéka: a modell közel
+harmada készen van.** Az EAGLE-magon ugyanezekhez irodalmi hivatkozás
+kellett volna, és öt közülük konfliktusban is állt a JV-értékekkel.
 
 ⚠ **Kivétel, amit nem szabad elfelejteni:** ha valaki EAGLE-értékeket lát
 valahol (`sigma`=0,4, `om_nr`=0,75, `rho_a`=0,90), az **a referencia-vonal**,
