@@ -1,5 +1,14 @@
 # DSGE-modell (Dynare)
 
+> ## ✅ 2026-08-12: A FŐ VONAL A `jv_dsge_v09_access` (Jakab–Világi mag)
+> A JV-vonal négy lépcsőben utolérte és meghaladta az EAGLE-vonalat:
+> `v06` (szegmens-tőkehozam) → `v07_3type` (három típus) →
+> `v08_3type_arak` (típusonkénti ár) → **`v09_access`** (hozzáférési margó).
+> Mind a négy lépcső **18/18 BK-stabil**, és lefutott a független
+> verifikáció is (szimmetria 1e−16, aggregáció 1e−19, nulla-sokk pontosan 0,
+> `ACCSCALE=0` → **pontosan** a v08). A `kkv_dsge_*` sor referencia-vonal.
+> Részletek a gyökér `README.md`-ben és `docs/kalibracio_teendok_csapatnak.md`-ben.
+
 ## ⚠ ALAPCIKK-VÁLTÁS (2026-07-13): Jakab–Világi a fő vonal
 
 Csapatdöntés szerint az alapmodell a **Jakab–Világi: An estimated DSGE

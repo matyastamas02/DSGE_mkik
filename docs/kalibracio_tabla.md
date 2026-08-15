@@ -1,4 +1,20 @@
-# Kalibrációs tábla — `kkv_dsge_v07_access` (a legbővebb modell)
+# Kalibrációs tábla — a modellvonalak paraméterei
+
+> ## ⚠ 2026-08-12: A FŐ MODELL MOST MÁR `jv_dsge_v09_access` (JV-mag)
+>
+> Ez a tábla eredetileg a `kkv_dsge_v07_access`-hez (EAGLE-mag) készült.
+> Azóta a JV-vonal utolérte és meghaladta: a `jv_dsge_v09_access` **91
+> paraméterrel** ugyanazt tudja (három típus, típusonkénti ár és kereslet,
+> hitelhozzáférési margó), de **magyar adaton becsült** paramétereken és
+> gazdagabb (háromnputos, import-intenzitást megkülönböztető) termelési
+> oldalon.
+>
+> **A csapatnak szóló teendőlista: [`kalibracio_teendok_csapatnak.md`](kalibracio_teendok_csapatnak.md).**
+>
+> Az alábbi EAGLE-tábla **továbbra is érvényes a referencia-vonalra**, és a
+> benne dokumentált EAGLE/JV konfliktusok (különösen az `om_nr` 0,75 vs
+> 0,25) épp azt indokolják, miért a JV lett a fő vonal.
+
 
 *2026-08-12 · a `src/model/kkv_dsge_v07_access.mod` mind a **66** deklarált
 paramétere, forrás szerint osztályozva. A cél: eldönteni, mi kalibrálható a
