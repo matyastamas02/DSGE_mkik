@@ -244,6 +244,25 @@ if exist(t42, 'file') == 2
         ok, hiba);
 end
 
+% --- FUGGETLEN ELLENORZES: szimmetria, aggregacio, nulla-sokk, nesting ----
+% Ezek NEM BK-tesztek: olyan azonossagokat ellenoriznek, amiknek a
+% szerkezetbol kovetkezniuk kell. Egy elgepelt index vagy suly mellett is
+% lehet 18/18 BK-konvergencia -- ezek fogjak el az olyan hibat.
+t43 = fullfile(repo, 'output', 'tables', 't43_ellenorzes_3type.csv');
+[ok, hiba] = ell(exist(t43, 'file') == 2, 't43 fuggetlen ellenorzes letezik', ok, hiba);
+if exist(t43, 'file') == 2
+    V3 = readtable(t43);
+    [ok, hiba] = ell(all(V3.rendben == 1), ...
+        sprintf('t43: mind a %d fuggetlen ellenorzes atment', height(V3)), ok, hiba);
+    szim = V3(contains(string(V3.teszt), 'szimmetria'), :);
+    [ok, hiba] = ell(~isempty(szim) && max(szim.elteres) < 1e-8, ...
+        sprintf(['t43 SZIMMETRIA: azonos parameterek -> azonos tipusok ' ...
+        '(max %.1e)'], max(szim.elteres)), ok, hiba);
+    nulla = V3(contains(string(V3.teszt), 'nulla-sokk'), :);
+    [ok, hiba] = ell(~isempty(nulla) && max(nulla.elteres) < 1e-9, ...
+        't43 NULLA-SOKK: sokk nelkul minden valtozo 0', ok, hiba);
+end
+
 % --- Összegzés ----------------------------------------------------------
 fprintf('\nFUSTTESZT: %d rendben, %d hiba\n', ok, hiba);
 if hiba > 0

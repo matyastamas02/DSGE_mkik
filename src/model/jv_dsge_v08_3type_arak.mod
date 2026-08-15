@@ -205,6 +205,26 @@ chi_E = 0.06; chi_D = 0.06; chi_L = 0.02;
 lev_E = 1.6;  lev_D = 1.6;  lev_L = 1.85;
 psi_E = 8.0;  psi_D = 8.0;  psi_L = 13.0;
 
+// -DSYM=1: SZIMMETRIA-TESZT. Minden tipus-specifikus parametert azonosra
+// allit. Ekkor a harom tipusnak DEFINICIO SZERINT azonosan kell viselkednie
+// (y_E == y_D == y_L, es a v08-ban p_E == p_D == p_L == 0). Ha nem igy van,
+// a szerkezetben hiba van -- ez fuggetlen ellenorzes a BK-teszt mellett.
+@#ifndef SYM
+  @#define SYM = 0
+@#endif
+@#if SYM == 1
+phi_E = 0.30; phi_D = 0.30; phi_L = 0.30;
+zeta_E = 0.155; zeta_D = 0.155; zeta_L = 0.155;
+aa_E = 0.60; aa_D = 0.60; aa_L = 0.60;
+chi_E = 0.04; chi_D = 0.04; chi_L = 0.04;
+lev_E = 1.7; lev_D = 1.7; lev_L = 1.7;
+psi_E = 10.5; psi_D = 10.5; psi_L = 10.5;
+om_E = 1/3; om_D = 1/3; om_L = 1/3;
+shl_E = 1/3; shl_D = 1/3; shl_L = 1/3;
+tsov_E = 0.175; tsov_D = 0.175; tsov_L = 0.175;
+tbank_E = 0.45; tbank_D = 0.45; tbank_L = 0.45;
+@#endif
+
 // --- SZARMAZTATOTT sulyok (nem szabad parameterek) ----------------------
 // A hazai jószag hatarkoltsege a tipusok mc_j-jenek sulyozott atlaga, a
 // HAZAI ertekesitesi sulyokkal; az export jószage az EXPORT sulyokkal.
@@ -413,9 +433,15 @@ end;
 endval;
 sov = -0.00625; bank = -0.00175; uni = 1;
 end;
-@#else
+@#elseif SCENARIO == 3
 endval;
 sov = -0.00375; bank = -0.0005; uni = 1;
+end;
+@#else
+// SCENARIO=4: NULLA SOKK (ellenorzo eset). Minden valtozonak vegig 0-nak
+// kell lennie -- ha nem, valahol konstans szivarog be a modellbe.
+endval;
+sov = 0; bank = 0; uni = 0;
 end;
 @#endif
 
@@ -444,7 +470,7 @@ var bank;
 periods 1:12 13 14 15 16;
 values 0 -0.0004375 -0.000875 -0.0013125 -0.00175;
 end;
-@#else
+@#elseif SCENARIO == 3
 shocks;
 var uni;  periods 1:12; values 0;
 var sov;
@@ -455,6 +481,10 @@ values -0.0001875 -0.000375 -0.0005625 -0.00075 -0.0009375 -0.001125
 var bank;
 periods 1:12 13 14 15 16;
 values 0 -0.000125 -0.00025 -0.000375 -0.0005;
+end;
+@#else
+shocks;
+var uni; periods 1:12; values 0;
 end;
 @#endif
 
