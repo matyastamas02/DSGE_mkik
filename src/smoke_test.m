@@ -186,6 +186,31 @@ if exist(v7_cal, 'file') == 2
         'szektoralis sorrend megfordul'], j), ok, hiba);
 end
 
+% --- 2. LEPCSO: haromtipusos JV-mag, kozos arszint ------------------------
+t3 = fullfile(repo, 'output', 'tables', 't40_jv_3type_stressz.csv');
+[ok, hiba] = ell(exist(t3, 'file') == 2, 't40 jv_3type stresszteszt letezik', ...
+    ok, hiba);
+if exist(t3, 'file') == 2
+    S3 = readtable(t3);
+    % A 2. LEPCSO LENYEGE: BK minden kombinacioban teljesul.
+    [ok, hiba] = ell(all(S3.konvergalt == 1), ...
+        sprintf('t40: mind a %d kombinacio BK-stabil (2. lepcso ATMENT)', ...
+        height(S3)), ok, hiba);
+    % Plauzibilitas: a zaras ne engedje elszaladni a realarfolyamot/NFA-t.
+    [ok, hiba] = ell(all(abs(S3.rer_pct) < 15) && all(abs(S3.bstar_pct) < 5), ...
+        't40: realarfolyam es NFA plauzibilis savban', ok, hiba);
+    % REGRESSZIOS GUARD a dokumentalt KORLATRA: a tipus-kibocsatas
+    % mechanikusan (1-phi)*y_d + phi*y_x. Ha valaki tipusonkenti keresletet
+    % vezet be (3. lepcso), ennek EL KELL BUKNIA -- akkor a guardot frissiteni
+    % kell, mert az mar a 3. lepcso, nem hiba.
+    a1 = S3(S3.SCENARIO == 1 & S3.TSCEN == 3 & S3.NOVERT == 0, :);
+    if height(a1) == 1
+        [ok, hiba] = ell(a1.y_E_pct > a1.y_L_pct && a1.y_L_pct > a1.y_D_pct, ...
+            ['t40: a tipus-kibocsatas sorrendje a phi_j sorrendje ' ...
+            '(dokumentalt KORLAT, nem eredmeny)'], ok, hiba);
+    end
+end
+
 % --- Összegzés ----------------------------------------------------------
 fprintf('\nFUSTTESZT: %d rendben, %d hiba\n', ok, hiba);
 if hiba > 0
