@@ -263,6 +263,30 @@ if exist(t43, 'file') == 2
         't43 NULLA-SOKK: sokk nelkul minden valtozo 0', ok, hiba);
 end
 
+% --- 4. LEPCSO: access-margo a JV-magon (v09) -----------------------------
+t44 = fullfile(repo, 'output', 'tables', 't44_jv_access_stressz.csv');
+[ok, hiba] = ell(exist(t44, 'file') == 2, 't44 jv_access stressz letezik', ok, hiba);
+if exist(t44, 'file') == 2
+    A9 = readtable(t44);
+    [ok, hiba] = ell(all(A9.konvergalt == 1), ...
+        sprintf('t44: mind a %d kombinacio BK-stabil (4. lepcso)', height(A9)), ok, hiba);
+    [ok, hiba] = ell(all(abs(A9.rer_pct) < 15) && all(abs(A9.bstar_pct) < 5), ...
+        't44: realarfolyam es NFA plauzibilis savban', ok, hiba);
+end
+t45b = fullfile(repo, 'output', 'tables', 't45b_jv_access_kuszob_osszegzes.csv');
+[ok, hiba] = ell(exist(t45b, 'file') == 2, 't45b jv_access kuszob letezik', ok, hiba);
+if exist(t45b, 'file') == 2
+    Kb = readtable(t45b);
+    % NESTING GUARD: ACCSCALE=0 mellett a v09-nek PONTOSAN a v08-at kell adnia.
+    [ok, hiba] = ell(Kb.nesting_elteres(1) < 1e-12, ...
+        sprintf('t45b NESTING: ACCSCALE=0 == v08 (elteres %.1e)', ...
+        Kb.nesting_elteres(1)), ok, hiba);
+    % Letezik VEGES kuszob a JV-magon.
+    [ok, hiba] = ell(isfinite(Kb.kuszob_KKV_L(1)) && Kb.kuszob_KKV_L(1) > 0, ...
+        sprintf('t45b: veges access-kuszob a JV-magon (ACCSCALE=%.1f)', ...
+        Kb.kuszob_KKV_L(1)), ok, hiba);
+end
+
 % --- Összegzés ----------------------------------------------------------
 fprintf('\nFUSTTESZT: %d rendben, %d hiba\n', ok, hiba);
 if hiba > 0
