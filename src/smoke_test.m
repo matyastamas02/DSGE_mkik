@@ -211,6 +211,39 @@ if exist(t3, 'file') == 2
     end
 end
 
+% --- 3. LEPCSO: tipusonkenti ar es kereslet -------------------------------
+t41 = fullfile(repo, 'output', 'tables', 't41_jv_3type_arak_stressz.csv');
+[ok, hiba] = ell(exist(t41, 'file') == 2, 't41 jv_3type_arak stressz letezik', ...
+    ok, hiba);
+if exist(t41, 'file') == 2
+    S4 = readtable(t41);
+    [ok, hiba] = ell(all(S4.konvergalt == 1), ...
+        sprintf(['t41: mind a %d kombinacio BK-stabil (3. lepcso ATMENT - ' ...
+        'az arszint-szetvalasztas nem tori el a JV-magot)'], height(S4)), ok, hiba);
+    % A v01-es EGYSEGGYOK-CSAPDA elkerulese: sum(wd_j*p_j) == 0.
+    [ok, hiba] = ell(max(abs(S4.normalizacio)) < 1e-10, ...
+        sprintf('t41: relativar-normalizacio tart (max %.1e) - v01 egyseggyok elkerulve', ...
+        max(abs(S4.normalizacio))), ok, hiba);
+    [ok, hiba] = ell(all(abs(S4.rer_pct) < 15) && all(abs(S4.bstar_pct) < 5), ...
+        't41: realarfolyam es NFA plauzibilis savban', ok, hiba);
+end
+
+t42 = fullfile(repo, 'output', 'tables', 't42_jv_3type_epsces_sens.csv');
+[ok, hiba] = ell(exist(t42, 'file') == 2, 't42 eps_ces erzekenyseg letezik', ok, hiba);
+if exist(t42, 'file') == 2
+    Ec = readtable(t42);
+    Ec = Ec(Ec.konvergalt == 1, :);
+    % AZ AGGREGATUM ROBUSZTUS: a GDP-hatas ne fuggjon az eps_ces-tol.
+    [ok, hiba] = ell(max(Ec.GDP_pct) - min(Ec.GDP_pct) < 0.05, ...
+        sprintf('t42: az aggregalt GDP eps_ces-re ERZEKETLEN (sav %.3f pp)', ...
+        max(Ec.GDP_pct) - min(Ec.GDP_pct)), ok, hiba);
+    % A SZEGMENS TOREKENY: a dokumentalt elojelvaltas alljon fenn. Ha valaki
+    % horgonyozza az eps_ces-t es szukiti a savot, ezt frissiteni kell.
+    [ok, hiba] = ell(any(Ec.y_E_pct > 0) && any(Ec.y_E_pct < 0), ...
+        't42: az y_E ELOJELE eps_ces-fuggo (dokumentalt KORLAT, kuszobforma kell)', ...
+        ok, hiba);
+end
+
 % --- Összegzés ----------------------------------------------------------
 fprintf('\nFUSTTESZT: %d rendben, %d hiba\n', ok, hiba);
 if hiba > 0
