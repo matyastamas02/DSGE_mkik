@@ -28,6 +28,96 @@ horgonyzatlan.*
 
 ---
 
+---
+
+# A FŐ MODELL: `jv_dsge_v09_access` — 91 paraméter
+
+*2026-08-12 · szkripttel ellenőrizve: mind a 91 deklarált paraméter pontosan
+egy kategóriában szerepel, egy sem maradt ki és egy sincs duplikálva.*
+
+## Összegzés számokban
+
+| Kategória | db | Megjegyzés |
+|---|---:|---|
+| **A.** saját adatunkból (Opten-panel) kalibrálható | **14** | fél–egy nap, azonnali hozam |
+| **B.** nyilvános magyar makroadatból (KSH) | **11** | könnyű, külső adatgyűjtés |
+| **C.** **JV-BECSÜLT — MÁR HORGONYZOTT, nem kell tenni semmit** | **28** | ez a base-paper döntés hozadéka |
+| **D.** nem azonosított / több adat kell | **20** | **ezek hordozzák a fő eredményt** |
+| **E.** származtatott vagy technikai (nem szabad paraméter) | **18** | — |
+| **Összesen** | **91** | |
+
+> ### A legfontosabb különbség az EAGLE-táblához képest
+>
+> Az EAGLE-modellnél a „szakirodalom kell" kategóriában **13 paraméter** volt,
+> és abból **5 konfliktusban állt** a JV-vonallal (köztük az `om_nr` 0,75 vs
+> 0,25 — háromszoros eltérés). **A JV-magon ez a kategória eltűnt:** ugyanezek
+> a paraméterek itt **magyar adaton becsült poszterior átlagok**, tehát
+> horgonyzottak. **28 paraméter — a modell közel harmada — készen van.**
+>
+> Ez konkrétan az, amit a 2026-07-13-i alapcikk-döntés ígért, és ami eddig
+> nem érvényesült, mert a legfejlettebb modell az EAGLE-magon volt.
+
+## A. Saját adatunkból kalibrálható — 14
+
+`om_E` `om_D` `om_L` · `phi_E` `phi_D` `phi_L` · `lev_E` `lev_D` `lev_L` ·
+`shl_E` `shl_D` `shl_L` · `delta` · `rho_acc`
+
+Részletek (miből, melyik paneloszlopból): lásd
+[`kalibracio_teendok_csapatnak.md`](kalibracio_teendok_csapatnak.md) 1. prioritás.
+
+## B. Nyilvános magyar makroadatból — 11
+
+`sc` `si` `sg` `sx` `sm` (KSH nemzeti számlák) ·
+`zeta_E` `zeta_D` `zeta_L` (ágazati tőkerészesedés) ·
+`aa_E` `aa_D` `aa_L` (import-intenzitás)
+
+A `zeta_j` és `aa_j` jelenleg a JV kétszektoros értékeinek (`zeta_d`/`zeta_x`,
+`a_d`/`a_x`) **átvitele** három típusra a piaci orientáció szerint — ez
+átvitel, nem becslés, tehát pótolandó.
+
+## C. JV-becsült — már horgonyzott, NEM kell tenni semmit — 28
+
+**Bayes-i poszterior átlagok magyar adaton (MNB WP 2008/9), 21 db:**
+`sigma` `habit` · `xi_p` `vth_p` `xi_x` `vth_x` `xi_w` `vth_w` ·
+`mu_x` `hx` · `gam_i` `phi_pi` · `nu_b` ·
+`rho_a` `rho_x` `rho_c` `rho_w` `rho_i` `rho_pr` `rho_mx` `rho_g`
+
+**JV-strukturális / survey-alapú, 5 db:** `fii` · `theta_w` · `rho_kz` ·
+`rho_z` · `om_no` *(25%, survey-alapú — az EAGLE-vonalon 75% áll!)*
+
+**BGG-konvenció (Bernanke–Gertler–Gilchrist 1999), 2 db:** `eps_qw` · `omega_nw`
+
+## D. Nem azonosított / több adat kell — 20
+
+*Ez a kategória hordozza a fő eredményt.*
+
+| Csoport | Paraméterek | Státusz |
+|---|---|---|
+| BGG-érzékenység | `chi_E` `chi_D` `chi_L` | „Opten-medián"-ként hivatkoztuk, de a tőkeáttétel-adat nem támogatja |
+| beruh. kiigazítás | `psi_E` `psi_D` `psi_L` | dokumentálatlan, a KKV-előny irányába torzít |
+| prémium-transzmisszió | `tsov_E/D/L` `tbank_E/D/L` | **nem azonosított** (0,26–2,75 sáv) |
+| **CES-helyettesítés** | **`eps_ces`** | **ezen fordul az `y_E` előjele (~2,3)** |
+| **hozzáférési margó** | **`lambda_acc_E/D` `omega_acc_E/D`** | **magyar adatból nem horgonyozható** |
+| vertikális link | `s_kkv` `mu_vert` | az IO-mérés hibás (`FIGYELMEZTETES_io_tabla_gyanus.md`) |
+| UIP-súly | `zsov` | forrás nincs |
+
+## E. Származtatott vagy technikai — 18
+
+**Nem szabad paraméterek** (más paraméterekből számolódnak):
+`lam_p` `lam_x` `lam_w` · `wd_E` `wd_D` `wd_L` · `wx_E` `wx_D` `wx_L` ·
+`shm_E` `shm_D` `shm_L` · `shd_c` `shd_i` `shd_g` `shd_v`
+
+**Konvenció / technikai zárás:** `beta` (0,99 = negyedéves 4%/év) ·
+`nu_uni` (az unió-ág külső zárása, diagnosztikából, nem becslés)
+
+---
+
+# A REFERENCIA-VONAL: `kkv_dsge_v07_access` — 66 paraméter
+
+*Az alábbi tábla az EAGLE-magú referencia-modellre vonatkozik. Továbbra is
+érvényes, és a benne dokumentált EAGLE/JV konfliktusok épp azt indokolják,
+miért a JV lett a fő vonal.*
+
 ## ⚠ Négy dolog, ami a kigyűjtés közben derült ki
 
 ### 1. A legbővebb modell az EAGLE-vonal *kalibrált* értékeit használja, nem a JV *becsült* értékeit

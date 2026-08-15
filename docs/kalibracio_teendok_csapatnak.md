@@ -4,6 +4,11 @@
 mag) **91 paramétere** alapján. Ez a csapatnak szóló munkalista: mit tudunk
 magunk kiszámolni, mihez kell külső adat, és mihez kell szakirodalom.*
 
+> **A 91 paraméterből 28 MÁR HORGONYZOTT** — ezek a Jakab–Világi magyar
+> adaton becsült poszterior átlagai, tehát velük nem kell tenni semmit. Ez
+> konkrétan a 2026-07-13-i alapcikk-döntés hozadéka. A teljes bontás:
+> [`kalibracio_tabla.md`](kalibracio_tabla.md).
+>
 > **Miért most:** a modell technikai része kész. A JV-mag háromtípusos
 > változata mindent tud, amit az EAGLE-vonal (három típus, típusonkénti ár
 > és kereslet, hitelhozzáférési margó), és minden lépcső átment a
@@ -30,7 +35,8 @@ kettő együtt). Ezért a lista élén nem paraméterek állnak, hanem **adatké
 ## 1. PRIORITÁS — amit MI tudunk kiszámolni, adatkérés nélkül
 
 *Opten-panel, 148 225 cég-év, 37 805 cég, 2021–2024. Már megvan, csak le
-kell futtatni. Becsült ráfordítás: **fél–egy nap az egész blokk.***
+kell futtatni. **14 paraméter**, becsült ráfordítás: **fél–egy nap az egész
+blokk.***
 
 | # | Paraméter | Jelenlegi | Miből | Panel-oszlop | Ki? |
 |---|---|---|---|---|---|
