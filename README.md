@@ -58,6 +58,7 @@ output/
 docs/
   regiszter/        az állítás- és paraméter-regiszter (CSV, ez a forrás)
   figyelmeztetesek/ amit NEM szabad közölni, és miért
+  irodalom/        szakirodalmi jegyzetek tételenként
   modszertan/       magyarázatok, paramétertábla, szerkezeti tanulságok
   eredmenyek/       dátumozott eredmény-doksik
   terv/             teendőlista, tanulmány-vázlat, ábraterv
