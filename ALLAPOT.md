@@ -5,15 +5,13 @@
 
 # DSGE_mkik — állapotlap
 
-*Generálva a füstteszt 2026-08-16 12:33-kor futott eredményéből · commit `080488f` · ág `main`*
+*Generálva a füstteszt 2026-08-16 12:33-kor futott eredményéből · commit `50cabdf` · ág `main`*
 
 **Fő modell:** `src/model/jv_dsge_v09_access.mod` (Jakab–Világi mag). A `kkv_dsge_*` a referencia-vonal.
 
 **Őrök:** 87 rendben, 0 hiba.
 
-## ⚠ FIGYELMEZTETÉS — a regiszter és az őrök nincsenek szinkronban
-
-- **A02** — nem létező őrre hivatkozik: `t37: az export-KKV hozzaferese >10x a hazaie`. Vagy az őr tűnt el, vagy a szöveg elavult.
+✅ **Minden „áll” állításnak van őre, és minden őr fut.**
 
 ---
 
@@ -30,7 +28,7 @@
 
 **A02.** Az exportáló KKV hitelhozzáférése 13-szorosa a hazai KKV-énak (61,9% vs 4,8%).
 
-> bizonyíték: `t37 (s14)` — *nincs őr*  
+> bizonyíték: `t37 (s14)` — őr: ✅ `t37: az export-KKV hozzaferese 13x a hazaie (12.8x: 61.9% vs 4.8%)`  
 > *2026-08-12 · Saját mérés az Opten-panelből; a projekt egyik legerősebb saját ténye.*
 
 **A03.** A nagyvállalati hitelhozzáférés 43,4% — ALACSONYABB, mint az export-KKV-ké.
