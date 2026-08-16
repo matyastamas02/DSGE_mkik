@@ -5,7 +5,7 @@
 
 # DSGE_mkik — állapotlap
 
-*Generálva a füstteszt 2026-08-16 15:28-kor futott eredményéből · commit `bfd7d1a` · ág `main`*
+*Generálva a füstteszt 2026-08-16 15:37-kor futott eredményéből · commit `4dbcf1f` · ág `main`*
 
 **Fő modell:** `src/modell/1_fo_vonal_jv/jv_dsge_v09_access.mod` (Jakab–Világi mag). A `kkv_dsge_*` a referencia-vonal.
 
@@ -391,6 +391,6 @@
 - ✅ t50b: a chi elojele atfordul a nevezo javitasaval (A: -0.01167 -> C: +0.00857) - a negativ eredmeny mutermek volt
 - ✅ t00 SZERKEZET: mind a 4 modell-vonal megvan, README-vel
 - ✅ t00 SZERKEZET: a FO MODELL a helyen van (1_fo_vonal_jv)
-- ✅ t00 SZERKEZET: minden futtato letezo .mod-ot hiv (29 futtato, 18 modell)
+- ✅ t00 SZERKEZET: minden futtato letezo .mod-ot hiv (29 futtato, 19 modell)
 
 </details>

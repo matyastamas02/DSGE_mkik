@@ -52,7 +52,9 @@ src/
   modell/       a Dynare-modellek, vonalanként (fent)
   app/          Streamlit-app
 data/           raw/ és processed/ — TARTALMA git-ignored, csak Drive-on
-output/         figures/ + tables/ — kódból generálva, kézzel semmit bele
+output/
+  INDEX.md      ← melyik tábla melyik scriptből, melyik vonalról, melyik állításhoz
+  figures/ + tables/ — kódból generálva, kézzel semmit bele
 docs/
   regiszter/        az állítás- és paraméter-regiszter (CSV, ez a forrás)
   figyelmeztetesek/ amit NEM szabad közölni, és miért

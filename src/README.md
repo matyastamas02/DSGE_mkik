@@ -51,3 +51,15 @@ python src/4_infra/13_allapotlap.py               # ALLAPOT.md újragenerálása
 - Ugyanezért **a `.mod` fájlok sem kaphatnak számelőtagot**: a Dynare a
   modellnévből MATLAB-csomagot generál. A sorrendet a mappanevek viszik.
 - Lokális függvény a MATLAB-script **végén** legyen, ne középen.
+
+## Az output/ tartalomjegyzéke
+
+```bash
+python src/4_infra/15_output_index.py     # output/INDEX.md
+```
+
+Megmondja minden tábláról és ábráról, hogy **melyik script írja** (tehát
+hogyan reprodukálható), **melyik vonalhoz** tartozik, **melyik állítást**
+támasztja alá, és **van-e rajta őr**. Auditál is: jelzi az árvákat (nincs
+script, ami előállítaná) és azokat az élő eredményeket, amikhez nem tartozik
+állítás.

@@ -20,6 +20,18 @@ aggregált eredményt**, és ez önmagában bizonyíték.
 | `kkv_dsge_v06_3type.mod` | az első explicit háromtípusos váz (E/D/L) |
 | `kkv_dsge_v07_access.mod` | hitelhozzáférési margó Tobin-Q-n keresztül |
 
+### `DSGE_alapmodell_juli13.mod` — az ős
+
+841 sor, a teljes EAGLE-HU (Békési–Kaszab–Szentmihályi, MNB 2017) magyar
+adatokra redukált változata. **Ez az a modell, amiről 2026-07-13-án a
+Jakab–Világi magra váltottunk** — a `kkv_dsge_v01` ebből indult.
+
+Nincs futtatója, és nem is kell: referenciaként van itt. 2026-08-16-ig a
+repo **gyökerében** ült (GitHub webes feltöltésből), ami félrevezető volt.
+
+Magyarázat és bírálat: `docs/modszertan/1_eagle_modell_magyarazat.md`,
+`docs/modszertan/alapmodell_juli13_jegyzet.md`.
+
 ## ⚠ Amit a két vonal között NEM szabad összehasonlítani
 
 **Az `ACCSCALE` skálája a két magon nem feleltethető meg egy-az-egyben.**
