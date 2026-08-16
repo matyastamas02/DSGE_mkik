@@ -13,10 +13,13 @@ data/processed/*
 # --- Dynare / MATLAB melléktermékek ---
 *.log
 +*/
-src/model/kkv_dsge_v*/
-src/model/jv_dsge_v*/
-src/model/jv_app_model/
-src/model/+jv_app_model/
+# UTVONALFUGGETLEN mintak. A korabbiak `src/model/...`-hez voltak kotve,
+# ezert a 2026-08-16-i atrendezes utan NEM fogtak -- a Dynare build-mappak
+# bekerultek egy commitba. Ezek barhol fognak a fan belul:
+**/jv_dsge_v*/
+**/kkv_dsge_v*/
+**/jv_app_model/
+**/+*/
 *_results.mat
 *.jnl
 *.eps.*
