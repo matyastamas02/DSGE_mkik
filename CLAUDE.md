@@ -11,6 +11,34 @@ ez még ötletelés fázisú vitaanyag, a végleges forrás később kerül be i
 
 ---
 
+## 👉 ELŐSZÖR: `ALLAPOT.md` (generált)
+
+**Az „mit állítunk ma / mi a státusza / mit vontunk vissza" kérdésre az
+[`ALLAPOT.md`](ALLAPOT.md) a válasz**, nem ez a fájl és nem a `docs/`.
+Generált, kézzel nem szerkeszthető:
+
+```
+matlab -batch "cd('src'); smoke_test"      # az őrök futnak, t00_orok.csv
+python src/13_allapotlap.py                # ALLAPOT.md
+```
+
+Forrásai: `docs/regiszter/allitasok.csv` (mit állítunk) +
+`docs/regiszter/parameterek.csv` (a 91 paraméter metaadata) + az őrök.
+**Új eredmény = sor a megfelelő CSV-ben + őr a füsttesztben**, nem új
+dátumozott doksi. A generátor kiabál, ha egy „áll" állításnak nincs őre,
+ha egy őr megbukott, vagy ha egy állítás nem létező őrre hivatkozik.
+
+> **SZINT-ŐR SZABÁLY:** ha egy állítás **számot mond**, az őrnek *arra a
+> számra* kell mennie, nem csak a relációra. Egy „L > E > D" sorrend-őr
+> mellett a „2,34 > 1,94 > 1,72" szintek némán elavulhatnak — a szöveg és
+> az adat pont így csúszik szét. (Ez a rés 2026-08-16-án derült ki; azóta
+> `t37`/`t47`/`t48b`/`t50` mind kapott SZINT-őrt.)
+
+Az alábbi szakasz a **háttér és a munkamódszer** — az aktuális számokat az
+`ALLAPOT.md` viszi.
+
+---
+
 ## ⚠ ÁLLAPOT — 2026-08-12. EZT OLVASD EL ELŐSZÖR
 
 ### A fő modell: `src/model/jv_dsge_v09_access.mod` (Jakab–Világi mag). NEM az EAGLE.
@@ -44,13 +72,18 @@ eredményt **küszöbformában** kell közölni (nem pontbecslésként).
   `docs/FIGYELMEZTETES_fo_allitas.md`.
 - **Szegmens-tőkét/beruházást a v05-ből** — reallokációs maradék.
 
-**Ami robusztus:** az aggregált GDP-hatás, +0,27% … +1,04% minden
-lépcsőn és paraméterezésen.
+**Ami robusztus:** az aggregált GDP-hatás **előjele és nagyságrendje**.
+⚠ **A sáv 2026-08-16-én módosult:** a korábbi „+0,27% … +1,04%" az
+*átvett* `rho_acc` = 0,85 mellett érvényes; az Opten-panelből horgonyzott
+`rho_acc` = 0,9673 mellett a felső vég +2,03% (`-DOPTEN=1`), a `rho_acc`-ot
+önmagában cserélve +2,89% (`-DOPTEN=3`). A helyes közlés: **+0,3 … +2,9%**,
+azzal, hogy a felső vég a hozzáférési csatorna perzisztenciáján múlik.
+Részletek: `docs/2026-08-16_opten_kalibracio_eredmeny.md`.
 
 ### Munkamódszer, ami bevált — tartsd meg
 
 1. **Füstteszt push előtt**: `matlab -batch "cd('src'); smoke_test"` —
-   jelenleg **57 ellenőrzés**, köztük replikációs és regressziós őrök.
+   jelenleg **74 ellenőrzés**, köztük replikációs és regressziós őrök.
    Ha egy állítást közlünk, tegyünk rá őrt.
 2. **BK-teszt nem elég.** Egy elgépelt index mellett is lehet 18/18
    konvergencia. Kell **független verifikáció**: szimmetria-teszt
@@ -58,12 +91,25 @@ lépcsőn és paraméterezésen.
    (`-DSCENARIO=4`), egymásba ágyazás. Lásd `src/model/ellenorzes_3type.m`.
 3. **Nagy átalakítás rövid életű branchen**, aznap vissza a main-re.
 4. **Kalibrációs változtatás makró-kapcsolóval** (`-DTSCEN`, `-DACCSCALE`,
-   `-DCALIB`, `-DEPSCES`, `-DSYM`), ne felülírással — így minden variáns
-   futtatható és összevethető marad.
+   `-DCALIB`, `-DEPSCES`, `-DSYM`, `-DOPTEN`, `-DRHOACC`), ne felülírással —
+   így minden variáns futtatható és összevethető marad. Ha egy kapcsoló új
+   alapértelmezést kapna, az **csapatdöntés**, nem kódolási lépés.
+5. **Ha egy paraméter `1/(1−ρ)` alakban hat, scan kell rá, nem pontbecslés.**
+   A `rho_acc` 0,85 → 0,9673 horgonyzása a hosszú távú hatást 4,6×-re vitte;
+   ilyen paraméternél egyetlen szám közlése félrevezető (`t49`).
 
 ### Hol tart a munka
 
 - **Modellépítés: kész.** Innentől **horgonyzás** van hátra.
+- **✅ 2026-08-16: az 1. prioritás lefutott** — 14 paraméter az
+  Opten-panelből (`s15_opten_kalibracio` → `t46`; modellhatás:
+  `stress_opten_v09` → `t47`–`t49b`). Makró-kapcsolóval kötve be:
+  `-DOPTEN=0|1|2|3`, `-DRHOACC=<x>`; **az alapértelmezés `0` maradt**, mert
+  az `om_j`/`shl_j` súlyokhoz még kell a KSH/Eurostat SBS mikrokör-bontás.
+  Amit hozott: `phi_L` és `delta` **megerősítve**; a `lev_E = lev_D`
+  kényszerített egyenlőség **megdőlt** (1,939 vs 1,719); a `rho_acc`
+  0,85 → **0,9673**, amitől a KKV-küszöb 36,5 → 22,3.
+  Eredménydoc: `docs/2026-08-16_opten_kalibracio_eredmeny.md`.
 - **Teendőlista a csapatnak:** `docs/kalibracio_teendok_csapatnak.md`
 - **Teljes paramétertábla (91 db):** `docs/kalibracio_tabla.md`
 - **Részletes átadás:** `docs/ATADAS_2026-08-12.md`

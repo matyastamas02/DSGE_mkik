@@ -86,6 +86,51 @@ tanulmány KERETEZÉSÉT módosította, nem a DSGE szerepét.
   **pontosan** a v08 (0,0e+00) · előjel helyes · küszöbök a JV-magon:
   `y_D≥y_L` **22,6** · súlyozott KKV **36,3** · `y_E≥y_L` **61,9**.
 
+- **`-DOPTEN` / `-DRHOACC` a `jv_dsge_v09_access.mod`-ban** (2026-08-16) —
+  nem új modellverzió, hanem a fő modell **empirikus horgonyzása**: a
+  `docs/kalibracio_teendok_csapatnak.md` 1. prioritása lefutott. A 14
+  „átvett induló" típus-paraméter (`om_j`, `shl_j`, `phi_j`, `lev_j`,
+  `delta`, `rho_acc`) most az **Opten-panelből** (148 225 cég-év, 37 805 cég,
+  2021–2024, 10+ fő) van kiszámolva. Futtatás: `s15_opten_kalibracio` →
+  `t46`, `t46b`, `t46c`; `stress_opten_v09` → `t47`, `t48`, `t48b`, `t49`,
+  `t49b`. **Felülírás helyett makró-kapcsoló**, a repo szabálya szerint:
+  `-DOPTEN=0` (átvett induló, **alapértelmezés**) · `1` (Opten, ALAP
+  szegmensdefiníció) · `2` (Opten, `export_arany ≥ 25%`) · `3` (**csak** a
+  `rho_acc` horgony — dekompozíciós ág) · `-DRHOACC=<x>` (közvetlen scan).
+  - **Amit az adat megerősít:** `phi_L` = 0,3649 vs. az átvett 0,365 és
+    `delta` = 0,0242 vs. 0,0250 — vagyis ez a két érték **már ebből a
+    panelből származhatott**, független próbán kijön.
+  - **Amit az adat megcáfol:** a `lev_E = lev_D = 1,6` **kényszerített
+    egyenlőség nem áll** — 1,939 vs. 1,719, azaz az exportáló KKV
+    tőkeáttételesebb. Az irányt a másik mérték (kötelezettségek/eszközök →
+    1,684 vs. 1,579) is megerősíti, a **szint viszont mérőfüggő**, ezért
+    csak az irányra szabad hivatkozni. Ez volt a teendőlista nevesített
+    részfeladata.
+  - **A legnagyobb hatású tétel:** `rho_acc` = **0,9673** (van_hitel
+    átmenet-mátrix, kétállapotú Markov, ρ_éves = p11 − p01 = 0,8754,
+    n = 110 350 cég-év pár) a korábbi 0,85 helyett. A hosszú távú
+    access-szorzó `1/(1−ρ)` révén **6,7× → 30,6×**, és ettől a küszöb a
+    súlyozott KKV-blokkra **36,5 → 22,3** (csak a `rho_acc`-tól: 17,0).
+  - ⚠ **A korábbi „+0,27…+1,04% robusztus GDP-sáv" a horgonyzott `rho_acc`
+    mellett NEM tartható:** `-DOPTEN=1` mellett +0,76…+2,03%, `-DOPTEN=3`
+    mellett +0,92…+2,89%. Füstteszt-őr rögzíti, hogy ez tudatos.
+  - ⚠ **Az `om_j`/`shl_j` súlyok NEM cserélhetők le vita nélkül:** a panel
+    a 10+ fős kört fedi, a mikrocégek hiányoznak, tehát ezek a 10+
+    populáción *belüli* részesedések (`shl_L` 0,466 vs. a jelenlegi 0,30 —
+    a különbség jórészt a hiányzó mikrokör). KSH/Eurostat SBS méret-bontás
+    kell hozzá; addig az alapértelmezés marad `-DOPTEN=0`.
+  - **BK-tanulság:** `-DOPTEN=1` mellett `phi_D = 0` **pontosan** (a D
+    szegmens épp a nem-exportáló cégeké), így `wx_D = 0`. Ez **nem** töri el
+    a modellt — az `x_D`-t a saját exportkereslet-egyenlete továbbra is
+    meghatározza, csak az aggregátumokba nem számít bele. 36/36 BK-stabil.
+  - **Kódtakarítás:** a `-DSYM=1` ág `shl_* = 1/3` sora **holt kód** volt
+    (egy későbbi sor felülírta). Az eredményt nem érintette (a három súly
+    összege mindkét esetben 1, szimmetriában `l_E==l_D==l_L`), de az
+    értékadás felkerült a típus-súlyokhoz. Regressziós őr: `-DOPTEN=0` a
+    `t44` tárolt eredményét bitre adja (eltérés 0,0e+00).
+  - *Notion döntésnapló-hivatkozás még jár ehhez* (ebben a munkamenetben
+    nem volt Notion-hozzáférés).
+
 - **`jv_dsge_v08_3type_arak.mod`** — 3. lépcső: **típusonkénti ár és
   kereslet**, ez oldja fel a v07_3type mechanikus-kibocsátás korlátját.
   A **v01-es egységgyök-csapdát** (*„a relatívár-identitások naiv felírása

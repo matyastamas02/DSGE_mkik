@@ -21,7 +21,11 @@ magunk kiszámolni, mihez kell külső adat, és mihez kell szakirodalom.*
 
 **Az aggregált eredmény robusztus, a szegmens-szintű nem.** Az euró tartós
 GDP-hatása minden lépcsőn és minden paraméterezésen **+0,27% … +1,04%**
-között marad. A szektorális eredményt viszont **két horgonyzatlan paraméter**
+között marad. ⚠ **Pontosítás (2026-08-16):** ez a sáv az *átvett* `rho_acc`
+= 0,85 mellett érvényes. Az Opten-panelből horgonyzott `rho_acc` = 0,9673
+mellett a felső vég **+2,03%-ra** tolódik (`-DOPTEN=1`), a `rho_acc`-ot
+önmagában cserélve +2,89%-ig (`-DOPTEN=3`) — mert a hosszú távú
+access-szorzó `1/(1−ρ)`. **A sáv iránya nem változott, a szélessége igen.** A szektorális eredményt viszont **két horgonyzatlan paraméter**
 viszi (`eps_ces` és `ACCSCALE`), és mindkettőn **fordul az előjel**. Amíg
 ezek nincsenek lehorgonyozva, a KKV/nagyvállalat állítást csak
 **küszöbformában** szabad közölni.
@@ -33,6 +37,20 @@ kettő együtt). Ezért a lista élén nem paraméterek állnak, hanem **adatké
 ---
 
 ## 1. PRIORITÁS — amit MI tudunk kiszámolni, adatkérés nélkül
+
+> ## ✅ 2026-08-16: EZ A BLOKK LEFUTOTT
+> Számoló: `src/s15_opten_kalibracio.m` → `t46`/`t46b`/`t46c`.
+> Modellhatás: `src/model/stress_opten_v09.m` → `t47`/`t48`/`t48b`/`t49`/`t49b`.
+> Modellbe kötve `-DOPTEN=0|1|2|3` makró-kapcsolóval (alapértelmezés `0`).
+> Részletes eredmény: [`2026-08-16_opten_kalibracio_eredmeny.md`](2026-08-16_opten_kalibracio_eredmeny.md).
+>
+> **Négy mondatban:** (1) a `phi_L` és a `delta` átvett értéke **helyes volt**
+> — a panel független próbán ugyanazt adja. (2) A `lev_E = lev_D`
+> kényszerített egyenlőség **megdőlt**: 1,939 vs. 1,719, az exportáló KKV
+> tőkeáttételesebb. (3) A `rho_acc` 0,85 → **0,9673**, ami a hosszú távú
+> access-szorzót 6,7×-ről 30,6×-re emeli, és a súlyozott KKV-küszöböt
+> **36,5-ről 22,3-ra** viszi le. (4) Az `om_j`/`shl_j` súlyok **nem
+> cserélhetők le** a mikrokör hiánya miatt — ez maradt nyitva (lásd 2.5).
 
 *Opten-panel, 148 225 cég-év, 37 805 cég, 2021–2024. Már megvan, csak le
 kell futtatni. **14 paraméter**, becsült ráfordítás: **fél–egy nap az egész
@@ -96,6 +114,23 @@ A jelenlegi panel a 10+ fős kört fedi. A Széchenyi Kártya viszont a
 mikrocégeknél koncentráltabb — tehát a hozzáférési reakciót
 **valószínűleg alulbecsüljük**, és a `t12`/`t14` arányok sem
 állomány-súlyozottak.
+
+### 2.5 KSH / Eurostat SBS méretkategóriás bontás — ÚJ, 2026-08-16
+
+**Ez blokkolja az `om_j`/`shl_j` súlyok lecserélését.** Az Opten-panel a
+10+ fős kört fedi, tehát a belőle számolt súlyok a 10+ populáción *belüli*
+részesedések: `shl_L = 0,466`, miközben a modell jelenlegi `shl_L = 0,30`
+értéke vélhetően a **teljes** vállalati szektorra vonatkozik. A kettő nem
+cserélhető fel közvetlenül — a különbség jórészt a hiányzó mikrokör.
+
+**Amit kérni/letölteni kell:** KSH vagy Eurostat SBS (`sbs_sc_ovw` jellegű)
+magyar vállalati bontás **méretkategóriánként** (0–9 / 10–49 / 50–249 / 250+),
+foglalkoztatás és hozzáadott érték szerint, 2021–2024. Ebből a 10+ súlyok
+átskálázhatók teljes gazdaságra. **Fél nap**, és utána az `-DOPTEN=1`
+alapértelmezéssé tehető.
+
+*(Kapcsolódik a 2.3-hoz — a mikrocégek hiánya ott a hozzáférési reakciót
+torzítja, itt a súlyokat.)*
 
 ### 2.4 KSH nemzeti számlák (könnyű, de meg kell csinálni)
 
@@ -169,11 +204,30 @@ export-KKV-k 61,9%-a. Valószínűbb, hogy a nagyvállalat nem is *kér* hitelt
 `ACCSCALE`, ami kell ahhoz, hogy a KKV megelőzze a nagyvállalatot
 (fő modell, `TSCEN=3` semleges transzmisszió):
 
-| Feltétel | Küszöb |
-|---|---:|
-| hazai KKV ≥ nagyvállalat | **22,6** |
-| súlyozott KKV-blokk ≥ nagyvállalat | **36,3** |
-| export-KKV ≥ nagyvállalat | **61,9** |
+| Feltétel | `-DOPTEN=0` (átvett) | `-DOPTEN=3` (csak `rho_acc`) | `-DOPTEN=1` (teljes Opten) |
+|---|---:|---:|---:|
+| hazai KKV ≥ nagyvállalat | **22,6** | 10,7 | 10,3 |
+| súlyozott KKV-blokk ≥ nagyvállalat | **36,3** | 17,0 | 22,3 |
+| export-KKV ≥ nagyvállalat | **61,9** | 28,9 | 31,0 |
+
+*(2026-08-16, `t48b`. A `-DOPTEN=0` oszlop a korábban közölt érték; a saját
+rácsunkon 22,9 / 36,5 / 61,7 jön ki — a különbség interpolációs, nem
+tartalmi.)*
+
+**A küszöb ~felére esik, amint a `rho_acc` empirikusan horgonyzott** — és
+mivel a 0,9673 **alsó korlát** (cég-szintű perzisztencia, a szegmens-szintű
+ennél magasabb), a valódi küszöb ennél is lejjebb van. A `t49` scan a teljes
+összefüggést mutatja:
+
+| `rho_acc` | 0,85 | 0,90 | 0,93 | 0,95 | **0,9673** | 0,98 |
+|---|---:|---:|---:|---:|---:|---:|
+| `1/(1−ρ)` | 6,7 | 10,0 | 14,3 | 20,0 | **30,6** | 50,0 |
+| küszöb (súlyozott KKV ≥ L) | 47,8 | 39,1 | 32,6 | 27,6 | **22,3** | 17,5 |
+| GDP @ `ACCSCALE=100` | 0,66% | 0,77% | 0,91% | 1,07% | **1,34%** | 1,75% |
+
+⚠ **Ezt a táblát kell közölni, nem a „küszöb = 22,3" számot.** Az `ACCSCALE`
+továbbra sem horgonyzott, tehát az állítás továbbra is feltételes; ami
+változott, az a küszöb **szintje**, és az, hogy immár tudjuk, mi viszi.
 
 ⚠ **Ne hasonlítsuk össze az EAGLE-vonal küszöbeivel** (94–101). A két
 magon az access-specifikáció eltér (ott Tobin-Q-n át, itt a beruházási
@@ -187,7 +241,8 @@ nem összevethető.
 
 | Sorrend | Feladat | Ki | Ráfordítás |
 |---|---|---|---|
-| **1** | Opten-panelből a 6 tétel újrakalibrálása (1. prioritás) | belső | fél–egy nap |
+| ~~**1**~~ | ~~Opten-panelből a 6 tétel újrakalibrálása (1. prioritás)~~ | ✅ **kész 2026-08-16** | — |
+| **1a** | KSH/Eurostat SBS méretbontás → az `om_j`/`shl_j` átskálázása (2.5) | belső | fél nap |
 | **2** | MNB méret szerinti kamatstatisztika **bekérése** | levél | + várakozás |
 | **3** | 2021 előtti cégpanel felkutatása | belső | fél nap |
 | **4** | KSH nemzeti számlák súlyai | belső | fél nap |

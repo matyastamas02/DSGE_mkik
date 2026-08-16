@@ -8,6 +8,12 @@ function smoke_test
 repo = fileparts(pwd);
 ok = 0; hiba = 0;
 
+% Az ellenorzesek eredmenyet CSV-be is kiirjuk, hogy az allapotlap
+% (src/13_allapotlap.py) MATLAB nelkul is generalhato legyen. A fusttest
+% marad a FORRAS: az allapotlap nem allithat semmit, amire itt nincs or.
+global SMOKE_LOG
+SMOKE_LOG = struct('nev', {}, 'rendben', {});
+
 % --- 1. Panel megvan és annyi sora van, amennyinek lennie kell --------
 f = fullfile(repo, 'data', 'processed', 'opten_panel.csv');
 [ok, hiba] = ell(exist(f, 'file') == 2, 'opten_panel.csv letezik', ok, hiba);
@@ -287,14 +293,190 @@ if exist(t45b, 'file') == 2
         Kb.kuszob_KKV_L(1)), ok, hiba);
 end
 
+% --- OPTEN-KALIBRACIO: a 14 parameter ujraszamolasa a panelbol ------------
+% Ezek REPLIKACIOS ORok: ha valaki ujrafuttatja az s15-ot es mas jon ki,
+% az vagy a panel valtozasa, vagy hiba -- mindketto tudni valo.
+t46 = fullfile(repo, 'output', 'tables', 't46_opten_kalibracio.csv');
+[ok, hiba] = ell(exist(t46, 'file') == 2, 't46 opten-kalibracio letezik', ok, hiba);
+if exist(t46, 'file') == 2
+    C = readtable(t46);
+    par = string(C.parameter);
+    ert = @(p) C.uj_ALAP(par == p);
+    [ok, hiba] = ell(height(C) == 14, ...
+        sprintf('t46: mind a 14 parameter megvan (%d)', height(C)), ok, hiba);
+    % A sulyoknak 1-re kell osszegzodniuk (definicio szerint).
+    [ok, hiba] = ell(abs(ert("om_E")+ert("om_D")+ert("om_L") - 1) < 1e-6 && ...
+        abs(ert("shl_E")+ert("shl_D")+ert("shl_L") - 1) < 1e-6, ...
+        't46: az om_j es az shl_j sulyok 1-re osszegzodnek', ok, hiba);
+    % AMIT AZ ADAT MEGERSIT: a phi_L es a delta atvett erteke helyes volt.
+    [ok, hiba] = ell(abs(ert("phi_L") - 0.365) < 0.005, ...
+        sprintf('t46: phi_L = %.4f megerositi az atvett 0.365-ot', ...
+        ert("phi_L")), ok, hiba);
+    [ok, hiba] = ell(abs(ert("delta") - 0.025) < 0.002, ...
+        sprintf('t46: delta = %.4f megerositi az atvett 0.0250-et', ...
+        ert("delta")), ok, hiba);
+    % AMIT AZ ADAT MEGCAFOL: a lev_E = lev_D kenyszeritett egyenloseg.
+    [ok, hiba] = ell(ert("lev_E") - ert("lev_D") > 0.1, ...
+        sprintf(['t46: a lev_E = lev_D kenyszeritett egyenloseg NEM ALL ' ...
+        '(%.3f vs %.3f)'], ert("lev_E"), ert("lev_D")), ok, hiba);
+end
+
+t47 = fullfile(repo, 'output', 'tables', 't47_opten_stressz.csv');
+[ok, hiba] = ell(exist(t47, 'file') == 2, 't47 opten stressz letezik', ok, hiba);
+if exist(t47, 'file') == 2
+    O = readtable(t47);
+    [ok, hiba] = ell(all(O.konvergalt == 1), ...
+        sprintf('t47: mind a %d kombinacio BK-stabil (az OPTEN=1 phi_D=0 is)', ...
+        height(O)), ok, hiba);
+    % SZINT-OR az A01 allitas savjahoz ("+0,3% ... +2,9%"). Ha a sav
+    % elmozdul, a tanulmany fo szamat kell atirni -- ne csendben tortenjen.
+    gmin = min(O.GDP_pct); gmax = max(O.GDP_pct);
+    [ok, hiba] = ell(gmin > 0 && gmin > 0.3 && gmax < 2.95, ...
+        sprintf(['t47 SZINT: az aggregalt GDP-sav az A01-ben kozolt ' ...
+        '+0,3...+2,9%%-on belul (%.2f%% ... %.2f%%)'], gmin, gmax), ok, hiba);
+    % REGRESSZIO: az OPTEN=0 ag adja-e a t44 tarolt eredmenyet? (Az shl_*
+    % ertekadas athelyezese a .mod-ban nem valtoztathatta meg semmit.)
+    if exist(t44, 'file') == 2
+        a = O(O.OPTEN == 0 & O.SCENARIO == 1 & O.TSCEN == 3, :);
+        b = A9(A9.SCENARIO == 1 & A9.TSCEN == 3 & A9.NOVERT == 0, :);
+        d = max(abs([a.GDP_pct-b.GDP_pct, a.y_E_pct-b.y_E_pct, ...
+            a.y_D_pct-b.y_D_pct, a.y_L_pct-b.y_L_pct]));
+        [ok, hiba] = ell(d < 1e-9, ...
+            sprintf('t47 REGRESSZIO: OPTEN=0 == t44 baseline (elteres %.1e)', ...
+            d), ok, hiba);
+    end
+end
+
+t48b = fullfile(repo, 'output', 'tables', 't48b_opten_kuszob_osszegzes.csv');
+[ok, hiba] = ell(exist(t48b, 'file') == 2, 't48b opten-kuszob letezik', ok, hiba);
+if exist(t48b, 'file') == 2
+    Kk = readtable(t48b);
+    k0 = Kk.kuszob_KKV_L(Kk.OPTEN == 0);
+    k1 = Kk.kuszob_KKV_L(Kk.OPTEN == 1);
+    [ok, hiba] = ell(all(isfinite(Kk.kuszob_KKV_L)), ...
+        't48b: minden agon letezik veges kuszob', ok, hiba);
+    [ok, hiba] = ell(all(Kk.kuszob_D_L < Kk.kuszob_KKV_L) && ...
+        all(Kk.kuszob_KKV_L < Kk.kuszob_E_L), ...
+        't48b: a kuszob-sorrend D < sulyozott KKV < E minden agon', ok, hiba);
+    [ok, hiba] = ell(k1 < k0, ...
+        sprintf(['t48b: az empirikus horgony LEVISZI a kuszobot ' ...
+        '(%.1f -> %.1f)'], k0, k1), ok, hiba);
+    % SZINT-OR az F01 allitas szovegehez ("22,3" es "36,5").
+    [ok, hiba] = ell(abs(k0 - 36.5) < 0.5 && abs(k1 - 22.3) < 0.5, ...
+        sprintf('t48b SZINT: a kuszobok az F01-ben kozolt szamokon (%.1f / %.1f)', ...
+        k0, k1), ok, hiba);
+end
+
+t49b = fullfile(repo, 'output', 'tables', 't49b_rhoacc_erzekenyseg_osszegzes.csv');
+[ok, hiba] = ell(exist(t49b, 'file') == 2, 't49b rho_acc erzekenyseg letezik', ok, hiba);
+if exist(t49b, 'file') == 2
+    Rr = sortrows(readtable(t49b), 'rho_acc');
+    [ok, hiba] = ell(all(diff(Rr.kuszob_KKV_L) < 0), ...
+        sprintf(['t49b: a kuszob MONOTON csokken a rho_acc-ban ' ...
+        '(%.1f -> %.1f)'], Rr.kuszob_KKV_L(1), Rr.kuszob_KKV_L(end)), ok, hiba);
+    [ok, hiba] = ell(all(diff(Rr.GDP_pct_ACC100) > 0), ...
+        't49b: a GDP-hatas MONOTON no a rho_acc-ban', ok, hiba);
+    % A DOKUMENTALT KORLAT ORE: a rho_acc-on a GDP-hatas tulmegy a korabban
+    % "robusztus"-nak nevezett +0.27..+1.04% savon. Ha ez az or elhal, valaki
+    % visszaallitotta a regi savot -- a szoveget is javitani kell.
+    [ok, hiba] = ell(max(Rr.GDP_pct_ACC100) > 1.04, ...
+        sprintf(['t49b KORLAT: a horgonyzott rho_acc mellett a GDP-hatas ' ...
+        'TULMEGY a korabbi savon (%.2f%% > 1.04%%)'], ...
+        max(Rr.GDP_pct_ACC100)), ok, hiba);
+end
+
+% --- AZ s14 HOZZAFERESI TENYEI (a projekt legerosebb sajat adatai) --------
+% Ezek eddig OR NELKUL alltak a doksikban -- az allapotlap konzisztencia-
+% ellenorzese fogta el (allitasok.csv A02-A05).
+t37 = fullfile(repo, 'output', 'tables', 't37_access_szegmens_evek.csv');
+[ok, hiba] = ell(exist(t37, 'file') == 2, 't37 access szegmens-evek letezik', ok, hiba);
+if exist(t37, 'file') == 2
+    H = readtable(t37);
+    sz = string(H.szegmens);
+    atl = @(s) mean(H.hozzaferes_pct(sz == s));
+    aE = atl("E_export_KKV"); aD = atl("D_hazai_KKV"); aL = atl("L_nagyvallalat");
+    % SZINT-OR: az A02 allitas "13-szoros"-t mond, tehat a savot is orizzuk,
+    % nem csak azt, hogy "sok".
+    [ok, hiba] = ell(aE / aD > 12 && aE / aD < 14, ...
+        sprintf('t37: az export-KKV hozzaferese 13x a hazaie (%.1fx: %.1f%% vs %.1f%%)', ...
+        aE / aD, aE, aD), ok, hiba);
+    [ok, hiba] = ell(aL < aE, ...
+        sprintf('t37: a nagyvallalati hozzaferes ALACSONYABB az export-KKV-enal (%.1f%% < %.1f%%)', ...
+        aL, aE), ok, hiba);
+    bsav = max(H.bubor_pct) - min(H.bubor_pct);
+    hsav = 0;
+    for s = ["E_export_KKV" "D_hazai_KKV" "L_nagyvallalat"]
+        hsav = max(hsav, max(H.hozzaferes_pct(sz == s)) - min(H.hozzaferes_pct(sz == s)));
+    end
+    % A korabbi doksiszoveg "kevesebb mint 2 pont"-ot mondott; a tenyleges
+    % maximum 2.2 pp (az export-KKV-nal). A kuszob ezert 3, es az UZENET
+    % viszi a valos szamot -- igy a szoveg es az adat nem tud szetcsuszni.
+    [ok, hiba] = ell(bsav > 12 && hsav < 3, ...
+        sprintf(['t37 PROGRAMVEZERELTSEG: a BUBOR %.1f pontot mozgott, a ' ...
+        'hozzaferes legfeljebb %.1f-et'], bsav, hsav), ok, hiba);
+    D21 = H.hozzaferes_pct(sz == "D_hazai_KKV" & H.ev == 2021);
+    D23 = H.hozzaferes_pct(sz == "D_hazai_KKV" & H.ev == 2023);
+    [ok, hiba] = ell(D23 > D21, ...
+        sprintf(['t37: a hazai KKV hozzaferese NOTT a kamatcsucs fele ' ...
+        '(%.1f%% -> %.1f%%)'], D21, D23), ok, hiba);
+end
+
+% --- BGG-BLOKK: lev_j es chi_j az Opten-panelbol (11_bgg_blokk_kalibracio.py)
+t50 = fullfile(repo, 'output', 'tables', 't50_bgg_blokk.csv');
+[ok, hiba] = ell(exist(t50, 'file') == 2, 't50 bgg-blokk letezik', ok, hiba);
+if exist(t50, 'file') == 2
+    B = readtable(t50);
+    bp = string(B.parameter);
+    b = @(p) B.opten(bp == p);
+    [ok, hiba] = ell(b("lev_L") > b("lev_E") && b("lev_E") > b("lev_D"), ...
+        sprintf('t50: a tokeattetel-sorrend L > E > D (%.3f > %.3f > %.3f)', ...
+        b("lev_L"), b("lev_E"), b("lev_D")), ok, hiba);
+    % Az irodalmi horgony (BGG / Christensen-Dib k/n = 2) kornyeke.
+    [ok, hiba] = ell(all(abs([b("lev_E") b("lev_D") b("lev_L")] - 2) < 0.4), ...
+        't50: mindharom lev az irodalmi k/n = 2 kornyeken (+-0.4)', ok, hiba);
+    % SZINT-OR. A SZABALY: ha egy allitas SZAMOT mond, az ort arra a szamra
+    % kell rakni, nem csak a relaciora. Az A07 allitas szovege "2,34 > 1,94 >
+    % 1,72" -- sorrend-or mellett ezek a SZINTEK nemán elavulhatnanak.
+    [ok, hiba] = ell(abs(b("lev_E") - 1.939) < 0.02 && ...
+        abs(b("lev_D") - 1.719) < 0.02 && abs(b("lev_L") - 2.337) < 0.02, ...
+        sprintf(['t50 SZINT: a lev_j ertekek az A07-ben kozolt szamokon ' ...
+        '(%.3f / %.3f / %.3f)'], b("lev_E"), b("lev_D"), b("lev_L")), ok, hiba);
+end
+t50b = fullfile(repo, 'output', 'tables', 't50b_bgg_chi_reszletes.csv');
+[ok, hiba] = ell(exist(t50b, 'file') == 2, 't50b chi-specifikaciok letezik', ok, hiba);
+if exist(t50b, 'file') == 2
+    Cs = readtable(t50b);
+    Cs = Cs(string(Cs.valtozo) == "log(lev)" & ...
+        string(Cs.csoport) == "S_KKV_egyben", :);
+    sA = Cs.egyutthato(startsWith(string(Cs.spec), 'A'));
+    sC = Cs.egyutthato(startsWith(string(Cs.spec), 'C'));
+    % A FO MODSZERTANI EREDMENY ORE: az "A" spec eros negativ egyutthatoja
+    % MERESI MUTERMEK (ev vegi allomany a nevezoben). A "C" specben a helyes,
+    % POZITIV elojel jon ki. Ha ez az or elhal, a doc allitasa nem all tobbe.
+    [ok, hiba] = ell(~isempty(sA) && ~isempty(sC) && sA < 0 && sC > 0, ...
+        sprintf(['t50b: a chi elojele atfordul a nevezo javitasaval ' ...
+        '(A: %+.5f -> C: %+.5f) - a negativ eredmeny mutermek volt'], ...
+        sA, sC), ok, hiba);
+end
+
 % --- Összegzés ----------------------------------------------------------
 fprintf('\nFUSTTESZT: %d rendben, %d hiba\n', ok, hiba);
+
+% --- az orok kiirasa adatkent (az allapotlaphoz) -------------------------
+L = table(string({SMOKE_LOG.nev})', double([SMOKE_LOG.rendben])', ...
+    'VariableNames', {'or', 'rendben'});
+L.idopont(:) = string(datetime('now', 'Format', 'yyyy-MM-dd HH:mm'));
+writetable(L, fullfile(repo, 'output', 'tables', 't00_orok.csv'));
+
 if hiba > 0
     error('smoke_test: %d ellenorzes megbukott — NE pushold!', hiba);
 end
 end
 
 function [ok, hiba] = ell(feltetel, nev, ok, hiba)
+    global SMOKE_LOG
+    SMOKE_LOG(end+1) = struct('nev', string(nev), ...
+        'rendben', double(logical(feltetel))); %#ok<AGROW>
     if feltetel
         fprintf('  [OK]    %s\n', nev);
         ok = ok + 1;

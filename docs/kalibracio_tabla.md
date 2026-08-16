@@ -39,7 +39,7 @@ egy kategóriában szerepel, egy sem maradt ki és egy sincs duplikálva.*
 
 | Kategória | db | Megjegyzés |
 |---|---:|---|
-| **A.** saját adatunkból (Opten-panel) kalibrálható | **14** | fél–egy nap, azonnali hozam |
+| **A.** saját adatunkból (Opten-panel) kalibrálható | **14** | ✅ **2026-08-16: LEFUTOTT** — `t46`, lásd lentebb |
 | **B.** nyilvános magyar makroadatból (KSH) | **11** | könnyű, külső adatgyűjtés |
 | **C.** **JV-BECSÜLT — MÁR HORGONYZOTT, nem kell tenni semmit** | **28** | ez a base-paper döntés hozadéka |
 | **D.** nem azonosított / több adat kell | **20** | **ezek hordozzák a fő eredményt** |
@@ -57,10 +57,39 @@ egy kategóriában szerepel, egy sem maradt ki és egy sincs duplikálva.*
 > Ez konkrétan az, amit a 2026-07-13-i alapcikk-döntés ígért, és ami eddig
 > nem érvényesült, mert a legfejlettebb modell az EAGLE-magon volt.
 
-## A. Saját adatunkból kalibrálható — 14
+## A. Saját adatunkból kalibrálható — 14 — ✅ **LEFUTOTT (2026-08-16)**
 
 `om_E` `om_D` `om_L` · `phi_E` `phi_D` `phi_L` · `lev_E` `lev_D` `lev_L` ·
 `shl_E` `shl_D` `shl_L` · `delta` · `rho_acc`
+
+Számoló: `src/s15_opten_kalibracio.m` → `output/tables/t46_opten_kalibracio.csv`
+(+ `t46b` évenkénti stabilitás, `t46c` a `van_hitel` átmenet-mátrix).
+Modellbe makró-kapcsolóval kötve: `-DOPTEN=0|1|2|3` a
+`src/model/jv_dsge_v09_access.mod`-ban (az **alapértelmezés `0`**, az átvett
+induló értékekkel — lásd az elfogadási feltételt lentebb).
+
+| Paraméter | Jelenlegi | Opten (ALAP) | Státusz |
+|---|---:|---:|---|
+| `om_E` / `om_D` / `om_L` | 0,18 / 0,37 / 0,45 | 0,256 / 0,184 / 0,560 | ⚠ **feltételes** (mikrokör hiányzik) |
+| `shl_E` / `shl_D` / `shl_L` | 0,20 / 0,50 / 0,30 | 0,157 / 0,378 / 0,466 | ⚠ **feltételes** (mikrokör hiányzik) |
+| `phi_E` / `phi_D` / `phi_L` | 0,56 / 0,05 / 0,365 | 0,376 / 0,000 / **0,3649** | `phi_L` ✅ megerősítve; `phi_D` definíciófüggő |
+| `lev_E` / `lev_D` / `lev_L` | 1,6 / 1,6 / 1,85 | 1,939 / 1,719 / 2,337 | ✅ a kényszerített egyenlőség **megdőlt** |
+| `delta` | 0,025 | **0,0242** | ✅ megerősítve |
+| `rho_acc` | 0,85 | **0,9673** | ✅ horgonyozva (**alsó korlát**) |
+
+**Két érték független próbán kijött** (`phi_L`, `delta`) — ezek tehát már
+korábban is ebből a panelből származhattak. **Egy feltevés megdőlt:**
+`lev_E ≠ lev_D`, az exportáló KKV tőkeáttételesebb (az irány mérőfüggetlen,
+a szint nem). **Egy paraméter viszi a modelleredményt:** a `rho_acc`, mert
+`1/(1−ρ)` révén a hosszú távú access-szorzó 6,7×-ről 30,6×-re nő — ezért
+scan van rá (`t49`), nem pontbecslés.
+
+⚠ **Elfogadási feltétel az `om_j`/`shl_j`-re:** a panel a **10+ fős** kört
+fedi, tehát ezek a 10+ populáción *belüli* részesedések. A jelenlegi
+`shl_L = 0,30` vélhetően a **teljes** gazdaságra vonatkozik, az új 0,466 nem
+— a kettő nem cserélhető fel közvetlenül. Ehhez KSH/Eurostat SBS
+méretkategóriás bontás kell (B. kategória, 2.4-es tétel). **Addig az `-DOPTEN`
+alapértelmezése `0` marad.**
 
 Részletek (miből, melyik paneloszlopból): lásd
 [`kalibracio_teendok_csapatnak.md`](kalibracio_teendok_csapatnak.md) 1. prioritás.
@@ -93,7 +122,7 @@ A `zeta_j` és `aa_j` jelenleg a JV kétszektoros értékeinek (`zeta_d`/`zeta_x
 
 | Csoport | Paraméterek | Státusz |
 |---|---|---|
-| BGG-érzékenység | `chi_E` `chi_D` `chi_L` | „Opten-medián"-ként hivatkoztuk, de a tőkeáttétel-adat nem támogatja |
+| BGG-érzékenység | `chi_E` `chi_D` `chi_L` | ⚠ **2026-08-16: megbecsülve, és NEM azonosított** — a panel „C" specifikációja `chi_S ≈ +0,002`-t ad (helyes előjel, t = 1,95), a `chi_L`-t egyáltalán nem azonosítja. A szakirodalom **0,042–0,067** (Christensen–Dib 2008 becslés / BGG-konvenció), méret szerinti bontás **nélkül**. → **szimmetrikus alap + scan**, lásd [`kalibracio_bgg_blokk.md`](kalibracio_bgg_blokk.md) |
 | beruh. kiigazítás | `psi_E` `psi_D` `psi_L` | dokumentálatlan, a KKV-előny irányába torzít |
 | prémium-transzmisszió | `tsov_E/D/L` `tbank_E/D/L` | **nem azonosított** (0,26–2,75 sáv) |
 | **CES-helyettesítés** | **`eps_ces`** | **ezen fordul az `y_E` előjele (~2,3)** |

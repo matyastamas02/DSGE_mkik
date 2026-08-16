@@ -1,0 +1,92 @@
+parameter,kategoria,kategoria_nev,statusz,forras,kapcsolo,or,doksi
+beta,E,származtatott vagy technikai,származtatott,más paraméterekből számolódik / technikai zárás,,,
+delta,A,saját adat (Opten-panel),horgonyzott,"Opten-panel 2021–24 (0,0242) ÉS Christensen–Dib (2008) 1. tábla (0,025)",-DOPTEN,t46: delta megerositi,2026-08-16_opten_kalibracio_eredmeny.md
+sigma,C,JV-becsült (MNB WP 2008/9 poszterior),horgonyzott,"Jakab–Világi, MNB WP 2008/9, becsült poszterior átlag",,,
+habit,C,JV-becsült (MNB WP 2008/9 poszterior),horgonyzott,"Jakab–Világi, MNB WP 2008/9, becsült poszterior átlag",,,
+fii,C,JV-strukturális / survey,horgonyzott,"Jakab–Világi, MNB WP 2008/9 (strukturális/survey)",,,
+rho_kz,C,JV-strukturális / survey,horgonyzott,"Jakab–Világi, MNB WP 2008/9 (strukturális/survey)",,,
+rho_z,C,JV-strukturális / survey,horgonyzott,"Jakab–Világi, MNB WP 2008/9 (strukturális/survey)",,,
+xi_p,C,JV-becsült (MNB WP 2008/9 poszterior),horgonyzott,"Jakab–Világi, MNB WP 2008/9, becsült poszterior átlag",,,
+vth_p,C,JV-becsült (MNB WP 2008/9 poszterior),horgonyzott,"Jakab–Világi, MNB WP 2008/9, becsült poszterior átlag",,,
+xi_x,C,JV-becsült (MNB WP 2008/9 poszterior),horgonyzott,"Jakab–Világi, MNB WP 2008/9, becsült poszterior átlag",,,
+vth_x,C,JV-becsült (MNB WP 2008/9 poszterior),horgonyzott,"Jakab–Világi, MNB WP 2008/9, becsült poszterior átlag",,,
+xi_w,C,JV-becsült (MNB WP 2008/9 poszterior),horgonyzott,"Jakab–Világi, MNB WP 2008/9, becsült poszterior átlag",,,
+vth_w,C,JV-becsült (MNB WP 2008/9 poszterior),horgonyzott,"Jakab–Világi, MNB WP 2008/9, becsült poszterior átlag",,,
+theta_w,C,JV-strukturális / survey,horgonyzott,"Jakab–Világi, MNB WP 2008/9 (strukturális/survey)",,,
+lam_p,E,származtatott vagy technikai,származtatott,más paraméterekből számolódik / technikai zárás,,,
+lam_x,E,származtatott vagy technikai,származtatott,más paraméterekből számolódik / technikai zárás,,,
+lam_w,E,származtatott vagy technikai,származtatott,más paraméterekből számolódik / technikai zárás,,,
+hx,C,JV-becsült (MNB WP 2008/9 poszterior),horgonyzott,"Jakab–Világi, MNB WP 2008/9, becsült poszterior átlag",,,
+mu_x,C,JV-becsült (MNB WP 2008/9 poszterior),horgonyzott,"Jakab–Világi, MNB WP 2008/9, becsült poszterior átlag",,,
+gam_i,C,JV-becsült (MNB WP 2008/9 poszterior),horgonyzott,"Jakab–Világi, MNB WP 2008/9, becsült poszterior átlag",,,
+phi_pi,C,JV-becsült (MNB WP 2008/9 poszterior),horgonyzott,"Jakab–Világi, MNB WP 2008/9, becsült poszterior átlag",,,
+nu_b,C,JV-becsült (MNB WP 2008/9 poszterior),horgonyzott,"Jakab–Világi, MNB WP 2008/9, becsült poszterior átlag",,,
+nu_uni,E,származtatott vagy technikai,származtatott,más paraméterekből számolódik / technikai zárás,-DNUUNI,,
+om_no,C,JV-strukturális / survey,horgonyzott,"Jakab–Világi, MNB WP 2008/9 (strukturális/survey)",,,
+eps_qw,C,BGG (1999) konvenció,horgonyzott,Bernanke–Gertler–Gilchrist (1999) konvenció,,,
+omega_nw,C,BGG (1999) konvenció,horgonyzott,Bernanke–Gertler–Gilchrist (1999) konvenció,,,
+om_E,A,saját adat (Opten-panel),feltételes,"Opten-panel, de a 10+ fős körön BELÜLI részesedés — KSH/Eurostat SBS mikrokör-bontás kell az átskálázáshoz (teendők 2.5)",-DOPTEN,t46: sulyok 1-re osszegzodnek,2026-08-16_opten_kalibracio_eredmeny.md
+om_D,A,saját adat (Opten-panel),feltételes,"Opten-panel, de a 10+ fős körön BELÜLI részesedés — KSH/Eurostat SBS mikrokör-bontás kell az átskálázáshoz (teendők 2.5)",-DOPTEN,t46: sulyok 1-re osszegzodnek,2026-08-16_opten_kalibracio_eredmeny.md
+om_L,A,saját adat (Opten-panel),feltételes,"Opten-panel, de a 10+ fős körön BELÜLI részesedés — KSH/Eurostat SBS mikrokör-bontás kell az átskálázáshoz (teendők 2.5)",-DOPTEN,t46: sulyok 1-re osszegzodnek,2026-08-16_opten_kalibracio_eredmeny.md
+phi_E,A,saját adat (Opten-panel),feltételes,"Opten-panel; a definíciótól függ (ALAP 0,376 vs KÜSZÖB25 0,691)",-DOPTEN,t46,2026-08-16_opten_kalibracio_eredmeny.md
+phi_D,A,saját adat (Opten-panel),feltételes,"Opten-panel; az ALAP definícióban DEFINÍCIÓ SZERINT 0, nem mérés",-DOPTEN,t46,2026-08-16_opten_kalibracio_eredmeny.md
+phi_L,A,saját adat (Opten-panel),horgonyzott,"Opten-panel 2021–24 (0,3649)",-DOPTEN,t46: phi_L megerositi,2026-08-16_opten_kalibracio_eredmeny.md
+zeta_E,B,nyilvános magyar makroadat (KSH),pótolandó,jelenleg JV-érték átvitele; KSH-ból pótolandó (teendők 2.4),,,
+zeta_D,B,nyilvános magyar makroadat (KSH),pótolandó,jelenleg JV-érték átvitele; KSH-ból pótolandó (teendők 2.4),,,
+zeta_L,B,nyilvános magyar makroadat (KSH),pótolandó,jelenleg JV-érték átvitele; KSH-ból pótolandó (teendők 2.4),,,
+aa_E,B,nyilvános magyar makroadat (KSH),pótolandó,jelenleg JV-érték átvitele; KSH-ból pótolandó (teendők 2.4),,,
+aa_D,B,nyilvános magyar makroadat (KSH),pótolandó,jelenleg JV-érték átvitele; KSH-ból pótolandó (teendők 2.4),,,
+aa_L,B,nyilvános magyar makroadat (KSH),pótolandó,jelenleg JV-érték átvitele; KSH-ból pótolandó (teendők 2.4),,,
+chi_E,D,nem azonosított / több adat kell,horgonyzatlan,"Opten-panel: chi_S≈+0,002 (alsó korlát); irodalom 0,042–0,067 (C&D 2008; BGG-konvenció) — méret szerinti bontás NÉLKÜL",,,kalibracio_bgg_blokk.md
+chi_D,D,nem azonosított / több adat kell,horgonyzatlan,"Opten-panel: chi_S≈+0,002 (alsó korlát); irodalom 0,042–0,067",,,kalibracio_bgg_blokk.md
+chi_L,D,nem azonosított / több adat kell,horgonyzatlan,"NEM AZONOSÍTOTT: n=230, t=-0,78, rossz előjel (kalibracio_bgg_blokk.md)",,,kalibracio_bgg_blokk.md
+lev_E,A,saját adat (Opten-panel),horgonyzott,"Opten-panel medián 1,939 (sáv 1,68–1,94); irodalom k/n=2 (C&D 2008 1. tábla)",-DOPTEN,t50: tokeattetel-sorrend,kalibracio_bgg_blokk.md
+lev_D,A,saját adat (Opten-panel),horgonyzott,"Opten-panel medián 1,719 (sáv 1,58–1,72)",-DOPTEN,t50: tokeattetel-sorrend,kalibracio_bgg_blokk.md
+lev_L,A,saját adat (Opten-panel),horgonyzott,"Opten-panel medián 2,337 (sáv 1,81–2,34)",-DOPTEN,t50: tokeattetel-sorrend,kalibracio_bgg_blokk.md
+psi_E,D,nem azonosított / több adat kell,horgonyzatlan,nincs hivatkozható forrás,,,
+psi_D,D,nem azonosított / több adat kell,horgonyzatlan,nincs hivatkozható forrás,,,
+psi_L,D,nem azonosított / több adat kell,horgonyzatlan,nincs hivatkozható forrás,,,
+tsov_E,D,nem azonosított / több adat kell,horgonyzatlan,nincs hivatkozható forrás,,,FIGYELMEZTETES_fo_allitas.md
+tsov_D,D,nem azonosított / több adat kell,horgonyzatlan,nincs hivatkozható forrás,,,FIGYELMEZTETES_fo_allitas.md
+tsov_L,D,nem azonosított / több adat kell,horgonyzatlan,nincs hivatkozható forrás,,,FIGYELMEZTETES_fo_allitas.md
+tbank_E,D,nem azonosított / több adat kell,horgonyzatlan,nincs hivatkozható forrás,,,FIGYELMEZTETES_fo_allitas.md
+tbank_D,D,nem azonosított / több adat kell,horgonyzatlan,nincs hivatkozható forrás,,,FIGYELMEZTETES_fo_allitas.md
+tbank_L,D,nem azonosított / több adat kell,horgonyzatlan,nincs hivatkozható forrás,,,FIGYELMEZTETES_fo_allitas.md
+wd_E,E,származtatott vagy technikai,származtatott,más paraméterekből számolódik / technikai zárás,,,
+wd_D,E,származtatott vagy technikai,származtatott,más paraméterekből számolódik / technikai zárás,,,
+wd_L,E,származtatott vagy technikai,származtatott,más paraméterekből számolódik / technikai zárás,,,
+wx_E,E,származtatott vagy technikai,származtatott,más paraméterekből számolódik / technikai zárás,,,
+wx_D,E,származtatott vagy technikai,származtatott,más paraméterekből számolódik / technikai zárás,,,
+wx_L,E,származtatott vagy technikai,származtatott,más paraméterekből számolódik / technikai zárás,,,
+shl_E,A,saját adat (Opten-panel),feltételes,"Opten-panel, de a 10+ fős körön BELÜLI részesedés — KSH/Eurostat SBS mikrokör-bontás kell az átskálázáshoz (teendők 2.5)",-DOPTEN,t46: sulyok 1-re osszegzodnek,2026-08-16_opten_kalibracio_eredmeny.md
+shl_D,A,saját adat (Opten-panel),feltételes,"Opten-panel, de a 10+ fős körön BELÜLI részesedés — KSH/Eurostat SBS mikrokör-bontás kell az átskálázáshoz (teendők 2.5)",-DOPTEN,t46: sulyok 1-re osszegzodnek,2026-08-16_opten_kalibracio_eredmeny.md
+shl_L,A,saját adat (Opten-panel),feltételes,"Opten-panel, de a 10+ fős körön BELÜLI részesedés — KSH/Eurostat SBS mikrokör-bontás kell az átskálázáshoz (teendők 2.5)",-DOPTEN,t46: sulyok 1-re osszegzodnek,2026-08-16_opten_kalibracio_eredmeny.md
+shm_E,E,származtatott vagy technikai,származtatott,más paraméterekből számolódik / technikai zárás,,,
+shm_D,E,származtatott vagy technikai,származtatott,más paraméterekből számolódik / technikai zárás,,,
+shm_L,E,származtatott vagy technikai,származtatott,más paraméterekből számolódik / technikai zárás,,,
+s_kkv,D,nem azonosított / több adat kell,horgonyzatlan,nincs hivatkozható forrás,-DSKKV,,FIGYELMEZTETES_io_tabla_gyanus.md
+mu_vert,D,nem azonosított / több adat kell,horgonyzatlan,nincs hivatkozható forrás,-DMUVERT,,FIGYELMEZTETES_io_tabla_gyanus.md
+zsov,D,nem azonosított / több adat kell,horgonyzatlan,nincs hivatkozható forrás,,,
+eps_ces,D,nem azonosított / több adat kell,horgonyzatlan,nincs hivatkozható forrás,-DEPSCES,,
+rho_acc,A,saját adat (Opten-panel),horgonyzott,"Opten-panel van_hitel átmenet-mátrix (0,9673) — ALSÓ KORLÁT",-DOPTEN / -DRHOACC,t49b: kuszob monoton a rho_acc-ban,2026-08-16_opten_kalibracio_eredmeny.md
+lambda_acc_E,D,nem azonosított / több adat kell,horgonyzatlan,nincs hivatkozható forrás,-DACCSCALE,,2026-08-12_access_horgonyzas_eredmeny.md
+lambda_acc_D,D,nem azonosított / több adat kell,horgonyzatlan,nincs hivatkozható forrás,-DACCSCALE,,2026-08-12_access_horgonyzas_eredmeny.md
+omega_acc_E,D,nem azonosított / több adat kell,horgonyzatlan,nincs hivatkozható forrás,-DACCSCALE,,2026-08-12_access_horgonyzas_eredmeny.md
+omega_acc_D,D,nem azonosított / több adat kell,horgonyzatlan,nincs hivatkozható forrás,-DACCSCALE,,2026-08-12_access_horgonyzas_eredmeny.md
+sc,B,nyilvános magyar makroadat (KSH),pótolandó,jelenleg JV-érték átvitele; KSH-ból pótolandó (teendők 2.4),,,
+si,B,nyilvános magyar makroadat (KSH),pótolandó,jelenleg JV-érték átvitele; KSH-ból pótolandó (teendők 2.4),,,
+sg,B,nyilvános magyar makroadat (KSH),pótolandó,jelenleg JV-érték átvitele; KSH-ból pótolandó (teendők 2.4),,,
+sx,B,nyilvános magyar makroadat (KSH),pótolandó,jelenleg JV-érték átvitele; KSH-ból pótolandó (teendők 2.4),,,
+sm,B,nyilvános magyar makroadat (KSH),pótolandó,jelenleg JV-érték átvitele; KSH-ból pótolandó (teendők 2.4),,,
+shd_c,E,származtatott vagy technikai,származtatott,más paraméterekből számolódik / technikai zárás,,,
+shd_i,E,származtatott vagy technikai,származtatott,más paraméterekből számolódik / technikai zárás,,,
+shd_g,E,származtatott vagy technikai,származtatott,más paraméterekből számolódik / technikai zárás,,,
+shd_v,E,származtatott vagy technikai,származtatott,más paraméterekből számolódik / technikai zárás,,,
+rho_a,C,JV-becsült (MNB WP 2008/9 poszterior),horgonyzott,"Jakab–Világi, MNB WP 2008/9, becsült poszterior átlag",,,
+rho_x,C,JV-becsült (MNB WP 2008/9 poszterior),horgonyzott,"Jakab–Világi, MNB WP 2008/9, becsült poszterior átlag",,,
+rho_c,C,JV-becsült (MNB WP 2008/9 poszterior),horgonyzott,"Jakab–Világi, MNB WP 2008/9, becsült poszterior átlag",,,
+rho_w,C,JV-becsült (MNB WP 2008/9 poszterior),horgonyzott,"Jakab–Világi, MNB WP 2008/9, becsült poszterior átlag",,,
+rho_i,C,JV-becsült (MNB WP 2008/9 poszterior),horgonyzott,"Jakab–Világi, MNB WP 2008/9, becsült poszterior átlag",,,
+rho_pr,C,JV-becsült (MNB WP 2008/9 poszterior),horgonyzott,"Jakab–Világi, MNB WP 2008/9, becsült poszterior átlag",,,
+rho_mx,C,JV-becsült (MNB WP 2008/9 poszterior),horgonyzott,"Jakab–Világi, MNB WP 2008/9, becsült poszterior átlag",,,
+rho_g,C,JV-becsült (MNB WP 2008/9 poszterior),horgonyzott,"Jakab–Világi, MNB WP 2008/9, becsült poszterior átlag",,,

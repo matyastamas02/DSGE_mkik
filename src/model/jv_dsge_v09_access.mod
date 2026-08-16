@@ -59,7 +59,8 @@
  * kuszobformaban kell kozolni.
  *
  * Szcenariok: -DSCENARIO=1|2|3|4, -DTSCEN=1|2|3, -DACCSCALE=<0..150>,
- *             -DEPSCES=<x>, -DSYM=1, -DNOVERT=1, -DNUUNI=<x>
+ *             -DEPSCES=<x>, -DSYM=1, -DNOVERT=1, -DNUUNI=<x>,
+ *             -DOPTEN=0|1|2
  * Futtatas:   stress_jv_access_v09.m
  */
 
@@ -89,6 +90,22 @@
 // parameterertekek atvetele.
 @#ifndef ACCSCALE
   @#define ACCSCALE = 100
+@#endif
+// -DOPTEN: a 14 tipus-parameter forrasa (s15_opten_kalibracio.m).
+//   0 = atvett indulo ertekek a kkv_dsge_v07_access-bol (ALAPERTELMEZES,
+//       hogy a korabbi eredmenyek valtozatlanul reprodukalhatok legyenek)
+//   1 = Opten-panel, ALAP szegmensdefinicio (E = barmilyen pozitiv export,
+//       azonos az s14 hozzaferesi szamaival)
+//   2 = Opten-panel, KUSZOB25 definicio (E = export_arany >= 25%)
+//   3 = CSAK a rho_acc horgony, minden mas atvett indulo marad. Ez a
+//       DEKOMPOZICIOS ag: a 0->3 lepes tisztan a perzisztencia-horgony
+//       hatasa, a 3->1 lepes a sulyoke es a tokeattetele.
+// A kapcsolo azert kell felulíras helyett, mert az om_j/shl_j sulyok a
+// 10+ fos populacion BELULI reszesedesek (a mikrocegek nincsenek a
+// panelben), tehat NEM cserelhetok le vita nelkul -- lasd a
+// t46-os tabla (1) korlatjat.
+@#ifndef OPTEN
+  @#define OPTEN = 0
 @#endif
 
 var
@@ -165,6 +182,13 @@ eps_qw = 0.96; omega_nw = 0.95;
 // ertelmezesenel viszont igen.
 om_E = 0.18; om_D = 0.37; om_L = 0.45;
 phi_E = 0.56; phi_D = 0.05; phi_L = 0.365;
+// Munka-sulyok: a v07 sn_* foglalkoztatasi reszesedesei. ITT allitjuk be,
+// nem lejjebb a szarmaztatott sulyoknal: korabban a -DSYM=1 shl-beallitasa
+// (1/3, 1/3, 1/3) HOLT KOD volt, mert egy kesobbi sor felulirta. A
+// szimmetria-teszt eredmenyet ez nem valtoztatta meg (a harom suly osszege
+// mindket esetben 1, es szimmetriaban l_E==l_D==l_L), de a sorrend igy
+// egyertelmu, es az -DOPTEN felulíras is ide tud kapcsolodni.
+shl_E = 0.20; shl_D = 0.50; shl_L = 0.30;
 
 // --- Termelesi parameterek tipusonkent ----------------------------------
 // A JV ket szektorra ad erteket: zeta_d=0.17 / zeta_x=0.14 (tokehanyad) es
@@ -183,6 +207,47 @@ aa_E   = 0.45; aa_D   = 0.80; aa_L   = 0.60;
 chi_E = 0.06; chi_D = 0.06; chi_L = 0.02;
 lev_E = 1.6;  lev_D = 1.6;  lev_L = 1.85;
 psi_E = 8.0;  psi_D = 8.0;  psi_L = 13.0;
+
+// --- -DOPTEN: EMPIRIKUS UJRAKALIBRACIO AZ OPTEN-PANELBOL ----------------
+// Forras: src/s15_opten_kalibracio.m -> output/tables/t46_opten_kalibracio.csv
+// Panel: 148 225 ceg-ev, 37 805 ceg, 2021-2024, 10+ fos cegek.
+// A delta es a rho_acc szegmensfuggetlen, ezert azok a sajat helyukon
+// vannak felulirva (delta itt, rho_acc a penzugyi blokk vegen).
+//
+// AMIT AZ ADAT MEGERSIT:
+//   phi_L = 0.3649 vs a jelenlegi 0.365 -- gyakorlatilag azonos, tehat az
+//     atvett ertek MAR EBBOL A PANELBOL szarmazhatott (fuggetlen proba).
+//   delta = 0.0242 negyedeves vs a jelenlegi 0.0250 -- 3%-on belul.
+// AMIT AZ ADAT MEGCAFOL:
+//   lev_E = lev_D KENYSZERITETT EGYENLOSEG NEM ALL: 1.939 vs 1.719, azaz
+//     az exportalo KKV TOKEATTETELESEBB, mint a hazai. Az iranyt a masik
+//     merteke (kotelezettsegek/eszkozok -> 1.684 vs 1.579) is megerositi,
+//     a SZINT viszont mero-fuggo -- ezert a szintre nem, csak az IRANYRA
+//     hivatkozzunk.
+//   rho_acc = 0.967 vs 0.85 -- ez a hosszu tavu access-szorzot
+//     1/(1-rho) reven ~4.5-szeresere emeli. Lasd t47.
+@#if OPTEN == 1
+// ALAP szegmensdefinicio (E = barmilyen pozitiv export; azonos az s14-gyel)
+om_E = 0.2555; om_D = 0.1844; om_L = 0.5601;
+shl_E = 0.1566; shl_D = 0.3775; shl_L = 0.4659;
+// FIGYELEM: phi_D = 0 ebben a definicioban DEFINICIO SZERINTI nulla (a D
+// szegmens epp a nem-exportalo cegeke), nem meres. Emiatt wx_D = 0 -- az
+// x_D valtozot a sajat exportkereslet-egyenlete tovabbra is meghatarozza,
+// csak az aggregatumokba nem szamit bele. Ha ez zavaro, hasznald az
+// -DOPTEN=2-t, ahol a D szegmens kis exportot is tartalmaz.
+phi_E = 0.3757; phi_D = 0.0000; phi_L = 0.3649;
+lev_E = 1.9385; lev_D = 1.7185; lev_L = 2.3374;
+delta = 0.0242;
+@#endif
+@#if OPTEN == 2
+// KUSZOB25 (E = export_arany >= 25%): kozelebb all a modell "export-
+// orientalt KKV" fogalmahoz, es a phi_D itt ertelmes szam.
+om_E = 0.1287; om_D = 0.3112; om_L = 0.5601;
+shl_E = 0.0749; shl_D = 0.4592; shl_L = 0.4659;
+phi_E = 0.6911; phi_D = 0.0227; phi_L = 0.3649;
+lev_E = 1.9314; lev_D = 1.7351; lev_L = 2.3374;
+delta = 0.0242;
+@#endif
 
 // -DSYM=1: SZIMMETRIA-TESZT. Minden tipus-specifikus parametert azonosra
 // allit. Ekkor a harom tipusnak DEFINICIO SZERINT azonosan kell viselkednie
@@ -216,8 +281,7 @@ wx_L = om_L*phi_L/(om_E*phi_E+om_D*phi_D+om_L*phi_L);
 // KONZISZTENCIA: wx_E/wx_D/wx_L = 0.356 / 0.065 / 0.579, ami PONTOSAN a
 // kkv_dsge_v07_access sx_E/sx_D/sx_L erteke. Ket fuggetlen uton ugyanaz.
 
-// Munka-sulyok: a v07 sn_* foglalkoztatasi reszesedesei.
-shl_E = 0.20; shl_D = 0.50; shl_L = 0.30;
+// (Munka-sulyok: feljebb, a tipus-sulyoknal -- lasd az ottani indoklast.)
 // Import-sulyok: az import-intenzitassal (1-aa_j) sulyozott meretaranyok.
 shm_E = om_E*(1-aa_E)/(om_E*(1-aa_E)+om_D*(1-aa_D)+om_L*(1-aa_L));
 shm_D = om_D*(1-aa_D)/(om_E*(1-aa_E)+om_D*(1-aa_D)+om_L*(1-aa_L));
@@ -261,6 +325,26 @@ eps_ces = @{EPSCES};
 // horgonyozhato (a tamogatott programok kiiktattak a kamatciklust a
 // KKV-hozzaferesbol). Kuszobformaban kozlendo.
 rho_acc = 0.85;
+// -DOPTEN>=1: az Opten-panel van_hitel atmenet-matrixabol becsult
+// perzisztencia. Ketallapotu Markov-lanc: rho_eves = p11 - p01 = 0.8754
+// (n = 110 350 ceg-ev par), negyedevesre 0.8754^(1/4) = 0.9673.
+// KORLAT: ez CEG-SZINTU statusz-perzisztencia, a modell acc_j-je viszont
+// SZEGMENS-szintu. Az aggregalt arany rendszerint perzisztensebb az
+// egyedinel (az s14 szerint a szegmens-aranyok 4 ev alatt <1 pontot
+// mozdultak), tehat a 0.967 ALSO KORLAT, nem pontbecsles.
+@#if OPTEN >= 1
+rho_acc = 0.9673;
+@#endif
+// -DRHOACC=<x>: a rho_acc kozvetlen felulirasa (minden mas valtozatlan).
+// AZERT KELL, mert a hosszu tavu access-hatas 1/(1-rho_acc)-kal aranyos,
+// ami rho -> 1 kozeleben ROBBAN: 0.85 -> 6.7x, 0.95 -> 20x, 0.98 -> 50x.
+// Egy ilyen parameterre nem eleg egy pontbecsles, scan kell (t49).
+@#ifndef RHOACC
+  @#define RHOACC = -1
+@#endif
+@#if RHOACC > 0
+rho_acc = @{RHOACC};
+@#endif
 lambda_acc_E = 2.0*(@{ACCSCALE}/100); lambda_acc_D = 2.5*(@{ACCSCALE}/100);
 omega_acc_E  = 0.35*(@{ACCSCALE}/100); omega_acc_D = 0.45*(@{ACCSCALE}/100);
 nu_uni = @{NUUNI};

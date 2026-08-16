@@ -4,6 +4,23 @@ New Keynesian DSGE modell magyar adatokra.
 **Deadline: 2026. december.**
 Kollaborátorok: [Név1], [Név2], [Név3].
 
+> # 👉 [**ALLAPOT.md**](ALLAPOT.md) — itt kezdd
+>
+> Egy generált oldal: **mit állítunk ma**, mi a bizonyítéka, mi védi, és
+> **mit vontunk már vissza** (dátummal és okkal). Plusz mind a 91 paraméter
+> élő értékkel, forrással és státusszal.
+>
+> Kézzel nem szerkeszthető — a `docs/regiszter/*.csv`-ből és a füstteszt
+> őreiből generálódik, tehát nem tud elcsúszni a kódtól:
+>
+> ```
+> matlab -batch "cd('src'); smoke_test"
+> python src/13_allapotlap.py
+> ```
+>
+> *Korábban kilenc különböző fájl állította magáról, hogy leírja a
+> jelenlegi állapotot. Ez a lap váltja ki őket.*
+
 ## Mi hol van
 
 | Tartalom             | Hely                                 |
