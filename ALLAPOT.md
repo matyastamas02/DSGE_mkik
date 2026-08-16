@@ -1,15 +1,15 @@
 <!-- GENERÁLT FÁJL — NE SZERKESZD. Forrás: docs/regiszter/*.csv +
      output/tables/t00_orok.csv. Újragenerálás:
-       matlab -batch "cd('src'); smoke_test"
-       python src/13_allapotlap.py                                -->
+       matlab -batch "cd('src/4_infra'); smoke_test"
+       python src/4_infra/13_allapotlap.py                                -->
 
 # DSGE_mkik — állapotlap
 
-*Generálva a füstteszt 2026-08-16 12:33-kor futott eredményéből · commit `50cabdf` · ág `main`*
+*Generálva a füstteszt 2026-08-16 15:25-kor futott eredményéből · commit `9e8ca73` · ág `repo-atrendezes`*
 
-**Fő modell:** `src/model/jv_dsge_v09_access.mod` (Jakab–Világi mag). A `kkv_dsge_*` a referencia-vonal.
+**Fő modell:** `src/modell/1_fo_vonal_jv/jv_dsge_v09_access.mod` (Jakab–Világi mag). A `kkv_dsge_*` a referencia-vonal.
 
-**Őrök:** 87 rendben, 0 hiba.
+**Őrök:** 90 rendben, 0 hiba.
 
 ✅ **Minden „áll” állításnak van őre, és minden őr fut.**
 
@@ -296,7 +296,7 @@
 
 ---
 
-## Őrök (87 db)
+## Őrök (90 db)
 
 *A füstteszt minden ellenőrzése. Ez a projekt egyetlen olyan nyilvántartása, ami nem tud némán elcsúszni: ha egy állítás megdől, itt megbukik egy sor.*
 
@@ -389,5 +389,8 @@
 - ✅ t50 SZINT: a lev_j ertekek az A07-ben kozolt szamokon (1.939 / 1.719 / 2.337)
 - ✅ t50b chi-specifikaciok letezik
 - ✅ t50b: a chi elojele atfordul a nevezo javitasaval (A: -0.01167 -> C: +0.00857) - a negativ eredmeny mutermek volt
+- ✅ t00 SZERKEZET: mind a 4 modell-vonal megvan, README-vel
+- ✅ t00 SZERKEZET: a FO MODELL a helyen van (1_fo_vonal_jv)
+- ✅ t00 SZERKEZET: minden futtato letezo .mod-ot hiv (29 futtato, 18 modell)
 
 </details>
