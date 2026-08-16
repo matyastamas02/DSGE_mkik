@@ -18,8 +18,8 @@ ez még ötletelés fázisú vitaanyag, a végleges forrás később kerül be i
 Generált, kézzel nem szerkeszthető:
 
 ```
-matlab -batch "cd('src'); smoke_test"      # az őrök futnak, t00_orok.csv
-python src/13_allapotlap.py                # ALLAPOT.md
+matlab -batch "cd('src/4_infra'); smoke_test"      # az őrök futnak, t00_orok.csv
+python src/4_infra/13_allapotlap.py                # ALLAPOT.md
 ```
 
 Forrásai: `docs/regiszter/allitasok.csv` (mit állítunk) +
@@ -41,7 +41,7 @@ Az alábbi szakasz a **háttér és a munkamódszer** — az aktuális számokat
 
 ## ⚠ ÁLLAPOT — 2026-08-12. EZT OLVASD EL ELŐSZÖR
 
-### A fő modell: `src/model/jv_dsge_v09_access.mod` (Jakab–Világi mag). NEM az EAGLE.
+### A fő modell: `src/modell/1_fo_vonal_jv/jv_dsge_v09_access.mod` (Jakab–Világi mag). NEM az EAGLE.
 
 A repóban **két modellvonal** él. A `kkv_dsge_*` az EAGLE-vonal
 (referencia/robusztusság), a `jv_dsge_*` a Jakab–Világi vonal (**fő**).
@@ -67,9 +67,9 @@ eredményt **küszöbformában** kell közölni (nem pontbecslésként).
 - **Szegmens-szintű kibocsátást pontbecslésként** — két horgonyzatlan
   paraméter (`eps_ces`, `ACCSCALE`) viszi, mindkettőn fordul az előjel.
 - **A `t24`/`s_kkv` IO-számokat** („autóipar 6% hazai köztes input") — a
-  mérés hibás, a gyökérok még nyitott: `docs/FIGYELMEZTETES_io_tabla_gyanus.md`.
+  mérés hibás, a gyökérok még nyitott: `docs/figyelmeztetesek/FIGYELMEZTETES_io_tabla_gyanus.md`.
 - **A `t_S > t_L` feltevést** eredményként — nem azonosítható:
-  `docs/FIGYELMEZTETES_fo_allitas.md`.
+  `docs/figyelmeztetesek/FIGYELMEZTETES_fo_allitas.md`.
 - **Szegmens-tőkét/beruházást a v05-ből** — reallokációs maradék.
 
 **Ami robusztus:** az aggregált GDP-hatás **előjele és nagyságrendje**.
@@ -78,17 +78,17 @@ eredményt **küszöbformában** kell közölni (nem pontbecslésként).
 `rho_acc` = 0,9673 mellett a felső vég +2,03% (`-DOPTEN=1`), a `rho_acc`-ot
 önmagában cserélve +2,89% (`-DOPTEN=3`). A helyes közlés: **+0,3 … +2,9%**,
 azzal, hogy a felső vég a hozzáférési csatorna perzisztenciáján múlik.
-Részletek: `docs/2026-08-16_opten_kalibracio_eredmeny.md`.
+Részletek: `docs/eredmenyek/2026-08-16_opten_kalibracio_eredmeny.md`.
 
 ### Munkamódszer, ami bevált — tartsd meg
 
-1. **Füstteszt push előtt**: `matlab -batch "cd('src'); smoke_test"` —
-   jelenleg **74 ellenőrzés**, köztük replikációs és regressziós őrök.
+1. **Füstteszt push előtt**: `matlab -batch "cd('src/4_infra'); smoke_test"` —
+   jelenleg **90 ellenőrzés**, köztük replikációs és regressziós őrök.
    Ha egy állítást közlünk, tegyünk rá őrt.
 2. **BK-teszt nem elég.** Egy elgépelt index mellett is lehet 18/18
    konvergencia. Kell **független verifikáció**: szimmetria-teszt
    (`-DSYM=1`), aggregációs azonosságok, nulla-sokk kontroll
-   (`-DSCENARIO=4`), egymásba ágyazás. Lásd `src/model/ellenorzes_3type.m`.
+   (`-DSCENARIO=4`), egymásba ágyazás. Lásd `src/modell/1_fo_vonal_jv/futtato/ellenorzes_3type.m`.
 3. **Nagy átalakítás rövid életű branchen**, aznap vissza a main-re.
 4. **Kalibrációs változtatás makró-kapcsolóval** (`-DTSCEN`, `-DACCSCALE`,
    `-DCALIB`, `-DEPSCES`, `-DSYM`, `-DOPTEN`, `-DRHOACC`), ne felülírással —
@@ -109,16 +109,16 @@ Részletek: `docs/2026-08-16_opten_kalibracio_eredmeny.md`.
   Amit hozott: `phi_L` és `delta` **megerősítve**; a `lev_E = lev_D`
   kényszerített egyenlőség **megdőlt** (1,939 vs 1,719); a `rho_acc`
   0,85 → **0,9673**, amitől a KKV-küszöb 36,5 → 22,3.
-  Eredménydoc: `docs/2026-08-16_opten_kalibracio_eredmeny.md`.
-- **Teendőlista a csapatnak:** `docs/kalibracio_teendok_csapatnak.md`
-- **Teljes paramétertábla (91 db):** `docs/kalibracio_tabla.md`
-- **Részletes átadás:** `docs/ATADAS_2026-08-12.md`
+  Eredménydoc: `docs/eredmenyek/2026-08-16_opten_kalibracio_eredmeny.md`.
+- **Teendőlista a csapatnak:** `docs/terv/kalibracio_teendok_csapatnak.md`
+- **Teljes paramétertábla (91 db):** `docs/modszertan/kalibracio_tabla.md`
+- **Részletes átadás:** `docs/archiv/ATADAS_2026-08-12.md`
 
 ---
 
 ## Repo-struktúra
 
-- `src/` — Dynare `.mod` fájlok és scriptek. Minden kód ide. **Új script
+- `src/` — Dynare `.mod` fájlok és scriptek. Minden kód ide. A szerkezetet a `src/README.md` írja le (`1_adat` / `2_empirikus` / `3_abrak` / `4_infra` / `modell` / `app`). **Új script
   MATLAB-ban készüljön** (a korai 01–05 adat-előkészítő/ábra scriptek
   Pythonban vannak — működnek, nem kell átírni őket).
 - `data/raw/`, `data/processed/` — adat, **git-ignored**. A tartalom Drive-on van, lásd `data-index.md`.

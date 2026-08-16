@@ -20,7 +20,8 @@ from pathlib import Path
 import pandas as pd
 import streamlit as st
 
-REPO = Path(__file__).resolve().parents[2]
+REPO = next(p for p in Path(__file__).resolve().parents
+            if (p / "CLAUDE.md").exists())
 MODEL_DIR = REPO / "src" / "model"
 APP_DIR = REPO / "src" / "app"
 MATLAB_EXE = os.environ.get(

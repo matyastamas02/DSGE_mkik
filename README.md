@@ -1,8 +1,8 @@
 # Hungarian DSGE Model — [Chamber of Commerce Project]
 
-New Keynesian DSGE modell magyar adatokra.
-**Deadline: 2026. december.**
-Kollaborátorok: [Név1], [Név2], [Név3].
+New Keynesian DSGE modell magyar adatokra: **mit tesz az euró bevezetése a
+magyar GDP-vel, és másképp érinti-e a KKV-kat, mint a nagyvállalatokat?**
+**Deadline: 2026. december.** Kollaborátorok: [Név1], [Név2], [Név3].
 
 > # 👉 [**ALLAPOT.md**](ALLAPOT.md) — itt kezdd
 >
@@ -14,136 +14,92 @@ Kollaborátorok: [Név1], [Név2], [Név3].
 > őreiből generálódik, tehát nem tud elcsúszni a kódtól:
 >
 > ```
-> matlab -batch "cd('src'); smoke_test"
-> python src/13_allapotlap.py
+> matlab -batch "cd('src/4_infra'); smoke_test"
+> python src/4_infra/13_allapotlap.py
 > ```
 >
 > *Korábban kilenc különböző fájl állította magáról, hogy leírja a
 > jelenlegi állapotot. Ez a lap váltja ki őket.*
 
-## Mi hol van
+## A fő modell
 
-| Tartalom             | Hely                                 |
-|----------------------|--------------------------------------|
-| Kód (Dynare/R)       | `src/` — ebben a repóban            |
-| Nyers adat           | Google Drive → `data-index.md`      |
-| Tisztított adat      | Google Drive → `data-index.md`      |
-| Ábrák, táblák        | `output/` — kódból reprodukálva     |
-| Döntésnapló, jegyzet | Notion → [link]                     |
-| Napi kommunikáció    | Slack #[csatorna]                   |
+**`src/modell/1_fo_vonal_jv/jv_dsge_v09_access.mod`** (Jakab–Világi mag).
+**NEM az EAGLE** — az a referencia-vonal.
 
----
+A repóban négy modell-mappa él, és a **mappa neve mondja meg a státuszt**:
 
-## ⚠ MELYIK MODELLEL MEGYÜNK TOVÁBB — olvasd el, mielőtt bármit futtatsz
-
-**A fő vonal: `src/model/jv_dsge_v09_access.mod` (Jakab–Világi mag).**
-**NEM az EAGLE.**
-
-Ez azért kell ide kiírni, mert a repóban **két modellvonal** él, és
-2026-08-12-ig a legfejlettebb modell az EAGLE-vonalon volt — miközben a
-csapat 2026-07-13-án azzal az érvvel döntött a Jakab–Világi alapmodell
-mellett, hogy annak paraméterei **magyar adaton Bayes-i módszerrel
-becsültek**, nem kalibráltak. A döntés és a kód nem ért össze. **Most már
-összeér:** a JV-vonal mindent tud, amit az EAGLE-vonal.
-
-| Vonal | Fájlok | Szerep |
+| Mappa | Mi ez | Státusz |
 |---|---|---|
-| **JV — FŐ VONAL** | `jv_dsge_v01` … **`jv_dsge_v09_access`** | **ezzel megyünk tovább** |
-| EAGLE — referencia | `kkv_dsge_v01` … `kkv_dsge_v07_access` | robusztussági/összevetési vonal |
+| [`1_fo_vonal_jv/`](src/modell/1_fo_vonal_jv/) | Jakab–Világi mag, háromtípusos — **a leadandó** | 🟢 élő |
+| [`2_referencia_eagle/`](src/modell/2_referencia_eagle/) | EAGLE-HU mag, robusztussági összevetés | 🟡 referencia |
+| [`3_archiv_korai_jv/`](src/modell/3_archiv_korai_jv/) | meghaladott JV-lépcsők (v01–v05) | ⚪ archív |
+| [`4_app/`](src/modell/4_app/) | a Streamlit-app futtató-modellje | 🟡 külön termék |
 
-### Miért a JV-mag, és nem az EAGLE
-
-1. **Becsült, nem kalibrált paraméterek** — ez volt az eredeti csapatdöntés érve.
-2. **Gazdagabb termelési oldal.** A JV három inputot ismer (tőke, munka,
-   **import**), explicit helyettesítési rugalmasságokkal, és típusonként
-   eltérő import-intenzitással (`aa_E`=0,45 vs `aa_D`=0,80). Az EAGLE
-   kétinputos Cobb–Douglas-a (`y = a + α·k + (1−α)·n`) ezt **nem tudja
-   kifejezni** — pedig az exportszektor import-intenzitása a magyar duális
-   gazdaság központi ténye, tehát épp a projekt fő kérdéséhez tartozik.
-3. **Ugyanazt tudja:** háromtípusos szerkezet (E/D/L), típusonkénti ár és
-   kereslet, hitelhozzáférési (extenzív) margó — mind megvan.
-
-### Hogyan jutottunk ide (négy lépcső, mind tesztelve)
-
-| Lépcső | Fájl | Mit ad hozzá | BK |
-|---|---|---|---|
-| 1 | `jv_dsge_v06` | szegmens-specifikus tőkehozam | 18/18 |
-| 2 | `jv_dsge_v07_3type` | három típus, közös ár | 18/18 |
-| 3 | `jv_dsge_v08_3type_arak` | típusonkénti ár és kereslet | 18/18 |
-| 4 | **`jv_dsge_v09_access`** | **hitelhozzáférési margó** | **18/18** |
-
-A BK-teszten túl **független verifikáció** is lefutott (`t43`): szimmetria
-(azonos paraméterek → azonos típusok, 1e−16), aggregációs azonosságok
-(1e−19), nulla-sokk kontroll (pontosan 0), és egymásba ágyazás
-(`ACCSCALE=0` → **pontosan** a v08). Részletek: `src/model/ellenorzes_3type.m`.
-
-### ⚠ Amit NEM szabad közölni a modellből
-
-- **Szegmens-szintű kibocsátást pontbecslésként.** Két horgonyzatlan
-  paraméter (`eps_ces`, `ACCSCALE`) viszi a szektorális eredményt, és
-  mindkettőn fordul az előjel. **Kettős küszöbformában** kell közölni.
-- **A `t24`/`s_kkv` IO-alapú számokat** (autóipar „6% hazai köztes input")
-  — a mérés hibás, lásd `docs/FIGYELMEZTETES_io_tabla_gyanus.md`.
-- **A `t_S > t_L` transzmissziós feltevést** eredményként — nem
-  azonosítható, lásd `docs/FIGYELMEZTETES_fo_allitas.md`.
-
-**Ami robusztus:** az aggregált GDP-hatás. Minden lépcsőn és minden
-paraméterezésen +0,27% … +1,04% között marad.
-
-### Mit kell még kalibrálni
-
-`docs/kalibracio_tabla.md` — mind a 66 paraméter, forrás szerint osztályozva.
-A csapatnak szóló teendőlista: `docs/kalibracio_teendok_csapatnak.md`.
-
----
-
-## Setup
-
-```bash
-git clone [repo-url]
-cd dsge-project
-```
-
-1. Dynare [verzió] telepítve, MATLAB [verzió] / Octave.
-2. Adat letöltése: lásd `data-index.md`, tedd a `data/raw/` mappába (git-ignored).
-3. Futtatás: lásd alább.
-
-## Futtatás
-
-```bash
-# Fő modell becslése
-dynare src/model_main.mod
-
-# SMM estimation
-[parancs]
-
-# Ábrák regenerálása
-[parancs]
-```
-
-Az `output/` teljes egésze reprodukálható a `src/`-ből. Kézzel semmit ne rakj bele.
+Mindegyikben ugyanaz a szerkezet: **`README.md` + `.mod` fájlok +
+`futtato/`**. A mappa README-je mondja meg, mi van benne, mit bizonyít, és
+hogyan kell futtatni. Miért a JV és nem az EAGLE:
+[`src/modell/README.md`](src/modell/README.md).
 
 ## Repo-struktúra
 
 ```
-src/          Dynare .mod fájlok, R/MATLAB scriptek
-data/         raw/ és processed/ — TARTALMA git-ignored, csak Drive-on
-output/       figures/ + tables/ — kódból generálva
-docs/         LaTeX, thesis-alapú levezetések
-notes/        almappánkénti rövid README-k
+ALLAPOT.md      ← a generált állapotlap (ITT KEZDD)
+src/
+  1_adat/       nyers -> tisztított panel, leíró statisztika
+  2_empirikus/  becslés és horgonyzás a panelből (Opten, IO, MNB)
+  3_abrak/      ábra- és leképezés-generálók a modell kimenetéből
+  4_infra/      füstteszt, regiszter-építő, állapotlap-generátor
+  modell/       a Dynare-modellek, vonalanként (fent)
+  app/          Streamlit-app
+data/           raw/ és processed/ — TARTALMA git-ignored, csak Drive-on
+output/         figures/ + tables/ — kódból generálva, kézzel semmit bele
+docs/
+  regiszter/        az állítás- és paraméter-regiszter (CSV, ez a forrás)
+  figyelmeztetesek/ amit NEM szabad közölni, és miért
+  modszertan/       magyarázatok, paramétertábla, szerkezeti tanulságok
+  eredmenyek/       dátumozott eredmény-doksik
+  terv/             teendőlista, tanulmány-vázlat, ábraterv
+  archiv/           meghaladott állapotleírások
 ```
+
+## Setup
+
+1. Dynare 6.5 + MATLAB. Ha nem a `C:\dynare\6.5\matlab` az útvonal, állítsd
+   a `DYNARE_PATH` környezeti változót.
+2. Adat: `data-index.md` szerint Drive-ról a `data/raw/`-ba (git-ignored).
+3. Panel építése: `python src/1_adat/01_opten_panel_tisztitas.py`
+
+## Futtatás
+
+```bash
+# A fő modell egy futása
+matlab -batch "cd('src/modell/1_fo_vonal_jv'); addpath('C:\dynare\6.5\matlab'); dynare('jv_dsge_v09_access','-DSCENARIO=1','-DTSCEN=3','console')"
+
+# A fő vonal tesztjei (a futtatók maguk lépnek a megfelelő mappába)
+matlab -batch "cd('src/modell/1_fo_vonal_jv/futtato'); stress_jv_access_v09"
+matlab -batch "cd('src/modell/1_fo_vonal_jv/futtato'); stress_opten_v09"
+matlab -batch "cd('src/modell/1_fo_vonal_jv/futtato'); ellenorzes_3type"
+
+# Füstteszt — PUSH ELŐTT KÖTELEZŐ
+matlab -batch "cd('src/4_infra'); smoke_test"
+```
+
+Az `output/` teljes egésze reprodukálható a `src/`-ből. Kézzel semmit ne
+rakj bele.
 
 ## Munkafolyamat (mindenki main-en dolgozik)
 
-Mivel nincs feladat-felosztás, a konfliktus elkerülése a fő cél:
-
 - **Pullolj minden munka ELŐTT:** `git pull --rebase`
-- **Commitolj kicsit és gyakran,** beszédes üzenettel (`becslés: SZOCHO sokk kalibráció`, ne `update`).
-- **Egy fájlon ne dolgozzon egyszerre kettő** — szólj Slacken, ha egy `.mod`-ot piszkálsz.
-- **Push előtt futtasd le,** hogy ne törjön a `main`.
-- Nagy kísérleti átalakításhoz: rövid életű branch, aznap merge-eld vissza.
+- **Commitolj kicsit és gyakran,** beszédes üzenettel (`becslés: SZOCHO
+  sokk kalibráció`, ne `update`).
+- **Egy `.mod`-on ne dolgozzon egyszerre kettő** — szólj Slacken.
+- **Push előtt futtasd le a füsttesztet,** hogy ne törjön a `main`.
+- Nagy átalakításhoz rövid életű branch, aznap merge vissza.
+- **Új eredmény = sor a `docs/regiszter/`-ben + őr a füsttesztben**, nem új
+  dátumozott doksi. Ez tartja egyben az `ALLAPOT.md`-t.
 
 ## Adatkezelés
 
-Nyers adat NEM kerül a repóba (méret). Minden adatfájl a Drive-on, a `data-index.md`
-tartalmazza a linket, leírást, forrást és a `data/` mappán belüli elvárt elérési utat.
+Nyers adat NEM kerül a repóba (méret). Minden adatfájl a Drive-on, a
+`data-index.md` tartalmazza a linket, leírást, forrást és a `data/` mappán
+belüli elvárt elérési utat.
