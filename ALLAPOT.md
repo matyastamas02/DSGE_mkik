@@ -5,11 +5,11 @@
 
 # DSGE_mkik — állapotlap
 
-*Generálva a füstteszt 2026-08-16 15:37-kor futott eredményéből · commit `4dbcf1f` · ág `main`*
+*Generálva a füstteszt 2026-08-16 15:46-kor futott eredményéből · commit `f8cef8e` · ág `main`*
 
 **Fő modell:** `src/modell/1_fo_vonal_jv/jv_dsge_v09_access.mod` (Jakab–Világi mag). A `kkv_dsge_*` a referencia-vonal.
 
-**Őrök:** 90 rendben, 0 hiba.
+**Őrök:** 108 rendben, 0 hiba.
 
 ✅ **Minden „áll” állításnak van őre, és minden őr fut.**
 
@@ -17,7 +17,7 @@
 
 ## Mit állítunk ma
 
-### 🟢 Ami ÁLL — 15 db
+### 🟢 Ami ÁLL — 21 db
 
 *Ezekre lehet építeni a tanulmányban.*
 
@@ -96,7 +96,37 @@
 > bizonyíték: `t50b` — őr: ✅ `t50b: a chi elojele atfordul a nevezo javitasaval (A: -0.01167 -> C: +0.00857) - a negativ eredmeny mutermek volt`  
 > *2026-08-16 · Módszertani figyelmeztetés a panel egészére. A nevező év végi állomány, a számláló évközi kamat.*
 
-### 🟡 Ami FELTÉTELES — 4 db
+**A16.** A magyar vállalati kamattranszmisszió MIND A NÉGY becslésben MAGASABB a nagyvállalatnál, mint a KKV-nál (szint: 0,922 vs 0,851 bankközi és 1,772 vs 1,657 állampapír; kumulált differencia: 0,652 vs 0,299 és 0,800 vs 0,206) — de egyik különbség sem szignifikáns 5%-on.
+
+> bizonyíték: `t25` — őr: ✅ `t25: mind a 4 becslesben a NAGYVALLALATI atgyuruzes a magasabb`  
+> *2026-08-16 · EZ A V03 VISSZAVONÁSÁNAK EMPIRIKUS ALAPJA. A t_S > t_L feltevés nemcsak nem azonosított — a pontbecslések következetesen az ELLENKEZŐ irányba mutatnak. KORLÁTOK: (1) az ECB MIR összeg-kategória (<=0,25M vs >1M EUR) a méret PROXYja, nem a méret; (2) a t_sov szint-együtthatók 1 fölöttiek (1,66-1,77), ami gazdaságilag képtelen teljes átgyűrűzésre utal — a szint-regressziók valószínűleg közös trendet fognak. A védhető objektum a KÜLÖNBSÉG, nem a szint.*
+
+**A17.** A kockázati besorolások közti nyers hitelhozzáférési szakadék nagyrészt ÖSSZETÉTEL-HATÁS: méretre, ágazatra, régióra és évre kiigazítva a 14,3 pontos rés (A 18,4% vs C 4,2%) 2,5 pontra zsugorodik (12,9% vs 10,4%).
+
+> bizonyíték: `t10, t11` — őr: ✅ `t11: a hozzaferesi res OSSZETETEL-HATAS (nyers 14.3 pp -> kiigazitott 2.5 pp)`  
+> *2026-08-16 · Vagyis nem a kockázati besorolás zárja ki a céget a hitelből, hanem a mérete és az ágazata. Ez a modell szempontjából lényeges: az access-margót MÉRET szerint kell specifikálni, nem kockázat szerint — ahogy a v09 teszi. A probit együtthatói (t10) ugyanezt mutatják: bes_C = -0,203 (t = -7,4).*
+
+**A18.** A magyar KKV-hitelárazás 2021–24-ben LESZAKADT a piaci kamattól: a medián implicit ráta 2,3%-ról csak 4,5%-ra nőtt, miközben a BUBOR 1,5%-ról 14,3%-ra — és 2023-ban a ráták mindössze 18,7%-a volt piaci árazású.
+
+> bizonyíték: `t12` — őr: ✅ `t12 LESZAKADAS: 2023-ban a BUBOR 14.3%, a median KKV-rata csak 4.5% (2021: 2.3%)`  
+> *2026-08-16 · Ez a PROGRAMVEZÉRELTSÉG (A04) árazási megfelelője: az A04 a hozzáférésről szól, ez az árról. A kettő együtt magyarázza, miért nem azonosítható a 2021-24-es epizódból sem a chi (V04), sem az ACCSCALE (A06), sem a t_S/t_L (V03) — a piaci kamat varianciája nem ért el a KKV-hitelekig.*
+
+**A19.** A piaci árazású alminta rátája a teljes minta 2,6–3,5-szerese (12,6–13,8% vs 3,7–4,9%), és ebben az almintában a kockázati besorolás szerinti sorrend ELTŰNIK: a legjobb besorolású cég (A: 12,92%) drágábban hitelez, mint a C (12,64%).
+
+> bizonyíték: `t13` — őr: ✅ `t13: a piaci alminta rataja a teljes minta tobbszorose (A: 3.5x, B: 3.1x, C: 2.6x)`  
+> *2026-08-16 · Következmény: a teljes mintában látszó „kockázati árazás” (A 3,68% < C 4,93%) NEM kockázati árazás, hanem PROGRAM-ÖSSZETÉTEL — a jobb besorolású cégek nagyobb arányban jutnak támogatott hitelhez. Óvatosan: a D osztály piaci almintája n=7, arra nem szabad hivatkozni.*
+
+**A20.** A KKV-hitelárazást fenntartó implicit támogatási ék 2023-ban 557 Mrd Ft (BUBOR-referenciával), illetve 665 Mrd Ft (BUBOR+200 bp) — a KKV-hitelállomány 9,6%-a —, és a cégek 78,5%-a a BUBOR alatt volt árazva.
+
+> bizonyíték: `t14` — őr: ✅ `t14: 2023-ban az implicit tamogatasi ek 557 Mrd Ft (az allomany 9.6%-a), a cegek 78.5%-a alularazott`  
+> *2026-08-16 · NEM költségvetési tétel: az ék egy részét a bankok és a fix kamatozású régi állomány (vintage-hatás) viselik, nem az állam. Nagyságrendi mérőszám arra, mekkora árazási beavatkozás tartja a jelenlegi szintet — és ezzel arra, mi történne a programok kifutásakor. Ez a tanulmány egyik legrelevánsabb szakpolitikai száma.*
+
+**A21.** A nominális bérmerevség a magyar cégpanelen GYENGE 2023–24-ben: a cégek 10,1%-a nominálisan CSÖKKENTETTE az átlagbért és csak 2,8% fagyasztotta be, a medián béremelés 11,6% — és a csökkentés monoton csökken a mérettel (13,9% / 7,6% / 5,8%).
+
+> bizonyíték: `t17` — őr: ✅ `t17: a nominalis bercsokkentes MONOTON csokken a merettel (13.9% > 7.6% > 5.8%)`  
+> *2026-08-16 · KORLÁTOK: egyetlen év-pár (a létszám csak 2023-ra és 2024-re ismert); MAGAS INFLÁCIÓS környezet, ahol a lefelé-merevség kevésbé köt — tehát ez ALSÓ korlát a merevségre; az átlagbér (bérköltség/létszám) összetétel-hatást is visz. Nem cáfolja a JV becsült xi_w = 0,657-ét, de jelzi, hogy a magyar bérmerevség méretfüggő lehet.*
+
+### 🟡 Ami FELTÉTELES — 5 db
 
 *Csak a feltétellel együtt közölhető — küszöbformában, vagy az elfogadási feltétel kiírásával.*
 
@@ -119,6 +149,11 @@
 
 > bizonyíték: `t50b; Christensen–Dib (2008) 2. tábla` — *nincs őr*  
 > *2026-08-16 · A becslés erősen attenuált (mérési hiba, átlagos vs határráta, programvezéreltség). NEM cáfolja az irodalmi értéket — alulazonosított.*
+
+**F05.** Az euró-hatás gyakorlatilag TELJES EGÉSZÉBEN a szuverén csatornán megy: a banki csatorna hozzájárulása az első negyedévben a teljes hatás 0,22%-a (−0,0005 pp a −0,252 pp-ból).
+
+> bizonyíték: `t15` — őr: ✅ `t15: a hatas gyakorlatilag teljesen a SZUVEREN csatornan megy (a banki resz 0.22%) — de a v03 ARCHIV modellen`  
+> *2026-08-16 · ELFOGADÁSI FELTÉTEL: ez a jv_dsge_v03 ARCHÍV modellen készült (kétszektoros, háromtípusos szerkezet nélkül, access-margó nélkül). A fő modellen (v09) ÚJRA KELL FUTTATNI, mielőtt közöljük — a v09-ben a banki csatorna az access-margón át is hat, tehát a súlya vélhetően nagyobb. Amíg ez nincs meg, csak a v03-ra vonatkozó megállapításként idézhető.*
 
 ### 🔴 Amit VISSZAVONTUNK — 8 db
 
@@ -296,7 +331,7 @@
 
 ---
 
-## Őrök (90 db)
+## Őrök (108 db)
 
 *A füstteszt minden ellenőrzése. Ez a projekt egyetlen olyan nyilvántartása, ami nem tud némán elcsúszni: ha egy állítás megdől, itt megbukik egy sor.*
 
@@ -389,6 +424,24 @@
 - ✅ t50 SZINT: a lev_j ertekek az A07-ben kozolt szamokon (1.939 / 1.719 / 2.337)
 - ✅ t50b chi-specifikaciok letezik
 - ✅ t50b: a chi elojele atfordul a nevezo javitasaval (A: -0.01167 -> C: +0.00857) - a negativ eredmeny mutermek volt
+- ✅ t25 transzmisszio letezik
+- ✅ t25: mind a 4 becslesben a NAGYVALLALATI atgyuruzes a magasabb
+- ✅ t25: egyik meret szerinti kulonbseg sem szignifikans 5%-on
+- ✅ t11 hozzaferes kiigazitott letezik
+- ✅ t11: a hozzaferesi res OSSZETETEL-HATAS (nyers 14.3 pp -> kiigazitott 2.5 pp)
+- ✅ t12 rata-eloszlas letezik
+- ✅ t12 LESZAKADAS: 2023-ban a BUBOR 14.3%, a median KKV-rata csak 4.5% (2021: 2.3%)
+- ✅ t12: 2023-ban a ratak mindossze 18.7%-a volt piaci arazasu
+- ✅ t13 piaci alminta letezik
+- ✅ t13: a piaci alminta rataja a teljes minta tobbszorose (A: 3.5x, B: 3.1x, C: 2.6x)
+- ✅ t13: a piaci almintaban a kockazati sorrend ELTUNIK (A 12.92% > C 12.64%)
+- ✅ t14 tamogatasi ek letezik
+- ✅ t14: 2023-ban az implicit tamogatasi ek 557 Mrd Ft (az allomany 9.6%-a), a cegek 78.5%-a alularazott
+- ✅ t15 csatorna-dekompozicio letezik
+- ✅ t15: a hatas gyakorlatilag teljesen a SZUVEREN csatornan megy (a banki resz 0.22%) — de a v03 ARCHIV modellen
+- ✅ t17 beralkalmazkodas letezik
+- ✅ t17: a nominalis bercsokkentes MONOTON csokken a merettel (13.9% > 7.6% > 5.8%)
+- ✅ t17: GYENGE nominalis merevseg 2023-24-ben (10.1% csokkentett, csak 2.8% fagyasztott)
 - ✅ t00 SZERKEZET: mind a 4 modell-vonal megvan, README-vel
 - ✅ t00 SZERKEZET: a FO MODELL a helyen van (1_fo_vonal_jv)
 - ✅ t00 SZERKEZET: minden futtato letezo .mod-ot hiv (29 futtato, 19 modell)

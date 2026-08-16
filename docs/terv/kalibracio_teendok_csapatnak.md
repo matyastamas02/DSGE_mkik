@@ -243,6 +243,7 @@ nem összevethető.
 |---|---|---|---|
 | ~~**1**~~ | ~~Opten-panelből a 6 tétel újrakalibrálása (1. prioritás)~~ | ✅ **kész 2026-08-16** | — |
 | **1a** | KSH/Eurostat SBS méretbontás → az `om_j`/`shl_j` átskálázása (2.5) | belső | fél nap |
+| **1b** | A csatorna-dekompozíció (`t15`) újrafuttatása a FŐ modellen — jelenleg a `v03` archív modellen áll (`F05`) | belső | fél nap |
 | **2** | MNB méret szerinti kamatstatisztika **bekérése** | levél | + várakozás |
 | **3** | 2021 előtti cégpanel felkutatása | belső | fél nap |
 | **4** | KSH nemzeti számlák súlyai | belső | fél nap |

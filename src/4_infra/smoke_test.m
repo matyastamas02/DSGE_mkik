@@ -460,6 +460,125 @@ if exist(t50b, 'file') == 2
         sA, sC), ok, hiba);
 end
 
+% --- A 2_empirikus VONAL EREDMENYEI (t10-t17, t25) -----------------------
+% Ezek a tablak hosszu ideig OR NELKUL alltak: valodi empirikus eredmenyek,
+% amikhez nem tartozott allitas. Az output/INDEX.md auditja fogta el oket
+% (2026-08-16). Most mind kap allitast (A16-A21, F05) es SZINT-ort.
+
+% t25 — KAMATTRANSZMISSZIO. A negy becslesbol MIND a nagyvallalatnal ad
+% magasabb atgyuruzest, DE egyik kulonbseg sem szignifikans 5%-on. Ez a
+% V03 (t_S > t_L) visszavonasanak empirikus alapja.
+t25 = fullfile(repo, 'output', 'tables', 't25_transzmisszio.csv');
+[ok, hiba] = ell(exist(t25, 'file') == 2, 't25 transzmisszio letezik', ok, hiba);
+if exist(t25, 'file') == 2
+    Tr = readtable(t25, 'VariableNamingRule', 'preserve');
+    szeg = string(Tr.szegmens); csat = string(Tr.csatorna);
+    irany_ok = true; szign = false;
+    for c = unique(csat)'
+        S = Tr(csat == c & szeg == "KKV", :);
+        L = Tr(csat == c & szeg == "nagyvallalat", :);
+        for oszlop = ["szint", "diff_kumulalt"]
+            bS = S.(oszlop + "_beta"); bL = L.(oszlop + "_beta");
+            seD = sqrt(S.(oszlop + "_se")^2 + L.(oszlop + "_se")^2);
+            irany_ok = irany_ok && (bL > bS);
+            szign = szign || (abs(bL - bS) / seD > 1.96);
+        end
+    end
+    [ok, hiba] = ell(irany_ok, ...
+        't25: mind a 4 becslesben a NAGYVALLALATI atgyuruzes a magasabb', ok, hiba);
+    [ok, hiba] = ell(~szign, ...
+        't25: egyik meret szerinti kulonbseg sem szignifikans 5%-on', ok, hiba);
+end
+
+% t10/t11 — HOZZAFERES. A nyers szakadek a kockazati besorolasok kozott
+% nagyreszt OSSZETETEL-HATAS: meretre/agazatra/regiora/evre kiigazitva
+% osszemegy.
+t11 = fullfile(repo, 'output', 'tables', 't11_hozzaferes_kiigazitott.csv');
+[ok, hiba] = ell(exist(t11, 'file') == 2, 't11 hozzaferes kiigazitott letezik', ok, hiba);
+if exist(t11, 'file') == 2
+    Hk = readtable(t11);
+    b = string(Hk.besorolas);
+    nyA = Hk.nyers_hozzaferes_pct(b == "A"); nyC = Hk.nyers_hozzaferes_pct(b == "C");
+    kiA = Hk.kiigazitott_hozzaferes_pct(b == "A"); kiC = Hk.kiigazitott_hozzaferes_pct(b == "C");
+    [ok, hiba] = ell((nyA - nyC) > 10 && (kiA - kiC) < 4, ...
+        sprintf(['t11: a hozzaferesi res OSSZETETEL-HATAS (nyers %.1f pp -> ' ...
+        'kiigazitott %.1f pp)'], nyA - nyC, kiA - kiC), ok, hiba);
+end
+
+% t12 — ARAZAS. A KKV-hitelarazas LESZAKADT a piaci kamattol.
+t12 = fullfile(repo, 'output', 'tables', 't12_rata_eloszlas_ev.csv');
+[ok, hiba] = ell(exist(t12, 'file') == 2, 't12 rata-eloszlas letezik', ok, hiba);
+if exist(t12, 'file') == 2
+    Re = readtable(t12);
+    r23 = Re(Re.ev == 2023, :); r21 = Re(Re.ev == 2021, :);
+    [ok, hiba] = ell(r23.bubor_pct > 13 && r23.median < 6, ...
+        sprintf(['t12 LESZAKADAS: 2023-ban a BUBOR %.1f%%, a median KKV-rata ' ...
+        'csak %.1f%% (2021: %.1f%%)'], r23.bubor_pct, r23.median, r21.median), ok, hiba);
+    [ok, hiba] = ell(r23.piaci_arazasu_pct < 25, ...
+        sprintf('t12: 2023-ban a ratak mindossze %.1f%%-a volt piaci arazasu', ...
+        r23.piaci_arazasu_pct), ok, hiba);
+end
+
+% t13 — A piaci alminta ratája a teljes minta TOBBSZOROSE, es ott a
+% kockazati sorrend eltunik (a jobb besorolasu ceg dragabban hitelez).
+t13 = fullfile(repo, 'output', 'tables', 't13_piaci_alminta_besorolas.csv');
+[ok, hiba] = ell(exist(t13, 'file') == 2, 't13 piaci alminta letezik', ok, hiba);
+if exist(t13, 'file') == 2
+    Pa = readtable(t13);
+    b = string(Pa.besorolas);
+    ar = @(x) Pa.median_piaci_pct(b == x) / Pa.median_teljes_pct(b == x);
+    [ok, hiba] = ell(all(arrayfun(@(x) ar(x) > 2.5, ["A" "B" "C"])), ...
+        sprintf(['t13: a piaci alminta rataja a teljes minta tobbszorose ' ...
+        '(A: %.1fx, B: %.1fx, C: %.1fx)'], ar("A"), ar("B"), ar("C")), ok, hiba);
+    [ok, hiba] = ell(Pa.median_piaci_pct(b == "A") > Pa.median_piaci_pct(b == "C"), ...
+        sprintf(['t13: a piaci almintaban a kockazati sorrend ELTUNIK ' ...
+        '(A %.2f%% > C %.2f%%)'], Pa.median_piaci_pct(b == "A"), ...
+        Pa.median_piaci_pct(b == "C")), ok, hiba);
+end
+
+% t14 — TAMOGATASI EK.
+t14 = fullfile(repo, 'output', 'tables', 't14_tamogatasi_ek.csv');
+[ok, hiba] = ell(exist(t14, 'file') == 2, 't14 tamogatasi ek letezik', ok, hiba);
+if exist(t14, 'file') == 2
+    Ek = readtable(t14);
+    e23 = Ek(Ek.ev == 2023, :);
+    [ok, hiba] = ell(e23.ek_bubor_MrdFt > 500 && e23.ek_allomany_aranyaban_pct > 9 ...
+        && e23.alularazott_cegek_pct > 75, ...
+        sprintf(['t14: 2023-ban az implicit tamogatasi ek %.0f Mrd Ft ' ...
+        '(az allomany %.1f%%-a), a cegek %.1f%%-a alularazott'], ...
+        e23.ek_bubor_MrdFt, e23.ek_allomany_aranyaban_pct, ...
+        e23.alularazott_cegek_pct), ok, hiba);
+end
+
+% t15 — CSATORNA-DEKOMPOZICIO (a v03 ARCHIV modellen!).
+t15 = fullfile(repo, 'output', 'tables', 't15_csatorna_dekompozicio.csv');
+[ok, hiba] = ell(exist(t15, 'file') == 2, 't15 csatorna-dekompozicio letezik', ok, hiba);
+if exist(t15, 'file') == 2
+    Cd = readtable(t15);
+    arany = abs(Cd.y_banki_pct(1)) / abs(Cd.y_teljes_pct(1));
+    [ok, hiba] = ell(arany < 0.01, ...
+        sprintf(['t15: a hatas gyakorlatilag teljesen a SZUVEREN csatornan ' ...
+        'megy (a banki resz %.2f%%) — de a v03 ARCHIV modellen'], 100*arany), ...
+        ok, hiba);
+end
+
+% t17 — BERMEREVSEG. A nominalis bercsokkentes MONOTON csokken a merettel.
+t17 = fullfile(repo, 'output', 'tables', 't17_beralkalmazkodas.csv');
+[ok, hiba] = ell(exist(t17, 'file') == 2, 't17 beralkalmazkodas letezik', ok, hiba);
+if exist(t17, 'file') == 2
+    Br = readtable(t17);
+    cs = string(Br.csoport);
+    cso = @(x) Br.nominalis_csokkentes_pct(cs == x);
+    [ok, hiba] = ell(cso("10-49") > cso("50-249") && cso("50-249") > cso("250+"), ...
+        sprintf(['t17: a nominalis bercsokkentes MONOTON csokken a merettel ' ...
+        '(%.1f%% > %.1f%% > %.1f%%)'], cso("10-49"), cso("50-249"), cso("250+")), ...
+        ok, hiba);
+    [ok, hiba] = ell(cso("összes") > 8 && Br.befagyasztas_pm1_pct(cs == "összes") < 5, ...
+        sprintf(['t17: GYENGE nominalis merevseg 2023-24-ben (%.1f%% csokkentett, ' ...
+        'csak %.1f%% fagyasztott)'], cso("összes"), ...
+        Br.befagyasztas_pm1_pct(cs == "összes")), ok, hiba);
+end
+
 % --- SZERKEZET-OROK (repo-atrendezes, 2026-08-16) ------------------------
 % MIERT KELL. A tobbi or TABLAKAT olvas, nem scripteket futtat -- tehat ha
 % egy .mod utvonala eltorik, azok TOVABBRA IS ZOLDEK maradnak. Az
