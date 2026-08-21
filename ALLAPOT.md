@@ -5,7 +5,7 @@
 
 # DSGE_mkik — állapotlap
 
-*Generálva a füstteszt 2026-08-21 15:07-kor futott eredményéből · commit `b7d0729` · ág `main`*
+*Generálva a füstteszt 2026-08-21 16:50-kor futott eredményéből · commit `4ccfe34` · ág `main`*
 
 **Fő modell:** `src/modell/1_fo_vonal_jv/jv_dsge_v09_access.mod` (Jakab–Világi mag). A `kkv_dsge_*` a referencia-vonal.
 
@@ -21,10 +21,10 @@
 
 *Ezekre lehet építeni a tanulmányban.*
 
-**A01.** A VIZSGÁLT euró-szcenáriókban a modell tartós GDP-hatása +0,3% … +2,9% — minden modellverzión, szcenárión és kalibrációs ágon POZITÍV.
+**A01.** A −200 bp szuverén és −45 bp banki felár-konvergenciát feltételező euró-szcenárióban a modell tartós GDP-hatása +0,3% … +2,9% — minden modellverzión, szcenárión (−150/−30 … −250/−60 bp) és kalibrációs ágon POZITÍV.
 
 > bizonyíték: `t44, t47` — őr: ✅ `t47: mind a 36 kombinacio BK-stabil (az OPTEN=1 phi_D=0 is)`  
-> *2026-08-16 · ÁTFOGALMAZVA 2026-08-21, külső bírálat nyomán: a korábbi szöveg („az euró tartós aggregált GDP-hatása…”) oksági becslésként olvasható volt. NEM AZ. A DSGE nem azonosítja az euróbevezetés kontrafaktuálisát; egy ELŐÍRT szuverén- és banki sokkpályát futtat végig egy rezsimváltás mellett. A védhető állítás tehát a modell feltételes kimenetéről szól, nem a történelmi hatásról. A referee első kérdése („what identifies the euro counterfactual?”) így megválaszolható: nem azonosítunk, kvantifikálunk. A SÁV 2026-08-16-án módosult (lásd V01).*
+> *2026-08-16 · ÁTFOGALMAZVA 2026-08-21, majd 2026-08-21-én MÁSODSZOR is javítva. Az első átfogalmazás („A VIZSGÁLT euró-szcenáriókban…”) külső bírálat nyomán született, de TÚL MESSZE MENT: elhallgatta a nagyságrendet, így az olvasó nem tudta értékelni. A bíráló érve („honnan jön a kontrafaktuális sokkpálya?”) FÉLREVEZETŐ volt: a pálya nem önkényes — sov = −0,005 negyedéves = pontosan −200 bp/év, bank = −0,001125 = −45 bp/év, ötfázisú időzítéssel (bejelentés → ERM-II 60% → belépés → normalizálódás → tartós) és három érzékenységi pályával. Lásd docs/modszertan/modell_verziok_osszefoglalo.md. AMI VISZONT VALÓDI RÉS: a −200 bp MAGÁNAK nincs hivatkozott forrása a repóban — EZT támadná egy bíráló, nem azt, hogy van előírt pálya. Felvéve a teendőlistára. A DSGE továbbra sem AZONOSÍTJA az euró kontrafaktuálisát, hanem kvantifikál egy kalibrált konvergencia-szcenáriót — de a szcenárió nagyságrendje az állításban benne van.*
 
 **A02.** Az exportáló KKV hitelhozzáférése 13-szorosa a hazai KKV-énak (61,9% vs 4,8%).
 
@@ -71,10 +71,10 @@
 > bizonyíték: `t46` — őr: ✅ `t46: phi_L = 0.3649 megerositi az atvett 0.365-ot`  
 > *2026-08-16 · Négy tizedesig egyezik az átvett értékkel — az valószínűleg már ebből a panelből származott.*
 
-**A11.** A hitelhozzáférési státusz cég-szintű negyedéves perzisztenciája 0,967 (éves 0,875 = p11 − p01, n = 110 350 cég-év pár).
+**A11.** A hitelhozzáférési állapot negyedéves perzisztenciája LEGALÁBB 0,967 (cég-szintű mérés: éves 0,875 = p11 − p01, n = 110 350 cég-év pár).
 
-> bizonyíték: `t46c` — őr: ✅ `t49b: a kuszob MONOTON csokken a rho_acc-ban (47.8 -> 17.5)`  
-> *2026-08-16 · ÁTFOGALMAZVA 2026-08-21: a korábbi szöveg azt mondta, „legalább 0,967” — de egy ALSÓ KORLÁT azt feltételezi, hogy ugyanazt a skálát mérjük. Amit mértünk: CÉG-szintű BINÁRIS státusz. Amit a modell használ: SZEGMENS-szintű FOLYTONOS állapot. Ez két különböző objektum, tehát a 0,967 nem korlát, hanem PLAUZIBILIS KALIBRÁCIÓ. Ezért van rá scan (t49/t51), nem pontérték.*
+> bizonyíték: `t46c, t37` — őr: ✅ `t49b: a kuszob MONOTON csokken a rho_acc-ban (47.8 -> 17.5)`  
+> *2026-08-16 · VISSZAÁLLÍTVA 2026-08-21: a „legalább” szót külső bírálat nyomán kivettük, majd ELLENŐRIZTÜK, és a bíráló érve gyengébbnek bizonyult, mint hangzott. Az érv az volt, hogy a cég-szintű BINÁRIS státusz és a szegmens-szintű FOLYTONOS állapot más objektum, tehát nem korlát. Két független ok szól amellett, hogy MÉGIS alsó korlát: (1) SAJÁT MÉRÉS (t37): a szegmens-arányok 4 év alatt 0,59–2,20 pontot mozdultak, miközben a BUBOR 12,83-at — az aggregált folyamat gyakorlatilag áll, tehát perzisztensebb a cég-szintűnél. (2) GRANGER-AGGREGÁCIÓ (1980): heterogén AR(1)-ek aggregálása lassabban lecsengő autokorrelációt ad, mint az átlagos rho — a szegmens-szint tehát elméletileg is perzisztensebb. A két objektum valóban különbözik, de a különbség IRÁNYA ismert, és a modellparaméterre alsó korlátot ad. A scan (t49/t51) ettől függetlenül kell, mert 1/(1−rho) robban.*
 
 **A12.** A fő modell BK-stabil minden szcenárió × transzmisszió × kalibrációs ág kombinációban (36/36).
 
