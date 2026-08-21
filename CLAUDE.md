@@ -105,7 +105,7 @@ megtámadná, és joggal.
 ### Munkamódszer, ami bevált — tartsd meg
 
 1. **Füstteszt push előtt**: `matlab -batch "cd('src/4_infra'); smoke_test"` —
-   jelenleg **90 ellenőrzés**, köztük replikációs és regressziós őrök.
+   jelenleg **116 ellenőrzés**, köztük replikációs és regressziós őrök.
    Ha egy állítást közlünk, tegyünk rá őrt.
 2. **BK-teszt nem elég.** Egy elgépelt index mellett is lehet 18/18
    konvergencia. Kell **független verifikáció**: szimmetria-teszt
