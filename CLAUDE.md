@@ -80,6 +80,28 @@ eredményt **küszöbformában** kell közölni (nem pontbecslésként).
 azzal, hogy a felső vég a hozzáférési csatorna perzisztenciáján múlik.
 Részletek: `docs/eredmenyek/2026-08-16_opten_kalibracio_eredmeny.md`.
 
+### A projekt AZONOSÍTÁSI ÁLLÁSPONTJA — ezt kell tudni közölni
+
+Három külső bírálati kör (2026-08-16, 08-21) után ez a védhető
+megfogalmazás, és ezt érdemes szó szerint használni:
+
+> **Az empirikus adatok az access-csatorna reduced-form hatásait
+> azonosítják, de a strukturális `ACCSCALE` paramétert nem. Ezért a
+> DSGE-ben az eredmény küszöbfüggő: a KKV-k relatív előnye akkor jelenik
+> meg, ha az access-csatorna perzisztenciája és erőssége egy meghatározott
+> tartomány fölött van.**
+
+Ez **nem gyengeség-beismerés**, hanem a modell és az empíria közötti
+azonosítási határ korrekt kezelése. A küszöbforma legitim közlési forma —
+van rá magyar DSGE-precedens (Szabó Bakos 2006, 4.7: a szerző explicit
+kimondja, hogy nem küszöbértéket határoz meg, hanem elemzési technikát mutat).
+
+⚠ **Amit soha ne csináljunk:** egy IV-ből kapott `Δberuházás / Δhozzáférés`
+hányadost `ACCSCALE`-nak átnevezni. Az „indukált beruházási válasz egységnyi
+indukált hozzáférésre" — a program teljes finanszírozási hatását viszi, nem
+a hozzáférési csatorna strukturális rugalmasságát. Egy bíráló ezt azonnal
+megtámadná, és joggal.
+
 ### Munkamódszer, ami bevált — tartsd meg
 
 1. **Füstteszt push előtt**: `matlab -batch "cd('src/4_infra'); smoke_test"` —

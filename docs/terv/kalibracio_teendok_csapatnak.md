@@ -288,6 +288,94 @@ auditot:**
 Csak ezután jön az első lépcső. **Ráfordítás: az audit 1 nap, az első
 lépcső további fél nap.**
 
+#### ⚠ PREDETERMINED FUTÓVÁLTOZÓ — ellenőrizve 2026-08-21, és ez SZŰKÍTI a designt
+
+A külső bírálat helyesen mutatott rá, hogy a futóváltozót a **kezelés
+ELŐTTI** állapotból kell venni: ha a jogosultság
+`1{letszam_it < 50}`, és a program hatására a cég 49-ről 52 főre nő, akkor
+**maga a kezelés változtatja meg az instrumentumot.** Ez fontosabb, mint a
+49/51 fő manipuláció.
+
+**Lefuttattuk a panelen. Az eredmény:**
+
+| Futóváltozó | Valóban éves? | Predetermined (2021)? | Használható? |
+|---|---|---|---|
+| `netto_arbevetel` | ✅ igen (medián 396k → 566k) | ✅ **igen, 36 109 cégre** | ✅ **IGEN** |
+| `letszam` | 🔴 **NEM** — cégenként **konstans** mind a 4 évben (0/37 805 cégnél változik) | 🔴 **NEM**: a statikus `letszam_2024`/`letszam_2023` mezőből jön, tehát **2023/24-es, POSZT-kezelés** érték | 🔴 **NEM** |
+| `teaor4` (ágazat) | időben állandó | ✅ igen | ✅ igen |
+
+**Következmény: a méret-küszöb NEM használható**, mert az egyetlen
+létszámadatunk a programbővülés (2022–23) UTÁNI állapot — és időben nem is
+változik, tehát egy rá épített cég-év jogosultság poszt-kezelésű és
+időinvariáns lenne egyszerre.
+
+**Ami marad: árbevételi küszöb (2021-es, predetermined) + ágazati
+jogosultság.** Ez egyszerűsíti a többdimenziós problémát (két dimenzió, nem
+három), de **el is vesz** — a Széchenyi/NHP-nál vélhetően épp a
+méret-küszöb a kötő. **Ezt a leadás előtt ki kell mondani.**
+
+*Feloldás: 2021 előtti vagy évenkénti létszámadat (a 2.2-es tétel része).*
+
+#### A kimeneti változók hierarchiája
+
+**Ne differenciálj.** Négy éves megfigyelés mellett a `Δvan_hitel`
+kifejezetten rossz (bináris változónál csak a 0→1 / 1→0 átmenetek
+maradnak, az információ nagy része elveszik), a `Δhitelallomany` pedig zajos
+stock-flow különbség. **Cég-fixhatás + év-fixhatás a természetes.**
+
+| Kimenet | Mit mér | Szerep |
+|---|---|---|
+| **`van_hitel`** | **extenzív hozzáférési margó** — ez van legközelebb a modell `acc_j`-jéhez | **fő első lépcső** |
+| `log(1 + hitelallomany)` | a finanszírozás intenzitása | másodlagos |
+| beruházás | reálgazdasági következmény | reduced form |
+
+Fő specifikáció (lineáris valószínűségi modell):
+
+```
+van_hitel_it = alfa_i + gamma_t + pi*(Jogosult_i × Post_t) + u_it
+```
+
+**Miért nem a `Δhitelallomany` a fő kimenet:** az állományváltozás
+összemossa az új hitelfelvételt, a törlesztést, a lejáratot, a
+refinanszírozást, a hitelkeret-változást és az esetleges leírást — egy
+pozitív `ΔH` nem jelenti, hogy a cég könnyebben jutott finanszírozáshoz.
+
+#### ⚠ A Wald-arány NEM `ACCSCALE`
+
+Ha az első lépcső és a reduced form is megvan, csábító a hányados:
+
+```
+Δberuházás / Δhozzáférés
+```
+
+**Ezt nem szabad `ACCSCALE`-nak nevezni.** Ez „*indukált beruházási válasz
+egységnyi indukált hozzáférésre*" — a program **teljes** finanszírozási
+hatását viszi, nem a hozzáférési csatorna strukturális rugalmasságát. Ha
+stabil különböző sávszélességek, polinomok, cutoffok és programok mellett,
+az **önmagában érdekes eredmény** — de más objektum.
+
+#### Egy design, amit érdemes megpróbálni: jogosultság × ex ante hitelfüggőség
+
+```
+Jogosult_i × HitelFüggőség_i^{2021} × Post_t
+```
+
+ahol a hitelfüggőség 2021-es (predetermined): hitelállomány/eszköz,
+kamatkiadás/eszköz, külső finanszírozás aránya. **Hipotézis:** ugyanaz a
+program erősebben lazítja a finanszírozási korlátot ott, ahol a cég ex ante
+hitelfüggőbb. Nem oldja meg a kizárási feltételt, de közelebb visz a
+mechanizmushoz — és a 2021-es értékek nálunk **megvannak**.
+
+#### A decemberi célhierarchia
+
+| | Cél | Státusz |
+|---|---|---|
+| **A** | MNB new-business kamat (méret × összeg × fixálás × futamidő, 2015-től) | **kötelező** — 2.1 |
+| **B** | Cutoff-validitási audit → első lépcső (`Jogosultság → van_hitel`) | **kötelezően megpróbálandó** — 1c, 1d |
+| **C** | Reduced form (`Jogosultság → beruházás`) | nagyon értékes |
+| **D** | IV (`van_hitel → beruházás`) | csak ha A–C meggyőző, és **óvatos** interpretációval |
+| **E** | `ACCSCALE` pontbecslés | **NEM decemberre** — küszöbformában marad |
+
 ### 2.7 Jóléti blokk — FELTÉTELES, nem teendő (2026-08-21)
 
 Külső bírálat szerint a másodfokú jóléti közelítés a mi **determinisztikus
