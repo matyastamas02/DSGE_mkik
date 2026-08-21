@@ -5,7 +5,7 @@
 
 # DSGE_mkik — állapotlap
 
-*Generálva a füstteszt 2026-08-21 13:20-kor futott eredményéből · commit `a9ea181` · ág `main`*
+*Generálva a füstteszt 2026-08-21 15:07-kor futott eredményéből · commit `b7d0729` · ág `main`*
 
 **Fő modell:** `src/modell/1_fo_vonal_jv/jv_dsge_v09_access.mod` (Jakab–Világi mag). A `kkv_dsge_*` a referencia-vonal.
 

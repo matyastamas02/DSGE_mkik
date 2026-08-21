@@ -237,6 +237,81 @@ nem összevethető.
 
 ---
 
+### 2.6 Program-jogosultsági design — ÚJ, 2026-08-21 (külső bírálat)
+
+**Ez a legkonkrétabb azonosítási lehetőség, amit ÚJ ADAT NÉLKÜL el tudunk
+kezdeni** — de vigyázni kell arra, hogy MIT azonosít.
+
+A jogosultság megkonstruálható a meglévő panelből: a Széchenyi/NHP
+jogosultság **méret-, árbevételi és ágazati küszöbökön** állt, és mind a
+három megvan (`letszam`, `netto_arbevetel`, `teaor4`). Nem a tényleges
+programrészvétel, hanem a **jogosultság** — fuzzy designhoz épp az kell.
+
+> ## ⚠ AMIT AZONOSÍT, ÉS AMIT NEM
+>
+> Egy jogosultsági RD a **beruházásra** a program **TELJES reduced-form
+> hatását** azonosítja, nem a hozzáférési csatornát külön. Egy támogatott
+> hitelprogram ugyanis nem csak hozzáférést ad, hanem **likviditást,
+> beruházási támogatást, garanciát és adminisztratív könnyítést** is.
+> Vagyis a kizárási feltétel
+>
+> `Jogosultság → Hozzáférés → Beruházás`  (és NINCS közvetlen
+> `Jogosultság → Beruházás`)
+>
+> **egy hitelprogramnál nem áll.** Ezért:
+>
+> - ✅ **`Jogosultság → hozzáférés/hitel` ELSŐ LÉPCSŐ** — ezt azonosítja,
+>   és ez az az objektum, ami az `ACCSCALE`-hez a legközelebb van
+> - 🔴 **strukturális `ACCSCALE`-horgony** — ezt **nem** adja meg magától;
+>   ahhoz a második lépcső is kell, megfelelő kizárási feltétellel
+>
+> **A tételt tehát „első lépcső azonosítása" néven visszük, nem
+> „`ACCSCALE`-azonosítás" néven.** Ez nem szőrszálhasogatás: pontosan az a
+> hibatípus, ami a projektben hatszor előfordult — egy objektumot annak
+> nevezni, ami nem.
+
+**A nagyobb fenyegetés nem a 49/51 fő manipuláció, hanem a
+többdimenziós jogosultság.** Ha
+`Jogosult_i = 1{L_i < c_L ÉS R_i < c_R ÉS ágazat ∈ S}`, akkor ez nem
+egyváltozós RD, hanem többdimenziós/fuzzy design.
+
+**Ezért NEM egyetlen RD-becslést futtatunk először, hanem cutoff-validitási
+auditot:**
+
+1. minden futóváltozó (running variable) külön
+2. sűrűség-teszt a cutoff körül (manipuláció)
+3. kovariáns-folytonosság
+4. kimenet-folytonosság a kezelés ELŐTTI változókra
+5. a cutoffok külön-külön
+6. a metszet / együttes jogosultság
+
+Csak ezután jön az első lépcső. **Ráfordítás: az audit 1 nap, az első
+lépcső további fél nap.**
+
+### 2.7 Jóléti blokk — FELTÉTELES, nem teendő (2026-08-21)
+
+Külső bírálat szerint a másodfokú jóléti közelítés a mi **determinisztikus
+perfect-foresight** keretünkben **technikailag megalapozható** — de csak
+szigorú megnevezési és értelmezési feltételekkel:
+
+- **NEM** nevezhető „stochastic second-order welfare analysis"-nak (nincs
+  bizonytalanság, nincs Jensen-korrekció, nincs kockázati prémium)
+- **NEM** nevezhető „az euró várható jóléti hatásának" — csak *a vizsgált
+  átmeneti szcenárió jóléti hatása*
+- **explicit baseline kell** (`ΔW = W_EUR − W_HUF`, azonos kezdőállapotból)
+- **érzékenységvizsgálat kell** a normatív paraméterekre (diszkontfaktor,
+  kockázatelutasítás, Frisch-rugalmasság, munka-diszutilitás, SS-normalizálás)
+- ⚠ **és a legfontosabb:** a `ΔW = 0` nullpont **NEM ugyanaz**, mint az
+  `F01` `KKV − L = 0` nullpontja. Elképzelhető `KKV − L > 0` **miközben**
+  `ΔW < 0`, és fordítva. **A jóléti blokk tehát NEM az `F01`
+  „monetizálása", hanem külön eredmény.**
+- a fogyasztás-egyenértékes (CEV) átváltás **csak akkor**, ha a `ΔW`
+  robusztus a preferenciaparaméterekre
+
+**Státusz: nem teendő.** Mind a külső bírálat, mind a saját sorrendünk
+szerint a 2.1 (MNB-adat) és a 2.6 (első lépcső) hozama nagyobb; a jólét
+csak ezek után adna érdemi pluszt.
+
 ## Összefoglaló táblázat — mit kell tenni
 
 | Sorrend | Feladat | Ki | Ráfordítás |
@@ -244,6 +319,8 @@ nem összevethető.
 | ~~**1**~~ | ~~Opten-panelből a 6 tétel újrakalibrálása (1. prioritás)~~ | ✅ **kész 2026-08-16** | — |
 | **1a** | KSH/Eurostat SBS méretbontás → az `om_j`/`shl_j` átskálázása (2.5) | belső | fél nap |
 | **1b** | A csatorna-dekompozíció (`t15`) újrafuttatása a FŐ modellen — jelenleg a `v03` archív modellen áll (`F05`) | belső | fél nap |
+| **1c** | **Cutoff-validitási audit** a program-jogosultsági küszöbökre (2.6) | belső | 1 nap |
+| **1d** | **`Jogosultság → hozzáférés` ELSŐ LÉPCSŐ** — NEM `ACCSCALE`-horgony (2.6) | belső | fél nap |
 | **2** | MNB méret szerinti kamatstatisztika **bekérése** | levél | + várakozás |
 | **3** | 2021 előtti cégpanel felkutatása | belső | fél nap |
 | **4** | KSH nemzeti számlák súlyai | belső | fél nap |
@@ -251,6 +328,6 @@ nem összevethető.
 | **6** | `omega_acc_L` scan (mint az `ACCSCALE`) | belső | fél nap |
 | **7** | IO-mérés javítása (`t24`) — a gyökérok még nyitott | belső | 1 nap |
 
-*Kapcsolódó: `docs/kalibracio_tabla.md` (a teljes paramétertábla forrás
-szerint) · `docs/FIGYELMEZTETES_fo_allitas.md` · `docs/FIGYELMEZTETES_io_tabla_gyanus.md` ·
-`docs/2026-08-12_access_horgonyzas_eredmeny.md`*
+*Kapcsolódó: `docs/modszertan/kalibracio_tabla.md` (a teljes paramétertábla forrás
+szerint) · `docs/figyelmeztetesek/FIGYELMEZTETES_fo_allitas.md` · `docs/figyelmeztetesek/FIGYELMEZTETES_io_tabla_gyanus.md` ·
+`docs/eredmenyek/2026-08-12_access_horgonyzas_eredmeny.md`*
