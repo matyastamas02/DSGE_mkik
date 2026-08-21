@@ -579,6 +579,79 @@ if exist(t17, 'file') == 2
         Br.befagyasztas_pm1_pct(cs == "összes")), ok, hiba);
 end
 
+% --- A KULSO BIRALAT NYOMAN BEVEZETETT KET TABLA (2026-08-21) -----------
+% t25b: a meret szerinti transzmisszio-kulonbseg konfidencia-intervalluma.
+% Az A16 mostantol NEM pontbecslest allit, hanem azt, hogy a kulonbseg
+% egyiranyu DE nem szignifikans -- mindkettot orizni kell.
+t25b = fullfile(repo, 'output', 'tables', 't25b_transzmisszio_ci.csv');
+[ok, hiba] = ell(exist(t25b, 'file') == 2, 't25b transzmisszio-CI letezik', ok, hiba);
+if exist(t25b, 'file') == 2
+    Ci = readtable(t25b);
+    [ok, hiba] = ell(all(Ci.kulonbseg_L_minus_S > 0), ...
+        sprintf(['t25b: mind a %d becslesben L > S (egyiranyu pontbecslesek)'], ...
+        height(Ci)), ok, hiba);
+    [ok, hiba] = ell(all(Ci.ci95_also < 0 & Ci.ci95_felso > 0), ...
+        't25b: mind a 4 CI TARTALMAZZA a nullat - a kulonbseg nem szignifikans', ...
+        ok, hiba);
+    [ok, hiba] = ell(all(Ci.szignifikans_5pct == 0), ...
+        sprintf('t25b: 0 szignifikans kulonbseg (max |t| = %.2f)', ...
+        max(abs(Ci.t_stat))), ok, hiba);
+end
+
+% t51: a kuszob nulla-kontura a (rho_acc, ACCSCALE) sikon. Az F01 mostantol
+% erre hivatkozik, mert a kuszob a KET parameter EGYUTTES fuggvenye.
+t51 = fullfile(repo, 'output', 'tables', 't51_kuszobfelulet.csv');
+[ok, hiba] = ell(exist(t51, 'file') == 2, 't51 kuszobfelulet-kontur letezik', ok, hiba);
+if exist(t51, 'file') == 2
+    Kf = sortrows(readtable(t51), 'rho_acc');
+    [ok, hiba] = ell(all(diff(Kf.kuszob_ACCSCALE) < 0), ...
+        sprintf('t51 KONTUR: a kuszob MONOTON csokken a rho_acc-ban (%.1f -> %.1f)', ...
+        Kf.kuszob_ACCSCALE(1), Kf.kuszob_ACCSCALE(end)), ok, hiba);
+    % SZINT-OR az F01 szovegehez: a ket nevezetes pont
+    k85 = Kf.kuszob_ACCSCALE(abs(Kf.rho_acc - 0.85) < 1e-9);
+    k97 = Kf.kuszob_ACCSCALE(abs(Kf.rho_acc - 0.9673) < 1e-9);
+    [ok, hiba] = ell(abs(k85 - 47.8) < 0.5 && abs(k97 - 22.3) < 0.5, ...
+        sprintf(['t51 SZINT: a kontur vegpontjai az F01-ben kozolt szamokon ' ...
+        '(%.1f / %.1f)'], k85, k97), ok, hiba);
+end
+
+% --- PHILLIPS-ASZIMMETRIA OR (kulso biralat, 2026-08-21) -----------------
+% MIT VED. A harom tipus arazasi egyenlete NEM szimmetrikus sokkot kap:
+%   pi_E, pi_D  ->  + eps_md    (NYERS sokk, varexo)
+%   pi_L        ->  + e_mx_ar   (AR-FOLYAMAT, rho_mx = 0.318)
+% Tehat nem csak a sokk forrasa mas, hanem a PERZISZTENCIAJA is. Ez jelenleg
+% NEM erint egyetlen kozolt eredmenyt sem, mert a szcenariok csak az uni/sov/
+% bank valtozokat hajtjak -- eps_md es eps_mx minden futasban azonosan nulla,
+% tehat e_mx_ar is az. DE: ha barki bevezet egy ar-markup sokkot (peldaul a
+% Szabo Bakos-fele "a piacszerkezet-valtozas markup-sokkkent" recept szerint),
+% az AZONNAL es NEMAN eltolja a KKV/nagyvallalat osszevetest, es a
+% szimmetria-teszt sem fogja el, mert az nulla sokk mellett fut.
+% EZ AZ OR ELBUKIK, ha valaki ilyen sokkot hajt, azzal az uzenettel, hogy
+% ELOBB a specifikaciot kell szimmetrizalni.
+fo_mod = fullfile(repo, 'src', 'modell', '1_fo_vonal_jv', 'jv_dsge_v09_access.mod');
+if isfile(fo_mod)
+    sz = fileread(fo_mod);
+    % a shocks; ... end; blokkok kigyujtese
+    blokkok = regexp(sz, 'shocks;(.*?)end;', 'tokens');
+    hajtott = false; melyik = "";
+    for i = 1:numel(blokkok)
+        b = blokkok{i}{1};
+        for v = ["eps_md" "eps_mx"]
+            if contains(b, v)
+                hajtott = true; melyik = melyik + " " + v;
+            end
+        end
+    end
+    [ok, hiba] = ell(~hajtott, ...
+        ['t00 PHILLIPS: az aszimmetrikus arsokkok (eps_md / eps_mx) egyik ' ...
+        'szcenarioban sincsenek hajtva'], ok, hiba);
+    if hajtott
+        fprintf(2, ['          %s HAJTVA VAN. A pi_E/pi_D nyers sokkot, a ' ...
+            'pi_L AR-folyamatot kap: ez elojel nelkul eltolja a ' ...
+            'KKV/nagyvallalat osszevetest. ELOBB SZIMMETRIZALD.\n'], melyik);
+    end
+end
+
 % --- SZERKEZET-OROK (repo-atrendezes, 2026-08-16) ------------------------
 % MIERT KELL. A tobbi or TABLAKAT olvas, nem scripteket futtat -- tehat ha
 % egy .mod utvonala eltorik, azok TOVABBRA IS ZOLDEK maradnak. Az

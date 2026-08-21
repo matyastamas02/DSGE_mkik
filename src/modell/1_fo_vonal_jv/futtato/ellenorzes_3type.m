@@ -116,6 +116,32 @@ fprintf('  v08: |mechanikus jóslat - y_E|          = %.2e  (a KORLAT FELOLDVA: 
 R = jegyez(R, "3. lepcso", "y_E MAR NEM mechanikus", 1e-3 - min(d7,1e-3), 1e-9, ...
     sprintf("elteres=%.4f (nagy = jo)", 100*d7));
 
+% --- SZEGMENS-KIBOCSATAS vs AGGREGALT GDP (kulso biralat, 2026-08-21) ---
+% MIERT KELL. Egy kulso birado eszrevette, hogy a modellben NINCS
+%   y = om_E*y_E + om_D*y_D + om_L*y_L
+% azonossag (a k es az ii van om_j-vel aggregalva, a y nem). Ez NEM hiba:
+% a y_j BRUTTO kibocsatas, ami importalt koztes inputot hasznal
+% (aa_E=0.45 vs aa_D=0.80), a y viszont KIADASI OLDALI GDP. Importalt input
+% mellett a ketto definicio szerint nem egyenlo, es ha rakotnenk az
+% azonossagot, AZ lenne a hiba.
+% Ami VISZONT teljesul, es eddig nem volt tesztelve: az om_j-vel sulyozott
+% szegmens-kibocsatas a KET JOSZAG mennyisegenek sulyozott kombinacioja,
+%   sum(om_j*y_j) = [sum om_j(1-phi_j)]*y_d + [sum om_j*phi_j]*y_x
+% ami a wd_j/wx_j sulyok definiciojabol kovetkezik. Ez az or azt vedi, hogy
+% a szegmens-kibocsatasok es a joszag-szintu mennyisegek ne csuszhassanak
+% szet — es egyben dokumentalja, hogy a y_j NEM GDP-komponens.
+om = @(j) p("om_" + j); ph = @(j) p("phi_" + j);
+sum_omy = 0; sum_d = 0; sum_x = 0;
+for jj = ["E" "D" "L"]
+    sum_omy = sum_omy + om(jj)*g("y_" + jj);
+    sum_d   = sum_d   + om(jj)*(1-ph(jj));
+    sum_x   = sum_x   + om(jj)*ph(jj);
+end
+d8 = abs(sum_omy - (sum_d*g('y_d') + sum_x*g('y_x')));
+fprintf('  v08: |sum(om_j*y_j) - [w_d*y_d + w_x*y_x]| = %.2e\n', d8);
+R = jegyez(R, "3. lepcso", "sum(om*y_j) == w_d*y_d + w_x*y_x", d8, 1e-10, ...
+    "a y_j BRUTTO kibocsatas, NEM GDP-komponens");
+
 % =====================================================================
 % (3) NULLA-SOKK TESZT
 % =====================================================================

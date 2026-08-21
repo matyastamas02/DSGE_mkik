@@ -3,11 +3,11 @@
 
 # output/ — tartalomjegyzék
 
-*Generálva · commit `f8cef8e`*
+*Generálva · commit `a9ea181`*
 
 A `output/tables/` szándékosan **lapos**: a szétvágás ~90 őrt és ~15 scriptet írt volna át, cserébe a `t35` attól még `t35` maradt volna. A navigálhatóságot ez az index adja.
 
-**65 tábla · 26 ábra.**
+**67 tábla · 27 ábra.**
 
 ✅ **Minden kimenet reprodukálható, és mindegyikhez tartozik állítás vagy őr.**
 
@@ -21,7 +21,7 @@ A `output/tables/` szándékosan **lapos**: a szétvágás ~90 őrt és ~15 scri
 | `szcenario_v02.csv` | `src/3_abrak/04_szcenario_abrak.py`<br>`src/modell/2_referencia_eagle/futtato/run_v02.m` | ábrageneráló | — | — | referencia/archív vonal |
 | `szcenario_v03.csv` | `src/3_abrak/05_szcenario_abrak_v03.py`<br>`src/3_abrak/s06_szegmens_lekepezes.m`<br>`src/modell/2_referencia_eagle/futtato/run_v03.m`<br>`src/modell/2_referencia_eagle/futtato/run_v04.m` | ábrageneráló | — | — | referencia/archív vonal |
 | `szcenario_v03_hosszutav.csv` | `src/3_abrak/05_szcenario_abrak_v03.py`<br>`src/3_abrak/s06_szegmens_lekepezes.m`<br>`src/4_infra/smoke_test.m`<br>`src/modell/2_referencia_eagle/futtato/run_v03.m`<br>`src/modell/2_referencia_eagle/futtato/run_v04.m` | ábrageneráló | — | ✅ 1 db | **állítást hordoz** |
-| `t00_orok.csv` | `src/4_infra/13_allapotlap.py`<br>`src/4_infra/smoke_test.m` | infrastruktúra | — | ✅ 3 db | **állítást hordoz** |
+| `t00_orok.csv` | `src/4_infra/13_allapotlap.py`<br>`src/4_infra/smoke_test.m` | infrastruktúra | — | ✅ 4 db | **állítást hordoz** |
 | `t01_ev_attekintes.csv` | `src/1_adat/02_leiro_stat.py` | adat-előkészítés | — | — | leíró háttér |
 | `t02_meret.csv` | `src/1_adat/02_leiro_stat.py` | adat-előkészítés | — | — | leíró háttér |
 | `t03_kockazati_besorolas.csv` | `src/1_adat/02_leiro_stat.py` | adat-előkészítés | — | — | leíró háttér |
@@ -46,7 +46,8 @@ A `output/tables/` szándékosan **lapos**: a szétvágás ~90 őrt és ~15 scri
 | `t22_szegmens_lekepezes_v05.csv` | `src/3_abrak/s13_szegmens_lekepezes_v05.m`<br>`src/4_infra/smoke_test.m` | ábrageneráló | — | ✅ 3 db | **állítást hordoz** |
 | `t23_sens_skkv.csv` | `src/modell/3_archiv_korai_jv/futtato/sens_skkv_v05.m` | ⚪ archív (korai JV) | — | — | referencia/archív vonal |
 | `t24_io_hazai_input.csv` | `src/2_empirikus/07_io_hazai_input_arany.py`<br>`src/2_empirikus/10_io_matrix_letoltes.py` | empirikus horgonyzás | V02 | — | **állítást hordoz** |
-| `t25_transzmisszio.csv` | `src/2_empirikus/08_mnb_transzmisszio.py`<br>`src/4_infra/smoke_test.m` | empirikus horgonyzás | A16 | ✅ 3 db | **állítást hordoz** |
+| `t25_transzmisszio.csv` | `src/2_empirikus/08_mnb_transzmisszio.py`<br>`src/2_empirikus/16_transzmisszio_ci.py`<br>`src/4_infra/smoke_test.m` | empirikus horgonyzás | A16 | ✅ 3 db | **állítást hordoz** |
+| `t25b_transzmisszio_ci.csv` | `src/2_empirikus/16_transzmisszio_ci.py`<br>`src/4_infra/smoke_test.m` | empirikus horgonyzás | A16 | ✅ 4 db | **állítást hordoz** |
 | `t26_tsuly_teszt.csv` | `src/modell/3_archiv_korai_jv/futtato/sens_tsuly_v05.m` | ⚪ archív (korai JV) | V03 | — | **állítást hordoz** |
 | `t27_v06_3type_hosszutav.csv` | `src/modell/2_referencia_eagle/futtato/run_v06_3type.m` | 🟡 referencia (EAGLE) | — | — | referencia/archív vonal |
 | `t27_v06_3type_szcenariok.csv` | `src/modell/2_referencia_eagle/futtato/run_v06_3type.m` | 🟡 referencia (EAGLE) | — | — | referencia/archív vonal |
@@ -78,10 +79,11 @@ A `output/tables/` szándékosan **lapos**: a szétvágás ~90 őrt és ~15 scri
 | `t47_opten_stressz.csv` | `src/4_infra/smoke_test.m`<br>`src/modell/1_fo_vonal_jv/futtato/stress_opten_v09.m` | infrastruktúra | A01 · A12 · V01 | ✅ 4 db | **állítást hordoz** |
 | `t48_opten_kuszob.csv` | `src/modell/1_fo_vonal_jv/futtato/stress_opten_v09.m` | 🟢 fő vonal (JV) | F01 | — | **állítást hordoz** |
 | `t48b_opten_kuszob_osszegzes.csv` | `src/4_infra/smoke_test.m`<br>`src/modell/1_fo_vonal_jv/futtato/stress_opten_v09.m` | infrastruktúra | F01 | ✅ 5 db | **állítást hordoz** |
-| `t49_rhoacc_erzekenyseg.csv` | `src/modell/1_fo_vonal_jv/futtato/stress_opten_v09.m` | 🟢 fő vonal (JV) | — | — | részletes rács (az összegzője őrzött) |
+| `t49_rhoacc_erzekenyseg.csv` | `src/3_abrak/17_kuszobfelulet.py`<br>`src/modell/1_fo_vonal_jv/futtato/stress_opten_v09.m` | ábrageneráló | F01 | — | **állítást hordoz** |
 | `t49b_rhoacc_erzekenyseg_osszegzes.csv` | `src/4_infra/smoke_test.m`<br>`src/modell/1_fo_vonal_jv/futtato/stress_opten_v09.m` | infrastruktúra | — | ✅ 4 db | **állítást hordoz** |
 | `t50_bgg_blokk.csv` | `src/2_empirikus/11_bgg_blokk_kalibracio.py`<br>`src/4_infra/smoke_test.m` | empirikus horgonyzás | A07 · A08 | ✅ 4 db | **állítást hordoz** |
 | `t50b_bgg_chi_reszletes.csv` | `src/2_empirikus/11_bgg_blokk_kalibracio.py`<br>`src/4_infra/smoke_test.m` | empirikus horgonyzás | A15 · F04 · V04 · V08 | ✅ 2 db | **állítást hordoz** |
+| `t51_kuszobfelulet.csv` | `src/3_abrak/17_kuszobfelulet.py`<br>`src/4_infra/smoke_test.m` | ábrageneráló | F01 | ✅ 3 db | **állítást hordoz** |
 
 ---
 
@@ -115,3 +117,4 @@ A `output/tables/` szándékosan **lapos**: a szétvágás ~90 őrt és ~15 scri
 | `f24_v07_access_szcenariok.png` | `src/modell/2_referencia_eagle/futtato/run_v07_access.m` | 🟡 referencia (EAGLE) | — | — | ábra (az állítás a tábláján ül) |
 | `f25_jv_v06_belso_javitas.png` | `src/modell/3_archiv_korai_jv/futtato/run_jv_v06.m` | ⚪ archív (korai JV) | — | — | ábra (az állítás a tábláján ül) |
 | `f26_access_horgonyzas.png` | `src/2_empirikus/s14_access_horgonyzas.m` | empirikus horgonyzás | — | — | ábra (az állítás a tábláján ül) |
+| `f27_kuszobfelulet.png` | `src/3_abrak/17_kuszobfelulet.py` | ábrageneráló | — | — | ábra (az állítás a tábláján ül) |
