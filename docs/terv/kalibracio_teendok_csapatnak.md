@@ -366,15 +366,80 @@ program erősebben lazítja a finanszírozási korlátot ott, ahol a cég ex ant
 hitelfüggőbb. Nem oldja meg a kizárási feltételt, de közelebb visz a
 mechanizmushoz — és a 2021-es értékek nálunk **megvannak**.
 
+#### 🔴 DÖNTÉS 2026-08-21: az RD-t ELENGEDJÜK — de egy ellenőrzés előtte
+
+A negyedik/ötödik bírálati kör után a proxy-RD **nem védhető**: ha a valódi
+policy-cutoff a **létszám**, és mi csak árbevételt látunk predeterminedként,
+akkor `P(Jogosult | Árbevétel)` **nem ugrik élesen** az igazi cutoffnál. Ez
+klasszikus **assignment-error**, és alapjaiban gyengíti az azonosítást.
+Árbevételt választani *azért, mert korrelál a létszámmal*, **nem RD**.
+
+> **EGY ELLENŐRZÉS, AMI ELŐTTE MÉG KELL — fél nap, nincs hozzá új adat:**
+> **Volt-e az árbevétel TÉNYLEGES jogosultsági kritérium?** Az EU-s
+> KKV-definíció (amit a magyar programok jellemzően átvesznek) **kettős**:
+> `< 250 fő` **ÉS** (`árbevétel ≤ 50 M EUR` **VAGY**
+> `mérlegfőösszeg ≤ 43 M EUR`). Ha a Széchenyi/NHP ezt használta, akkor az
+> árbevétel **nem proxy, hanem valódi kritérium** — csak egy
+> **konjunktív szabály** egyik ága, aminek a másik ágát (létszám)
+> predeterminedként nem látjuk. Ez akkor is többdimenziós határ, nem tiszta
+> 1-D cutoff.
+>
+> **A programdokumentációt meg kell nézni** (nyilvános), mert ez dönti el,
+> hogy a design *halott* vagy csak *többdimenziós*. Amíg ez nincs meg, az
+> RD nem indul.
+
+#### ⚠ ÉS EGY KORLÁT, AMI MINDKÉT DESIGNT ÉRINTI: EGY PRE-PERIÓDUS
+
+Lefuttatva 2026-08-21: a `t12` szerint a programvezéreltség **2021 és 2022
+között tör meg** — a piaci árazású ráták aránya 100%-ról 26,3%-ra esik,
+miközben a BUBOR 1,5%-ról 10,0%-ra ugrik.
+
+**Tehát a 2021–24-es panelben pontosan EGY pre-periódus van (2021).**
+
+Következmény: **pre-trend teszt nem futtatható** — sem az RD-hez, sem a
+hitelfüggőségi designhoz. A bírálat kifejezetten kérte a
+`FD_2021 × 2021` placebót; a panel ezt **nem engedi meg**, mert egy
+pre-évből nulla szabadságfok jut a trendre.
+
+**Ezt a leadásban ki kell mondani.** Ez az, ami az egész decemberi
+cégszintű empirikus blokk ambícióját korlátozza — nem a design-választás.
+
+#### A hitelfüggőségi design: MECHANIZMUS-TESZT, nem DID
+
+```
+Y_it = alfa_i + gamma_t + beta*(Exposure_i × FD_i^{2021} × Post_t) + ...
+```
+
+ahol `FD^2021` = predetermined hitelfüggőség (**hitelállomány/eszköz** és
+**kamatkiadás/eszköz** — mindkettő megvan 2021-re, és **külön** kell
+futtatni: ha csak az egyik proxy működik, az sokkal óvatosabb kezelést kér).
+
+⚠ **A `FD × Post` önmagában NEM azonosít programhatást.** A magas
+hitelfüggőségű cégek 2022–24-ben **a kamatciklus miatt is** másképp
+viselkedtek — a BUBOR 1,5%-ról 14,3%-ra ment. Vagyis a `FD × Post`
+elsősorban a **kamatsokk-kitettséget** méri, nem a programot. Ezért
+kell a hármas interakció a program-kitettséggel, és ezért
+**mechanizmus-teszt**, nem DID.
+
+Robusztusság: tercilis/kvartilis bin-ek, folytonos, winsorizált folytonos.
+
 #### A decemberi célhierarchia
 
 | | Cél | Státusz |
 |---|---|---|
-| **A** | MNB new-business kamat (méret × összeg × fixálás × futamidő, 2015-től) | **kötelező** — 2.1 |
-| **B** | Cutoff-validitási audit → első lépcső (`Jogosultság → van_hitel`) | **kötelezően megpróbálandó** — 1c, 1d |
-| **C** | Reduced form (`Jogosultság → beruházás`) | nagyon értékes |
-| **D** | IV (`van_hitel → beruházás`) | csak ha A–C meggyőző, és **óvatos** interpretációval |
-| **E** | `ACCSCALE` pontbecslés | **NEM decemberre** — küszöbformában marad |
+| **A** | **MNB new-business kamat** — cellaszinten: méret × hitelösszeg × kamatfixálás × futamidő, **a hozzá tartozó új szerződéses volumenekkel**, 2015–2024 | **EZ AZ ELSŐ PRIORITÁS** — 2.1 |
+| **B** | Programdokumentáció: volt-e **árbevételi** jogosultsági kritérium? | **fél nap, nyilvános** — ez dönti el a B/C sorsát |
+| **C** | Hitelfüggőségi **mechanizmus-teszt** (`Exposure × FD^2021 × Post`), két proxyval | értékes, de pre-trend nélkül |
+| **D** | Eligibility RD / első lépcső | **csak** ha a B pozitív, és akkor is többdimenziós határként |
+| **E** | IV (`van_hitel → beruházás`) | csak ha A–D meggyőző, **soha nem `ACCSCALE` néven** |
+| **F** | `ACCSCALE` pontbecslés | **NEM decemberre** — küszöbformában marad |
+
+**Miért az MNB-adat az egyértelmű első:** ez az egyetlen tétel, ami
+**időbeli aggregátum**, tehát **nem igényel cég-szintű pre-trendet** — épp
+azt a korlátot kerüli meg, ami a cégszintű designokat sújtja. És a
+cellaszintű bontás nélkül a composition bias megmarad: az összevetéshez
+**standardizálni kell** hitelösszegre, futamidőre és fixálásra, ehhez pedig
+cellák és volumenek kellenek, nem egy SME- és egy Large-átlagkamat.
 
 ### 2.7 Jóléti blokk — FELTÉTELES, nem teendő (2026-08-21)
 
