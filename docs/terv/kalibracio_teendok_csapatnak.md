@@ -423,6 +423,55 @@ kell a hármas interakció a program-kitettséggel, és ezért
 
 Robusztusság: tercilis/kvartilis bin-ek, folytonos, winsorizált folytonos.
 
+##### A kontrollkészlet és a lefedettsége — lemérve 2026-08-21
+
+A bírálat konkrét kontrolllistát adott (2021-es, predetermined értékek).
+Lefuttatva a panelen, `n = 36 115` cég-év 2021-ben:
+
+| Kontroll | Konstrukció | Lefedettség |
+|---|---|---|
+| méret | `letszam` | 100,0% |
+| ágazat | `teaor4` | 100,0% |
+| termelékenység | `netto_arbevetel / letszam` | 100,0% |
+| jövedelmezőség | `uzemi_eredmeny / eszkozok_osszesen` | 99,8% |
+| likviditás | `penzeszkozok / eszkozok_osszesen` | 99,9% |
+| exportőri státusz | `exportor` | 100,0% |
+| **beruházási ráta** | `beruhazasok_felujitasok / targyi_eszkozok` | 🔴 **20,0%** |
+| **FD-1** | `hitelallomany / eszkozok_osszesen` | ✅ 99,9% |
+| **FD-2** | `kamatraforditas / eszkozok_osszesen` | 🔴 **20,3%** |
+
+**Hét kontroll gyakorlatilag teljes. Kettő nem — és épp az a kettő, ami a
+legjobban kellene.** Mindkettőre van válasz:
+
+**(1) A beruházást NE a közvetlen mezőből számoljuk.** A
+`beruhazasok_felujitasok` csak **21,8%**-on van kitöltve. A szokásos
+*perpetual inventory* konstrukció viszont **98,3%**:
+
+```
+I_it = targyi_eszkozok_it − targyi_eszkozok_i,t−1 + ertekcsokkenes_it
+```
+
+(`n = 108 421 / 110 350` szomszédos cég-év párra). **A reduced-form
+beruházási kimenet tehát rendben van — csak megfelelően kell előállítani.**
+
+**(2) Az FD-2 NEM alkalmas független robusztussági proxynak az extenzív
+margón — mert a kimenetre szelektál.** A `kamatraforditas` nem véletlenül
+hiányzik: a **hitellel rendelkező** cégek **98,7%-ánál** megvan (mind a négy
+évben), a hitel nélkülieknél nincs. Vagyis az FD-2 gyakorlatilag **csak a
+`van_hitel = 1` almintán definiált** — márpedig épp a `van_hitel` az, amit
+magyarázni akarunk.
+
+> **Következmény:** a bírálat kérte a kétproxys robusztussági tesztet („ha
+> ugyanaz jön ki mindkettővel, az sokkal meggyőzőbb"). Ez az **extenzív
+> margóra nem elérhető** — az FD-2 ott a függő változóra szelektálna. Az
+> **intenzív margóra** (`log(1+H)` a hitellel rendelkezők között) viszont
+> használható.
+>
+> Tehát: **FD-1 mindkét kimenetre, FD-2 csak az intenzív margóra.** Ha csak
+> az FD-1 áll rendelkezésre az extenzív margón, azt a bírálat saját szabálya
+> szerint **óvatosabban** kell kezelni.
+
+
 #### A decemberi célhierarchia
 
 | | Cél | Státusz |
