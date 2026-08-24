@@ -15,8 +15,8 @@ modellt, csak megjeleníti — tehát tetszőleges számú alkalommal
 
 FONTOS ÉRTELMEZÉS: a felület tengelyei KÉT NEM AZONOSÍTOTT paraméter.
 Az ábra nem azt mondja meg, hol vagyunk, hanem hogy a küszöb hogyan függ
-attól, hol vagyunk. A megjelölt pont (rho_acc = 0,9673) kalibráció, nem
-becslés.
+attól, hol vagyunk. A megjelölt pont (rho_acc = 0,9673) leíró magas-rho
+érzékenységi pont, nem a modell dinamikus szegmensparaméterének kalibrációja.
 
 Kimenet: output/figures/f27_kuszobfelulet.png
          output/tables/t51_kuszobfelulet.csv   (a nulla-kontúr adatként)
@@ -47,14 +47,23 @@ TINTA = "#0a0a0a"
 MASOD = "#525049"
 FELULET = "#fcfcfb"
 
+ELVART_RHOK = np.array([0.85, 0.90, 0.93, 0.95, 0.9673, 0.98])
+ELVART_ACCSCALE = np.array([
+    0, 2, 4, 6, 8, 10, 12, 14, 16, 18, 20, 25, 30, 35, 40, 45, 50, 60,
+    80, 100, 120, 140,
+])
 
-def kuszob(acc: np.ndarray, d: np.ndarray) -> float:
-    """Lineáris interpoláció ott, ahol a KKV-L elojelet valt (mint a
-    stress_opten_v09.m kuszob_ fuggvenye)."""
+
+def kuszob(acc: np.ndarray, d: np.ndarray,
+           ervenyes: np.ndarray) -> tuple[float, float]:
+    """Lineáris interpoláció két szomszédos, BK-érvényes pont között."""
     for j in range(len(d) - 1):
-        if d[j] < 0 <= d[j + 1]:
-            return acc[j] + (acc[j + 1] - acc[j]) * (0 - d[j]) / (d[j + 1] - d[j])
-    return 0.0 if len(d) and d[0] >= 0 else float("nan")
+        if ervenyes[j] == 1 and ervenyes[j + 1] == 1 and d[j] < 0 <= d[j + 1]:
+            k = acc[j] + (acc[j + 1] - acc[j]) * (0 - d[j]) / (d[j + 1] - d[j])
+            return k, 1.0
+    if len(d) and ervenyes[0] == 1 and d[0] >= 0:
+        return 0.0, 1.0
+    return float("nan"), float("nan")
 
 
 def main() -> None:
@@ -62,11 +71,53 @@ def main() -> None:
         raise SystemExit(f"Hiányzik: {BE}\nElőbb: matlab -batch "
                          "\"cd('src/modell/1_fo_vonal_jv/futtato'); "
                          "stress_opten_v09\"")
-    T = pd.read_csv(BE)
-    T = T[T["konvergalt"] == 1]
+    T_all = pd.read_csv(BE)
+    required = {"OPTEN", "SCENARIO", "TSCEN", "rho_acc", "accscale",
+                "GDP_pct", "KKV_minus_L_pp", "solver_ok", "bk_check_ok",
+                "bk_ok", "ervenyes", "n_forward", "n_unstable",
+                "bk_qz_criterium"}
+    missing = sorted(required - set(T_all.columns))
+    if missing:
+        raise SystemExit(
+            f"A {BE.name} elavult, hiányzó BK-oszlopok: {', '.join(missing)}. "
+            "Futtasd újra a stress_opten_v09.m scriptet.")
 
-    rhok = np.array(sorted(T["rho_acc"].unique()))
-    accok = np.array(sorted(T["accscale"].unique()))
+    kulcs = ["rho_acc", "accscale"]
+    duplikalt = T_all.duplicated(kulcs, keep=False)
+    vart_db = len(ELVART_RHOK) * len(ELVART_ACCSCALE)
+    if len(T_all) != vart_db or duplikalt.any():
+        raise SystemExit(
+            f"A {BE.name} nem teljes, egyedi 6×22-es rács: "
+            f"{len(T_all)}/{vart_db} sor, {int(duplikalt.sum())} "
+            "duplikált kulcsú sor. Futtasd újra a stress_opten_v09.m scriptet.")
+
+    rhok = np.sort(T_all["rho_acc"].dropna().unique())
+    accok = np.sort(T_all["accscale"].dropna().unique())
+    jo_rhok = (rhok.shape == ELVART_RHOK.shape and
+               np.allclose(rhok, ELVART_RHOK, rtol=0, atol=1e-10))
+    jo_accok = (accok.shape == ELVART_ACCSCALE.shape and
+                np.allclose(accok, ELVART_ACCSCALE, rtol=0, atol=1e-10))
+    if not jo_rhok or not jo_accok:
+        raise SystemExit(
+            f"A {BE.name} rácstengelyei eltérnek az elvárt 6 rho × 22 "
+            "ACCSCALE tengelytől. Futtasd újra a stress_opten_v09.m scriptet.")
+
+    if not (T_all["OPTEN"].eq(1).all() and
+            T_all["SCENARIO"].eq(1).all() and
+            T_all["TSCEN"].eq(3).all()):
+        raise SystemExit(
+            f"A {BE.name} nem kizárólag az elvárt OPTEN=1, SCENARIO=1, "
+            "TSCEN=3 konfigurációt tartalmazza.")
+
+    technikai_ok = T_all["solver_ok"].eq(1) & T_all["bk_check_ok"].eq(1)
+    if not technikai_ok.all():
+        raise SystemExit(
+            f"A {BE.name} {int((~technikai_ok).sum())} során a PF solver "
+            "vagy a terminális BK-diagnosztika technikailag nem futott le; "
+            "nem készül részleges t51/ábra.")
+
+    T = T_all[T_all["ervenyes"] == 1].copy()
+
     Z = np.full((len(rhok), len(accok)), np.nan)
     for i, r in enumerate(rhok):
         for j, a in enumerate(accok):
@@ -77,16 +128,27 @@ def main() -> None:
     # --- a nulla-kontur adatkent ---------------------------------------
     sorok = []
     for i, r in enumerate(rhok):
-        sor = T[np.isclose(T["rho_acc"], r)].sort_values("accscale")
-        k = kuszob(sor["accscale"].to_numpy(), sor["KKV_minus_L_pp"].to_numpy())
-        g100 = sor.loc[sor["accscale"] == 100, "GDP_pct"]
+        sor = T_all[np.isclose(T_all["rho_acc"], r)].sort_values("accscale")
+        k, bk_k = kuszob(sor["accscale"].to_numpy(),
+                         sor["KKV_minus_L_pp"].to_numpy(),
+                         sor["ervenyes"].to_numpy())
+        pont100 = sor[sor["accscale"] == 100]
+        jo100 = pont100[pont100["ervenyes"] == 1]
         sorok.append({
             "rho_acc": r,
             "LR_szorzo": round(1.0 / (1.0 - r), 2),
             "kuszob_ACCSCALE": round(k, 2) if np.isfinite(k) else np.nan,
-            "GDP_pct_ACC100": round(float(g100.iloc[0]), 4) if len(g100) else np.nan,
+            "GDP_pct_ACC100": round(float(jo100["GDP_pct"].iloc[0]), 4)
+            if len(jo100) else np.nan,
+            "bk_ok_ACC100": float(pont100["bk_ok"].iloc[0])
+            if len(pont100) else np.nan,
+            "bk_ok_kuszobon": bk_k,
         })
     K = pd.DataFrame(sorok)
+    if T.empty or not K["bk_ok_kuszobon"].notna().all():
+        raise SystemExit(
+            "Nem mind a hat rho-szeleten van BK-érvényes küszöb; "
+            "nem készül részleges t51/ábra.")
     K.to_csv(T_KI, index=False, encoding="utf-8")
 
     # --- abra ----------------------------------------------------------
@@ -133,7 +195,7 @@ def main() -> None:
 
     # a ket nevezetes rho jelolese mindket panelen
     for ertek, cimke, szin in [(0.85, "átvett (0,85)", PIROS),
-                               (0.9673, "Opten-kalibráció (0,9673)", AQUA)]:
+                               (0.9673, "leíró high-rho (0,9673)", AQUA)]:
         ax1.axhline(ertek, color=szin, linestyle="--", linewidth=1.3)
         # a cimke a VILAGOS (bal) oldalra megy, kulonben a sotet piros
         # zonaban olvashatatlan
@@ -149,8 +211,10 @@ def main() -> None:
              "hogyan függ attól, hol vagyunk. Mindkét tengely "
              "HORGONYZATLAN paraméter:\naz ACCSCALE magyar 2021–24-es "
              "adatból nem azonosítható (A06), a rho_acc = 0,9673 pedig "
-             "cég-szintű státuszperzisztenciából származó KALIBRÁCIÓ,\nnem "
-             "szegmens-szintű becslés (A11). Adat: t49 (132 pont), "
+             "cég-szintű státuszperzisztenciából származó magas-rho "
+             "ÉRZÉKENYSÉG,\nnem szegmens-szintű becslés vagy alsó korlát "
+             "(A11). Adat: t49 (132 pont). "
+             "A fehér/hiányzó tartomány terminálisan BK-indeterminált; "
              "kontúr: t51.",
              fontsize=7.8, color=MASOD, va="bottom")
 

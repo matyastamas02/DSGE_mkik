@@ -4,6 +4,18 @@
 *Kód: `src/modell/1_fo_vonal_jv/futtato/dekomp_edl_v09.m` · kapcsoló: `-DDECOMP=0..4`, `-DDECOMPW=0|1`*
 *Táblák: `t53` (ágak), `t53b` (küszöb), `t53c` (BK-stressz), `t53d` (regresszió)*
 
+> **KORREKCIÓ — 2026-08-24 (valódi Blanchard–Kahn-audit).** A történeti
+> `konvergalt` mező csak a perfect-foresight solver státusza volt. A `t53`
+> `ACCSCALE=100` rácsa PF/check szerint 45/45 esetben lefut, de a
+> **terminális lokális BK-feltétel 0/45 esetben teljesül**. Emiatt a lent
+> közölt `ACCSCALE=100` GDP- és szegmensszintek, továbbá az „öt ágon
+> pozitív” pontbecsléses állítás nem interpretálható modell-eredményként.
+> A döntő küszöbvizsgálat viszont fennmarad: a `t53b` mind a 10/10
+> küszöbpontja BK-valid, ezért a **22,36 / 22,62 / 22,95** összevetés és az
+> ebből levont, küszöbformájú technológiai-robosztussági következtetés
+> érvényes. Az alábbi eredeti szöveget történeti nyomként meghagyjuk; a
+> korrekció minden 45/45-ös BK- és `ACCSCALE=100`-as szintállítást felülír.
+
 ---
 
 ## A referee-kérdés, amire ez válaszol
@@ -63,22 +75,22 @@ műtermék.
 > el. Csak a pénzügyi heterogenitást meghagyva 1%-kal.** A KKV-eredmény
 > tehát gyakorlatilag teljes egészében **finanszírozási** eredetű.
 
-### Pontbecslésben (`t53`, OPTEN=1, ACCSCALE=100)
+### `ACCSCALE=100` pontdiagnosztika (`t53`) — nem közölhető modell-eredmény
 
-| ág | GDP | y_E | y_D | y_L | **KKV−L** |
-|---|---:|---:|---:|---:|---:|
-| 0 alap | +1,340% | +2,560% | +3,026% | −1,137% | **+3,89 pp** |
-| B pénzügyi | +1,472% | +2,562% | +3,460% | −1,334% | **+4,27 pp** |
-| D technológia azonos | +1,364% | +2,587% | +3,196% | −1,225% | **+4,07 pp** |
-| A csak `phi_j` | +2,056% | +5,162% | +4,712% | −2,383% | +7,36 pp |
-| C csak `aa_j` | +2,168% | +5,152% | +4,873% | −2,517% | +7,55 pp |
+A rács minden pontján lefut a perfect-foresight solver, de az
+`OPTEN=1`, `rho_acc=0,9673` terminális rezsimben mind a 45 kombináció
+BK-hibás: 15 instabil gyök jut 13 előretekintő változóra. Emiatt a régi
+GDP-, `y_E`, `y_D`, `y_L` és „KKV−L” pontértékeket visszavontuk.
 
-**Mind az öt ágon pozitív.** A súlyozási ellenpróba (`-DDECOMPW=0`) nem
-változtat a következtetésen: a D ág ott +4,05 pp (súlyozottan +4,07).
+A súlyozási implementáció ellenpróbája BK-valid `OPTEN=0` ágon fut: a D
+ág súlyozott és számtani átlagos változata rendre 1,4144709 és 1,4153392
+százalékpontos KKV−L eltérést ad (kb. 0,061% relatív különbség). Ez
+implementációs őr, nem az `OPTEN=1`, `ACCSCALE=100` pont igazolása.
 
-### BK-stabilitás (`t53c`)
+### BK-audit (`t53c`)
 
-**45/45 kombináció stabil** (5 ág × 3 SCENARIO × 3 TSCEN).
+**45/45 solver-sikeres, 0/45 terminálisan BK-valid** (5 ág × 3 SCENARIO ×
+3 TSCEN). Minden pontban `n_forward=13`, `n_unstable=15`.
 
 ---
 
@@ -94,23 +106,12 @@ mechanikus, nem tiszta „a technológia önmagában" hatás.
 Ezért a **tiszta összevetés a 0 ↔ D és a 0 ↔ B**, és a következtetést is
 csak ezekre alapozzuk.
 
-### 2. Az A és a C ág GDP-sávja kilóg a közölt `A01` sávból
+### 2. Az `ACCSCALE=100` GDP-sáv nem vethető össze az `A01` állítással
 
-| ág | GDP-sáv (9 kombináció) |
-|---|---|
-| 0 alap | +0,76% … +2,02% |
-| B pénzügyi | +0,81% … +2,27% |
-| D technológia azonos | +0,77% … +2,06% |
-| A csak `phi_j` | +0,97% … **+3,51%** |
-| C csak `aa_j` | +1,01% … **+3,73%** |
-
-Az `A01` közölt sávja +0,3 … +2,9%. **Az A és a C ág fölé megy** — de ez
-nem ellentmondás: **a dekompozíciós ágak diagnosztikák, nem alternatív
-kalibrációk.** Olyan paraméterértékeket állítanak be (típusok közt
-kiegyenlített pénzügyi blokk), amiket semmilyen adat nem támogat. Az `A01`
-sávja a *kalibrációs* ágakra (`OPTEN=0..3`) vonatkozik, és azt ez nem
-érinti. **Ezt a mondatot érdemes szó szerint készenlétben tartani**, mert
-egy bíráló elő fogja venni a táblát.
+A dekompozíciós rács 45 pontja terminálisan BK-invalid, ezért az ezekből
+képzett GDP-sávokat sem az `A01` állítással, sem egymással nem hasonlítjuk
+össze. A dekompozíció érvényes következtetése kizárólag a `t53b` tíz,
+egyenként BK-valid küszöbpontjára épül.
 
 ### 3. Amit a scan NEM válaszol meg
 
@@ -128,8 +129,9 @@ egyetlen feltevés**.
 > méretsúlyozott átlagra), az eredmény küszöbe 22,36-ról 22,95-re
 > mozdul — 3%-os elmozdulás. Ha **csak a pénzügyi heterogenitást**
 > hagyjuk meg, 22,62 — 1%. Az eredményt tehát a finanszírozási
-> heterogenitás viszi, nem a termelési oldal. Mind a négy ág, mind a 45
-> szcenárió-kombináció BK-stabil, és a KKV-előny előjele mindenütt pozitív.
+> heterogenitás viszi, nem a termelési oldal. A következtetés a tíz
+> BK-valid küszöbponton áll; az `ACCSCALE=100` melletti 45 pontból álló
+> szintrács terminálisan BK-invalid, ezért abból pontértéket nem közlünk.
 
 ---
 

@@ -4,7 +4,7 @@
  * A lepcsozetes terv 3. lepcsoje (2026-08-12).
  *
  * A 2. LEPCSO (jv_dsge_v07_3type) ATMENT: a haromtipusos szerkezet a
- * Jakab-Vilagi magon BK-stabil, 18/18 kombinacioban. DE ott dokumentaltuk
+ * Jakab-Vilagi magon PF-solverrel megoldodott, 18/18 kombinacioban; BK-t nem mertunk. DE ott dokumentaltuk
  * a donto korlatot: KOZOS arszint mellett a tipus-kibocsatas MECHANIKUS
  *     y_j = (1-phi_j)*y_d + phi_j*y_x
  * ket kozos valtozo fix sulyu kevereke, tehat a tipus SAJAT koltsege
@@ -56,7 +56,7 @@
  * =====================================================================
  * EREDMENY (stress_jv_3type_arak.m, 2026-08-12)
  * =====================================================================
- * (A) BK: 18/18 kombinacio megoldodott. A normalizacio 6.9e-18-ig tart,
+ * (A) PF solver: 18/18 kombinacio megoldodott; ez nem BK-teszt. A normalizacio 6.9e-18-ig tart,
  *     a realarfolyam max 1.02%, az NFA max 1.25% -- minden plauzibilis.
  *     ==> AZ ARSZINT-SZETVALASZTAS A JV-MAGON NEM TORI EL A MODELLT.
  *     A v04-es kudarc tehat NEM volt elkerulhetetlen: ott a KOMBINACIO

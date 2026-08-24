@@ -43,7 +43,8 @@
 %     regi 22.3-as szamot kell visszaadja: ez koti ossze az uj, ketdimenzios
 %     kozlest a t48b/t51 korabbi eredmenyevel.
 %
-% Konfiguracio: OPTEN=1 (Opten-horgonyzott sulyok, rho_acc = 0.9673),
+% Konfiguracio: OPTEN=1 (Opten-sulyok, felteteles magas-rho erzekenyseg:
+% rho_acc = 0.9673; ez nem dinamikus szegmens-rho horgony),
 % SCENARIO=1, TSCEN=3 -- pontosan az, amin a t51 kontur 22.3-as vegpontja
 % all. Az OPTEN=0 (atvett, rho_acc = 0.85) diagonalisat is meghuzzuk, mert
 % a t48b szerint annak 36.5-nek kell lennie.
@@ -60,6 +61,7 @@ while ~isfile(fullfile(repo, 'CLAUDE.md')), repo = fileparts(repo); end
 dynare_path = getenv('DYNARE_PATH');
 if isempty(dynare_path), dynare_path = 'C:\dynare\6.5\matlab'; end
 addpath(dynare_path);
+addpath(fullfile(repo, 'src', '4_infra'));
 
 TAB = @(n) fullfile(repo, 'output', 'tables', n);
 
@@ -113,26 +115,36 @@ for irany = ["lambda" "omega" "egyutt"]
             otherwise,     r = fut_(1, s_, -1, -1);
         end
         M = [M; table(string(irany), s_, r.konvergalt, r.GDP_pct, ...
-            r.KKV_minus_L_pp, r.KKV_minus_L_pp - b0, 'VariableNames', ...
+            r.KKV_minus_L_pp, r.KKV_minus_L_pp - b0, r.solver_ok, ...
+            r.bk_check_ok, r.bk_ok, r.ervenyes, r.n_forward, r.n_unstable, ...
+            r.bk_qz_criterium, r.bk_info_code, r.nearest_unit_complex, ...
+            'VariableNames', ...
             {'irany','skala','konvergalt','GDP_pct','KKV_minus_L_pp', ...
-            'hatas_pp'})]; %#ok<AGROW>
+            'hatas_pp','solver_ok','bk_check_ok','bk_ok','ervenyes', ...
+            'n_forward','n_unstable','bk_qz_criterium','bk_info_code', ...
+            'nearest_unit_complex'})]; %#ok<AGROW>
     end
 end
 % a linearitas merteke: hatas/skala (a nulla skalat kihagyva)
 M.hatas_per_skala = M.hatas_pp ./ M.skala;
 M.hatas_per_skala(M.skala == 0) = NaN;
+% CSV-kompatibilitas: a korabbi het oszlop marad elol, az uj statuszok
+% csak a regi sema utan kovetkeznek.
+M = movevars(M, 'hatas_per_skala', 'After', 'hatas_pp');
 writetable(M, TAB('t52c_lam_om_marginalis.csv'));
 
 for irany = ["lambda" "omega" "egyutt"]
-    Mi = M(M.irany == irany & M.konvergalt == 1 & M.skala > 0, :);
+    Mi = M(M.irany == irany & M.ervenyes == 1 & M.skala > 0, :);
     cim = containers.Map({'lambda','omega','egyutt'}, ...
         {'CSAK lambda mozog (omega = 100)', 'CSAK omega mozog (lambda = 100)', ...
          'EGYUTT mozognak (a regi ACCSCALE)'});
     fprintf('  %s\n', cim(char(irany)));
-    fprintf('    %8s %12s %12s %14s\n', 'skala', 'KKV-L', 'hatas', 'hatas/skala');
+    fprintf('    %8s %3s %12s %12s %14s\n', ...
+        'skala', 'BK', 'KKV-L', 'hatas', 'hatas/skala');
     for i = 1:height(Mi)
-        fprintf('    %8.4g %+11.4f %+11.4f %14.5f\n', Mi.skala(i), ...
-            Mi.KKV_minus_L_pp(i), Mi.hatas_pp(i), Mi.hatas_per_skala(i));
+        fprintf('    %8.4g %3d %+11.4f %+11.4f %14.5f\n', Mi.skala(i), ...
+            Mi.bk_ok(i), Mi.KKV_minus_L_pp(i), Mi.hatas_pp(i), ...
+            Mi.hatas_per_skala(i));
     end
     v = Mi.hatas_per_skala;
     fprintf('    -> a hatas/skala hanyados %.2f-szeresere valtozik a racson\n\n', ...
@@ -169,21 +181,35 @@ parok = {[100 100], [200 50], [50 200], [400 25], [25 400]; ...
          [50 50],   [100 25], [25 100], [250 10], [10 250]};
 P = table();
 for r_ = 1:size(parok, 1)
-    ertekek = [];
+    ertekek = nan(1, size(parok, 2));
+    n_ertek = 0;
     fprintf('  szorzat = %g\n', prod(parok{r_, 1}));
     fprintf('    %10s %10s %14s %14s\n', 'lambda', 'omega', 'GDP', 'KKV-L');
     for c_ = 1:size(parok, 2)
         L_ = parok{r_, c_}(1); O_ = parok{r_, c_}(2);
         rr = fut_(1, 100, L_, O_);
-        ertekek(end+1) = rr.KKV_minus_L_pp; %#ok<AGROW>
+        if rr.ervenyes == 1
+            n_ertek = n_ertek + 1;
+            ertekek(n_ertek) = rr.KKV_minus_L_pp;
+        end
         fprintf('    %10g %10g %13.4f%% %+13.4f\n', L_, O_, rr.GDP_pct, ...
             rr.KKV_minus_L_pp);
         P = [P; table(L_*O_, L_, O_, rr.konvergalt, rr.GDP_pct, ...
-            rr.KKV_minus_L_pp, 'VariableNames', {'szorzat','lambda_skala', ...
-            'omega_skala','konvergalt','GDP_pct','KKV_minus_L_pp'})]; %#ok<AGROW>
+            rr.KKV_minus_L_pp, rr.solver_ok, rr.bk_check_ok, rr.bk_ok, ...
+            rr.ervenyes, rr.n_forward, rr.n_unstable, rr.bk_qz_criterium, ...
+            rr.bk_info_code, rr.nearest_unit_complex, 'VariableNames', ...
+            {'szorzat','lambda_skala','omega_skala','konvergalt','GDP_pct', ...
+            'KKV_minus_L_pp','solver_ok','bk_check_ok','bk_ok','ervenyes', ...
+            'n_forward','n_unstable','bk_qz_criterium','bk_info_code', ...
+            'nearest_unit_complex'})]; %#ok<AGROW>
     end
-    fprintf('    -> max elteres a soron belul: %.3e pp\n\n', ...
-        max(ertekek) - min(ertekek));
+    ertekek = ertekek(1:n_ertek);
+    if numel(ertekek) >= 2
+        fprintf('    -> BK-ervenyes sorokon max elteres: %.3e pp\n\n', ...
+            max(ertekek) - min(ertekek));
+    else
+        fprintf('    -> nincs legalabb ket BK-ervenyes osszehasonlitasi pont\n\n');
+    end
 end
 writetable(P, TAB('t52e_lam_om_szorzat.csv'));
 fprintf(['  ERTELMEZES: ha az elteres numerikus nulla, akkor a modell a ket\n' ...
@@ -206,7 +232,9 @@ for L_ = lam_racs
     end
 end
 writetable(G, TAB('t52_lam_om_racs.csv'));
-fprintf('  %d pont, ebbol %d konvergalt.\n', height(G), sum(G.konvergalt == 1));
+fprintf(['  %d pont; PF solver %d; valodi BK %d; mindket feltetel ' ...
+    '%d ponton teljesul.\n'], height(G), sum(G.solver_ok == 1), ...
+    sum(G.bk_ok == 1), sum(G.ervenyes == 1));
 
 fprintf('\n  KKV - nagyvallalat (pp) -- sor: lambda, oszlop: omega\n');
 fprintf('  %8s', 'lam\\om');
@@ -214,7 +242,7 @@ fprintf('%9.4g', om_racs); fprintf('\n');
 for L_ = lam_racs
     fprintf('  %8.4g', L_);
     for O_ = om_racs
-        m = G.lamscale == L_ & G.omscale == O_ & G.konvergalt == 1;
+        m = G.lamscale == L_ & G.omscale == O_ & G.ervenyes == 1;
         if any(m), fprintf('%+9.3f', G.KKV_minus_L_pp(m));
         else, fprintf('%9s', 'n/a'); end
     end
@@ -230,13 +258,15 @@ fprintf('%s\n', repmat('=', 1, 92));
 
 lam_kontur = [5 10 15 20 22.3 25 30 40 50 70 100 140];
 K = table();
-fprintf('  %10s %14s %16s %14s\n', 'lambda', 'kuszob omega', ...
-    'szorzat lam*om', 'GDP@kuszob');
+fprintf('  %10s %14s %16s %3s %14s\n', 'lambda', 'kuszob omega', ...
+    'szorzat lam*om', 'BK', 'GDP@kuszob');
 for L_ = lam_kontur
-    [ok_, gdp_] = kuszob_omega_(1, L_, 300);
-    K = [K; table(L_, ok_, L_*ok_, gdp_, 'VariableNames', ...
-        {'lambda_skala','kuszob_omega','szorzat','GDP_pct_kuszobon'})]; %#ok<AGROW>
-    fprintf('  %10.4g %14.2f %16.1f %13.3f%%\n', L_, ok_, L_*ok_, gdp_);
+    [ok_, gdp_, bk_] = kuszob_omega_(1, L_, 300);
+    K = [K; table(L_, ok_, L_*ok_, gdp_, bk_, 'VariableNames', ...
+        {'lambda_skala','kuszob_omega','szorzat','GDP_pct_kuszobon', ...
+        'bk_ok_kuszobon'})]; %#ok<AGROW>
+    fprintf('  %10.4g %14.2f %16.1f %3d %13.3f%%\n', ...
+        L_, ok_, L_*ok_, bk_, gdp_);
 end
 writetable(K, TAB('t52b_lam_om_kontur.csv'));
 
@@ -247,7 +277,8 @@ fprintf('\n%s\n', repmat('=', 1, 92));
 fprintf('(4) SZORZAT-DIAGNOSZTIKA ES A REGI SZAMHOZ VALO KOTES\n');
 fprintf('%s\n', repmat('=', 1, 92));
 
-jo = K(isfinite(K.kuszob_omega), :);
+jo = K(isfinite(K.kuszob_omega) & K.bk_ok_kuszobon == 1, :);
+assert(~isempty(jo), 'Nincs BK-ervenyes lambda-omega kuszobkontur.');
 sz = jo.szorzat;
 fprintf(['  A kontur menten a lambda*omega szorzat: %.0f ... %.0f\n' ...
     '  (median %.0f, relativ szoras %.1f%%)\n'], min(sz), max(sz), ...
@@ -255,14 +286,18 @@ fprintf(['  A kontur menten a lambda*omega szorzat: %.0f ... %.0f\n' ...
 
 % A DIAGONALIS: lambda = omega = x. Ennek vissza kell adnia a t48b/t51
 % szamait -- ez a hid a regi, egydimenzios kozles fele.
-d1 = kuszob_diagonalis_(1, 300);   % OPTEN=1, rho_acc = 0.9673  -> vart 22.3
-d0 = kuszob_diagonalis_(0, 300);   % OPTEN=0, rho_acc = 0.85    -> vart 36.5
+[d1, bk1] = kuszob_diagonalis_(1, 300); % OPTEN=1, rho_acc=0.9673 -> vart 22.3
+[d0, bk0] = kuszob_diagonalis_(0, 300); % OPTEN=0, rho_acc=0.85   -> vart 36.5
+assert(bk1 == 1 && bk0 == 1, ...
+    'A diagonalis kuszobok kozul legalabb egy terminalisan BK-invalid.');
 fprintf(['\n  A DIAGONALIS (lambda = omega, azaz a regi ACCSCALE):\n' ...
-    '    OPTEN=1 (rho_acc = 0.9673): %.2f   [t48b/t51 szerint 22.3]\n' ...
-    '    OPTEN=0 (rho_acc = 0.85)  : %.2f   [t48b szerint 36.5]\n'], d1, d0);
+    '    OPTEN=1 (rho_acc = 0.9673): %.2f, BK=%d [vart 22.3]\n' ...
+    '    OPTEN=0 (rho_acc = 0.85)  : %.2f, BK=%d [vart 36.5]\n'], ...
+    d1, bk1, d0, bk0);
 
-D = table([1; 0], [d1; d0], [d1^2; d0^2], 'VariableNames', ...
-    {'OPTEN', 'kuszob_diagonalis', 'szorzat_a_diagonalison'});
+D = table([1; 0], [d1; d0], [d1^2; d0^2], [bk1; bk0], ...
+    'VariableNames', {'OPTEN', 'kuszob_diagonalis', ...
+    'szorzat_a_diagonalison','bk_ok_kuszobon'});
 writetable(D, TAB('t52d_lam_om_diagonalis.csv'));
 
 fprintf(['\n  EZT KELL KOZOLNI:\n' ...
@@ -273,7 +308,7 @@ fprintf(['\n  EZT KELL KOZOLNI:\n' ...
     '    lepcsot azonos aranyban skalaztuk. A szorzat ott %.0f.\n' ...
     '  - Ezert onmagaban a 22.3 nem interpretalhato: ugyanaz az eredmeny\n' ...
     '    all elo pl. lambda = %.0f, omega = %.0f mellett is.\n'], ...
-    d1^2, K.lambda_skala(end), K.kuszob_omega(end));
+    d1^2, jo.lambda_skala(end), jo.kuszob_omega(end));
 fprintf('%s\n', repmat('=', 1, 92));
 
 % --- lokalis fuggvenyek --------------------------------------------------
@@ -287,7 +322,11 @@ try
     dynare('jv_dsge_v09_access', arg{:}, 'console', 'nograph');
     M_  = evalin('base', 'M_');
     oo_ = evalin('base', 'oo_');
-    ok_ = oo_.deterministic_simulation.status;
+    options_ = evalin('base', 'options_');
+    solver_ok_ = double(oo_.deterministic_simulation.status);
+    B_ = bk_check_metrics(M_, options_, oo_);
+    ok_ = solver_ok_;  % legacy `konvergalt`: kizarolag PF solver-statusz
+    valid_ = double(solver_ok_ == 1 && B_.check_ok == 1 && B_.bk_ok == 1);
     n = cellstr(M_.endo_names);
     g = @(v) 100 * oo_.steady_state(strcmp(n, v));
     pn = cellstr(M_.param_names);
@@ -299,12 +338,15 @@ try
         p('rho_acc'), p('lambda_acc_E'), p('omega_acc_E'), ok_, g('y'), ...
         g('y_E'), g('y_D'), g('y_L'), ykkv, ykkv - g('y_L'), ...
         g('y_D') - g('y_L'), g('y_E') - g('y_L'), ...
+        solver_ok_, B_.check_ok, B_.bk_ok, valid_, B_.n_forward, B_.n_unstable, ...
+        B_.qz_criterium, B_.info_code, B_.nearest_unit_complex, ...
         'VariableNames', kolumnak_());
 catch ME
     fprintf(2, '  !! HIBA (OPTEN=%d ACC=%g LAM=%g OM=%g): %s\n', op, ...
         accscale, lam, om, ME.message);
+    hiany = num2cell(nan(1, 8));
     R = table(op, accscale, lam_(lam, accscale), om_(om, accscale), ...
-        NaN, NaN, NaN, 0, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, ...
+        NaN, NaN, NaN, 0, hiany{:}, 0, 0, NaN, 0, NaN, NaN, NaN, NaN, NaN, ...
         'VariableNames', kolumnak_());
 end
 end
@@ -316,6 +358,8 @@ function c = kolumnak_()
 c = {'OPTEN','accscale','lamscale','omscale','rho_acc','lambda_acc_E', ...
     'omega_acc_E','konvergalt','GDP_pct','y_E_pct','y_D_pct','y_L_pct', ...
     'y_KKV_pct','KKV_minus_L_pp','D_minus_L_pp','E_minus_L_pp'};
+c = [c, {'solver_ok','bk_check_ok','bk_ok','ervenyes','n_forward','n_unstable', ...
+    'bk_qz_criterium','bk_info_code','nearest_unit_complex'}];
 end
 
 function d = osszevet_(a, b)
@@ -324,40 +368,47 @@ d = max(abs([a.GDP_pct - b.GDP_pct, a.y_E_pct - b.y_E_pct, ...
     a.KKV_minus_L_pp - b.KKV_minus_L_pp]));
 end
 
-function [o, gdp] = kuszob_omega_(op, lam, ofelso)
+function [o, gdp, bk_ok] = kuszob_omega_(op, lam, ofelso)
 % Adott lambda mellett az az omega, ahol KKV-L eppen nullat er.
 % A KKV-L az omega-ban MONOTON NO, ezert bisekcio hasznalhato.
 lo = 0; hi = ofelso;
+bk_ok = NaN;
 rlo = fut_(op, 100, lam, lo);
-if rlo.konvergalt == 1 && rlo.KKV_minus_L_pp >= 0
-    o = 0; gdp = rlo.GDP_pct; return           % mar nulla omega-nal is nyer
+if rlo.solver_ok == 1 && rlo.KKV_minus_L_pp >= 0
+    o = 0; gdp = rlo.GDP_pct; bk_ok = rlo.bk_ok; return
 end
 rhi = fut_(op, 100, lam, hi);
-if rhi.konvergalt ~= 1 || rhi.KKV_minus_L_pp < 0
+if rhi.solver_ok ~= 1 || rhi.KKV_minus_L_pp < 0
     o = Inf; gdp = NaN; return                 % omega = %g-ig sem fordul at
 end
 for it = 1:16
     mid = 0.5*(lo+hi);
     rm = fut_(op, 100, lam, mid);
-    if rm.konvergalt == 1 && rm.KKV_minus_L_pp >= 0, hi = mid; rhi = rm;
+    if rm.solver_ok == 1 && rm.KKV_minus_L_pp >= 0, hi = mid;
     else, lo = mid; end
     if hi - lo < 0.02, break, end
 end
-o = 0.5*(lo+hi); gdp = rhi.GDP_pct;
+o = 0.5*(lo+hi);
+rstar = fut_(op, 100, lam, o);
+gdp = rstar.GDP_pct;
+bk_ok = rstar.bk_ok;
 end
 
-function x = kuszob_diagonalis_(op, felso)
+function [x, bk_ok] = kuszob_diagonalis_(op, felso)
 % lambda = omega = x mellett az atfordulasi pont (= a regi ACCSCALE-kuszob).
 lo = 0; hi = felso;
+bk_ok = NaN;
 rhi = fut_(op, hi, -1, -1);
-if rhi.konvergalt ~= 1 || rhi.KKV_minus_L_pp < 0, x = Inf; return, end
+if rhi.solver_ok ~= 1 || rhi.KKV_minus_L_pp < 0, x = Inf; return, end
 for it = 1:18
     mid = 0.5*(lo+hi);
     rm = fut_(op, mid, -1, -1);
-    if rm.konvergalt == 1 && rm.KKV_minus_L_pp >= 0, hi = mid; else, lo = mid; end
+    if rm.solver_ok == 1 && rm.KKV_minus_L_pp >= 0, hi = mid; else, lo = mid; end
     if hi - lo < 0.01, break, end
 end
 x = 0.5*(lo+hi);
+rstar = fut_(op, x, -1, -1);
+bk_ok = rstar.bk_ok;
 end
 
 function y = ternary_(c, a, b)

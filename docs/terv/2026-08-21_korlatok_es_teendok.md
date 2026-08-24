@@ -4,6 +4,20 @@
 mellett ott van, hogy **mértük-e** vagy elvi érv. A sorrend súlyosság szerint,
 nem témakör szerint — mert a leadásig nem mindenre lesz idő.*
 
+> **KORREKCIÓ — 2026-08-24 (valódi Blanchard–Kahn-audit).** A riportban
+> történetileg `konvergalt` néven használt mező a perfect-foresight solver
+> numerikus státusza volt, nem BK-teszt. A `t47` ezért PF szerint 36/36,
+> de a terminális `uni=1` lokális rezsimben csak 9/36 BK-valid: az
+> `OPTEN=0` ág 9/9 esetben 13 instabil / 13 előretekintő gyökkel helyes,
+> míg az `OPTEN=1/2/3` ágak 27/27 esetben 15/13-mal hibásak. A `t53`
+> `ACCSCALE=100` eredménye PF/check szerint 45/45, de BK szerint 0/45;
+> ezért az ottani GDP-szintek és a minden ágon pozitív KKV-pontbecslés nem
+> interpretálható. A `t53b` 10/10 küszöbpontja ugyanakkor BK-valid, így a
+> 22,36 / 22,62 / 22,95 technológiai összevetés fennmarad. Ugyanígy a
+> lambda–omega küszöbkontúr BK-valid, de az `OPTEN=1`, `ACCSCALE=100` pont
+> nem az. A lent meghagyott történeti 36/36 és 45/45 BK-megfogalmazásokat,
+> valamint az érintett `ACCSCALE=100` szintállításokat ez a blokk felülírja.
+
 ---
 
 ## 🔴 SÚLYOS — a fő eredményt érinti
@@ -237,17 +251,18 @@ ellenpróbához). Kód: `dekomp_edl_v09.m`. Eredménydoc:
 
 A teljes technológiai heterogenitás kivétele a küszöböt **3%-kal**
 mozdítja el; csak a pénzügyi heterogenitást meghagyva **1%-kal**. Az
-eredmény tehát finanszírozási eredetű. 45/45 kombináció BK-stabil, a
-KKV-előny mindenütt pozitív, és a súlyozási ellenpróba nem változtat.
+eredmény tehát finanszírozási eredetű. A `t53b` 10/10 küszöbpontja
+BK-valid. A `t53c` pontértékrács ugyan 45/45 esetben solver-sikeres, de
+0/45 esetben terminálisan BK-valid, ezért abból KKV-előjelet és GDP-sávot
+nem közlünk.
 
 **Két dolgot ki kell mondani, mert a bíráló elő fogja venni:**
 1. Az **A** és a **C** ág nem „csak technológia" — a pénzügyi blokkot is
    kiegyenlíti, ami mechanikusan felviszi az E típus access-rugalmasságát.
    A tiszta összevetés a `0 ↔ D` és a `0 ↔ B`.
-2. Az **A** és a **C** ág GDP-sávja (+3,5 / +3,7%) **kilóg** az `A01`
-   közölt +0,3…+2,9%-ából. Ez nem ellentmondás: a dekompozíciós ágak
-   **diagnosztikák, nem alternatív kalibrációk** — az `A01` sávja az
-   `OPTEN=0..3` kalibrációs ágakra vonatkozik.
+2. Az `ACCSCALE=100` dekompozíciós GDP-sávok mind BK-invalid pontokra
+   épültek, ezért visszavontuk őket. A technológiai-robosztussági állítás
+   kizárólag a BK-valid küszöbök összevetésére támaszkodik.
 
 **Amit a scan NEM válaszol meg:** az `omega_acc_L = 0` feltevést nem tudja
 semlegesíteni (a nagyvállalatnak definíció szerint nincs `acc`-egyenlete).
@@ -337,9 +352,10 @@ tartósan az egyik vagy a másik vödörben ül.
 a hozzáférés LASSAN alkalmazkodik.** A kettő nem ugyanaz, és a modell
 szempontjából a második számítana.
 
-⚠ **Ez az `A11` „alsó korlát" érvét is árnyalja.** A share-folyamat tényleg
-perzisztens (a Granger-aggregáció áll) — de az *oka* más, mint amit
-sugalltunk. És a modell `acc_j`-je épp azokról a cégekről szól, amelyek
+⚠ **Ez cáfolja az `A11` korábbi „alsó korlát" érvét.** A share-folyamat
+lehet perzisztens (a Granger-aggregáció áll), de ebből nem következik a
+modell sokk utáni szegmens-alkalmazkodásának `rho_acc` paramétere. És a
+modell `acc_j`-je épp azokról a cégekről szól, amelyek
 mozognak: a **7,6%-os margóról**.
 
 **Teendők — az 1. a legfontosabb, és ma már tudjuk, hogy kötő:**
@@ -374,7 +390,8 @@ használ: **szegmens-szintű folytonos** állapot. Két különböző objektum.
 perzisztensebb: (a) saját mérés (`t37`): a szegmens-arányok 4 év alatt
 0,59–2,20 pontot mozdultak, a BUBOR 12,83-at; (b) Granger-aggregáció:
 heterogén AR(1)-ek aggregálása lassabban lecsengő autokorrelációt ad.
-Ezért **alsó korlát**, nem pontbecslés. <span>`A11`</span>
+Ezért a 0,9673 **sem pontbecslés, sem alsó korlát**: csak leíró,
+cégszintű érzékenységi pont. Az `A11` állítást visszavontuk.
 
 ### 10. Az `om_j`/`shl_j` súlyok csak a 10+ fős körre
 

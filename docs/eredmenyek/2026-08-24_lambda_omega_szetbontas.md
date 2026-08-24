@@ -4,6 +4,17 @@
 *Kód: `src/modell/1_fo_vonal_jv/futtato/sens_lam_om_v09.m` · ábra: `src/3_abrak/18_lam_om_felulet.py`*
 *Táblák: `t52` (rács), `t52b` (kontúr), `t52c` (marginális), `t52d` (átló), `t52e` (szorzat-azonosság)*
 
+> **KORREKCIÓ — 2026-08-24 (valódi Blanchard–Kahn-audit).** A történeti
+> `konvergalt` jelzés itt is csak a perfect-foresight solver sikerét jelentette.
+> Az `OPTEN=1`, `rho_acc=0,9673`, `ACCSCALE=100` pont **nem terminális
+> BK-valid**, ezért az ezen a ponton közölt GDP- és szegmensszintek nem
+> interpretálhatók modell-eredményként. A küszöbgeometria ettől nem esik
+> el: a `t52b` izo-szorzat küszöbkontúrjának pontjai BK-validak, így a
+> `lambda_acc·omega_acc` azonosítható szorzatára és a **22,36-os
+> diagonális küszöbre** vonatkozó következtetés fennmarad. Az alábbi
+> történeti szövegben az `ACCSCALE=100` pontszinteket ennek megfelelően
+> diagnosztikai, nem közölhető modellkimenetként kell olvasni.
+
 ---
 
 ## A kiinduló probléma
@@ -36,9 +47,8 @@ Egyszerre egy lépcsőt mozgatva, a másikat 100-on tartva (`t52c`, OPTEN=1):
 |---:|---:|---:|---:|
 | 4 | 0,0835 | 0,0835 | 0,0035 |
 | 20 | 0,0704 | 0,0704 | 0,0167 |
-| 100 | 0,0430 | 0,0430 | 0,0430 |
-| 140 | 0,0370 | 0,0370 | 0,0439 |
-| **tartomány a rácson** | **2,3×** | **2,3×** | **12,5×** |
+| 60 | 0,0525 | 0,0525 | 0,0369 |
+| **BK-valid tartomány (4–60)** | **1,6×** | **1,6×** | **10,5×** |
 
 Az együttes hanyados **nő** (kvadratikus), az egy-lépcsős **csökken**
 (általános egyensúlyi tompítás). A kvadratikusság tehát a **közös skálázás
@@ -49,9 +59,10 @@ műterméke** volt, nem a modell tulajdonsága.
 **A „csak λ" és a „csak ω" oszlop számjegyre azonos.** Ez nem véletlen:
 a két paraméter kizárólag a **szorzatán** keresztül hat.
 
-Ellenőrizve (`t52e`): azonos szorzatú, de nagyon különböző párok ugyanazt
-adják. `(λ,ω) = (100,100)`, `(200,50)`, `(50,200)`, `(400,25)`, `(25,400)`
-— mind ugyanaz az eredmény.
+Ellenőrizve (`t52e`) egy BK-valid, 2500-as szorzatcsoporton: azonos
+szorzatú, de nagyon különböző párok ugyanazt adják. `(λ,ω) = (50,50)`,
+`(100,25)`, `(25,100)`, `(250,10)`, `(10,250)` — mind ugyanazt az
+eredményt adja, és mind az öt pont BK-valid.
 
 > ### Amit ebből ki kell mondani
 >
@@ -102,8 +113,9 @@ görbén, azt, ahol a két lépcsőt azonos arányban skáláztuk.
 
 > A KKV-blokk szegmens-kibocsátása akkor előzi meg a nagyvállalatit, ha a
 > hozzáférési csatorna **két lépcsőjének szorzata** meghalad egy küszöböt:
-> az átvett kalibrációhoz viszonyított skálán `(λ·ω)* = 500` a horgonyzott
-> `rho_acc = 0,9673` mellett, és `1337` az átvett `rho_acc = 0,85` mellett.
+> az átvett kalibrációhoz viszonyított skálán `(λ·ω)* = 500` a feltételes,
+> magas-`rho_acc = 0,9673` érzékenységi ágban, és `1337` az átvett
+> `rho_acc = 0,85` mellett.
 > Ugyanaz az eredmény áll elő erős 1. lépcső + gyenge 2. lépcső mellett,
 > mint fordítva — a modell a kettőt nem különbözteti meg.
 

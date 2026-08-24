@@ -1,11 +1,11 @@
-% s15_opten_kalibracio.m - AZ 1. PRIORITAS: 14 PARAMETER UJRAKALIBRALASA
-% AZ OPTEN-PANELBOL
+% s15_opten_kalibracio.m - AZ 1. PRIORITAS: 13 PARAMETER UJRAKALIBRALASA
+% ES 1 LEIRO HITELSTATUSZ-DIAGNOSZTIKA AZ OPTEN-PANELBOL
 % =====================================================================
-% MIERT EZ A KOVETKEZO LEPES. A fo modell (jv_dsge_v09_access) 14
+% MIERT EZ A KOVETKEZO LEPES. A fo modell (jv_dsge_v09_access) 13
 % parametere ATVETT INDULO ertek a csapattars kkv_dsge_v07_access-ebol --
 % a sajat .mod-juk is igy jeloli: "Ezek indulok: empirikus ujrakalibracio
 % kell." A docs/kalibracio_teendok_csapatnak.md 1. prioritasa szerint
-% mind a 14 KOZVETLENUL szamolhato a mar meglevo Opten-panelbol, kulso
+% mind a 13 KOZVETLENUL szamolhato a mar meglevo Opten-panelbol, kulso
 % adatkeres nelkul:
 %
 %   om_E/om_D/om_L    kibocsatas-reszesedes    netto_arbevetel
@@ -13,7 +13,7 @@
 %   phi_E/phi_D/phi_L exportarbevetel-arany    export_arbevetel/netto_arbevetel
 %   lev_E/lev_D/lev_L tokeattetel (BGG: K/N)   eszkozok_osszesen/sajat_toke
 %   delta             ertekcsokkenesi rata     ertekcsokkenes/targyi_eszkozok
-%   rho_acc           hozzaferesi perzisztencia van_hitel atmenet-matrix
+%   rho_acc           csak LEIRO cegszintu statuszmutato; nem kalibracio
 %
 % A SZEGMENSDEFINICIO AZONOS az s14-evel (E = exportalo KKV, D = hazai
 % KKV, L = nagyvallalat), hogy a hozzaferesi eredmenyek (61.9% / 4.8% /
@@ -30,9 +30,10 @@
 %  (3) A lev_j konyv szerinti (kotelezettsegek + sajat toke) mennyiseg;
 %      a BGG lev a piaci ertekelesu K/N. A konyv szerinti ertek a
 %      szokasos kozelites, de nem azonos a modell fogalmaval.
-%  (4) A rho_acc itt CEG-SZINTU allapot-perzisztencia. A modell acc_j-je
-%      SZEGMENS-szintu; az aggregalt arany rendszerint perzisztensebb,
-%      mint az egyedi statusz -> ez ALSO KORLAT.
+%  (4) A 0.9673 CEG-SZINTU, pooled statusz-perzisztencia. A cegek 92.4%-a
+%      negy ev alatt egyszer sem valtott, ezert a mutato foleg allando
+%      heterogenitast tukroz. Nem a modell dinamikus SZEGMENS-szintu
+%      rho_acc becslese, nem also korlat; a rho_acc horgonyzatlan marad.
 %
 % Kimenet: output/tables/t46_opten_kalibracio.csv         (fo tabla)
 %          output/tables/t46b_opten_kalibracio_evenkent.csv (stabilitas)
@@ -210,9 +211,9 @@ for dd = 1:numel(DEF)
 end
 
 % =========================================================================
-% delta es rho_acc -- SZEGMENSFUGGETLEN, egyszer szamoljuk
-% Mindketto CEG-SZINTU EVES ATMENETET igenyel: rendezes (ceg, ev) szerint,
-% es csak a SZOMSZEDOS evek (t-1 -> t) parjai hasznalhatok.
+% delta kalibracio es a LEIRO hitelstatusz-mutato -- egyszer szamoljuk
+% A szamitasokhoz rendezes (ceg, ev) szerint es csak a SZOMSZEDOS evek
+% (t-1 -> t) parjai hasznalhatok. A statuszmutato nem rho_acc-becsles.
 % =========================================================================
 [Ps, ord] = sortrows(P, {'opten_id', 'ev'});
 szF = FO.sz(ord);
@@ -241,7 +242,7 @@ fprintf('  n = %d ceg-ev par | jelenlegi modellertek: 0.0250 (negyedeves)\n', ..
     sum(joD));
 
 fprintf('\n%s\n', repmat('=', 1, 78));
-fprintf('rho_acc -- A HITELHOZZAFERESI ALLAPOT PERZISZTENCIAJA\n');
+fprintf('LEIRO CEGSZINTU HITELSTATUSZ-PERZISZTENCIA (NEM rho_acc-BECSLES)\n');
 fprintf('%s\n', repmat('=', 1, 78));
 % Ketallapotu Markov-lanc: az indikator AR(1)-egyutthatoja rho = p11 - p01,
 % ahol p11 = P(hitel_t=1 | hitel_{t-1}=1), p01 = P(hitel_t=1 | hitel_{t-1}=0).
@@ -267,10 +268,16 @@ for i = 0:3
         'rho_negyedeves'})]; %#ok<AGROW>
 end
 rho_acc_uj = rho_sor.rho_negyedeves(1);
-fprintf('  jelenlegi modellertek: 0.8500 (negyedeves)\n');
+fprintf(['  jelenlegi modellertek: 0.8500 (negyedeves)\n' ...
+    '  ERTELMEZES: a 0.9673 leiro cegszintu mutato; a cegek 92.4%%-a\n' ...
+    '  negy ev alatt sosem valtott, foleg allando heterogenitas miatt.\n' ...
+    '  Nem dinamikus szegmens-rho-becsles, nem also korlat; rho_acc\n' ...
+    '  horgonyzatlan. A lenti rho_acc sor csak erzekenysegi pont.\n']);
 
 % =========================================================================
-% OSSZEVETES A JELENLEGI KALIBRACIOVAL
+% OSSZEVETES: 13 KALIBRALHATO PARAMETER + 1 LEIRO ERZEKENYSEGI PONT
+% A 14 soros kimeneti sema kompatibilitasi okbol megmarad; a rho_acc sora
+% diagnosztika, nem kalibracios ajanlas.
 % =========================================================================
 par_nev = {'om_E','om_D','om_L','shl_E','shl_D','shl_L', ...
     'phi_E','phi_D','phi_L','lev_E','lev_D','lev_L','delta','rho_acc'};
@@ -280,7 +287,7 @@ ujA = [FO.om(:)'  FO.shl(:)'  FO.phi(:)'  FO.lev(:)'  delta_q rho_acc_uj];
 ujB = [FO.om_k(:)' FO.shl_k(:)' FO.phi_k(:)' FO.lev_k(:)' delta_q rho_acc_uj];
 
 fprintf('\n%s\n', repmat('=', 1, 78));
-fprintf('OSSZEVETES -- 14 PARAMETER\n');
+fprintf('OSSZEVETES -- 13 KALIBRALHATO PARAMETER + 1 LEIRO ERZEKENYSEGI PONT\n');
 fprintf('%s\n', repmat('=', 1, 78));
 fprintf('%-10s %12s %12s %12s %10s\n', 'parameter', 'jelenlegi', ...
     'uj (ALAP)', 'uj (KUSZOB25)', 'elteres%');
@@ -315,9 +322,10 @@ fprintf(['(2) phi_D. Az ALAP definicioban (barmilyen pozitiv export) a\n' ...
 fprintf(['(3) lev_j. Konyv szerinti eszkoz/sajat toke; a BGG lev piaci\n' ...
     '    ertekelesu K/N. A negativ sajat tokeju cegek kiestek (n-ek a\n' ...
     '    tablaban).\n']);
-fprintf(['(4) rho_acc. CEG-SZINTU allapot-perzisztencia; a modell acc_j-je\n' ...
-    '    SZEGMENS-szintu. Az aggregalt arany perzisztensebb az egyedinel,\n' ...
-    '    tehat ez ALSO KORLAT a modellparameterre.\n']);
+fprintf(['(4) rho_acc. A 0.9673 LEIRO CEG-SZINTU statusz-perzisztencia.\n' ...
+    '    A cegek 92.4%%-a negy ev alatt egyszer sem valtott, ezert a mutato\n' ...
+    '    foleg allando heterogenitast tukroz. Nem dinamikus SZEGMENS-rho\n' ...
+    '    becsles es nem also korlat; a rho_acc horgonyzatlan marad.\n']);
 fprintf(['(5) delta. Konyv szerinti ertekcsokkenes (adotorvenyi kulcsok),\n' ...
     '    nem gazdasagi amortizacio -- a ketto rendszerint eltero.\n']);
 

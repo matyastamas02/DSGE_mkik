@@ -39,10 +39,10 @@ egy kategóriában szerepel, egy sem maradt ki és egy sincs duplikálva.*
 
 | Kategória | db | Megjegyzés |
 |---|---:|---|
-| **A.** saját adatunkból (Opten-panel) kalibrálható | **14** | ✅ **2026-08-16: LEFUTOTT** — `t46`, lásd lentebb |
+| **A.** saját adatunkból (Opten-panel) kalibrálható | **13** | ✅ **2026-08-16: LEFUTOTT** — `t46`, lásd lentebb |
 | **B.** nyilvános magyar makroadatból (KSH) | **11** | könnyű, külső adatgyűjtés |
 | **C.** **JV-BECSÜLT — MÁR HORGONYZOTT, nem kell tenni semmit** | **28** | ez a base-paper döntés hozadéka |
-| **D.** nem azonosított / több adat kell | **20** | **ezek hordozzák a fő eredményt** |
+| **D.** nem azonosított / több adat kell | **21** | **ezek hordozzák a fő eredményt** |
 | **E.** származtatott vagy technikai (nem szabad paraméter) | **18** | — |
 | **Összesen** | **91** | |
 
@@ -57,13 +57,14 @@ egy kategóriában szerepel, egy sem maradt ki és egy sincs duplikálva.*
 > Ez konkrétan az, amit a 2026-07-13-i alapcikk-döntés ígért, és ami eddig
 > nem érvényesült, mert a legfejlettebb modell az EAGLE-magon volt.
 
-## A. Saját adatunkból kalibrálható — 14 — ✅ **LEFUTOTT (2026-08-16)**
+## A. Saját adatunkból kalibrálható — 13 — ✅ **LEFUTOTT (2026-08-16)**
 
 `om_E` `om_D` `om_L` · `phi_E` `phi_D` `phi_L` · `lev_E` `lev_D` `lev_L` ·
-`shl_E` `shl_D` `shl_L` · `delta` · `rho_acc`
+`shl_E` `shl_D` `shl_L` · `delta`
 
 Számoló: `src/s15_opten_kalibracio.m` → `output/tables/t46_opten_kalibracio.csv`
-(+ `t46b` évenkénti stabilitás, `t46c` a `van_hitel` átmenet-mátrix).
+(+ `t46b` évenkénti stabilitás, `t46c` a `van_hitel` leíró átmenet-mátrixa;
+utóbbi nem a modell `rho_acc` paraméterének becslése).
 Modellbe makró-kapcsolóval kötve: `-DOPTEN=0|1|2|3` a
 `src/model/jv_dsge_v09_access.mod`-ban (az **alapértelmezés `0`**, az átvett
 induló értékekkel — lásd az elfogadási feltételt lentebb).
@@ -75,14 +76,17 @@ induló értékekkel — lásd az elfogadási feltételt lentebb).
 | `phi_E` / `phi_D` / `phi_L` | 0,56 / 0,05 / 0,365 | 0,376 / 0,000 / **0,3649** | `phi_L` ✅ megerősítve; `phi_D` definíciófüggő |
 | `lev_E` / `lev_D` / `lev_L` | 1,6 / 1,6 / 1,85 | 1,939 / 1,719 / 2,337 | ✅ a kényszerített egyenlőség **megdőlt** |
 | `delta` | 0,025 | **0,0242** | ✅ megerősítve |
-| `rho_acc` | 0,85 | **0,9673** | ✅ horgonyozva (**alsó korlát**) |
 
 **Két érték független próbán kijött** (`phi_L`, `delta`) — ezek tehát már
 korábban is ebből a panelből származhattak. **Egy feltevés megdőlt:**
 `lev_E ≠ lev_D`, az exportáló KKV tőkeáttételesebb (az irány mérőfüggetlen,
-a szint nem). **Egy paraméter viszi a modelleredményt:** a `rho_acc`, mert
-`1/(1−ρ)` révén a hosszú távú access-szorzó 6,7×-ről 30,6×-re nő — ezért
-scan van rá (`t49`), nem pontbecslés.
+a szint nem). **Egy horgonyzatlan paraméter erősen viszi a
+modelleredményt:** a `rho_acc`, mert `1/(1−ρ)` révén a hosszú távú
+access-szorzó 6,7×-ről 30,6×-re nő, ha érzékenységi pontként 0,9673-ra
+állítjuk. A 0,9673 leíró cégszintű státusz-perzisztencia: a cégek 92,4%-a
+négy év alatt sosem váltott, így a mutató főleg állandó heterogenitást
+tükröz. Nem a dinamikus szegmensszintű `rho_acc` becslése, és nem alsó
+korlát; a paraméter horgonyzatlan, ezért scan kell rá (`t49`).
 
 ⚠ **Elfogadási feltétel az `om_j`/`shl_j`-re:** a panel a **10+ fős** kört
 fedi, tehát ezek a 10+ populáción *belüli* részesedések. A jelenlegi
@@ -116,7 +120,7 @@ A `zeta_j` és `aa_j` jelenleg a JV kétszektoros értékeinek (`zeta_d`/`zeta_x
 
 **BGG-konvenció (Bernanke–Gertler–Gilchrist 1999), 2 db:** `eps_qw` · `omega_nw`
 
-## D. Nem azonosított / több adat kell — 20
+## D. Nem azonosított / több adat kell — 21
 
 *Ez a kategória hordozza a fő eredményt.*
 
@@ -127,6 +131,7 @@ A `zeta_j` és `aa_j` jelenleg a JV kétszektoros értékeinek (`zeta_d`/`zeta_x
 | prémium-transzmisszió | `tsov_E/D/L` `tbank_E/D/L` | **nem azonosított** (0,26–2,75 sáv) |
 | **CES-helyettesítés** | **`eps_ces`** | **ezen fordul az `y_E` előjele (~2,3)** |
 | **hozzáférési margó** | **`lambda_acc_E/D` `omega_acc_E/D`** | **magyar adatból nem horgonyozható** |
+| **hozzáférési perzisztencia** | **`rho_acc`** | **horgonyzatlan** — a 0,9673 csak leíró cégszintű státusz-perzisztencia (92,4% négy év alatt egyszer sem váltott, főleg állandó heterogenitás), nem dinamikus szegmens-rho-becslés és nem alsó korlát |
 | vertikális link | `s_kkv` `mu_vert` | az IO-mérés hibás (`FIGYELMEZTETES_io_tabla_gyanus.md`) |
 | UIP-súly | `zsov` | forrás nincs |
 
@@ -302,7 +307,7 @@ egyikükre sincs elfogadható horgony.*
 | `lambda_acc_E` / `lambda_acc_D` | 2,0 / 2,5 (`ACCSCALE=100`) | **horgonyzatlan; a szerzők maguk jelezték** | Az `s14` szerint **magyar 2021–24 adatból NEM horgonyozható** (programvezérelt piac). Kell: MNB méret szerinti új-szerződéses kamatstatisztika, vagy 2021 előtti minta. |
 | `omega_acc_E` / `omega_acc_D` | 0,35 / 0,45 | **horgonyzatlan; korábban NEM volt jelezve** | ugyanaz |
 | *`omega_acc_L` (nem létezik)* | implicit **0** | **a legnagyobb egyetlen feltevés** — ez viszi a szektorális átfordulást | Az `s14` szerint az L hozzáférése 43,4%, ami *alacsonyabb* az export-KKV 61,9%-ánál → a „nagyvállalat nincs korlátozva" történet **nincs az adatban**. Scan kell rá, mint az `ACCSCALE`-re. |
-| `rho_acc` | 0,85 | horgonyzatlan | hozzáférési státusz-átmenet a panelből (`van_hitel` átmenet-mátrix) — **ez számolható!** |
+| `rho_acc` | 0,85 | **horgonyzatlan** | A panelből számolt 0,9673 csak leíró cégszintű hitelstátusz-perzisztencia. A cégek 92,4%-a négy év alatt sosem váltott, ezért a mutató főleg állandó heterogenitást tükröz; nem dinamikus szegmens-rho-becslés és nem alsó korlát. Azonosításhoz szegmensszintű dinamikus evidencia kell. |
 | `tsov_E/D/L`, `tbank_E/D/L` | TSCEN=3: 0,175 / 0,45 | **nem azonosított** (becsült arány 0,26–2,75, semmi sem szignifikáns) | A `.mod` korrektül a semleges alapot használja. Feloldás: MNB részletes bontás. |
 | `chi_E` / `chi_D` / `chi_L` | 0,06 / 0,06 / 0,02 | **„Opten-panel medián"-ként hivatkoztuk, de nem az** | A tőkeáttétel-adat (`lev_S` 1,6 < `lev_L` 1,85) **nem támogatja** a magasabb KKV-χ-t. Emellett `∂i/∂F = −1/χ` miatt a nagyvállalatnak dolgozik. Kell: EFP-érzékenység becslése, vagy szimmetrikus alap + scan. |
 | `zsov` — UIP-országprémium súly | 0,5 | forrás nincs | becsülhető: magyar UIP-reziduum vs. CDS-felár |
@@ -335,13 +340,13 @@ egyikükre sincs elfogadható horgony.*
 
 1. **Az A-kategória lefuttatása** (19 paraméter az Opten-panelből). Ez a
    legnagyobb hozam a legkisebb ráfordítással, és a `.mod` maga kéri.
-   Ide tartozik a `rho_acc` is a `van_hitel` átmenet-mátrixból.
 2. **Csapatdöntés az EAGLE/JV kalibrációs konfliktusról** (különösen az
    `om_nr` 0,75 vs 0,25). Ez elvi kérdés, nem technikai.
 3. **A B-kategória** KSH/MNB-adatból — ezen belül a Taylor-szabály
    újrabecslése magyar adaton a legvédhetőbb önálló lépés.
 4. **A D-kategória kezelése küszöbformában**, nem pontbecsléssel — ahogy a
-   `v07`-specifikáció már javasolja. Az `omega_acc_L`-re scan kell.
+   `v07`-specifikáció már javasolja. Az `omega_acc_L`-re és a horgonyzatlan
+   `rho_acc`-ra scan kell; a cégszintű 0,9673 csak érzékenységi pont.
 5. A C-kategória a legkevésbé sürgős: ott az érték *van*, csak külső
    forrásból; a kockázat a konfliktusokban van, nem a hiányban.
 

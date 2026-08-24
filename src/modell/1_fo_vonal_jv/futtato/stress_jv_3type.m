@@ -1,7 +1,7 @@
 % stress_jv_3type.m — A 2. LEPCSO DONTO TESZTJE
 % =====================================================================
-% Kerdes: a haromtipusos (E/D/L) szerkezet a Jakab-Vilagi magon
-% Blanchard-Kahn-stabil-e, KOZOS arszint mellett?
+% Kerdes: a haromtipusos (E/D/L) szerkezet perfect-foresight solverrel
+% megoldhato-e a Jakab-Vilagi magon, KOZOS arszint mellett?
 %
 % Ha IGEN: a JV-magon a meret szerinti szetbontas jarhato, es erdemes a
 % 3. lepcsore menni (tipusonkenti ar es exportkereslet).
@@ -78,7 +78,7 @@ end
 writetable(T, fullfile(repo, 'output', 'tables', 't40_jv_3type_stressz.csv'));
 
 fprintf('\n%s\n', repmat('=', 1, 96));
-fprintf('2. LEPCSO: HAROMTIPUSOS JV-MAG, KOZOS ARSZINT -- BK-STRESSZTESZT\n');
+fprintf('2. LEPCSO: HAROMTIPUSOS JV-MAG, KOZOS ARSZINT -- PF-SOLVER STRESSZTESZT\n');
 fprintf('%s\n', repmat('=', 1, 96));
 fprintf('%-24s %5s %9s %8s %8s %8s %11s\n', 'kombinacio', 'OK', 'GDP', ...
     'y_E', 'y_D', 'y_L', 'KKV-L');
@@ -98,7 +98,7 @@ n_ok = sum(T.konvergalt == 1);
 fprintf('EREDMENY: %d / %d kombinacio megoldodott.\n', n_ok, height(T));
 if n_ok == height(T)
     fprintf(['\n==> A 2. LEPCSO ATMENT. A haromtipusos szerkezet a JV-magon\n' ...
-        '    BK-stabil kozos arszint mellett. Erdemes a 3. lepcsore menni\n' ...
+        '    PF-solverrel megoldhato kozos arszint mellett. Ez nem BK-teszt.\n' ...
         '    (tipusonkenti ar es exportkereslet) -- ott derul ki, hogy a\n' ...
         '    v04-ben dokumentalt arszint-szetvalasztasi problema jelentkezik-e.\n']);
     % plauzibilitas: a realarfolyam es az NFA ne szaladjon el

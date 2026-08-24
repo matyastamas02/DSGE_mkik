@@ -49,6 +49,12 @@ TINTA = "#0a0a0a"
 MASOD = "#525049"
 FELULET = "#fcfcfb"
 
+ELVART_RACS = np.array([0, 5, 10, 15, 20, 30, 40, 60, 80, 100, 140])
+ELVART_KONTUR_LAMBDA = np.array([
+    5, 10, 15, 20, 22.3, 25, 30, 40, 50, 70, 100, 140,
+])
+ELVART_ATLO_OPTEN = np.array([0, 1])
+
 
 def main() -> None:
     racs_f = TAB / "t52_lam_om_racs.csv"
@@ -61,15 +67,98 @@ def main() -> None:
                 "1_fo_vonal_jv/futtato'); sens_lam_om_v09\"")
 
     G = pd.read_csv(racs_f)
-    G = G[G["konvergalt"] == 1]
-    K = pd.read_csv(kont_f).dropna(subset=["kuszob_omega"])
-    K = K[np.isfinite(K["kuszob_omega"])]
+    required_g = {"OPTEN", "accscale", "lamscale", "omscale",
+                  "KKV_minus_L_pp", "solver_ok", "bk_check_ok", "bk_ok",
+                  "ervenyes", "n_forward", "n_unstable",
+                  "bk_qz_criterium"}
+    missing = sorted(required_g - set(G.columns))
+    if missing:
+        raise SystemExit(
+            f"A {racs_f.name} elavult, hiányzó BK-oszlopok: {', '.join(missing)}. "
+            "Futtasd újra a sens_lam_om_v09.m scriptet.")
+
+    racs_kulcs = ["lamscale", "omscale"]
+    duplikalt = G.duplicated(racs_kulcs, keep=False)
+    vart_db = len(ELVART_RACS) ** 2
+    if len(G) != vart_db or duplikalt.any():
+        raise SystemExit(
+            f"A {racs_f.name} nem teljes, egyedi 11×11-es rács: "
+            f"{len(G)}/{vart_db} sor, {int(duplikalt.sum())} duplikált "
+            "kulcsú sor. Futtasd újra a sens_lam_om_v09.m scriptet.")
+
+    lam = np.sort(G["lamscale"].dropna().unique())
+    om = np.sort(G["omscale"].dropna().unique())
+    jo_lam = (lam.shape == ELVART_RACS.shape and
+              np.allclose(lam, ELVART_RACS, rtol=0, atol=1e-10))
+    jo_om = (om.shape == ELVART_RACS.shape and
+             np.allclose(om, ELVART_RACS, rtol=0, atol=1e-10))
+    if not jo_lam or not jo_om:
+        raise SystemExit(
+            f"A {racs_f.name} tengelyei eltérnek az elvárt 11×11-es "
+            "lambda×omega rácstól. Futtasd újra a sens_lam_om_v09.m scriptet.")
+
+    if not (G["OPTEN"].eq(1).all() and G["accscale"].eq(100).all()):
+        raise SystemExit(
+            f"A {racs_f.name} nem kizárólag az elvárt OPTEN=1, "
+            "ACCSCALE=100 konfigurációt tartalmazza.")
+
+    technikai_ok = G["solver_ok"].eq(1) & G["bk_check_ok"].eq(1)
+    if not technikai_ok.all():
+        raise SystemExit(
+            f"A {racs_f.name} {int((~technikai_ok).sum())} során a PF solver "
+            "vagy a terminális BK-diagnosztika technikailag nem futott le; "
+            "nem készül részleges ábra.")
+
+    G = G[G["ervenyes"] == 1].copy()
+    if G.empty:
+        raise SystemExit("A t52 rácson nincs BK-érvényes cella; nem készül ábra.")
+
+    K = pd.read_csv(kont_f)
+    required_k = {"lambda_skala", "kuszob_omega", "szorzat",
+                  "bk_ok_kuszobon"}
+    missing = sorted(required_k - set(K.columns))
+    if missing:
+        raise SystemExit(
+            f"A {kont_f.name} elavult, hiányzó oszlopok: {', '.join(missing)}.")
+    k_lam = np.sort(K["lambda_skala"].dropna().unique())
+    jo_k_lam = (k_lam.shape == ELVART_KONTUR_LAMBDA.shape and
+                np.allclose(k_lam, ELVART_KONTUR_LAMBDA,
+                            rtol=0, atol=1e-10))
+    if (len(K) != len(ELVART_KONTUR_LAMBDA) or
+            K.duplicated(["lambda_skala"], keep=False).any() or not jo_k_lam):
+        raise SystemExit(
+            f"A {kont_f.name} nem a teljes, egyedi, elvárt 12 soros "
+            "lambda-kontúrt tartalmazza.")
+    if (not K["bk_ok_kuszobon"].eq(1).all() or
+            not np.isfinite(K[["kuszob_omega", "szorzat"]].to_numpy()).all()):
+        raise SystemExit(
+            f"A {kont_f.name} legalább egy küszöbpontja nem véges vagy "
+            "terminálisan BK-invalid; nem készül részleges ábra.")
+
     D = pd.read_csv(diag_f)
+    required_d = {"OPTEN", "kuszob_diagonalis", "szorzat_a_diagonalison",
+                  "bk_ok_kuszobon"}
+    missing = sorted(required_d - set(D.columns))
+    if missing:
+        raise SystemExit(
+            f"A {diag_f.name} elavult, hiányzó oszlopok: {', '.join(missing)}.")
+    d_opten = np.sort(D["OPTEN"].dropna().unique())
+    if (len(D) != len(ELVART_ATLO_OPTEN) or
+            D.duplicated(["OPTEN"], keep=False).any() or
+            not np.array_equal(d_opten, ELVART_ATLO_OPTEN)):
+        raise SystemExit(
+            f"A {diag_f.name} nem az elvárt két egyedi OPTEN=0/1 átlósort "
+            "tartalmazza.")
+    if (not D["bk_ok_kuszobon"].eq(1).all() or
+            not np.isfinite(D[["kuszob_diagonalis",
+                               "szorzat_a_diagonalison"]].to_numpy()).all()):
+        raise SystemExit(
+            f"A {diag_f.name} legalább egy átlópontja nem véges vagy "
+            "terminálisan BK-invalid; nem készül ábra.")
+
     d1 = float(D.loc[D["OPTEN"] == 1, "kuszob_diagonalis"].iloc[0])
     szorzat = float(K["szorzat"].median())
 
-    lam = np.array(sorted(G["lamscale"].unique()))
-    om = np.array(sorted(G["omscale"].unique()))
     Z = np.full((len(lam), len(om)), np.nan)
     for i, L in enumerate(lam):
         for j, O in enumerate(om):
@@ -145,7 +234,9 @@ def main() -> None:
              "Ugyanaz az eredmény áll elő pl. "
              rf"$\lambda$-skála $=5$, $\omega$-skála $=100$ mellett is. "
              "Mindkét tengely HORGONYZATLAN paraméter (D kategória). "
-             "Adat: t52 (rács), t52b (kontúr), t52d (átló).",
+             "Adat: t52 (rács), t52b (kontúr), t52d (átló).\n"
+             "A fehér/hiányzó cella terminálisan BK-indeterminált vagy "
+             "technikailag érvénytelen futás; nem egyszerű adathiány.",
              fontsize=7.8, color=MASOD, va="bottom")
 
     fig.savefig(KI, dpi=180, facecolor=FELULET)

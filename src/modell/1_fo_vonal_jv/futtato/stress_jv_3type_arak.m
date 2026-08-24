@@ -2,7 +2,7 @@
 % =====================================================================
 % Ket kerdest dont el:
 %
-% (A) BK-STABILITAS. A v04 elso kiserlete a szegmens-specifikus toke +
+% (A) PF-SOLVER STABILITAS. A v04 elso kiserlete a szegmens-specifikus toke +
 %     ARSZINT-SZETVALASZTAS kombinaciojan bukott meg. A v06 es a v07_3type
 %     mar bizonyitotta, hogy a toke-oldal onmagaban stabil -- tehat ha ITT
 %     bukik, az IZOLALTAN az arra vezetheto vissza.
@@ -38,7 +38,7 @@ if isempty(dynare_path), dynare_path = 'C:\dynare\6.5\matlab'; end
 addpath(dynare_path);
 
 % =====================================================================
-% (A) BK-stresszteszt: minden SCENARIO x TSCEN x NOVERT
+% (A) PF-solver stresszteszt: minden SCENARIO x TSCEN x NOVERT
 % =====================================================================
 T = table();
 for sc_ = 1:3
@@ -86,7 +86,7 @@ end
 writetable(T, fullfile(repo, 'output', 'tables', 't41_jv_3type_arak_stressz.csv'));
 
 fprintf('\n%s\n', repmat('=', 1, 100));
-fprintf('3. LEPCSO (A): TIPUSONKENTI AR -- BK-STRESSZTESZT\n');
+fprintf('3. LEPCSO (A): TIPUSONKENTI AR -- PF-SOLVER STRESSZTESZT\n');
 fprintf('%s\n', repmat('=', 1, 100));
 fprintf('%-24s %4s %9s %9s %9s %9s %10s\n', 'kombinacio', 'OK', 'GDP', ...
     'y_E', 'y_D', 'y_L', 'norm');
@@ -104,8 +104,8 @@ n_ok = sum(T.konvergalt == 1);
 fprintf('%s\n', repmat('=', 1, 100));
 fprintf('(A) EREDMENY: %d / %d kombinacio megoldodott.\n', n_ok, height(T));
 if n_ok == height(T)
-    fprintf(['==> A 3. LEPCSO BK-BAN ATMENT. Az arszint-szetvalasztas a\n' ...
-        '    JV-magon NEM tori el a modellt (a v04-es kudarc tehat nem\n' ...
+    fprintf(['==> A 3. LEPCSO PF-SOLVERREL ATMENT; ez NEM BK-teszt.\n' ...
+        '    Az arszint-szetvalasztas numerikusan nem tori el a modellt, de\n' ...
         '    elkerulhetetlen -- ott a KOMBINACIO volt a baj).\n']);
 else
     fprintf(['==> A 3. LEPCSO %d kombinacioban ELBUKOTT. Mivel a toke-oldal\n' ...

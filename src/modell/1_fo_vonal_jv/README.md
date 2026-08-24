@@ -11,16 +11,22 @@ ezzel azonnal horgonyzott. Ez a mappa a döntés kódbeli megvalósítása.
 A négy fájl **egy levezetés négy lépcsője**, nem négy alternatíva. Mindegyik
 a nála eggyel kisebbre épül, és mindegyik külön Blanchard–Kahn tesztet kapott.
 
-| Fájl | Mit ad hozzá | BK | Mit bizonyított |
+| Fájl | Mit ad hozzá | régi PF-stressz | Mit bizonyított |
 |---|---|---|---|
 | `jv_dsge_v06.mod` | szegmens-specifikus tőkehozam (`rk_j`) | 18/18 | a `chi`-patológia nagyrészt a **közös `rk`** következménye volt |
 | `jv_dsge_v07_3type.mod` | három típus (E/D/L), közös ár | 18/18 | közös ár mellett a típus-kibocsátás **mechanikus** — ebből a lépcsőből szegmens-eredményt közölni nem szabad |
-| `jv_dsge_v08_3type_arak.mod` | típusonkénti ár és kereslet | 18/18 | a v04-es BK-kudarc **nem volt elkerülhetetlen** — ott a *kombináció* volt a baj |
-| **`jv_dsge_v09_access.mod`** | hitelhozzáférési (extenzív) margó | 18/18 | nesting: `ACCSCALE=0` → **pontosan** a v08 (eltérés 0,0e+00) |
+| `jv_dsge_v08_3type_arak.mod` | típusonkénti ár és kereslet | 18/18; BK nem mérve | a v04-es numerikus kudarc **nem volt elkerülhetetlen** — ott a *kombináció* volt a baj |
+| **`jv_dsge_v09_access.mod`** | hitelhozzáférési (extenzív) margó | 18/18 (`OPTEN=0`) | nesting: `ACCSCALE=0` → **pontosan** a v08 (eltérés 0,0e+00) |
 
 **Miért maradnak itt a korábbi lépcsők, ha csak a v09 a leadandó:** mert a
 füstteszt őrei rajtuk állnak (`t34`, `t35`, `t40`–`t43`), és mert a v09
 nesting-tesztje **egyszerre futtatja a v08-at és a v09-et**. Ha ezeket
+
+> **BK-korrekció (2026-08-24):** a `t47` teljes kalibrációs rácsa 36/36
+> perfect-foresight megoldást, de csak 9/36 terminális lokális BK-stabil
+> esetet ad. Az `OPTEN=0` ág 9/9 stabil (13/13); az `OPTEN=1/2/3` ágak
+> 0/27 stabilak (15/13). A fenti 18/18 kizárólag az alapértelmezett
+> `OPTEN=0` stresszrácsra vonatkozik.
 archívumba tennénk, a fő modell bizonyítéka szűnne meg.
 
 ## Futtatás
@@ -39,7 +45,7 @@ matlab -batch "cd('src/modell/1_fo_vonal_jv/futtato'); stress_jv_access_v09"
 | `dekomp_edl_v09.m` | **E/D/L dekompozíció**: technológia vagy finanszírozás? | `t53`–`t53d` |
 | `stress_jv_access_v09.m` | 4. lépcső: BK-stressz, nesting, `ACCSCALE`-küszöb | `t44`, `t45`, `t45b` |
 | `stress_jv_3type_arak.m` | 3. lépcső + `eps_ces` érzékenység | `t41`, `t42` |
-| `stress_jv_3type.m` | 2. lépcső BK-stressz | `t40` |
+| `stress_jv_3type.m` | 2. lépcső PF-solver stressz (nem BK) | `t40` |
 | `ellenorzes_3type.m` | **független verifikáció** (17 azonosság) | `t43` |
 | `sens_chi_psi_v06.m` · `stress_v06.m` · `check_v06_ss.m` | a v06-lépcső vizsgálatai | `t35` |
 

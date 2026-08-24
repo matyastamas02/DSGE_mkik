@@ -179,8 +179,10 @@ def main() -> None:
             w(f"**{r['id']}.** {r['allitas']}")
             w("")
             biz = r.get("bizonyitek", "")
-            biz = f"bizonyíték: `{biz}` " if isinstance(biz, str) and biz else ""
-            w(f"> {biz}{orjel}  ")
+            biz = f"bizonyíték: `{biz}`" if isinstance(biz, str) and biz else ""
+            kapcsolat = " — " if biz and orjel else ""
+            if biz or orjel:
+                w(f"> {biz}{kapcsolat}{orjel}")
             w(f"> *{r['datum']} · {r['megjegyzes']}*")
             w("")
 

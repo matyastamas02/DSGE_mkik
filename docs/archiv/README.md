@@ -12,8 +12,11 @@ Konkrétan, ami ezekben a fájlokban már NEM stimmel:
   szereplő `matlab -batch "cd('src/model'); ..."` parancsok nem futnak le.
   A helyes parancsok: [`README.md`](../../README.md).
 - **Az aggregált GDP-sáv.** Az `ATADAS_2026-08-12.md` a „+0,27…+1,04%"
-  sávot közli. Ezt 2026-08-16-án visszavontuk (`V01` az állítás-regiszterben);
-  a horgonyzott `rho_acc` mellett a helyes sáv **+0,3…+2,9%**.
+  sávot közli. Ezt 2026-08-16-án visszavontuk (`V01` az
+  állítás-regiszterben); a későbbi **+0,3…+2,9%** helyettesítő sávot a
+  2026-08-24-i BK-audit szintén visszavonta, mert BK-invalid magas-rho
+  pontokat tartalmazott. Jelenleg az `OPTEN=0` ág BK-valid sávja
+  **+0,52…+1,18%**.
 - **A `chi_S > chi_L` háromszoros KKV-fölény.** Visszavonva (`V04`).
 
 **Miért maradnak itt:** az `ATADAS` a JV-vonal négylépcsős felzárkóztatásának

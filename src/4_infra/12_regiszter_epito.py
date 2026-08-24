@@ -32,7 +32,7 @@ KI = REG / "parameterek.csv"
 
 # --- A kategóriák a docs/kalibracio_tabla.md-ből, szó szerint --------------
 A = ("om_E om_D om_L phi_E phi_D phi_L lev_E lev_D lev_L "
-     "shl_E shl_D shl_L delta rho_acc").split()
+     "shl_E shl_D shl_L delta").split()
 B = "sc si sg sx sm zeta_E zeta_D zeta_L aa_E aa_D aa_L".split()
 C_JV = ("sigma habit xi_p vth_p xi_x vth_x xi_w vth_w mu_x hx gam_i phi_pi "
         "nu_b rho_a rho_x rho_c rho_w rho_i rho_pr rho_mx rho_g").split()
@@ -40,7 +40,7 @@ C_STR = "fii theta_w rho_kz rho_z om_no".split()
 C_BGG = "eps_qw omega_nw".split()
 D = ("chi_E chi_D chi_L psi_E psi_D psi_L tsov_E tsov_D tsov_L "
      "tbank_E tbank_D tbank_L eps_ces lambda_acc_E lambda_acc_D "
-     "omega_acc_E omega_acc_D s_kkv mu_vert zsov").split()
+     "omega_acc_E omega_acc_D rho_acc s_kkv mu_vert zsov").split()
 E = ("lam_p lam_x lam_w wd_E wd_D wd_L wx_E wx_D wx_L shm_E shm_D shm_L "
      "shd_c shd_i shd_g shd_v beta nu_uni").split()
 
@@ -78,9 +78,12 @@ HORGONYZOTT = {
               "-DOPTEN", "t50: tokeattetel-sorrend"),
     "lev_L": ("horgonyzott", "Opten-panel medián 2,337 (sáv 1,81–2,34)",
               "-DOPTEN", "t50: tokeattetel-sorrend"),
-    "rho_acc": ("horgonyzott",
-                "Opten-panel van_hitel átmenet-mátrix (0,9673) — ALSÓ KORLÁT",
-                "-DOPTEN / -DRHOACC", "t49b: kuszob monoton a rho_acc-ban"),
+    "rho_acc": ("horgonyzatlan",
+                "Opten-panel: leíró cégszintű hitelstátusz-perzisztencia "
+                "(0,9673); a cégek 92,4%-a négy év alatt sosem váltott, "
+                "ami főleg állandó heterogenitást tükröz. Nem dinamikus "
+                "szegmens-rho-becslés és nem alsó korlát.",
+                "-DOPTEN / -DRHOACC", "t49b: érzékenység; rho_acc horgonyzatlan"),
     # feltételes: kiszámolva, de elfogadási feltétellel
     **{n: ("feltételes",
            "Opten-panel, de a 10+ fős körön BELÜLI részesedés — KSH/Eurostat SBS "

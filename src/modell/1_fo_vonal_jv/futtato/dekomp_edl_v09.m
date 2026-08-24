@@ -59,6 +59,7 @@ while ~isfile(fullfile(repo, 'CLAUDE.md')), repo = fileparts(repo); end
 dynare_path = getenv('DYNARE_PATH');
 if isempty(dynare_path), dynare_path = 'C:\dynare\6.5\matlab'; end
 addpath(dynare_path);
+addpath(fullfile(repo, 'src', '4_infra'));
 
 TAB = @(n) fullfile(repo, 'output', 'tables', n);
 AGNEV = containers.Map({0,1,2,3,4}, { ...
@@ -114,19 +115,22 @@ for op_ = [0 1]
         cim = ternary_(w_ == 1, 'meretsulyozott (om_j) atlag', ...
             'egyszeru szamtani atlag [ELLENPROBA]');
         fprintf('\n  OPTEN=%d, kozos ertek = %s\n', op_, cim);
-        fprintf('  %-26s %4s %10s %10s %10s %10s %12s\n', 'ag', 'OK', ...
-            'GDP', 'y_E', 'y_D', 'y_L', 'KKV-L');
+        fprintf('  %-26s %3s %3s %7s %10s %10s %10s %10s %12s\n', ...
+            'ag', 'PF', 'BK', 'U/F', 'GDP', 'y_E', 'y_D', 'y_L', 'KKV-L');
         fprintf('  %s\n', repmat('-', 1, 88));
         for dc_ = [0 1 2 3 4]
             m = T.DECOMP == dc_ & T.OPTEN == op_ & ...
                 (T.DECOMPW == w_ | T.DECOMP == 0);
             if ~any(m), continue, end
             i = find(m, 1);
-            if T.konvergalt(i) ~= 1
-                fprintf('  %-26s  *** NEM KONVERGALT\n', AGNEV(dc_)); continue
+            if T.solver_ok(i) ~= 1
+                fprintf('  %-26s   0   -       -  *** PF SOLVER HIBA\n', ...
+                    AGNEV(dc_)); continue
             end
-            fprintf('  %-26s %4d %+9.3f%% %+9.3f%% %+9.3f%% %+9.3f%% %+10.3f pp\n', ...
-                AGNEV(dc_), T.konvergalt(i), T.GDP_pct(i), T.y_E_pct(i), ...
+            fprintf(['  %-26s %3d %3d %2d/%-2d %+9.3f%% %+9.3f%% %+9.3f%% ' ...
+                '%+9.3f%% %+10.3f pp\n'], AGNEV(dc_), T.solver_ok(i), ...
+                T.bk_ok(i), T.n_unstable(i), T.n_forward(i), T.GDP_pct(i), ...
+                T.y_E_pct(i), ...
                 T.y_D_pct(i), T.y_L_pct(i), T.KKV_minus_L_pp(i));
         end
     end
@@ -138,18 +142,20 @@ end
 fprintf('\n%s\n', repmat('=', 1, 100));
 fprintf('(3) AGANKENTI ACCESS-KUSZOB (mekkora skala kell a KKV-elonyhoz?)\n');
 fprintf('%s\n', repmat('=', 1, 100));
-fprintf('  %-26s %6s %14s %16s\n', 'ag', 'OPTEN', 'kuszob', 'a 0-aghoz kepest');
+fprintf('  %-26s %6s %14s %3s %16s\n', ...
+    'ag', 'OPTEN', 'kuszob', 'BK', 'a 0-aghoz kepest');
 fprintf('  %s\n', repmat('-', 1, 70));
 K = table();
 for op_ = [0 1]
     alapk = NaN;
     for dc_ = [0 1 2 3 4]
-        k = kuszob_(dc_, 1, op_, 400);
+        [k, k_bk] = kuszob_(dc_, 1, op_, 400);
         if dc_ == 0, alapk = k; end
         ar = k / alapk;
-        K = [K; table(dc_, string(AGNEV(dc_)), op_, k, ar, 'VariableNames', ...
-            {'DECOMP','ag','OPTEN','kuszob','arany_a_0_aghoz'})]; %#ok<AGROW>
-        fprintf('  %-26s %6d %14.2f %15.2fx\n', AGNEV(dc_), op_, k, ar);
+        K = [K; table(dc_, string(AGNEV(dc_)), op_, k, ar, k_bk, ...
+            'VariableNames', {'DECOMP','ag','OPTEN','kuszob', ...
+            'arany_a_0_aghoz','kuszob_bk_ok'})]; %#ok<AGROW>
+        fprintf('  %-26s %6d %14.2f %3g %15.2fx\n', AGNEV(dc_), op_, k, k_bk, ar);
     end
 end
 writetable(K, TAB('t53b_dekomp_kuszob.csv'));
@@ -158,7 +164,7 @@ writetable(K, TAB('t53b_dekomp_kuszob.csv'));
 % (4) BK-STRESSZ — minden ag, minden szcenario es transzmisszios feltevés
 % =====================================================================
 fprintf('\n%s\n', repmat('=', 1, 100));
-fprintf('(4) BK-STRESSZ: minden ag x SCENARIO x TSCEN (OPTEN=1)\n');
+fprintf('(4) TERMINALIS LOKALIS BK-STRESSZ: minden ag x SCENARIO x TSCEN (OPTEN=1)\n');
 fprintf('%s\n', repmat('=', 1, 100));
 S = table();
 for dc_ = [0 1 2 3 4]
@@ -169,13 +175,19 @@ for dc_ = [0 1 2 3 4]
     end
 end
 writetable(S, TAB('t53c_dekomp_bk.csv'));
-fprintf('  %d / %d kombinacio BK-stabil.\n', sum(S.konvergalt == 1), height(S));
+fprintf('  PF solver: %d/%d; terminalis lokalis BK: %d/%d; mindketto: %d/%d.\n', ...
+    sum(S.solver_ok == 1), height(S), sum(S.bk_ok == 1), height(S), ...
+    sum(S.ervenyes == 1), height(S));
 fprintf('\n  GDP-SAV AGANKENT (az A01 kozolt savja: +0.3 ... +2.9%%):\n');
 for dc_ = [0 1 2 3 4]
-    m = S.DECOMP == dc_ & S.konvergalt == 1;
-    fprintf('    %-26s  %+.3f%% ... %+.3f%%   (KKV-L elojel: %s)\n', ...
-        AGNEV(dc_), min(S.GDP_pct(m)), max(S.GDP_pct(m)), ...
-        elojel_(S.KKV_minus_L_pp(m)));
+    m = S.DECOMP == dc_ & S.ervenyes == 1;
+    if any(m)
+        fprintf('    %-26s  %+.3f%% ... %+.3f%%   (KKV-L elojel: %s)\n', ...
+            AGNEV(dc_), min(S.GDP_pct(m)), max(S.GDP_pct(m)), ...
+            elojel_(S.KKV_minus_L_pp(m)));
+    else
+        fprintf('    %-26s  nincs BK-ervenyes ACCSCALE=100 futas\n', AGNEV(dc_));
+    end
 end
 
 % =====================================================================
@@ -206,7 +218,11 @@ try
         'console', 'nograph');
     M_  = evalin('base', 'M_');
     oo_ = evalin('base', 'oo_');
-    ok_ = oo_.deterministic_simulation.status;
+    options_ = evalin('base', 'options_');
+    solver_ok_ = double(oo_.deterministic_simulation.status);
+    B_ = bk_check_metrics(M_, options_, oo_);
+    ok_ = solver_ok_;  % legacy `konvergalt`: kizarolag PF solver-statusz
+    valid_ = double(solver_ok_ == 1 && B_.check_ok == 1 && B_.bk_ok == 1);
     n = cellstr(M_.endo_names);
     g = @(v) 100 * oo_.steady_state(strcmp(n, v));
     pn = cellstr(M_.param_names);
@@ -219,13 +235,15 @@ try
         p('phi_D'), p('lev_E'), p('lev_D'), p('omega_acc_E'), ...
         p('omega_acc_D'), g('y'), g('y_E'), g('y_D'), g('y_L'), ykkv, ...
         ykkv - g('y_L'), g('y_D') - g('y_L'), g('y_E') - g('y_L'), ...
+        solver_ok_, B_.check_ok, B_.bk_ok, valid_, B_.n_forward, B_.n_unstable, ...
+        B_.qz_criterium, B_.info_code, B_.nearest_unit_complex, ...
         'VariableNames', kolumnak_());
 catch ME
     fprintf(2, '  !! HIBA (DECOMP=%d W=%d OPTEN=%d ACC=%g SC=%d TS=%d): %s\n', ...
         dc, w, op, accscale, sc, ts, ME.message);
-    R = table(dc, w, op, accscale, sc, ts, 0, NaN, NaN, NaN, NaN, NaN, ...
-        NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, ...
-        'VariableNames', kolumnak_());
+    hiany = num2cell(nan(1, 18));
+    R = table(dc, w, op, accscale, sc, ts, 0, hiany{:}, 0, 0, NaN, 0, ...
+        NaN, NaN, NaN, NaN, NaN, 'VariableNames', kolumnak_());
 end
 end
 
@@ -234,30 +252,41 @@ c = {'DECOMP','DECOMPW','OPTEN','accscale','SCENARIO','TSCEN','konvergalt', ...
     'zeta_E','zeta_D','aa_E','aa_D','phi_E','phi_D','lev_E','lev_D', ...
     'omega_acc_E','omega_acc_D','GDP_pct','y_E_pct','y_D_pct','y_L_pct', ...
     'y_KKV_pct','KKV_minus_L_pp','D_minus_L_pp','E_minus_L_pp'};
+c = [c, {'solver_ok','bk_check_ok','bk_ok','ervenyes','n_forward','n_unstable', ...
+    'bk_qz_criterium','bk_info_code','nearest_unit_complex'}];
 end
 
-function k = kuszob_(dc, w, op, felso)
+function [k, bk_ok] = kuszob_(dc, w, op, felso)
 % Az az ACCSCALE (a lambda-t es az omega-t egyutt skalazva), ahol a
 % KKV-blokk eppen utoleri a nagyvallalatot. Bisekcio: a KKV-L az
 % access-skalaban monoton no.
 lo = 0; hi = felso;
+bk_ok = NaN;
 rhi = fut_(dc, w, op, hi, 1, 3);
-if rhi.konvergalt ~= 1 || rhi.KKV_minus_L_pp < 0, k = Inf; return, end
+if rhi.solver_ok ~= 1 || rhi.KKV_minus_L_pp < 0, k = Inf; return, end
 rlo = fut_(dc, w, op, lo, 1, 3);
-if rlo.konvergalt == 1 && rlo.KKV_minus_L_pp >= 0, k = 0; return, end
+if rlo.solver_ok == 1 && rlo.KKV_minus_L_pp >= 0
+    k = 0; bk_ok = rlo.bk_ok; return
+end
 for it = 1:18
     mid = 0.5*(lo+hi);
     rm = fut_(dc, w, op, mid, 1, 3);
-    if rm.konvergalt == 1 && rm.KKV_minus_L_pp >= 0, hi = mid; else, lo = mid; end
+    if rm.solver_ok == 1 && rm.KKV_minus_L_pp >= 0, hi = mid; else, lo = mid; end
     if hi - lo < 0.01, break, end
 end
 k = 0.5*(lo+hi);
+rstar = fut_(dc, w, op, k, 1, 3);
+bk_ok = rstar.bk_ok;
 end
 
 function s = elojel_(v)
-if all(v > 0), s = 'vegig POZITIV';
-elseif all(v < 0), s = 'vegig NEGATIV';
-else, s = 'VALTAKOZIK'; end
+if all(v > 0)
+    s = 'vegig POZITIV';
+elseif all(v < 0)
+    s = 'vegig NEGATIV';
+else
+    s = 'VALTAKOZIK';
+end
 end
 
 function y = ternary_(c, a, b)

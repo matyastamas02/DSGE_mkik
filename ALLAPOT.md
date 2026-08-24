@@ -5,11 +5,11 @@
 
 # DSGE_mkik — állapotlap
 
-*Generálva a füstteszt 2026-08-24 12:03-kor futott eredményéből · commit `6c61473` · ág `main`*
+*Generálva a füstteszt 2026-08-24 15:00-kor futott eredményéből · commit `8a6a5dc` · ág `main`*
 
 **Fő modell:** `src/modell/1_fo_vonal_jv/jv_dsge_v09_access.mod` (Jakab–Világi mag). A `kkv_dsge_*` a referencia-vonal.
 
-**Őrök:** 138 rendben, 0 hiba.
+**Őrök:** 148 rendben, 0 hiba.
 
 ✅ **Minden „áll” állításnak van őre, és minden őr fut.**
 
@@ -17,124 +17,119 @@
 
 ## Mit állítunk ma
 
-### 🟢 Ami ÁLL — 23 db
+### 🟢 Ami ÁLL — 22 db
 
 *Ezekre lehet építeni a tanulmányban.*
 
-**A01.** A −200 bp szuverén és −45 bp banki felár-konvergenciát feltételező euró-szcenárióban a modell tartós GDP-hatása +0,3% … +2,9% — minden modellverzión, szcenárión (−150/−30 … −250/−60 bp) és kalibrációs ágon POZITÍV.
+**A01.** A −200 bp szuverén és −45 bp banki felár-konvergenciát feltételező euró-szcenárióban a terminálisan determinált OPTEN=0 ágon a modell tartós GDP-hatása +0,52% … +1,18% a három szcenárió × három transzmissziós változat mindegyikében (9/9) pozitív.
 
-> bizonyíték: `t44, t47` — őr: ✅ `t47: mind a 36 kombinacio BK-stabil (az OPTEN=1 phi_D=0 is)`  
-> *2026-08-16 · ÁTFOGALMAZVA 2026-08-21, majd 2026-08-21-én MÁSODSZOR is javítva. Az első átfogalmazás („A VIZSGÁLT euró-szcenáriókban…”) külső bírálat nyomán született, de TÚL MESSZE MENT: elhallgatta a nagyságrendet, így az olvasó nem tudta értékelni. A bíráló érve („honnan jön a kontrafaktuális sokkpálya?”) FÉLREVEZETŐ volt: a pálya nem önkényes — sov = −0,005 negyedéves = pontosan −200 bp/év, bank = −0,001125 = −45 bp/év, ötfázisú időzítéssel (bejelentés → ERM-II 60% → belépés → normalizálódás → tartós) és három érzékenységi pályával. Lásd docs/modszertan/modell_verziok_osszefoglalo.md. AMI VISZONT VALÓDI RÉS: a −200 bp MAGÁNAK nincs hivatkozott forrása a repóban — EZT támadná egy bíráló, nem azt, hogy van előírt pálya. Felvéve a teendőlistára. A DSGE továbbra sem AZONOSÍTJA az euró kontrafaktuálisát, hanem kvantifikál egy kalibrált konvergencia-szcenáriót — de a szcenárió nagyságrendje az állításban benne van.*
+> bizonyíték: `t47` — — őr: ✅ `t47 ERVENYES SZINT: a terminalisan determinált GDP-sav 0.52% ... 1.18%`
+> *2026-08-16 · BK-KORREKCIÓ 2026-08-24: a korábbi +0,3%…+2,9%-os sáv BK-invalid OPTEN=1/2/3 sorokat is tartalmazott, ezért nem közölhető modell-eredményként. A perfect-foresight solver mind a 36 sort megoldja, de a terminális lokális BK-feltétel csak az OPTEN=0 ág 9 sorában teljesül. A −200 bp szcenárió maga továbbra is hivatkozás nélküli kalibrált kontrafaktuális, nem empirikusan azonosított euróhatás.*
 
 **A02.** Az exportáló KKV hitelhozzáférése 13-szorosa a hazai KKV-énak (61,9% vs 4,8%).
 
-> bizonyíték: `t37 (s14)` — őr: ✅ `t37: az export-KKV hozzaferese 13x a hazaie (12.8x: 61.9% vs 4.8%)`  
+> bizonyíték: `t37 (s14)` — — őr: ✅ `t37: az export-KKV hozzaferese 13x a hazaie (12.8x: 61.9% vs 4.8%)`
 > *2026-08-12 · Saját mérés az Opten-panelből; a projekt egyik legerősebb saját ténye.*
 
 **A03.** A nagyvállalati hitelhozzáférés 43,4% — ALACSONYABB, mint az export-KKV-ké.
 
-> bizonyíték: `t37 (s14)` — őr: ✅ `t37: a nagyvallalati hozzaferes ALACSONYABB az export-KKV-enal (43.5% < 61.9%)`  
+> bizonyíték: `t37 (s14)` — — őr: ✅ `t37: a nagyvallalati hozzaferes ALACSONYABB az export-KKV-enal (43.5% < 61.9%)`
 > *2026-08-12 · Cáfolja a "nagyvállalatnak mindig van hitele" narratívát; az omega_acc_L=0 feltevést gyengíti.*
 
 **A04.** A magyar KKV-hitelpiac 2021–24-ben PROGRAMVEZÉRELT volt: a BUBOR 12,8 pontot mozgott, a hozzáférési arányok legfeljebb 2,2-t (a hazai KKV-nál mindössze 0,6-ot).
 
-> bizonyíték: `t37 (s14)` — őr: ✅ `t37 PROGRAMVEZERELTSEG: a BUBOR 12.8 pontot mozgott, a hozzaferes legfeljebb 2.2-et`  
+> bizonyíték: `t37 (s14)` — — őr: ✅ `t37 PROGRAMVEZERELTSEG: a BUBOR 12.8 pontot mozgott, a hozzaferes legfeljebb 2.2-et`
 > *2026-08-12 · Ez a projekt legfontosabb azonosítási korlátja — ebből következik V03, V04 és részben V06. JAVÍTVA 2026-08-16: a korábbi doksiszöveg „kevesebb mint 2 pontot” mondott, a tényleges maximum 2,2 pp (export-KKV). Az állapotlap konzisztencia-ellenőrzése fogta el.*
 
 **A05.** A hazai KKV hozzáférése MONOTON NŐTT a kamatcsúcs felé (4,5% → 5,1%).
 
-> bizonyíték: `t37 (s14)` — őr: ✅ `t37: a hazai KKV hozzaferese NOTT a kamatcsucs fele (4.5% -> 5.1%)`  
+> bizonyíték: `t37 (s14)` — — őr: ✅ `t37: a hazai KKV hozzaferese NOTT a kamatcsucs fele (4.5% -> 5.1%)`
 > *2026-08-12 · A támogatott programok épp akkor bővültek, amikor a piaci kamat tetőzött.*
 
 **A06.** Az ACCSCALE magyar 2021–24-es adatból NEM horgonyozható. (Negatív eredmény, de eredmény.)
 
-> bizonyíték: `t36, t37` — őr: ✅ `t45b: veges access-kuszob a JV-magon (ACCSCALE=36.3)`  
+> bizonyíték: `t36, t37` — — őr: ✅ `t45b: veges access-kuszob a JV-magon (ACCSCALE=36.3)`
 > *2026-08-12 · Következmény: a szektorális állítás küszöbformában közlendő. Doksi: 2026-08-12_access_horgonyzas_eredmeny.md*
 
 **A07.** A tőkeáttétel sorrendje lev_L > lev_E > lev_D (2,34 > 1,94 > 1,72), és a SORREND mérőfüggetlen.
 
-> bizonyíték: `t50` — őr: ✅ `t50: a tokeattetel-sorrend L > E > D (2.337 > 1.939 > 1.719)`  
+> bizonyíték: `t50` — — őr: ✅ `t50: a tokeattetel-sorrend L > E > D (2.337 > 1.939 > 1.719)`
 > *2026-08-16 · A SZINT mérőfüggő, ezért sávban közlendő: lev_E 1,68–1,94 · lev_D 1,58–1,72 · lev_L 1,81–2,34.*
 
 **A08.** A lev_E = lev_D kényszerített egyenlőség NEM ÁLL: az exportáló KKV tőkeáttételesebb.
 
-> bizonyíték: `t46, t50` — őr: ✅ `t46: a lev_E = lev_D kenyszeritett egyenloseg NEM ALL (1.939 vs 1.719)`  
+> bizonyíték: `t46, t50` — — őr: ✅ `t46: a lev_E = lev_D kenyszeritett egyenloseg NEM ALL (1.939 vs 1.719)`
 > *2026-08-16 · A teendőlista 1. prioritásának nevesített részfeladata volt.*
 
 **A09.** A negyedéves értékcsökkenési ráta 0,024–0,025 — két független forrás egyezik.
 
-> bizonyíték: `t46; Christensen–Dib (2008) 1. tábla` — őr: ✅ `t46: delta = 0.0242 megerositi az atvett 0.0250-et`  
+> bizonyíték: `t46; Christensen–Dib (2008) 1. tábla` — — őr: ✅ `t46: delta = 0.0242 megerositi az atvett 0.0250-et`
 > *2026-08-16 · Opten-panel 0,0242; C&D 0,025. Az átvett modellérték helyes volt.*
 
 **A10.** A nagyvállalati exportárbevétel-arány phi_L ≈ 0,365.
 
-> bizonyíték: `t46` — őr: ✅ `t46: phi_L = 0.3649 megerositi az atvett 0.365-ot`  
+> bizonyíték: `t46` — — őr: ✅ `t46: phi_L = 0.3649 megerositi az atvett 0.365-ot`
 > *2026-08-16 · Négy tizedesig egyezik az átvett értékkel — az valószínűleg már ebből a panelből származott.*
 
-**A11.** A hitelhozzáférési állapot negyedéves perzisztenciája LEGALÁBB 0,967 (cég-szintű mérés: éves 0,875 = p11 − p01, n = 110 350 cég-év pár).
+**A12.** A fő v09 modell perfect-foresight pályája 36/36 konfigurációban megoldódik, de a terminális lokális BK-feltétel csak 9/36 esetben teljesül: OPTEN=0 mellett 13 instabil gyök jut 13 előretekintő változóra, az OPTEN=1/2/3 ágakon 15 jut 13-ra.
 
-> bizonyíték: `t46c, t37` — őr: ✅ `t49b: a kuszob MONOTON csokken a rho_acc-ban (47.8 -> 17.5)`  
-> *2026-08-16 · VISSZAÁLLÍTVA 2026-08-21: a „legalább” szót külső bírálat nyomán kivettük, majd ELLENŐRIZTÜK, és a bíráló érve gyengébbnek bizonyult, mint hangzott. Az érv az volt, hogy a cég-szintű BINÁRIS státusz és a szegmens-szintű FOLYTONOS állapot más objektum, tehát nem korlát. Két független ok szól amellett, hogy MÉGIS alsó korlát: (1) SAJÁT MÉRÉS (t37): a szegmens-arányok 4 év alatt 0,59–2,20 pontot mozdultak, miközben a BUBOR 12,83-at — az aggregált folyamat gyakorlatilag áll, tehát perzisztensebb a cég-szintűnél. (2) GRANGER-AGGREGÁCIÓ (1980): heterogén AR(1)-ek aggregálása lassabban lecsengő autokorrelációt ad, mint az átlagos rho — a szegmens-szint tehát elméletileg is perzisztensebb. A két objektum valóban különbözik, de a különbség IRÁNYA ismert, és a modellparaméterre alsó korlátot ad. A scan (t49/t51) ettől függetlenül kell, mert 1/(1−rho) robban.*
-
-**A12.** A fő modell BK-stabil minden szcenárió × transzmisszió × kalibrációs ág kombinációban (36/36).
-
-> bizonyíték: `t47` — őr: ✅ `t47: mind a 36 kombinacio BK-stabil (az OPTEN=1 phi_D=0 is)`  
-> *2026-08-16 · Beleértve az OPTEN=1 ágat, ahol phi_D = 0 pontosan.*
+> bizonyíték: `t47` — — őr: ✅ `t47 TERMINALIS BK: csak OPTEN=0 stabil; az OPTEN=1/2/3 agakon 15 instabil gyok jut 13 eloretekinto valtozora (9/36 stabil)`
+> *2026-08-16 · BK-KORREKCIÓ 2026-08-24: a korábbi 36/36 állítás az oo_.deterministic_simulation.status perfect-foresight solver-státuszt tévesen BK-tesztként értelmezte. A magas-rho ágak terminálisan indetermináltak; pontbecsléseik nem interpretálhatók.*
 
 **A13.** Az access-csatorna egzaktul beágyazott: ACCSCALE=0 mellett a v09 PONTOSAN a v08-at adja (eltérés 0,0e+00).
 
-> bizonyíték: `t45b` — őr: ✅ `t45b NESTING: ACCSCALE=0 == v08 (elteres 0.0e+00)`  
+> bizonyíték: `t45b` — — őr: ✅ `t45b NESTING: ACCSCALE=0 == v08 (elteres 0.0e+00)`
 > *2026-08-12 · Független verifikáció, nem BK-teszt.*
 
 **A14.** A modell átment 18/18 független azonosság-ellenőrzésen (szimmetria 1e−16, aggregáció 1e−19, nulla-sokk pontosan 0, szegmens-kibocsátás → jószág-aggregáció 4,3e−19).
 
-> bizonyíték: `t43` — őr: ✅ `t43: mind a 18 fuggetlen ellenorzes atment`  
+> bizonyíték: `t43` — — őr: ✅ `t43: mind a 18 fuggetlen ellenorzes atment`
 > *2026-08-12 · Ezek olyan hibát fognak el (elgépelt index, felcserélt súly), amit a BK-teszt nem. BŐVÍTVE 2026-08-21, külső bírálat nyomán: a 18. ellenőrzés azt őrzi, hogy sum(om_j·y_j) = w_d·y_d + w_x·y_x. Ez azért kellett, mert a bíráló észrevette, hogy NINCS y = sum(om_j·y_j) azonosság a modellben. Nincs is, és NEM IS LEHET: a y_j bruttó kibocsátás importált köztes inputtal, a y kiadási oldali GDP. Ami viszont teljesül — a jószág-szintű aggregáció —, most tesztelt.*
 
 **A15.** Az implicit_kamatrata oszlop TORZÍT minden olyan regresszióban, ahol a magyarázó változó együtt mozog a hitelállomány változásával.
 
-> bizonyíték: `t50b` — őr: ✅ `t50b: a chi elojele atfordul a nevezo javitasaval (A: -0.01167 -> C: +0.00857) - a negativ eredmeny mutermek volt`  
+> bizonyíték: `t50b` — — őr: ✅ `t50b: a chi elojele atfordul a nevezo javitasaval (A: -0.01167 -> C: +0.00857) - a negativ eredmeny mutermek volt`
 > *2026-08-16 · Módszertani figyelmeztetés a panel egészére. A nevező év végi állomány, a számláló évközi kamat.*
 
 **A16.** A magyar vállalati kamattranszmisszió pontbecslése MIND A NÉGY specifikációban magasabb a nagyvállalatnál, mint a KKV-nál — de a méret szerinti különbség statisztikailag NEM különböztethető meg nullától: mind a négy 95%-os konfidencia-intervallum tartalmazza a nullát (t = 1,17…1,85).
 
-> bizonyíték: `t25, t25b` — őr: ✅ `t25: mind a 4 becslesben a NAGYVALLALATI atgyuruzes a magasabb`  
+> bizonyíték: `t25, t25b` — — őr: ✅ `t25: mind a 4 becslesben a NAGYVALLALATI atgyuruzes a magasabb`
 > *2026-08-16 · ÁTFOGALMAZVA 2026-08-21: a CI-k most számként is megvannak (t25b). Különbségek (L−S) és 95% CI: bankközi szint +0,071 [−0,004; +0,146]; állampapír szint +0,115 [−0,077; +0,307]; bankközi kumulált +0,353 [−0,120; +0,826]; állampapír kumulált +0,594 [−0,325; +1,512]. EZ A V03 VISSZAVONÁSÁNAK EMPIRIKUS ALAPJA: a t_S > t_L feltevés nemcsak nem azonosított — a pontbecslések következetesen az ELLENKEZŐ irányba mutatnak. LEÍRÓ regularitásként áll, strukturális pass-through paraméterként NEM. KORLÁTOK: az ECB MIR összeg-kategória a méret PROXYja; a szint-együtthatók 1 fölöttiek (közös trend); a se(d) korrelált hibák mellett konzervatív.*
 
 **A17.** A kockázati besorolások közti nyers hitelhozzáférési szakadék nagyrészt ÖSSZETÉTEL-HATÁS: méretre, ágazatra, régióra és évre kiigazítva a 14,3 pontos rés (A 18,4% vs C 4,2%) 2,5 pontra zsugorodik (12,9% vs 10,4%).
 
-> bizonyíték: `t10, t11` — őr: ✅ `t11: a hozzaferesi res OSSZETETEL-HATAS (nyers 14.3 pp -> kiigazitott 2.5 pp)`  
+> bizonyíték: `t10, t11` — — őr: ✅ `t11: a hozzaferesi res OSSZETETEL-HATAS (nyers 14.3 pp -> kiigazitott 2.5 pp)`
 > *2026-08-16 · Vagyis nem a kockázati besorolás zárja ki a céget a hitelből, hanem a mérete és az ágazata. Ez a modell szempontjából lényeges: az access-margót MÉRET szerint kell specifikálni, nem kockázat szerint — ahogy a v09 teszi. A probit együtthatói (t10) ugyanezt mutatják: bes_C = -0,203 (t = -7,4).*
 
 **A18.** A magyar KKV-hitelárazás 2021–24-ben LESZAKADT a piaci kamattól: a medián implicit ráta 2,3%-ról csak 4,5%-ra nőtt, miközben a BUBOR 1,5%-ról 14,3%-ra — és 2023-ban a ráták mindössze 18,7%-a volt piaci árazású.
 
-> bizonyíték: `t12` — őr: ✅ `t12 LESZAKADAS: 2023-ban a BUBOR 14.3%, a median KKV-rata csak 4.5% (2021: 2.3%)`  
+> bizonyíték: `t12` — — őr: ✅ `t12 LESZAKADAS: 2023-ban a BUBOR 14.3%, a median KKV-rata csak 4.5% (2021: 2.3%)`
 > *2026-08-16 · Ez a PROGRAMVEZÉRELTSÉG (A04) árazási megfelelője: az A04 a hozzáférésről szól, ez az árról. A kettő együtt magyarázza, miért nem azonosítható a 2021-24-es epizódból sem a chi (V04), sem az ACCSCALE (A06), sem a t_S/t_L (V03) — a piaci kamat varianciája nem ért el a KKV-hitelekig.*
 
 **A19.** A piaci árazású alminta rátája a teljes minta 2,6–3,5-szerese (12,6–13,8% vs 3,7–4,9%), és ebben az almintában a kockázati besorolás szerinti sorrend ELTŰNIK: a legjobb besorolású cég (A: 12,92%) drágábban hitelez, mint a C (12,64%).
 
-> bizonyíték: `t13` — őr: ✅ `t13: a piaci alminta rataja a teljes minta tobbszorose (A: 3.5x, B: 3.1x, C: 2.6x)`  
+> bizonyíték: `t13` — — őr: ✅ `t13: a piaci alminta rataja a teljes minta tobbszorose (A: 3.5x, B: 3.1x, C: 2.6x)`
 > *2026-08-16 · Következmény: a teljes mintában látszó „kockázati árazás” (A 3,68% < C 4,93%) NEM kockázati árazás, hanem PROGRAM-ÖSSZETÉTEL — a jobb besorolású cégek nagyobb arányban jutnak támogatott hitelhez. Óvatosan: a D osztály piaci almintája n=7, arra nem szabad hivatkozni.*
 
 **A20.** A BENCHMARK-ALAPÚ IMPLICIT FINANSZÍROZÁSI ÁRAZÁSI RÉS a magyar KKV-hitelállományon 2023-ban 557 Mrd Ft (BUBOR-referenciával), illetve 665 Mrd Ft (BUBOR+200 bp) — az állomány 9,6%-a —, és a cégek 78,5%-a a BUBOR alatt volt árazva.
 
-> bizonyíték: `t14` — őr: ✅ `t14: 2023-ban az implicit tamogatasi ek 557 Mrd Ft (az allomany 9.6%-a), a cegek 78.5%-a alularazott`  
+> bizonyíték: `t14` — — őr: ✅ `t14: 2023-ban az implicit tamogatasi ek 557 Mrd Ft (az allomany 9.6%-a), a cegek 78.5%-a alularazott`
 > *2026-08-16 · ÁTNEVEZVE 2026-08-21, külső bírálat nyomán: a korábbi név („implicit támogatási ék”) TÚL ERŐS. A szám valójában állomány × (benchmark kamat − megfigyelt implicit kamat) alakú KONTRAFAKTUÁLIS RÉS. NEM azonos állami támogatással, fiskális kiadással, banki veszteséggel, vagy a kedvezményezettnél jelentkező transzfer jelenértékével — az ék egy részét a bankok és a fix kamatozású régi állomány (vintage) viselik. A név azért lényeges, mert a SZÁMOT a név kíséri a sajtóba: „600 milliárd állami támogatás” nem védhető a jelenlegi módszertannal. Ráadásul az implicit ráta maga is mérési konstrukció (lásd A15). Nagyságrendi viszonyítás: EU-25 állami támogatás 2004-ben a GDP ~0,6%-a; ez ~0,8%.*
 
 **A21.** A nominális bérmerevség a magyar cégpanelen GYENGE 2023–24-ben: a cégek 10,1%-a nominálisan CSÖKKENTETTE az átlagbért és csak 2,8% fagyasztotta be, a medián béremelés 11,6% — és a csökkentés monoton csökken a mérettel (13,9% / 7,6% / 5,8%).
 
-> bizonyíték: `t17` — őr: ✅ `t17: a nominalis bercsokkentes MONOTON csokken a merettel (13.9% > 7.6% > 5.8%)`  
+> bizonyíték: `t17` — — őr: ✅ `t17: a nominalis bercsokkentes MONOTON csokken a merettel (13.9% > 7.6% > 5.8%)`
 > *2026-08-16 · KORLÁTOK: egyetlen év-pár (a létszám csak 2023-ra és 2024-re ismert); MAGAS INFLÁCIÓS környezet, ahol a lefelé-merevség kevésbé köt — tehát ez ALSÓ korlát a merevségre; az átlagbér (bérköltség/létszám) összetétel-hatást is visz. Nem cáfolja a JV becsült xi_w = 0,657-ét, de jelzi, hogy a magyar bérmerevség méretfüggő lehet.*
 
 **A22.** A modell a hozzáférési csatorna két rugalmasságát (lambda_acc, omega_acc) KÜLÖN-KÜLÖN NEM AZONOSÍTJA — kizárólag a szorzatukon keresztül hatnak. Azonos szorzatú, nagyságrendileg különböző (λ, ω) párok számjegyre azonos eredményt adnak.
 
-> bizonyíték: `t52c, t52e` — őr: ✅ `t52e SZERKEZET: a modell CSAK a lambda*omega szorzatot azonositja (max elteres 0.0e+00 pp)`  
+> bizonyíték: `t52c, t52e` — — őr: ✅ `t52e SZERKEZET: a modell CSAK a lambda*omega szorzatot azonositja a BK-ervenyes tartomanyban (max elteres 0.0e+00 pp)`
 > *2026-08-24 · SZERKEZETI (nem empirikus) eredmény: a hosszú távú access-hatás −ω·λ/(1−ρ)·efp alakú. Mérve: a „csak λ” és a „csak ω” marginális metszet számjegyre azonos (t52c), és az azonos szorzatú párok eltérése numerikus nulla (t52e: 0 és 6,7e−16 pp). KÖVETKEZMÉNY A REGISZTERRE: a D kategória négy access-tétele valójában KÉT azonosítható objektum (λ_E·ω_E és λ_D·ω_D). Aki a négyet külön akarja horgonyozni, olyan adatot keres, ami a modellen keresztül nem létezik. Ez nem rontja az eredményt — javítja a közlést.*
 
-**A23.** A KKV-eredmény NEM a technológiai kalibráció műterméke: ha a három típus minden technológiai paraméterét (zeta_j, aa_j) azonosra állítjuk, a küszöb 22,36-ról 22,95-re mozdul (1,03×); csak a pénzügyi heterogenitást meghagyva 22,62 (1,01×). Mind az öt ág, mind a 45 szcenárió-kombináció BK-stabil, és a KKV-előny mindenütt pozitív.
+**A23.** A BK-érvényes küszöb-összevetésben a KKV-eredmény nem a technológiai kalibráció műterméke: ha a három típus minden technológiai paraméterét (zeta_j, aa_j) azonosra állítjuk, a küszöb 22,36-ról 22,95-re mozdul (1,03×); csak a pénzügyi heterogenitást meghagyva 22,62 (1,01×).
 
-> bizonyíték: `t53, t53b, t53c` — őr: ✅ `t53b FO ALLITAS: a KKV-eredmeny NEM technologiai mutermek (technologia azonos 1.03x, csak penzugyi 1.01x)`  
-> *2026-08-24 · A korlátok-riport 2. teendője; ez válaszolja meg a várható fő referee-kérdést („show me that your main conclusion is not an artifact of the E/D/L calibration”). A döntési szabályt ELŐRE kimondtuk: ha a B és D ágon is megvan az eredmény, finanszírozási; ha csak az A/C ágon, technológiai műtermék. KÉT ÓVATOSSÁG: (1) az A és C ág NEM „csak technológia” — a pénzügyi blokkot is kiegyenlíti, ami mechanikusan felviszi az E típus access-rugalmasságát (omega_acc_E 0,350 → 0,392), ezért a tiszta összevetés a 0↔D és a 0↔B; (2) az A és C ág GDP-sávja (+3,5 / +3,7%) KILÓG az A01 közölt +0,3…+2,9%-ából — de a dekompozíciós ágak DIAGNOSZTIKÁK, nem alternatív kalibrációk, az A01 sávja az OPTEN=0..3 kalibrációs ágakra vonatkozik. AMIT NEM VÁLASZOL MEG: az omega_acc_L = 0 feltevést a scan nem tudja semlegesíteni.*
+> bizonyíték: `t53b` — — őr: ✅ `t53b FO ALLITAS: a KKV-eredmeny NEM technologiai mutermek (technologia azonos 1.03x, csak penzugyi 1.01x)`
+> *2026-08-24 · BK-KORREKCIÓ 2026-08-24: a t53b mind a 10 közölt dekompozíciós küszöbpontja terminálisan BK-érvényes, ezért a küszöb-összevetés fennmarad. A korábbi ACCSCALE=100 pontállítás viszont visszavonandó: az OPTEN=1 t53c rács 45/45 PF-megoldása mellett 0/45 terminális BK, mindenütt 15/13; ezért az ottani GDP-sáv és KKV-pozitivitás nem interpretálható. Az A és C ág nem tiszta technológiai ellenpróba; a döntő összevetés továbbra is 0↔D és 0↔B. Az omega_acc_L=0 feltevést ez a scan nem semlegesíti.*
 
 ### 🟡 Ami FELTÉTELES — 6 db
 
@@ -142,76 +137,79 @@
 
 **F01.** A KKV-blokk SZEGMENS-KIBOCSÁTÁSA akkor előzi meg a nagyvállalatit, ha a hozzáférési csatorna két lépcsőjének SZORZATA meghalad egy küszöböt: (λ·ω)* = 500 az átvett kalibrációhoz viszonyított skálán, rho_acc = 0,9673 mellett (átvett rho_acc = 0,85 mellett 1337). A korábban közölt „ACCSCALE ≥ 22,3” ennek EGYETLEN pontja — az, ahol a két lépcsőt azonos arányban skáláztuk: √500 = 22,36.
 
-> bizonyíték: `t48, t48b, t49, t51, t52b, t52d` — őr: ✅ `t51 KONTUR: a kuszob MONOTON csokken a rho_acc-ban (47.8 -> 17.5)`  
+> bizonyíték: `t48, t48b, t49, t51, t52b, t52d` — — őr: ✅ `t51 KONTUR: a kuszob MONOTON csokken a rho_acc-ban (47.8 -> 17.5)`
 > *2026-08-16 · ÁTFOGALMAZVA 2026-08-24, a λ/ω szétbontás után (korlátok-riport 1. teendő). AMI VÁLTOZOTT: a 22,3 nem hibás, de nem is interpretálható volt, mert KÉT rugalmasság szorzatán ült, előre rögzített λ:ω arány mellett. A szétbontás (-DLAMSCALE / -DOMSCALE) azt is megmutatta, hogy a modell a két paramétert KÜLÖN NEM IS AZONOSÍTJA (lásd A22), tehát a szorzat az egyetlen értelmes küszöb-objektum. A nulla-kontúron a szorzat 28-szoros λ-tartományon 0,08%-on belül állandó (t52b). A régi számokhoz a kötést a t52d átló adja: 22,36 / 36,56 vs a t48b/t51 22,3 / 36,5. A rho_acc-függés VÁLTOZATLANUL áll (t51: 47,8 → 17,5). Mindkét tengely horgonyzatlan (A06, A11), ezért a kondicionálás mindig kiírandó. PONTOSÍTÁS: az összevetés SZEGMENS-KIBOCSÁTÁS (y_j = bruttó kibocsátás), NEM GDP-részesedés.*
 
 **F02.** Az export-KKV kibocsátásának ELŐJELE az eps_ces-en fordul, ~2,3-nál.
 
-> bizonyíték: `t42` — őr: ✅ `t42: az y_E ELOJELE eps_ces-fuggo (dokumentalt KORLAT, kuszobforma kell)`  
+> bizonyíték: `t42` — — őr: ✅ `t42: az y_E ELOJELE eps_ces-fuggo (dokumentalt KORLAT, kuszobforma kell)`
 > *2026-08-12 · Az aggregált GDP érzéketlen rá (0,008 pp sáv) — csak a szektorális eredményt viszi.*
 
 **F03.** Az om_j / shl_j súlyok az Opten-panelből: 0,256/0,184/0,560 és 0,157/0,378/0,466.
 
-> bizonyíték: `t46` — őr: ✅ `t46: az om_j es az shl_j sulyok 1-re osszegzodnek`  
+> bizonyíték: `t46` — — őr: ✅ `t46: az om_j es az shl_j sulyok 1-re osszegzodnek`
 > *2026-08-16 · ELFOGADÁSI FELTÉTEL: ezek a 10+ fős populáción BELÜLI részesedések. Teljes gazdaságra KSH/Eurostat SBS mikrokör-bontás kell (teendők 2.5). Addig -DOPTEN alapértelmezése 0.*
 
 **F04.** A chi (BGG felár-rugalmasság) alsó korlátja a magyar panelen +0,002 negyedéves; az irodalmi érték 0,042–0,067.
 
-> bizonyíték: `t50b; Christensen–Dib (2008) 2. tábla` — *nincs őr*  
+> bizonyíték: `t50b; Christensen–Dib (2008) 2. tábla` — — *nincs őr*
 > *2026-08-16 · A becslés erősen attenuált (mérési hiba, átlagos vs határráta, programvezéreltség). NEM cáfolja az irodalmi értéket — alulazonosított.*
 
 **F05.** Az euró-hatás gyakorlatilag TELJES EGÉSZÉBEN a szuverén csatornán megy: a banki csatorna hozzájárulása az első negyedévben a teljes hatás 0,22%-a (−0,0005 pp a −0,252 pp-ból).
 
-> bizonyíték: `t15` — őr: ✅ `t15: a hatas gyakorlatilag teljesen a SZUVEREN csatornan megy (a banki resz 0.22%) — de a v03 ARCHIV modellen`  
+> bizonyíték: `t15` — — őr: ✅ `t15: a hatas gyakorlatilag teljesen a SZUVEREN csatornan megy (a banki resz 0.22%) — de a v03 ARCHIV modellen`
 > *2026-08-16 · ELFOGADÁSI FELTÉTEL: ez a jv_dsge_v03 ARCHÍV modellen készült (kétszektoros, háromtípusos szerkezet nélkül, access-margó nélkül). A fő modellen (v09) ÚJRA KELL FUTTATNI, mielőtt közöljük — a v09-ben a banki csatorna az access-margón át is hat, tehát a súlya vélhetően nagyobb. Amíg ez nincs meg, csak a v03-ra vonatkozó megállapításként idézhető.*
 
 **F06.** A méret szerinti kamattranszmissziós különbség iránya az euróövezeti irodalom és a magyar saját mérés között ELLENTÉTES: Horváth–Kotlebová–Širaňová (JFS 2018) szerint a transzmisszió csak a kisvállalati hitelekre teljes, a magyar panelen viszont a pontbecslés mind a négy specifikációban a nagyvállalatnál magasabb (A16).
 
-> bizonyíték: `t25, t25b; Horváth–Kotlebová–Širaňová (2018), JFS 36, 12–21` — őr: ✅ `t25b: mind a 4 CI TARTALMAZZA a nullat - a kulonbseg nem szignifikans`  
+> bizonyíték: `t25, t25b; Horváth–Kotlebová–Širaňová (2018), JFS 36, 12–21` — — őr: ✅ `t25b: mind a 4 CI TARTALMAZZA a nullat - a kulonbseg nem szignifikans`
 > *2026-08-24 · A D-kategória irodalmi keresés (2026-08-24) találata. EZ NEM ÁLLÍTJA VISSZA a V03-at — megerősíti, hogy a TSCEN=3 (semleges) alapértelmezés volt a helyes döntés, és most már KÉT oldalról indokolható, nem csak adathiánnyal. A tanulmányban így írandó: „a méret szerinti transzmissziós különbség iránya az irodalom és a magyar adat között ellentétes, ezért a modell semleges transzmissziót használ, és a -DTSCEN=1|2 ágakon mindkét irányt megmutatja.” KORLÁT: az irodalmi eredmény euróövezeti panel, a mi mérésünk magyar és nem szignifikáns — egyik sem dönti el a kérdést.*
 
-### 🔴 Amit VISSZAVONTUNK — 8 db
+### 🔴 Amit VISSZAVONTUNK — 9 db
 
 *Ezek **nem** kerülhetnek vissza a szövegbe. A dátum és az ok azért van itt, hogy ne kelljen újra levezetni.*
 
+**A11.** "A modell dinamikus szegmens-szintű rho_acc paramétere legalább 0,967."
+
+> bizonyíték: `t46c, t37`
+> *2026-08-16 · VISSZAVONVA 2026-08-24: a 0,9673 egy cég-szintű bináris van_hitel státusz leíró perzisztenciája (éves p11−p01=0,8754; n=110 350), nem a modell sokk utáni szegmens-alkalmazkodásának becslése és nem alsó korlátja. A négy teljes évvel rendelkező cégek 92,4%-a egyszer sem váltott státuszt, ezért a szám főként állandó cégheterogenitást mér. A rho_acc horgonyzatlan; marginális/váltó almintás vagy közvetlen szegmens-szintű dinamikus becslés kell.*
+
 **V01.** "Az aggregált GDP-hatás +0,27% … +1,04% minden lépcsőn és paraméterezésen."
 
-> bizonyíték: `t47` — őr: ✅ `t49b KORLAT: a horgonyzott rho_acc mellett a GDP-hatas TULMEGY a korabbi savon (1.75% > 1.04%)`  
-> *2026-08-16 · OK: a sáv az ÁTVETT rho_acc=0,85 mellett érvényes. Horgonyzott rho_acc mellett a felső vég +2,03% (OPTEN=1), illetve +2,89% (OPTEN=3). Helyette: A01.*
+> bizonyíték: `t49b` — — őr: ✅ `t49b KORLAT: rho_acc>=0.93 mellett ACCSCALE=100 BK-invalid, GDP nincs kozolve`
+> *2026-08-16 · BK-KORREKCIÓ 2026-08-24: a korábbi helyettesítő +0,3%…+2,9%-os sáv sem volt védhető, mert BK-invalid magas-rho pontokat tartalmazott. A jelenleg közölhető, terminálisan determinált főmodellsáv az OPTEN=0 ágon +0,52%…+1,18% (A01).*
 
 **V02.** "Duális gazdaság: a magyar autóipar mindössze 6% hazai köztes inputot használ."
 
-> bizonyíték: `t24; P2-azonosságteszt`   
+> bizonyíték: `t24; P2-azonosságteszt`
 > *2026-08-12 · OK: az IO-mérés hibás — az összegzett köztes felhasználás a nemzeti számlák P2-jének csak 1,8–8,6%-a. A gyökérok MÉG NYITOTT, és az IRÁNYT SEM tudjuk. Doksi: FIGYELMEZTETES_io_tabla_gyanus.md*
 
 **V03.** "A KKV erősebb kamattranszmissziót kap (t_S > t_L)."
 
-> bizonyíték: `t26`   
+> bizonyíték: `t26`
 > *2026-08-12 · OK: nem azonosítható — a becsült arány 0,26 és 2,75 között szóródik, semmi sem szignifikáns. Doksi: FIGYELMEZTETES_fo_allitas.md*
 
 **V04.** "A KKV BGG-érzékenysége háromszorosa a nagyvállalatiénak (chi_S = 0,06 vs chi_L = 0,02)."
 
-> bizonyíték: `t50b; Christensen–Dib (2008)`   
+> bizonyíték: `t50b; Christensen–Dib (2008)`
 > *2026-08-16 · OK: a panel a chi_L-t egyáltalán nem azonosítja (n=230, t=-0,78), a szakirodalom pedig EGYETLEN, méret szerint nem bontott chi-t becsül. Javaslat: szimmetrikus alap + scan.*
 
 **V05.** "A chi_j értékek az Opten-panel mediánjai."
 
->   
 > *2026-08-12 · OK: soha nem voltak azok — a hivatkozás téves volt. A tőkeáttétel-adat (lev_S < lev_L) ráadásul nem is támogatja a magasabb KKV-chi-t.*
 
 **V06.** "A KKV hitelhozzáférése erősen reagál a piaci kamatra (a chi/access becsülhető a 2021–24-es panelből)."
 
-> bizonyíték: `t36, t37`   
+> bizonyíték: `t36, t37`
 > *2026-08-12 · OK: a 2021–24-es magyar epizód programvezérelt (A04), ezért a piaci kamat varianciája nem azonosítja a piaci kamatra vett rugalmasságot.*
 
 **V07.** "Szegmens-szintű tőke és beruházás a v05-ből."
 
->   
 > *2026-08-11 · OK: reallokációs maradék, nem szerkezeti eredmény. A v06 oldotta meg (szegmens-specifikus rk_j).*
 
 **V08.** "A tőkeáttétel növekedése csökkenti a vállalati forrásköltséget (chi < 0, t = -4,09)."
 
-> bizonyíték: `t50b` — őr: ✅ `t50b: a chi elojele atfordul a nevezo javitasaval (A: -0.01167 -> C: +0.00857) - a negativ eredmeny mutermek volt`  
+> bizonyíték: `t50b` — — őr: ✅ `t50b: a chi elojele atfordul a nevezo javitasaval (A: -0.01167 -> C: +0.00857) - a negativ eredmeny mutermek volt`
 > *2026-08-16 · OK: MÉRÉSI MŰTERMÉK. Az implicit ráta nevezője év végi állomány, a számlálója évközi kamat; a nevező javítása után az együttható eltűnik, a stabil állományú metszeten pedig pozitívra fordul. Lásd A15.*
 
 ---
@@ -220,15 +218,15 @@
 
 | Státusz | db |
 |---|---:|
-| 🟢 horgonyzott | 34 |
-| 🔴 horgonyzatlan | 20 |
+| 🟢 horgonyzott | 33 |
+| 🔴 horgonyzatlan | 21 |
 | ⚪ származtatott | 18 |
 | 🟡 pótolandó | 11 |
 | 🟡 feltételes | 8 |
 
 *Az **érték** oszlop a modellből jön futásidőben (`-DOPTEN=0` ág), nem a CSV-ből — kézzel átírt érték nem tud becsúszni.*
 
-### A. saját adat (Opten-panel) — 14 db
+### A. saját adat (Opten-panel) — 13 db
 
 | Paraméter | Érték | Státusz | Forrás | Kapcsoló | Doksi |
 |---|---:|---|---|---|---|
@@ -245,7 +243,6 @@
 | `shl_E` | 0.2 | 🟡 feltételes | Opten-panel, de a 10+ fős körön BELÜLI részesedés — KSH/Eurostat SBS mikrokör-bontás kell az átskálázáshoz (teendők 2.5) | -DOPTEN | [2026-08-16_opten_kalibracio_eredmeny.md](docs/eredmenyek/2026-08-16_opten_kalibracio_eredmeny.md) |
 | `shl_D` | 0.5 | 🟡 feltételes | Opten-panel, de a 10+ fős körön BELÜLI részesedés — KSH/Eurostat SBS mikrokör-bontás kell az átskálázáshoz (teendők 2.5) | -DOPTEN | [2026-08-16_opten_kalibracio_eredmeny.md](docs/eredmenyek/2026-08-16_opten_kalibracio_eredmeny.md) |
 | `shl_L` | 0.3 | 🟡 feltételes | Opten-panel, de a 10+ fős körön BELÜLI részesedés — KSH/Eurostat SBS mikrokör-bontás kell az átskálázáshoz (teendők 2.5) | -DOPTEN | [2026-08-16_opten_kalibracio_eredmeny.md](docs/eredmenyek/2026-08-16_opten_kalibracio_eredmeny.md) |
-| `rho_acc` | 0.85 | 🟢 horgonyzott | Opten-panel van_hitel átmenet-mátrix (0,9673) — ALSÓ KORLÁT | -DOPTEN / -DRHOACC | [2026-08-16_opten_kalibracio_eredmeny.md](docs/eredmenyek/2026-08-16_opten_kalibracio_eredmeny.md) |
 
 ### B. nyilvános magyar makroadat (KSH) — 11 db
 
@@ -296,7 +293,7 @@
 | `rho_mx` | 0.318 | 🟢 horgonyzott | Jakab–Világi, MNB WP 2008/9, becsült poszterior átlag |  |  |
 | `rho_g` | 0.8 | 🟢 horgonyzott | Jakab–Világi, MNB WP 2008/9, becsült poszterior átlag |  |  |
 
-### D. nem azonosított / több adat kell — 20 db
+### D. nem azonosított / több adat kell — 21 db
 
 | Paraméter | Érték | Státusz | Forrás | Kapcsoló | Doksi |
 |---|---:|---|---|---|---|
@@ -316,6 +313,7 @@
 | `mu_vert` | 0.5 | 🔴 horgonyzatlan | Kerestünk: a beszállítói ár-átgyűrűzés rugalmasságára nem találtunk becslést. A húszból ez az EGYETLEN, amiről a keresés után is azt mondjuk, hogy nincs mit megnézni. | -DMUVERT | [FIGYELMEZTETES_io_tabla_gyanus.md](docs/figyelmeztetesek/FIGYELMEZTETES_io_tabla_gyanus.md) · [2026-08-24_D_kategoria_irodalmi_kereses.md](docs/terv/2026-08-24_D_kategoria_irodalmi_kereses.md) |
 | `zsov` | 0.5 | 🔴 horgonyzatlan | KÖZVETLENÜL MÉRHETŐ két nyilvános idősorból (magyar szuverén felár vs. BUBOR–EURIBOR különbözet). Irodalmi támpont: Vonnák (MNB WP 2010/1). A húszból ez a legolcsóbb horgony — és tisztán makró idősorból megy. |  | [2026-08-24_D_kategoria_irodalmi_kereses.md](docs/terv/2026-08-24_D_kategoria_irodalmi_kereses.md) |
 | `eps_ces` | 6 | 🔴 horgonyzatlan | Magyar markup-becslés LÉTEZIK: Dobrinsky–Kőrösi–Markov–Halpern (JCE 2006, 34(1):92–110). ⚠ DE MÁS OBJEKTUM: nálunk az eps_ces a VÁLLALATTÍPUSOK, az irodalmi markup a TERMÉKVÁLTOZATOK közti helyettesítés. Plauzibilitási sáv, nem horgony. | -DEPSCES | [2026-08-24_D_kategoria_irodalmi_kereses.md](docs/terv/2026-08-24_D_kategoria_irodalmi_kereses.md) |
+| `rho_acc` | 0.85 | 🔴 horgonyzatlan | A 0,9673 csak leíró cég-szintű van_hitel státusz-perzisztencia; a cégek 92,4%-a négy év alatt egyszer sem váltott. Főként állandó heterogenitást mér, nem a modell dinamikus szegmens-rho-ját, és nem alsó korlát. Marginális/váltó alminta vagy közvetlen szegmens-dinamika kell. | -DOPTEN / -DRHOACC | [2026-08-16_opten_kalibracio_eredmeny.md](docs/eredmenyek/2026-08-16_opten_kalibracio_eredmeny.md) · [2026-08-21_korlatok_es_teendok.md](docs/terv/2026-08-21_korlatok_es_teendok.md) |
 | `lambda_acc_E` | 2 | 🔴 horgonyzatlan | ⚠ CSAK A SZORZAT AZONOSÍTHATÓ (A22): a modell a lambda_acc-ot és az omega_acc-ot külön nem különbözteti meg. Forrásjelölt a szorzatra: EIBIS, EC/ECB SAFE éves kör (magyar + mikro bontással). | -DACCSCALE / -DLAMSCALE | [2026-08-12_access_horgonyzas_eredmeny.md](docs/eredmenyek/2026-08-12_access_horgonyzas_eredmeny.md) · [2026-08-24_D_kategoria_irodalmi_kereses.md](docs/terv/2026-08-24_D_kategoria_irodalmi_kereses.md) |
 | `lambda_acc_D` | 2.5 | 🔴 horgonyzatlan | ⚠ CSAK A SZORZAT AZONOSÍTHATÓ (A22). Lásd lambda_acc_E. | -DACCSCALE / -DLAMSCALE | [2026-08-12_access_horgonyzas_eredmeny.md](docs/eredmenyek/2026-08-12_access_horgonyzas_eredmeny.md) · [2026-08-24_D_kategoria_irodalmi_kereses.md](docs/terv/2026-08-24_D_kategoria_irodalmi_kereses.md) |
 | `omega_acc_E` | 0.35 | 🔴 horgonyzatlan | ⚠ CSAK A SZORZAT AZONOSÍTHATÓ (A22). IRÁNY: a pénzügyileg nem korlátozott cégek nettó beruházási rátája ~7,8 pp-tal magasabb, és a hatás kisebb a nagyvállalatoknál. ⚠ A BIS WP 984 magyar program-hatását TILOS omega_acc-nak nevezni (CLAUDE.md). | -DACCSCALE / -DOMSCALE | [2026-08-12_access_horgonyzas_eredmeny.md](docs/eredmenyek/2026-08-12_access_horgonyzas_eredmeny.md) · [2026-08-24_D_kategoria_irodalmi_kereses.md](docs/terv/2026-08-24_D_kategoria_irodalmi_kereses.md) |
@@ -346,7 +344,7 @@
 
 ---
 
-## Őrök (138 db)
+## Őrök (148 db)
 
 *A füstteszt minden ellenőrzése. Ez a projekt egyetlen olyan nyilvántartása, ami nem tud némán elcsúszni: ha egy állítás megdől, itt megbukik egy sor.*
 
@@ -389,11 +387,11 @@
 - ✅ t39b: a CALIB=1 ag reprodukalja a kozolt kuszobet (101.0)
 - ✅ t39b: JV-keszlettel a kuszob 100 ALATT (94.2) - a szektoralis sorrend megfordul
 - ✅ t40 jv_3type stresszteszt letezik
-- ✅ t40: mind a 18 kombinacio BK-stabil (2. lepcso ATMENT)
+- ✅ t40: mind a 18 kombinacio PF-solverrel megoldodott
 - ✅ t40: realarfolyam es NFA plauzibilis savban
 - ✅ t40: a tipus-kibocsatas sorrendje a phi_j sorrendje (dokumentalt KORLAT, nem eredmeny)
 - ✅ t41 jv_3type_arak stressz letezik
-- ✅ t41: mind a 18 kombinacio BK-stabil (3. lepcso ATMENT - az arszint-szetvalasztas nem tori el a JV-magot)
+- ✅ t41: mind a 18 kombinacio PF-solverrel megoldodott; ez nem BK-teszt
 - ✅ t41: relativar-normalizacio tart (max 6.9e-18) - v01 egyseggyok elkerulve
 - ✅ t41: realarfolyam es NFA plauzibilis savban
 - ✅ t42 eps_ces erzekenyseg letezik
@@ -404,11 +402,13 @@
 - ✅ t43 SZIMMETRIA: azonos parameterek -> azonos tipusok (max 4.4e-16)
 - ✅ t43 NULLA-SOKK: sokk nelkul minden valtozo 0
 - ✅ t44 jv_access stressz letezik
-- ✅ t44: mind a 18 kombinacio BK-stabil (4. lepcso)
+- ✅ t44: mind a 18 perfect-foresight futas megoldodott
+- ✅ t44: mind a 18 terminalis lokalis BK-ellenorzes atment
 - ✅ t44: realarfolyam es NFA plauzibilis savban
 - ✅ t45b jv_access kuszob letezik
 - ✅ t45b NESTING: ACCSCALE=0 == v08 (elteres 0.0e+00)
 - ✅ t45b: veges access-kuszob a JV-magon (ACCSCALE=36.3)
+- ✅ t45b: minden kozolt JV access-kuszob terminalisan BK-stabil
 - ✅ t46 opten-kalibracio letezik
 - ✅ t46: mind a 14 parameter megvan (14)
 - ✅ t46: az om_j es az shl_j sulyok 1-re osszegzodnek
@@ -416,18 +416,20 @@
 - ✅ t46: delta = 0.0242 megerositi az atvett 0.0250-et
 - ✅ t46: a lev_E = lev_D kenyszeritett egyenloseg NEM ALL (1.939 vs 1.719)
 - ✅ t47 opten stressz letezik
-- ✅ t47: mind a 36 kombinacio BK-stabil (az OPTEN=1 phi_D=0 is)
-- ✅ t47 SZINT: az aggregalt GDP-sav az A01-ben kozolt +0,3...+2,9%-on belul (0.52% ... 2.89%)
+- ✅ t47: mind a 36 PF/BK diagnosztika technikailag lefutott
+- ✅ t47 TERMINALIS BK: csak OPTEN=0 stabil; az OPTEN=1/2/3 agakon 15 instabil gyok jut 13 eloretekinto valtozora (9/36 stabil)
+- ✅ t47 ERVENYES SZINT: a terminalisan determinált GDP-sav 0.52% ... 1.18%
 - ✅ t47 REGRESSZIO: OPTEN=0 == t44 baseline (elteres 0.0e+00)
 - ✅ t48b opten-kuszob letezik
 - ✅ t48b: minden agon letezik veges kuszob
+- ✅ t48b: minden kozolt kuszob terminalisan lokalisan BK-stabil
 - ✅ t48b: a kuszob-sorrend D < sulyozott KKV < E minden agon
-- ✅ t48b: az empirikus horgony LEVISZI a kuszobot (36.5 -> 22.3)
+- ✅ t48b: a magas-rho kalibracios ag LEVISZI a kuszobot (36.5 -> 22.3)
 - ✅ t48b SZINT: a kuszobok az F01-ben kozolt szamokon (36.5 / 22.3)
 - ✅ t49b rho_acc erzekenyseg letezik
 - ✅ t49b: a kuszob MONOTON csokken a rho_acc-ban (47.8 -> 17.5)
-- ✅ t49b: a GDP-hatas MONOTON no a rho_acc-ban
-- ✅ t49b KORLAT: a horgonyzott rho_acc mellett a GDP-hatas TULMEGY a korabbi savon (1.75% > 1.04%)
+- ✅ t49b: a GDP-hatas a BK-ervenyes ACC100 pontokon monoton no
+- ✅ t49b KORLAT: rho_acc>=0.93 mellett ACCSCALE=100 BK-invalid, GDP nincs kozolve
 - ✅ t37 access szegmens-evek letezik
 - ✅ t37: az export-KKV hozzaferese 13x a hazaie (12.8x: 61.9% vs 4.8%)
 - ✅ t37: a nagyvallalati hozzaferes ALACSONYABB az export-KKV-enal (43.5% < 61.9%)
@@ -462,30 +464,36 @@
 - ✅ t25b: mind a 4 CI TARTALMAZZA a nullat - a kulonbseg nem szignifikans
 - ✅ t25b: 0 szignifikans kulonbseg (max |t| = 1.85)
 - ✅ t51 kuszobfelulet-kontur letezik
+- ✅ t51: a teljes kozolt nullkontur BK-ervenyes racspontok kozt fekszik
 - ✅ t51 KONTUR: a kuszob MONOTON csokken a rho_acc-ban (47.8 -> 17.5)
 - ✅ t51 SZINT: a kontur vegpontjai az F01-ben kozolt szamokon (47.8 / 22.2)
 - ✅ t52e szorzat-azonossag letezik
-- ✅ t52e SZERKEZET: a modell CSAK a lambda*omega szorzatot azonositja (max elteres 0.0e+00 pp)
+- ✅ t52e SZERKEZET: a modell CSAK a lambda*omega szorzatot azonositja a BK-ervenyes tartomanyban (max elteres 0.0e+00 pp)
+- ✅ t52e: az 2500-as kontrollcsoport mind az 5 pontja BK-ervenyes
 - ✅ t52b lam-om kontur letezik
 - ✅ t52b: a kuszob-kontur IZO-SZORZAT gorbe (12 pont, a szorzat relativ szorasa 0.08%)
 - ✅ t52b SZINT: a szorzat-kuszob a kozolt 500-on (500.1)
 - ✅ t52b: a kuszob-omega MONOTON csokken a lambda-ban (100.0 -> 3.6)
 - ✅ t52d lam-om atlo letezik
+- ✅ t52d: mindket atlobeli kuszob terminalisan lokalisan BK-stabil
 - ✅ t52d HID: az atlo visszaadja a t48b/t51 kuszobeit (22.36 / 36.56 vs 22.3 / 36.5)
 - ✅ t52c marginalis scan letezik
 - ✅ t52c: a "csak lambda" es a "csak omega" metszet AZONOS
-- ✅ t52c DIAGNOZIS: a kvadratikussag a KOZOS skalazas mutermeke (egyutt 12.5x vs egy-lepcso 2.3x)
+- ✅ t52c DIAGNOZIS: a kvadratikussag a KOZOS skalazas mutermeke (egyutt 10.5x vs egy-lepcso 1.6x)
 - ✅ t53d dekomp-regresszio letezik
 - ✅ t53d REGRESSZIO: a -DDECOMP=0 ag == t44 baseline (elteres 6.7e-16)
 - ✅ t53b dekomp-kuszob letezik
 - ✅ t53b: minden dekompozicios agon letezik veges kuszob
+- ✅ t53b: minden kozolt dekompozicios kuszob terminalisan BK-stabil
 - ✅ t53b FO ALLITAS: a KKV-eredmeny NEM technologiai mutermek (technologia azonos 1.03x, csak penzugyi 1.01x)
 - ✅ t53b SZINT: a kuszobok a kozolt szamokon (22.36 / 22.62 / 22.95)
 - ✅ t53c dekomp BK-stressz letezik
-- ✅ t53c: mind a 45 dekompozicios kombinacio BK-stabil
-- ✅ t53c: a KKV-elony POZITIV mind az ot agon, minden szcenarioban
+- ✅ t53c: mind a 45 PF/BK diagnosztika technikailag lefutott
+- ✅ t53c KORREKCIO: az OPTEN1 ACC100 racs pontosan 0/45 terminalis BK-stabil (gyok/elo=15/13)
 - ✅ t53 dekomp-agak letezik
-- ✅ t53 ELLENPROBA: a sulyozas modja nem szamit (4.07 vs 4.05 pp)
+- ✅ t53: mind a 18 dekompozicios PF/BK diagnosztika lefutott
+- ✅ t53 KORREKCIO: OPTEN0 9/9 BK (13/13), OPTEN1 0/9 BK (15/13)
+- ✅ t53 ELLENPROBA (BK-ervenyes OPTEN0): a sulyozas modja nem szamit (1.414 vs 1.415 pp)
 - ✅ t00 PHILLIPS: az aszimmetrikus arsokkok (eps_md / eps_mx) egyik szcenarioban sincsenek hajtva
 - ✅ t00 SZERKEZET: mind a 4 modell-vonal megvan, README-vel
 - ✅ t00 SZERKEZET: a FO MODELL a helyen van (1_fo_vonal_jv)

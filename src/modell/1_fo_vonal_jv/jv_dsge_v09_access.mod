@@ -8,9 +8,9 @@
  * oldalan.
  *
  * ELOZMENY (a lepcsozetes terv):
- *   1. lepcso  jv_dsge_v06          szegmens-specifikus tokehozam   BK 18/18
- *   2. lepcso  jv_dsge_v07_3type    harom tipus, kozos ar           BK 18/18
- *   3. lepcso  jv_dsge_v08_3type_arak  tipusonkenti ar es kereslet  BK 18/18
+ *   1. lepcso  jv_dsge_v06          szegmens-specifikus tokehozam   PF 18/18; BK nem merve
+ *   2. lepcso  jv_dsge_v07_3type    harom tipus, kozos ar           PF 18/18; BK nem merve
+ *   3. lepcso  jv_dsge_v08_3type_arak  tipusonkenti ar es kereslet  PF 18/18; BK nem merve
  *   + fuggetlen verifikacio (szimmetria, aggregacio, nulla-sokk,
  *     egymasba agyazas): 17/17 -- t43.
  *
@@ -163,15 +163,16 @@
 @#ifndef DECOMPW
   @#define DECOMPW = 1
 @#endif
-// -DOPTEN: a 14 tipus-parameter forrasa (s15_opten_kalibracio.m).
+// -DOPTEN: 13 tipus-parameter forrasa es egy leiro rho-erzekenysegi pont
+// (s15_opten_kalibracio.m).
 //   0 = atvett indulo ertekek a kkv_dsge_v07_access-bol (ALAPERTELMEZES,
 //       hogy a korabbi eredmenyek valtozatlanul reprodukalhatok legyenek)
 //   1 = Opten-panel, ALAP szegmensdefinicio (E = barmilyen pozitiv export,
 //       azonos az s14 hozzaferesi szamaival)
 //   2 = Opten-panel, KUSZOB25 definicio (E = export_arany >= 25%)
-//   3 = CSAK a rho_acc horgony, minden mas atvett indulo marad. Ez a
-//       DEKOMPOZICIOS ag: a 0->3 lepes tisztan a perzisztencia-horgony
-//       hatasa, a 3->1 lepes a sulyoke es a tokeattetele.
+//   3 = CSAK a leiro 0.9673 rho-erzekenysegi pont, minden mas atvett indulo
+//       marad. Ez NEM horgony: a 0->3 lepes a rho-felteves hatasa, a 3->1
+//       lepes a sulyoke es a tokeattetele.
 // A kapcsolo azert kell felulíras helyett, mert az om_j/shl_j sulyok a
 // 10+ fos populacion BELULI reszesedesek (a mikrocegek nincsenek a
 // panelben), tehat NEM cserelhetok le vita nelkul -- lasd a
@@ -280,11 +281,12 @@ chi_E = 0.06; chi_D = 0.06; chi_L = 0.02;
 lev_E = 1.6;  lev_D = 1.6;  lev_L = 1.85;
 psi_E = 8.0;  psi_D = 8.0;  psi_L = 13.0;
 
-// --- -DOPTEN: EMPIRIKUS UJRAKALIBRACIO AZ OPTEN-PANELBOL ----------------
+// --- -DOPTEN: EMPIRIKUS UJRAKALIBRACIO + RHO-ERZEKENYSEG -----------------
 // Forras: src/s15_opten_kalibracio.m -> output/tables/t46_opten_kalibracio.csv
 // Panel: 148 225 ceg-ev, 37 805 ceg, 2021-2024, 10+ fos cegek.
-// A delta es a rho_acc szegmensfuggetlen, ezert azok a sajat helyukon
-// vannak felulirva (delta itt, rho_acc a penzugyi blokk vegen).
+// A delta szegmensfuggetlen kalibracio; a rho_acc szinten kozos, de
+// horgonyzatlan erzekenysegi felteves. A sajat helyukon vannak felulirva
+// (delta itt, rho_acc a penzugyi blokk vegen).
 //
 // AMIT AZ ADAT MEGERSIT:
 //   phi_L = 0.3649 vs a jelenlegi 0.365 -- gyakorlatilag azonos, tehat az
@@ -296,8 +298,11 @@ psi_E = 8.0;  psi_D = 8.0;  psi_L = 13.0;
 //     merteke (kotelezettsegek/eszkozok -> 1.684 vs 1.579) is megerositi,
 //     a SZINT viszont mero-fuggo -- ezert a szintre nem, csak az IRANYRA
 //     hivatkozzunk.
-//   rho_acc = 0.967 vs 0.85 -- ez a hosszu tavu access-szorzot
-//     1/(1-rho) reven ~4.5-szeresere emeli. Lasd t47.
+// LEIRO RHO-ERZEKENYSEGI PONT (NEM KALIBRACIO):
+//   A 0.9673 cegszintu hitelstatusz-perzisztencia mechanikusan ~4.5-szeresere
+//   emeli a hosszu tavu access-szorzot 0.85-hoz kepest. A cegek 92.4%-a negy
+//   ev alatt egyszer sem valtott, igy ez foleg allando heterogenitast tukroz;
+//   nem dinamikus szegmens-rho-becsles es nem also korlat. Lasd t47.
 @#if OPTEN == 1
 // ALAP szegmensdefinicio (E = barmilyen pozitiv export; azonos az s14-gyel)
 om_E = 0.2555; om_D = 0.1844; om_L = 0.5601;
@@ -444,20 +449,20 @@ eps_ces = @{EPSCES};
 // horgonyozhato (a tamogatott programok kiiktattak a kamatciklust a
 // KKV-hozzaferesbol). Kuszobformaban kozlendo.
 rho_acc = 0.85;
-// -DOPTEN>=1: az Opten-panel van_hitel atmenet-matrixabol becsult
-// perzisztencia. Ketallapotu Markov-lanc: rho_eves = p11 - p01 = 0.8754
-// (n = 110 350 ceg-ev par), negyedevesre 0.8754^(1/4) = 0.9673.
-// KORLAT: ez CEG-SZINTU statusz-perzisztencia, a modell acc_j-je viszont
-// SZEGMENS-szintu. Az aggregalt arany rendszerint perzisztensebb az
-// egyedinel (az s14 szerint a szegmens-aranyok 4 ev alatt <1 pontot
-// mozdultak), tehat a 0.967 ALSO KORLAT, nem pontbecsles.
+// -DOPTEN>=1: az Opten-panel van_hitel atmenet-matrixabol szamolt LEIRO
+// cegszintu statusz-perzisztencia. A pooled mutato rho_eves = p11-p01 =
+// 0.8754 (n = 110 350 ceg-ev par), negyedevesen 0.8754^(1/4) = 0.9673.
+// A cegek 92.4%-a negy ev alatt egyszer sem valtott, ezert a magas mutato
+// foleg allando cegheterogenitast tukroz. NEM a modell dinamikus,
+// SZEGMENS-szintu rho_acc parameterenek becslese, es NEM also korlat.
+// A rho_acc tovabbra is horgonyzatlan; a 0.9673 csak erzekenysegi pont.
 @#if OPTEN >= 1
 rho_acc = 0.9673;
 @#endif
 // -DRHOACC=<x>: a rho_acc kozvetlen felulirasa (minden mas valtozatlan).
 // AZERT KELL, mert a hosszu tavu access-hatas 1/(1-rho_acc)-kal aranyos,
 // ami rho -> 1 kozeleben ROBBAN: 0.85 -> 6.7x, 0.95 -> 20x, 0.98 -> 50x.
-// Egy ilyen parameterre nem eleg egy pontbecsles, scan kell (t49).
+// Horgony nelkul a teljes tartomanyt scanben kell kozolni (t49).
 @#ifndef RHOACC
   @#define RHOACC = -1
 @#endif

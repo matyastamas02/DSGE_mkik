@@ -80,7 +80,7 @@ fprintf('%-38s %9s %8s %8s %8s %11s\n', 'parameterkeszlet', 'GDP', 'y_E', ...
 fprintf('%s\n', repmat('-', 1, 88));
 for i = 1:height(T)
     if T.konvergalt(i) ~= 1
-        fprintf('%-38s  *** NEM KONVERGALT / BK SERUL ***\n', T.leiras(i));
+        fprintf('%-38s  *** PF SOLVER NEM KONVERGALT (BK NEM MERve) ***\n', T.leiras(i));
         continue
     end
     fprintf('%-38s %+8.3f%% %+7.3f%% %+7.3f%% %+7.3f%% %+8.3f pp\n', ...

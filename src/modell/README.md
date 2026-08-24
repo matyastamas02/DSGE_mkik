@@ -29,10 +29,14 @@
 > A JV-vonal négy lépcsőben utolérte és meghaladta az EAGLE-vonalat:
 > `v06` (szegmens-tőkehozam) → `v07_3type` (három típus) →
 > `v08_3type_arak` (típusonkénti ár) → **`v09_access`** (hozzáférési margó).
-> Mind a négy lépcső **18/18 BK-stabil**, és lefutott a független
+> A v09 alapértelmezett `OPTEN=0` ága **18/18 terminálisan BK-stabil**, és lefutott a független
 > verifikáció is (szimmetria 1e−16, aggregáció 1e−19, nulla-sokk pontosan 0,
 > `ACCSCALE=0` → **pontosan** a v08). A `kkv_dsge_*` sor referencia-vonal.
 > Részletek a gyökér `README.md`-ben és `docs/kalibracio_teendok_csapatnak.md`-ben.
+>
+> **BK-korrekció (2026-08-24):** a teljes `OPTEN=0..3` rács 36/36
+> perfect-foresight megoldása nem jelent 36/36 BK-stabilitást. A terminális
+> lokális BK-feltétel 9/36 esetben teljesül; kizárólag az `OPTEN=0` ág stabil.
 
 ## ⚠ ALAPCIKK-VÁLTÁS (2026-07-13): Jakab–Világi a fő vonal
 
@@ -112,16 +116,16 @@ tanulmány KERETEZÉSÉT módosította, nem a DSGE szerepét.
   `y_D≥y_L` **22,6** · súlyozott KKV **36,3** · `y_E≥y_L` **61,9**.
 
 - **`-DOPTEN` / `-DRHOACC` a `jv_dsge_v09_access.mod`-ban** (2026-08-16) —
-  nem új modellverzió, hanem a fő modell **empirikus horgonyzása**: a
+  nem új modellverzió, hanem a fő modell **kalibrációs és érzékenységi rácsa**: a
   `docs/kalibracio_teendok_csapatnak.md` 1. prioritása lefutott. A 14
   „átvett induló" típus-paraméter (`om_j`, `shl_j`, `phi_j`, `lev_j`,
-  `delta`, `rho_acc`) most az **Opten-panelből** (148 225 cég-év, 37 805 cég,
+  `delta`, valamint egy leíró `rho_acc`-változat) az **Opten-panelből** (148 225 cég-év, 37 805 cég,
   2021–2024, 10+ fő) van kiszámolva. Futtatás: `s15_opten_kalibracio` →
   `t46`, `t46b`, `t46c`; `stress_opten_v09` → `t47`, `t48`, `t48b`, `t49`,
   `t49b`. **Felülírás helyett makró-kapcsoló**, a repo szabálya szerint:
   `-DOPTEN=0` (átvett induló, **alapértelmezés**) · `1` (Opten, ALAP
   szegmensdefiníció) · `2` (Opten, `export_arany ≥ 25%`) · `3` (**csak** a
-  `rho_acc` horgony — dekompozíciós ág) · `-DRHOACC=<x>` (közvetlen scan).
+  magas-rho változat — dekompozíciós ág) · `-DRHOACC=<x>` (közvetlen scan).
   - **Amit az adat megerősít:** `phi_L` = 0,3649 vs. az átvett 0,365 és
     `delta` = 0,0242 vs. 0,0250 — vagyis ez a két érték **már ebből a
     panelből származhatott**, független próbán kijön.
@@ -131,14 +135,17 @@ tanulmány KERETEZÉSÉT módosította, nem a DSGE szerepét.
     1,684 vs. 1,579) is megerősíti, a **szint viszont mérőfüggő**, ezért
     csak az irányra szabad hivatkozni. Ez volt a teendőlista nevesített
     részfeladata.
-  - **A legnagyobb hatású tétel:** `rho_acc` = **0,9673** (van_hitel
+  - **A legnagyobb hatású érzékenységi tétel:** `rho_acc` = **0,9673** (van_hitel
     átmenet-mátrix, kétállapotú Markov, ρ_éves = p11 − p01 = 0,8754,
     n = 110 350 cég-év pár) a korábbi 0,85 helyett. A hosszú távú
     access-szorzó `1/(1−ρ)` révén **6,7× → 30,6×**, és ettől a küszöb a
     súlyozott KKV-blokkra **36,5 → 22,3** (csak a `rho_acc`-tól: 17,0).
-  - ⚠ **A korábbi „+0,27…+1,04% robusztus GDP-sáv" a horgonyzott `rho_acc`
-    mellett NEM tartható:** `-DOPTEN=1` mellett +0,76…+2,03%, `-DOPTEN=3`
-    mellett +0,92…+2,89%. Füstteszt-őr rögzíti, hogy ez tudatos.
+    **Ez nem horgony:** a cégek 92,4%-a négy év alatt egyszer sem váltott,
+    ezért a 0,9673 főként állandó cégheterogenitást, nem dinamikus
+    szegmens-alkalmazkodást mér.
+  - ⚠ **A korábbi GDP-sávok visszavontak:** az `OPTEN=1/2/3, ACCSCALE=100`
+    pontok terminálisan BK-invalidak. Jelenleg csak az `OPTEN=0` +0,52…+1,18%
+    sávja közölhető pont-eredményként.
   - ⚠ **Az `om_j`/`shl_j` súlyok NEM cserélhetők le vita nélkül:** a panel
     a 10+ fős kört fedi, a mikrocégek hiányoznak, tehát ezek a 10+
     populáción *belüli* részesedések (`shl_L` 0,466 vs. a jelenlegi 0,30 —
@@ -147,7 +154,9 @@ tanulmány KERETEZÉSÉT módosította, nem a DSGE szerepét.
   - **BK-tanulság:** `-DOPTEN=1` mellett `phi_D = 0` **pontosan** (a D
     szegmens épp a nem-exportáló cégeké), így `wx_D = 0`. Ez **nem** töri el
     a modellt — az `x_D`-t a saját exportkereslet-egyenlete továbbra is
-    meghatározza, csak az aggregátumokba nem számít bele. 36/36 BK-stabil.
+    meghatározza, csak az aggregátumokba nem számít bele. A PF solver 36/36
+    konfigurációt megold, de a terminális BK csak az `OPTEN=0` 9/9 során
+    teljesül; az `OPTEN=1/2/3` ágakon 15/13 miatt megbukik.
   - **Kódtakarítás:** a `-DSYM=1` ág `shl_* = 1/3` sora **holt kód** volt
     (egy későbbi sor felülírta). Az eredményt nem érintette (a három súly
     összege mindkét esetben 1, szimmetriában `l_E==l_D==l_L`), de az
@@ -160,7 +169,7 @@ tanulmány KERETEZÉSÉT módosította, nem a DSGE szerepét.
   kereslet**, ez oldja fel a v07_3type mechanikus-kibocsátás korlátját.
   A **v01-es egységgyök-csapdát** (*„a relatívár-identitások naiv felírása
   egységgyököt hagy"*) a súlyozott relatívár-összeg explicit nullára kötése
-  kerüli ki. **Eredmény:** BK 18/18 — tehát a v04-es kudarc **nem volt
+  kerüli ki. **Régi stresszeredmény:** PF solver 18/18; valódi BK-check nincs — tehát a v04-es kudarc **nem volt
   elkerülhetetlen**, ott a *kombináció* volt a baj; a korlát feloldva
   (0,4455 pp eltérés a mechanikus jóslattól).
   ⚠ **Új horgonyzatlan paraméter:** `eps_ces` (a JV-ben nincs ilyen), és az
@@ -169,7 +178,7 @@ tanulmány KERETEZÉSÉT módosította, nem a DSGE szerepét.
 
 - **`jv_dsge_v07_3type.mod`** — 2. lépcső: **három típus** (E/D/L) a
   JV-magon, közös árszinttel. Minden típus mindkét piacon értékesít, tehát
-  a méret/piac szétválasztás követelménye már itt teljesül. BK 18/18.
+  a méret/piac szétválasztás követelménye már itt teljesül. PF solver 18/18; BK nem volt mérve.
   ⚠ **Dokumentált korlát:** közös ár mellett a típus-kibocsátás
   **mechanikus** (`y_j = (1−phi_j)·y_d + phi_j·y_x`, bitre) — szegmens-szintű
   kibocsátást ebből a lépcsőből **nem szabad közölni**. Ugyanaz a hibatípus,
@@ -238,7 +247,7 @@ tanulmány KERETEZÉSÉT módosította, nem a DSGE szerepét.
   A v06 megmutatja, hogy **nem a szegmens-specifikus tőkehozam volt a
   hibás, hanem a KOMBINÁCIÓ a CPI/árszint-szétválasztással**: `rk_S`/`rk_L`
   önmagában, változatlan `px`/CPI-blokk mellett, **18 kombinációban
-  (3 SCENARIO × 3 TSCEN × 2 NOVERT) mind konvergál, BK sehol nem sérül**
+  (3 SCENARIO × 3 TSCEN × 2 NOVERT) mind PF-solverrel konvergál; BK-t ekkor nem mértünk**
   (`stress_v06.m`). A jövőbeli bővítéseknél tehát a tiltás nem a szektor-
   specifikus tőkére, hanem az egyszerre végzett árszint-szétválasztásra áll.
   **Nyitott, mielőtt eredménynek számít:** teljes euró-szcenárió tábla

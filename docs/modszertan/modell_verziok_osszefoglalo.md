@@ -454,7 +454,7 @@ A v04 azt rögzítette, hogy „`rk_S`/`rk_L` + CPI-szétválasztás megbontotta
 BK-t". A v06 megmutatja: **nem a szegmens-specifikus tőkehozam volt a
 hibás, hanem a KOMBINÁCIÓ.** `rk_S`/`rk_L` önmagában, változatlan CPI-blokk
 mellett **18 kombinációban (3 SCENARIO × 3 TSCEN × 2 NOVERT) mind
-konvergál, BK sehol nem sérül** (`stress_v06.m`). A jövőbeli bővítéseknél a
+PF-solverrel konvergál; BK-t a régi futtató nem mérte** (`stress_v06.m`). A jövőbeli bővítéseknél a
 tiltás tehát **nem** a szektor-specifikus tőkére áll, hanem az egyszerre
 végzett árszint-szétválasztásra.
 

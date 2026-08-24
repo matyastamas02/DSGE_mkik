@@ -237,11 +237,14 @@ paraméter** síkon (134. o. ábra). A kulcsmegállapítás:
 - **Ugyanaz a 13%-os sokk `AR = 0,06`-tal** már csak egy **két periódusos**
   beavatkozás küszöbeként szolgál.
 
-> ⭐ **Ez a mi `rho_acc`-eredményünk pontos analógja.** Nálunk a horgonyzott
-> perzisztencia (0,85 → 0,9673) a KKV-küszöböt 36,5-ről 22,3-ra vitte le,
+> ⭐ **Ez a mi `rho_acc`-érzékenységünk szerkezeti analógiája.** Nálunk a
+> feltételes magas-perzisztenciájú ág (0,85 → 0,9673) a KKV-küszöböt
+> 36,5-ről 22,3-ra vitte le,
 > mert a hosszú távú hatás `1/(1−ρ)`-val arányos. Itt ugyanez: **a küszöb a
 > sokk perzisztenciáján múlik, nem csak a nagyságán.** Két, egymástól
-> független modellben ugyanaz a szerkezeti tanulság.
+> független modellben ugyanaz a szerkezeti tanulság. A 0,9673 azonban nem
+> empirikus szegmens-rho-horgony: a panelbeli hitelstátusz főként tartós
+> cégek közötti heterogenitást mér, ezért ez csak érzékenységi pont.
 
 ### A szerző saját fenntartása — ezt érdemes szó szerint észben tartani
 

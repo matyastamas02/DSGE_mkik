@@ -73,7 +73,16 @@ A repóban **két modellvonal** él. A `kkv_dsge_*` az EAGLE-vonal
 csapat 2026-07-13-án azzal az érvvel döntött a JV mellett, hogy annak
 paraméterei magyar adaton **becsültek**. Ez azóta rendben van: a JV-vonal
 négy lépcsőben utolérte (`v06` → `v07_3type` → `v08_3type_arak` →
-`v09_access`), mind 18/18 BK-stabil.
+`v09_access`). A v09 **alapértelmezett `OPTEN=0` ága** 18/18 BK-stabil.
+
+> **BK-KORREKCIÓ — 2026-08-24:** a korábbi „36/36 BK” megállapítás
+> téves volt: az `oo_.deterministic_simulation.status` csak a
+> perfect-foresight solver sikerét jelzi. A valódi terminális lokális
+> Dynare `check` szerint a `t47` 36/36 PF-megoldása közül 9/36 BK-stabil:
+> `OPTEN=0` 9/9 (13 instabil gyök / 13 előretekintő változó), míg az
+> `OPTEN=1/2/3` ágak 0/27 (15/13). Ezeken az ágakon az `ACCSCALE=100`
+> pont-eredmények nem interpretálhatók. A `t48b`, `t51`, `t52b` és `t53b`
+> közölt küszöbpontjai viszont külön ellenőrizve BK-érvényesek.
 
 ### A projekt visszatérő hibamintázata — EZT MUSZÁJ TUDNI
 
@@ -96,12 +105,12 @@ eredményt **küszöbformában** kell közölni (nem pontbecslésként).
   `docs/figyelmeztetesek/FIGYELMEZTETES_fo_allitas.md`.
 - **Szegmens-tőkét/beruházást a v05-ből** — reallokációs maradék.
 
-**Ami robusztus:** az aggregált GDP-hatás **előjele és nagyságrendje**.
-⚠ **A sáv 2026-08-16-én módosult:** a korábbi „+0,27% … +1,04%" az
-*átvett* `rho_acc` = 0,85 mellett érvényes; az Opten-panelből horgonyzott
-`rho_acc` = 0,9673 mellett a felső vég +2,03% (`-DOPTEN=1`), a `rho_acc`-ot
-önmagában cserélve +2,89% (`-DOPTEN=3`). A helyes közlés: **+0,3 … +2,9%**,
-azzal, hogy a felső vég a hozzáférési csatorna perzisztenciáján múlik.
+**Ami jelenleg közölhető:** a terminálisan determinált `OPTEN=0` ágon az
+aggregált tartós GDP-hatás **pozitív, +0,52% … +1,18%** (9/9). A korábbi
+„+0,27% … +1,04%", majd „+0,3% … +2,9%" sávok visszavontak: az utóbbi
+BK-invalid `OPTEN=1/2/3` pontokat is tartalmazott. A `rho_acc=0,9673` pedig
+nem empirikus horgony, hanem cégstátusz-leíró statisztika; főként állandó
+heterogenitást mér, nem a modell dinamikus szegmensállapotát.
 Részletek: `docs/eredmenyek/2026-08-16_opten_kalibracio_eredmeny.md`.
 
 ### A projekt AZONOSÍTÁSI ÁLLÁSPONTJA — ezt kell tudni közölni
@@ -119,7 +128,7 @@ megfogalmazás, és ezt érdemes szó szerint használni:
 szétbontás (`-DLAMSCALE` / `-DOMSCALE`) megmutatta, hogy a modell a
 hozzáférési csatorna két rugalmasságát **külön-külön nem is azonosítja** —
 csak a **szorzatukat**. A helyes küszöb-objektum tehát `(λ·ω)* = 500` (a
-horgonyzott `rho_acc = 0,9673` mellett), és a korábban közölt „22,3" ennek
+feltételes `rho_acc = 0,9673` változat mellett), és a korábban közölt „22,3" ennek
 egyetlen pontja: `√500`. Lásd `A22`, `F01` és
 `docs/eredmenyek/2026-08-24_lambda_omega_szetbontas.md`.
 
@@ -156,7 +165,7 @@ megtámadná, és joggal.
    így minden variáns futtatható és összevethető marad. Ha egy kapcsoló új
    alapértelmezést kapna, az **csapatdöntés**, nem kódolási lépés.
 5. **Ha egy paraméter `1/(1−ρ)` alakban hat, scan kell rá, nem pontbecslés.**
-   A `rho_acc` 0,85 → 0,9673 horgonyzása a hosszú távú hatást 4,6×-re vitte;
+   A `rho_acc` 0,85 → 0,9673 érzékenységi váltása a hosszú távú mechanikai szorzót 4,6×-re vitte;
    ilyen paraméternél egyetlen szám közlése félrevezető (`t49`).
 
 ### Hol tart a munka
@@ -168,8 +177,9 @@ megtámadná, és joggal.
   `-DOPTEN=0|1|2|3`, `-DRHOACC=<x>`; **az alapértelmezés `0` maradt**, mert
   az `om_j`/`shl_j` súlyokhoz még kell a KSH/Eurostat SBS mikrokör-bontás.
   Amit hozott: `phi_L` és `delta` **megerősítve**; a `lev_E = lev_D`
-  kényszerített egyenlőség **megdőlt** (1,939 vs 1,719); a `rho_acc`
-  0,85 → **0,9673**, amitől a KKV-küszöb 36,5 → 22,3.
+  kényszerített egyenlőség **megdőlt** (1,939 vs 1,719). A leíró
+  cégstátusz-statisztikából képzett `rho_acc=0,9673` érzékenységi változat
+  a KKV-küszöböt 36,5 → 22,3-ra viszi, de ez nem horgony és nem alsó korlát.
   Eredménydoc: `docs/eredmenyek/2026-08-16_opten_kalibracio_eredmeny.md`.
 - **✅ 2026-08-16 után 2026-08-24: a korlátok-riport 1. és 2. teendője
   is lefutott.**
@@ -183,7 +193,9 @@ megtámadná, és joggal.
     `dekomp_edl_v09.m` → `t53`–`t53d`). Amit hozott: a KKV-eredmény
     **nem technológiai műtermék** — a technológia teljes kiegyenlítése a
     küszöböt 3%-kal mozdítja (22,36 → 22,95), csak a pénzügyi
-    heterogenitással 22,62 (`A23`). 45/45 BK-stabil.
+    heterogenitással 22,62 (`A23`). A 10 közölt küszöbpont BK-érvényes;
+    az `OPTEN=1, ACCSCALE=100` pont-rács ezzel szemben 0/45 terminális BK,
+    ezért abból GDP-sáv vagy KKV-pozitivitás nem közölhető.
     Doc: `docs/eredmenyek/2026-08-24_edl_dekompozicio.md`.
   - **3. — a D kategória 20 tételének irodalmi átfésülése.** 3 zöld,
     16 sárga, 1 piros. Legfontosabb: `tbank_j`-re VAN irodalom, és

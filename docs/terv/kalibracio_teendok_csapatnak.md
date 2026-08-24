@@ -9,26 +9,26 @@ magunk kiszámolni, mihez kell külső adat, és mihez kell szakirodalom.*
 > konkrétan a 2026-07-13-i alapcikk-döntés hozadéka. A teljes bontás:
 > [`kalibracio_tabla.md`](kalibracio_tabla.md).
 >
-> **Miért most:** a modell technikai része kész. A JV-mag háromtípusos
-> változata mindent tud, amit az EAGLE-vonal (három típus, típusonkénti ár
-> és kereslet, hitelhozzáférési margó), és minden lépcső átment a
-> Blanchard–Kahn teszten és a független verifikáción. **Innentől nem
-> modellépítés van hátra, hanem horgonyzás.**
+> **Miért most:** a JV-mag háromtípusos változata szerkezetileg mindent tud,
+> amit az EAGLE-vonal (három típus, típusonkénti ár
+> és kereslet, hitelhozzáférési margó). A perfect-foresight futások **36/36**
+> esetben érvényesek, de a valódi, terminális `uni=1` Blanchard–Kahn-teszt
+> csak **9/36** esetben teljesül. Ezért a horgonyzás mellett a BK-hibát is
+> rendezni kell.
 
 ---
 
 ## A lényeg egy bekezdésben
 
-**Az aggregált eredmény robusztus, a szegmens-szintű nem.** Az euró tartós
-GDP-hatása minden lépcsőn és minden paraméterezésen **+0,27% … +1,04%**
-között marad. ⚠ **Pontosítás (2026-08-16):** ez a sáv az *átvett* `rho_acc`
-= 0,85 mellett érvényes. Az Opten-panelből horgonyzott `rho_acc` = 0,9673
-mellett a felső vég **+2,03%-ra** tolódik (`-DOPTEN=1`), a `rho_acc`-ot
-önmagában cserélve +2,89%-ig (`-DOPTEN=3`) — mert a hosszú távú
-access-szorzó `1/(1−ρ)`. **A sáv iránya nem változott, a szélessége igen.** A szektorális eredményt viszont **két horgonyzatlan paraméter**
-viszi (`eps_ces` és `ACCSCALE`), és mindkettőn **fordul az előjel**. Amíg
-ezek nincsenek lehorgonyozva, a KKV/nagyvállalat állítást csak
-**küszöbformában** szabad közölni.
+**A közölhető aggregált eredmény jelenleg az `OPTEN=0` ágra korlátozódik:**
+a 9/9 terminálisan BK-valid konfiguráció tartós GDP-hatása
+**+0,52% … +1,18%**. Az `OPTEN=1/2/3`, `ACCSCALE=100` pontok ugyan
+perfect-foresight értelemben lefutnak, de terminálisan BK-indetermináltak,
+ezért az azokból korábban képzett GDP-sávokat visszavontuk. A
+szektorális eredmény előjelét két horgonyzatlan paraméter viszi (`eps_ces`
+és `ACCSCALE`); a szintet a szintén horgonyzatlan `rho_acc` erősen
+felskálázza. Amíg ezek nincsenek lehorgonyozva és a BK-hiba nincs rendezve,
+a KKV/nagyvállalat állítást csak diagnosztikai küszöbként szabad közölni.
 
 Ez a **hatodik** eset a projektben ugyanezzel a mintázattal (`t_S>t_L`,
 `chi`-aszimmetria, `ACCSCALE`, IO-alapú `s_kkv`, `eps_ces`, és most a
@@ -47,14 +47,15 @@ kettő együtt). Ezért a lista élén nem paraméterek állnak, hanem **adatké
 > **Négy mondatban:** (1) a `phi_L` és a `delta` átvett értéke **helyes volt**
 > — a panel független próbán ugyanazt adja. (2) A `lev_E = lev_D`
 > kényszerített egyenlőség **megdőlt**: 1,939 vs. 1,719, az exportáló KKV
-> tőkeáttételesebb. (3) A `rho_acc` 0,85 → **0,9673**, ami a hosszú távú
-> access-szorzót 6,7×-ről 30,6×-re emeli, és a súlyozott KKV-küszöböt
-> **36,5-ről 22,3-ra** viszi le. (4) Az `om_j`/`shl_j` súlyok **nem
+> tőkeáttételesebb. (3) A cégszintű, leíró **0,9673** érzékenységi pontként
+> 6,7×-ről 30,6×-re emeli a hosszú távú access-szorzót, és a súlyozott
+> KKV-küszöböt **36,5-ről 22,3-ra** viszi le, de nem horgonyozza a
+> `rho_acc`-ot. (4) Az `om_j`/`shl_j` súlyok **nem
 > cserélhetők le** a mikrokör hiánya miatt — ez maradt nyitva (lásd 2.5).
 
 *Opten-panel, 148 225 cég-év, 37 805 cég, 2021–2024. Már megvan, csak le
-kell futtatni. **14 paraméter**, becsült ráfordítás: **fél–egy nap az egész
-blokk.***
+kell futtatni. **13 kalibrálható paraméter + 1 leíró státuszdiagnosztika**,
+becsült ráfordítás: **fél–egy nap az egész blokk.***
 
 | # | Paraméter | Jelenlegi | Miből | Panel-oszlop | Ki? |
 |---|---|---|---|---|---|
@@ -63,7 +64,7 @@ blokk.***
 | 3 | `phi_E` / `phi_D` / `phi_L` | 0,56 / 0,05 / 0,365 | exportárbevétel-arány | `export_arany` | |
 | 4 | `lev_E` / `lev_D` / `lev_L` | 1,6 / **1,6** / 1,85 | tőkeáttétel-medián | `tokeattetel` | |
 | 5 | `delta` | 0,025 | écs / tárgyi eszközök | `ertekcsokkenes` | |
-| 6 | `rho_acc` | 0,85 | hozzáférési státusz-átmenet | `van_hitel` átmenet-mátrix | |
+| 6 | `rho_acc` (**horgonyzatlan**) | 0,85 | csak leíró cégszintű státusz-perzisztencia (0,9673; 92,4% négy év alatt sosem váltott, főleg állandó heterogenitás) | `van_hitel` átmenet-mátrix; **nem** dinamikus szegmens-rho-becslés vagy alsó korlát | |
 
 **Fontos a 4-esnél:** a `lev_E = lev_D = 1,6` egy **kényszerített
 egyenlőség** — a modell szándékosan azonos KKV-paramétert ad az export- és
@@ -187,6 +188,7 @@ nem a fő vonal. A kettő között `om_nr`-nél **háromszoros** az eltérés.
 | Paraméter | Miért | Hogyan közöljük |
 |---|---|---|
 | `ACCSCALE` (a hozzáférési margó ereje) | magyar 2021–24 adatból nem azonosítható (programvezérelt piac) | **küszöbforma** |
+| `rho_acc` (a hozzáférési állapot dinamikus szegmens-perzisztenciája) | a cégszintű 0,9673-at főleg állandó heterogenitás adja (92,4% négy év alatt sosem váltott); nem azonosítja a modellparamétert | **horgonyzatlan; scan**, a 0,9673 csak leíró érzékenységi pont és nem alsó korlát |
 | `omega_acc_L` (nem létezik: a nagyvállalatnak nincs margója) | ez a legnagyobb egyetlen feltevés, és ez viszi a szektorális átfordulást | scan kell rá, mint az `ACCSCALE`-re |
 | `nu_uni`, `nu_b` | **technikai** külső zárás, nem strukturális | érzékenységgel kísérve |
 | `s_kkv` / `mu_vert` | az IO-mérés hibás (`FIGYELMEZTETES_io_tabla_gyanus.md`) | amíg nincs javított IO: **ne közöljük** |
@@ -204,7 +206,7 @@ export-KKV-k 61,9%-a. Valószínűbb, hogy a nagyvállalat nem is *kér* hitelt
 `ACCSCALE`, ami kell ahhoz, hogy a KKV megelőzze a nagyvállalatot
 (fő modell, `TSCEN=3` semleges transzmisszió):
 
-| Feltétel | `-DOPTEN=0` (átvett) | `-DOPTEN=3` (csak `rho_acc`) | `-DOPTEN=1` (teljes Opten) |
+| Feltétel | `-DOPTEN=0` (átvett) | `-DOPTEN=3` (csak 0,9673 érzékenységi pont) | `-DOPTEN=1` (teljes Opten) |
 |---|---:|---:|---:|
 | hazai KKV ≥ nagyvállalat | **22,6** | 10,7 | 10,3 |
 | súlyozott KKV-blokk ≥ nagyvállalat | **36,3** | 17,0 | 22,3 |
@@ -212,22 +214,27 @@ export-KKV-k 61,9%-a. Valószínűbb, hogy a nagyvállalat nem is *kér* hitelt
 
 *(2026-08-16, `t48b`. A `-DOPTEN=0` oszlop a korábban közölt érték; a saját
 rácsunkon 22,9 / 36,5 / 61,7 jön ki — a különbség interpolációs, nem
-tartalmi.)*
+tartalmi. A táblázat perfect-foresight diagnosztika: a teljes rács PF
+**36/36**, de a terminális valódi BK-feltétel csak **9/36** ponton teljesül;
+az `OPTEN>=1` eredmények BK-indetermináltak.)*
 
-**A küszöb ~felére esik, amint a `rho_acc` empirikusan horgonyzott** — és
-mivel a 0,9673 **alsó korlát** (cég-szintű perzisztencia, a szegmens-szintű
-ennél magasabb), a valódi küszöb ennél is lejjebb van. A `t49` scan a teljes
+**A küszöb ~felére esik, ha a `rho_acc`-ot a leíró 0,9673 érzékenységi
+pontra állítjuk.** Ez nem empirikus horgony és nem alsó korlát: a cégek
+92,4%-a négy év alatt sosem váltott, így a cégszintű mutató főleg állandó
+heterogenitást tükröz, nem a modell dinamikus szegmens-perzisztenciáját
+azonosítja. A `rho_acc` horgonyzatlan; a `t49` scan csak a feltételes
 összefüggést mutatja:
 
 | `rho_acc` | 0,85 | 0,90 | 0,93 | 0,95 | **0,9673** | 0,98 |
 |---|---:|---:|---:|---:|---:|---:|
 | `1/(1−ρ)` | 6,7 | 10,0 | 14,3 | 20,0 | **30,6** | 50,0 |
 | küszöb (súlyozott KKV ≥ L) | 47,8 | 39,1 | 32,6 | 27,6 | **22,3** | 17,5 |
-| GDP @ `ACCSCALE=100` | 0,66% | 0,77% | 0,91% | 1,07% | **1,34%** | 1,75% |
+| GDP @ `ACCSCALE=100` | 0,66% | 0,77% | — (BK-invalid) | — (BK-invalid) | — (BK-invalid) | — (BK-invalid) |
 
-⚠ **Ezt a táblát kell közölni, nem a „küszöb = 22,3" számot.** Az `ACCSCALE`
-továbbra sem horgonyzott, tehát az állítás továbbra is feltételes; ami
-változott, az a küszöb **szintje**, és az, hogy immár tudjuk, mi viszi.
+⚠ **Ezt a táblát is csak diagnosztikaként szabad közölni, nem a „küszöb =
+22,3" számot.** Az `ACCSCALE` és a `rho_acc` egyaránt horgonyzatlan, az
+`OPTEN>=1` pontok pedig terminális BK-indetermináltak. A tábla azt mutatja,
+hogyan függ a küszöb a feltevésektől, nem elfogadott pontbecslést ad.
 
 ⚠ **Ne hasonlítsuk össze az EAGLE-vonal küszöbeivel** (94–101). A két
 magon az access-specifikáció eltér (ott Tobin-Q-n át, itt a beruházási

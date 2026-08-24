@@ -42,6 +42,7 @@ SZEREP = {
     "mellek": "referencia/archív vonal",
     "abra": "ábra (az állítás a tábláján ül)",
     "hiany": "⚠ **hiányzik az állítás**",
+    "visszavont": "leíró diagnosztika; **az A11 visszavont**",
 }
 
 VONAL_NEV = {
@@ -50,7 +51,7 @@ VONAL_NEV = {
     "3_archiv_korai_jv": "⚪ archív (korai JV)",
     "4_app": "🟡 app",
     "1_adat": "adat-előkészítés",
-    "2_empirikus": "empirikus horgonyzás",
+    "2_empirikus": "empirikus elemzés",
     "3_abrak": "ábrageneráló",
     "4_infra": "infrastruktúra",
 }
@@ -107,6 +108,8 @@ def main() -> None:
     def besorol(x) -> str:
         """Ha nincs allitas ES nincs or, MIERT nincs? Negy nagyon kulonbozo
         eset keveredik, es csak az egyik valodi hianyossag."""
+        if x["azon"] == "t46c":
+            return "visszavont"
         if x["allitasok"] or x["orok"]:
             return "hordoz"
         # az ABRA nem onallo allitashordozo, hanem egy tabla vizualizacioja --

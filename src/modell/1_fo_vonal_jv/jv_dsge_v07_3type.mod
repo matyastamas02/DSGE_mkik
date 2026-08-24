@@ -55,7 +55,7 @@
  * formalizalas egyezik Samuéval.
  *
  * KIINDULAS: jv_dsge_v06.mod (ott mar bizonyitott, hogy a
- * szegmens-specifikus rk a JV-magon BK-stabil, 18/18 kombinacioban).
+ * szegmens-specifikus rk a JV-magon PF-solverrel megoldodott 18/18 kombinacioban; BK-t nem mertunk).
  *
  * =====================================================================
  * !!! DONTO KORLAT: A TIPUS-KIBOCSATAS (y_j) MECHANIKUS !!!

@@ -14,8 +14,8 @@
 %     nem-exportalo cegeke) -> wx_D = 0. Ha ettol eltorik a modell, az
 %     kiderul itt.
 %
-% (2) DEKOMPOZICIO. Az -DOPTEN=3 ag CSAK a rho_acc horgonyt viszi be.
-%     Igy a 0->3 lepes tisztan a perzisztencia-horgony hatasa, a 3->1
+% (2) DEKOMPOZICIO. Az -DOPTEN=3 ag CSAK a magas-rho erteket viszi be.
+%     Igy a 0->3 lepes tisztan a rho-valtozat hatasa, a 3->1
 %     lepes a sulyoke es a tokeattetele. Ez azert lenyeges, mert a
 %     rho_acc 0.85 -> 0.9673 valtozas a hosszu tavu access-szorzot
 %     1/(1-rho) reven 6.67-rol 30.6-ra emeli (4.6-szeres).
@@ -42,6 +42,7 @@ while ~isfile(fullfile(repo, 'CLAUDE.md')), repo = fileparts(repo); end
 dynare_path = getenv('DYNARE_PATH');
 if isempty(dynare_path), dynare_path = 'C:\dynare\6.5\matlab'; end
 addpath(dynare_path);
+addpath(fullfile(repo, 'src', '4_infra'));
 % [a repo-t a fejlec mar beallitotta]
 
 % =====================================================================
@@ -76,36 +77,45 @@ end
 writetable(T, fullfile(repo, 'output', 'tables', 't47_opten_stressz.csv'));
 
 fprintf('\n%s\n', repmat('=', 1, 92));
-fprintf('(1)+(2) BK-STRESSZ ES DEKOMPOZICIO (ACCSCALE=100, NOVERT=0)\n');
+fprintf('(1)+(2) TERMINALIS LOKALIS BK-STRESSZ ES DEKOMPOZICIO (ACCSCALE=100, NOVERT=0)\n');
 fprintf('%s\n', repmat('=', 1, 92));
 opnev = containers.Map({0,1,2,3}, {'0 atvett indulo', '1 Opten ALAP', ...
     '2 Opten KUSZOB25', '3 csak rho_acc'});
-fprintf('%-18s %3s %3s %4s %9s %9s %9s %9s %11s\n', 'OPTEN', 'SC', 'TS', ...
-    'OK', 'GDP', 'y_E', 'y_D', 'y_L', 'KKV-L');
+fprintf('%-18s %3s %3s %3s %3s %7s %9s %9s %9s %9s %11s\n', ...
+    'OPTEN', 'SC', 'TS', 'PF', 'BK', 'U/F', 'GDP', 'y_E', 'y_D', 'y_L', 'KKV-L');
 fprintf('%s\n', repmat('-', 1, 92));
 for i = 1:height(T)
-    if T.konvergalt(i) ~= 1
-        fprintf('%-18s %3d %3d  *** NEM KONVERGALT\n', opnev(T.OPTEN(i)), ...
+    if T.solver_ok(i) ~= 1
+        fprintf('%-18s %3d %3d   0   -       -  *** PF SOLVER HIBA\n', ...
+            opnev(T.OPTEN(i)), ...
             T.SCENARIO(i), T.TSCEN(i)); continue
     end
-    fprintf('%-18s %3d %3d %4d %+8.3f%% %+8.3f%% %+8.3f%% %+8.3f%% %+10.3f pp\n', ...
-        opnev(T.OPTEN(i)), T.SCENARIO(i), T.TSCEN(i), T.konvergalt(i), ...
+    fprintf(['%-18s %3d %3d %3d %3d %2d/%-2d %+8.3f%% %+8.3f%% ' ...
+        '%+8.3f%% %+8.3f%% %+10.3f pp\n'], ...
+        opnev(T.OPTEN(i)), T.SCENARIO(i), T.TSCEN(i), T.solver_ok(i), ...
+        T.bk_ok(i), T.n_unstable(i), T.n_forward(i), ...
         T.GDP_pct(i), T.y_E_pct(i), T.y_D_pct(i), T.y_L_pct(i), ...
         T.KKV_minus_L_pp(i));
 end
-fprintf('EREDMENY: %d / %d megoldodott.\n', sum(T.konvergalt == 1), height(T));
+fprintf(['EREDMENY: PF solver %d/%d; terminalis lokalis BK %d/%d; mindketto ' ...
+    '%d/%d.\n'], sum(T.solver_ok == 1), height(T), sum(T.bk_ok == 1), ...
+    height(T), sum(T.ervenyes == 1), height(T));
 
 fprintf('\nAGGREGALT GDP-SAV AGANKENT (a korabbi kozolt sav: +0.27 ... +1.04%%):\n');
 for op_ = [0 3 1 2]
-    m = T.OPTEN == op_ & T.konvergalt == 1;
-    fprintf('  %-18s  %+.3f%% ... %+.3f%%\n', opnev(op_), ...
-        min(T.GDP_pct(m)), max(T.GDP_pct(m)));
+    m = T.OPTEN == op_ & T.ervenyes == 1;
+    if any(m)
+        fprintf('  %-18s  %+.3f%% ... %+.3f%%\n', opnev(op_), ...
+            min(T.GDP_pct(m)), max(T.GDP_pct(m)));
+    else
+        fprintf('  %-18s  nincs BK-ervenyes ACCSCALE=100 futas\n', opnev(op_));
+    end
 end
 
 % =====================================================================
 % (3) A KUSZOB UJRASZAMOLASA
 % =====================================================================
-% Surubb racs alacsony ACCSCALE-en: ha a rho_acc-horgony tenyleg 4.6-szeres
+% Surubb racs alacsony ACCSCALE-en: a magas-rho erzekenyseg 4.6-szeres
 % hosszu tavu szorzot ad, a kuszob a korabbi 36.3 tizedere is eshet.
 scales = [0:2:20, 25:5:50, 60:20:140];
 K = table();
@@ -120,17 +130,19 @@ Ki = table();
 fprintf('\n%s\n', repmat('=', 1, 92));
 fprintf('(3) AZ ACCESS-KUSZOB AGANKENT (SCENARIO=1, TSCEN=3)\n');
 fprintf('%s\n', repmat('=', 1, 92));
-fprintf('%-18s %14s %14s %14s\n', 'OPTEN', 'kuszob D>=L', 'kuszob KKV>=L', ...
-    'kuszob E>=L');
+fprintf('%-18s %14s %3s %14s %3s %14s %3s\n', 'OPTEN', 'kuszob D>=L', ...
+    'BK', 'kuszob KKV>=L', 'BK', 'kuszob E>=L', 'BK');
 for op_ = [0 3 1]
-    Kok = K(K.OPTEN == op_ & K.konvergalt == 1, :);
+    Kok = K(K.OPTEN == op_ & K.ervenyes == 1, :);
     kD = kuszob_(Kok.accscale, Kok.D_minus_L_pp);
     kK = kuszob_(Kok.accscale, Kok.KKV_minus_L_pp);
     kE = kuszob_(Kok.accscale, Kok.E_minus_L_pp);
-    fprintf('%-18s %14.1f %14.1f %14.1f\n', opnev(op_), kD, kK, kE);
-    Ki = [Ki; table(op_, string(opnev(op_)), kD, kK, kE, ...
+    bkD = bk_at_(op_, kD); bkK = bk_at_(op_, kK); bkE = bk_at_(op_, kE);
+    fprintf('%-18s %14.1f %3g %14.1f %3g %14.1f %3g\n', ...
+        opnev(op_), kD, bkD, kK, bkK, kE, bkE);
+    Ki = [Ki; table(op_, string(opnev(op_)), kD, kK, kE, bkD, bkK, bkE, ...
         'VariableNames', {'OPTEN', 'ag', 'kuszob_D_L', 'kuszob_KKV_L', ...
-        'kuszob_E_L'})]; %#ok<AGROW>
+        'kuszob_E_L','bk_ok_D_L','bk_ok_KKV_L','bk_ok_E_L'})]; %#ok<AGROW>
 end
 writetable(Ki, fullfile(repo, 'output', 'tables', ...
     't48b_opten_kuszob_osszegzes.csv'));
@@ -138,11 +150,12 @@ writetable(Ki, fullfile(repo, 'output', 'tables', ...
 fprintf(['\nERTELMEZES:\n' ...
     '- A kuszobFORMA marad: az ACCSCALE tovabbra sem horgonyzott, tehat a\n' ...
     '  szektoralis allitas tovabbra is felteteles ("a KKV akkor nyer, ha...").\n' ...
-    '- Ami valtozik, az a KUSZOB SZINTJE. A rho_acc empirikus horgonya\n' ...
+    '- Ami valtozik, az a KUSZOB SZINTJE. A magas-rho kalibracios ag\n' ...
     '  (0.85 -> 0.9673) a hosszu tavu access-szorzot 1/(1-rho) reven\n' ...
-    '  %.2f-szeresere emeli, tehat ARANYOSAN kisebb ACCSCALE is eleg.\n' ...
+    '  %.2f-szeresere emeli. Ez osszehasonlito mechanikai eredmeny, nem\n' ...
+    '  empirikus horgony, es csak BK-ervenyes kuszobpontokon ertelmezheto.\n' ...
     '- A 0->3 es a 3->1 lepes kulonbsegebol latszik, hogy ebbol mennyi a\n' ...
-    '  perzisztencia-horgony es mennyi a sulyok/tokeattetel atrendezodese.\n'], ...
+    '  magas-rho valtozat es mennyi a sulyok/tokeattetel atrendezodese.\n'], ...
     (1-0.85)/(1-0.9673));
 fprintf('%s\n', repmat('=', 1, 92));
 
@@ -150,9 +163,11 @@ fprintf('%s\n', repmat('=', 1, 92));
 % (4) rho_acc ERZEKENYSEG -- A LEGFONTOSABB ROBUSZTUSSAGI PROBA
 % =====================================================================
 % A hosszu tavu access-hatas 1/(1-rho_acc)-kal aranyos, ami rho -> 1
-% kozeleben robban. Az empirikus horgony (0.9673) ONMAGABAN ALSO KORLAT
-% (ceg-szintu perzisztencia), tehat epp abba az iranyba mutat, ahol a
-% modell a legerzekenyebb. Ha nem mutatjuk meg a scant, ugyanazt a hibat
+% kozeleben robban. A 0.9673 csak leiro ceg-szintu statusz-statisztika:
+% a 2026-08-24-i ujramerese szerint foleg allando ceg-heterogenitast, nem
+% dinamikus szegmens-alkalmazkodast mer; ezert nem rho-becsles es nem also
+% korlat.
+% Ha nem mutatjuk meg a scant es a valodi BK-hatart, ugyanazt a hibat
 % kovetjuk el, mint a projekt eddigi hat esetében: egy parameter viszi az
 % eredmenyt, es nem latszik, hogy o viszi.
 rhos = [0.85 0.90 0.93 0.95 0.9673 0.98];
@@ -167,28 +182,32 @@ writetable(S, fullfile(repo, 'output', 'tables', 't49_rhoacc_erzekenyseg.csv'));
 fprintf('\n%s\n', repmat('=', 1, 92));
 fprintf('(4) rho_acc ERZEKENYSEG (OPTEN=1, SCENARIO=1, TSCEN=3)\n');
 fprintf('%s\n', repmat('=', 1, 92));
-fprintf('%9s %12s %14s %14s %14s %14s\n', 'rho_acc', '1/(1-rho)', ...
-    'GDP@ACC=100', 'kuszob D>=L', 'kuszob KKV>=L', 'kuszob E>=L');
+fprintf('%9s %12s %14s %3s %14s %14s %14s\n', 'rho_acc', '1/(1-rho)', ...
+    'GDP@ACC=100', 'BK', 'kuszob D>=L', 'kuszob KKV>=L', 'kuszob E>=L');
 Se = table();
 for rh_ = rhos
-    Sk = S(abs(S.rho_acc - rh_) < 1e-9 & S.konvergalt == 1, :);
+    Sraw = S(abs(S.rho_acc - rh_) < 1e-9, :);
+    Sk = S(abs(S.rho_acc - rh_) < 1e-9 & S.ervenyes == 1, :);
     g100 = Sk.GDP_pct(Sk.accscale == 100);
     if isempty(g100), g100 = NaN; end
+    b100 = Sraw.bk_ok(Sraw.accscale == 100);
+    if isempty(b100), b100 = NaN; end
     kD = kuszob_(Sk.accscale, Sk.D_minus_L_pp);
     kK = kuszob_(Sk.accscale, Sk.KKV_minus_L_pp);
     kE = kuszob_(Sk.accscale, Sk.E_minus_L_pp);
-    fprintf('%9.4f %12.1f %13.3f%% %14.1f %14.1f %14.1f\n', rh_, ...
-        1/(1-rh_), g100, kD, kK, kE);
-    Se = [Se; table(rh_, 1/(1-rh_), g100, kD, kK, kE, 'VariableNames', ...
+    fprintf('%9.4f %12.1f %13.3f%% %3g %14.1f %14.1f %14.1f\n', rh_, ...
+        1/(1-rh_), g100, b100, kD, kK, kE);
+    Se = [Se; table(rh_, 1/(1-rh_), g100, kD, kK, kE, b100, ...
+        'VariableNames', ...
         {'rho_acc','LR_szorzo','GDP_pct_ACC100','kuszob_D_L', ...
-        'kuszob_KKV_L','kuszob_E_L'})]; %#ok<AGROW>
+        'kuszob_KKV_L','kuszob_E_L','bk_ok_ACC100'})]; %#ok<AGROW>
 end
 writetable(Se, fullfile(repo, 'output', 'tables', ...
     't49b_rhoacc_erzekenyseg_osszegzes.csv'));
-fprintf(['\nEZT KELL A TANULMANYBAN KOZOLNI: nem a "kuszob = 22.3" szamot,\n' ...
-    'hanem azt, hogy a kuszob a rho_acc-on MONOTON csokken, es hogy a\n' ...
-    'rendelkezesre allo horgony (0.9673) ALSO KORLAT -- tehat a valodi\n' ...
-    'kuszob a tablazatban lefele mutato iranyban van.\n']);
+fprintf(['\nERTELMEZES: nem egyetlen "kuszob = 22.3" szamot kell kozolni.\n' ...
+    'A rho_acc=0.9673 nem a modell dinamikus allapotanak megbizhato\n' ...
+    'horgonya, es ACCSCALE=100 mellett a terminalis BK-feltetelt is\n' ...
+    'megserti. Csak a bk_ok=1 sorok hasznalhatok modell-eredmenykent.\n']);
 fprintf('%s\n', repmat('=', 1, 92));
 
 % --- lokalis fuggvenyek --------------------------------------------------
@@ -199,19 +218,23 @@ try
     if rhoacc > 0
         dynare('jv_dsge_v09_access', sprintf('-DSCENARIO=%d', sc), ...
             sprintf('-DTSCEN=%d', ts), sprintf('-DOPTEN=%d', op), ...
-            sprintf('-DACCSCALE=%d', accscale), ...
+            sprintf('-DACCSCALE=%.10g', accscale), ...
             sprintf('-DRHOACC=%.6g', rhoacc), 'console', 'nograph');
     else
         dynare('jv_dsge_v09_access', sprintf('-DSCENARIO=%d', sc), ...
             sprintf('-DTSCEN=%d', ts), sprintf('-DOPTEN=%d', op), ...
-            sprintf('-DACCSCALE=%d', accscale), 'console', 'nograph');
+            sprintf('-DACCSCALE=%.10g', accscale), 'console', 'nograph');
     end
     % A Dynare a BASE workspace-be teszi az M_/oo_-t (a driver-t evalin-nel
     % futtatja), ezert fuggvenybol hivva onnan kell elovenni -- kulonben a
     % try/catch NEMA NaN-t adna vissza minden futasra.
     M_  = evalin('base', 'M_');
     oo_ = evalin('base', 'oo_');
-    ok_ = oo_.deterministic_simulation.status;
+    options_ = evalin('base', 'options_');
+    solver_ok_ = double(oo_.deterministic_simulation.status);
+    B_ = bk_check_metrics(M_, options_, oo_);
+    ok_ = solver_ok_;  % legacy `konvergalt`: kizarolag PF solver-statusz
+    valid_ = double(solver_ok_ == 1 && B_.check_ok == 1 && B_.bk_ok == 1);
     n = cellstr(M_.endo_names);
     g = @(v) 100 * oo_.steady_state(strcmp(n, v));
     pn = cellstr(M_.param_names);
@@ -222,14 +245,17 @@ try
     R = table(op, sc, ts, accscale, p('rho_acc'), ok_, g('y'), g('y_E'), ...
         g('y_D'), g('y_L'), ykkv, ykkv - g('y_L'), g('y_D') - g('y_L'), ...
         g('y_E') - g('y_L'), g('acc_E'), g('acc_D'), g('rer'), g('bstar'), ...
+        solver_ok_, B_.check_ok, B_.bk_ok, valid_, B_.n_forward, B_.n_unstable, ...
+        B_.qz_criterium, B_.info_code, B_.nearest_unit_complex, ...
         'VariableNames', kolumnak_());
 catch ME
     % A hibat KIIRJUK: a nema NaN-sorozat korabban ugy nezett ki, mintha a
     % modell nem konvergalt volna, pedig kodhiba volt.
-    fprintf(2, '  !! HIBA (OPTEN=%d SC=%d TS=%d ACC=%d): %s\n', op, sc, ts, ...
+    fprintf(2, '  !! HIBA (OPTEN=%d SC=%d TS=%d ACC=%.10g): %s\n', op, sc, ts, ...
         accscale, ME.message);
-    R = table(op, sc, ts, accscale, rhoacc, 0, NaN, NaN, NaN, NaN, NaN, ...
-        NaN, NaN, NaN, NaN, NaN, NaN, NaN, 'VariableNames', kolumnak_());
+    hiany = num2cell(nan(1, 12));
+    R = table(op, sc, ts, accscale, rhoacc, 0, hiany{:}, 0, 0, NaN, 0, ...
+        NaN, NaN, NaN, NaN, NaN, 'VariableNames', kolumnak_());
 end
 end
 
@@ -237,6 +263,8 @@ function c = kolumnak_()
 c = {'OPTEN','SCENARIO','TSCEN','accscale','rho_acc','konvergalt','GDP_pct', ...
     'y_E_pct','y_D_pct','y_L_pct','y_KKV_pct','KKV_minus_L_pp', ...
     'D_minus_L_pp','E_minus_L_pp','acc_E','acc_D','rer_pct','bstar_pct'};
+c = [c, {'solver_ok','bk_check_ok','bk_ok','ervenyes','n_forward','n_unstable', ...
+    'bk_qz_criterium','bk_info_code','nearest_unit_complex'}];
 end
 
 function k = kuszob_(x, d)
@@ -247,6 +275,13 @@ for j = 1:numel(d)-1
     end
 end
 if ~isempty(d) && d(1) >= 0, k = 0; end
+end
+
+function b = bk_at_(op, accscale)
+b = NaN;
+if ~isfinite(accscale), return, end
+r = fut_(op, 1, 3, accscale);
+if r.bk_check_ok == 1, b = r.bk_ok; end
 end
 
 function y = ternary_(c, a, b)
