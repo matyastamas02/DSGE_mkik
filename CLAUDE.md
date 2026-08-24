@@ -115,6 +115,20 @@ megfogalmazás, és ezt érdemes szó szerint használni:
 > meg, ha az access-csatorna perzisztenciája és erőssége egy meghatározott
 > tartomány fölött van.**
 
+⚠ **2026-08-24-től ez PONTOSÍTHATÓ, és pontosítandó is.** A `λ`/`ω`
+szétbontás (`-DLAMSCALE` / `-DOMSCALE`) megmutatta, hogy a modell a
+hozzáférési csatorna két rugalmasságát **külön-külön nem is azonosítja** —
+csak a **szorzatukat**. A helyes küszöb-objektum tehát `(λ·ω)* = 500` (a
+horgonyzott `rho_acc = 0,9673` mellett), és a korábban közölt „22,3" ennek
+egyetlen pontja: `√500`. Lásd `A22`, `F01` és
+`docs/eredmenyek/2026-08-24_lambda_omega_szetbontas.md`.
+
+És egy második pontosítás, ami **erősíti** az álláspontot: az E/D/L
+dekompozíciós scan (`-DDECOMP`) szerint a KKV-eredmény **nem a
+technológiai kalibráció műterméke** — a technológia teljes kiegyenlítése
+a küszöböt 3%-kal mozdítja el (`A23`). Ez a várható fő referee-kérdésre
+adott válasz, és készen kell állnia.
+
 Ez **nem gyengeség-beismerés**, hanem a modell és az empíria közötti
 azonosítási határ korrekt kezelése. A küszöbforma legitim közlési forma —
 van rá magyar DSGE-precedens (Szabó Bakos 2006, 4.7: a szerző explicit
@@ -129,7 +143,7 @@ megtámadná, és joggal.
 ### Munkamódszer, ami bevált — tartsd meg
 
 1. **Füstteszt push előtt**: `matlab -batch "cd('src/4_infra'); smoke_test"` —
-   jelenleg **116 ellenőrzés**, köztük replikációs és regressziós őrök.
+   jelenleg **138 ellenőrzés**, köztük replikációs és regressziós őrök.
    Ha egy állítást közlünk, tegyünk rá őrt.
 2. **BK-teszt nem elég.** Egy elgépelt index mellett is lehet 18/18
    konvergencia. Kell **független verifikáció**: szimmetria-teszt
@@ -137,7 +151,8 @@ megtámadná, és joggal.
    (`-DSCENARIO=4`), egymásba ágyazás. Lásd `src/modell/1_fo_vonal_jv/futtato/ellenorzes_3type.m`.
 3. **Nagy átalakítás rövid életű branchen**, aznap vissza a main-re.
 4. **Kalibrációs változtatás makró-kapcsolóval** (`-DTSCEN`, `-DACCSCALE`,
-   `-DCALIB`, `-DEPSCES`, `-DSYM`, `-DOPTEN`, `-DRHOACC`), ne felülírással —
+   `-DLAMSCALE`, `-DOMSCALE`, `-DCALIB`, `-DEPSCES`, `-DSYM`, `-DOPTEN`,
+   `-DRHOACC`, `-DDECOMP`, `-DDECOMPW`), ne felülírással —
    így minden variáns futtatható és összevethető marad. Ha egy kapcsoló új
    alapértelmezést kapna, az **csapatdöntés**, nem kódolási lépés.
 5. **Ha egy paraméter `1/(1−ρ)` alakban hat, scan kell rá, nem pontbecslés.**
@@ -156,6 +171,26 @@ megtámadná, és joggal.
   kényszerített egyenlőség **megdőlt** (1,939 vs 1,719); a `rho_acc`
   0,85 → **0,9673**, amitől a KKV-küszöb 36,5 → 22,3.
   Eredménydoc: `docs/eredmenyek/2026-08-16_opten_kalibracio_eredmeny.md`.
+- **✅ 2026-08-16 után 2026-08-24: a korlátok-riport 1. és 2. teendője
+  is lefutott.**
+  - **1. — az `ACCSCALE` szétbontása** (`-DLAMSCALE` / `-DOMSCALE`;
+    `sens_lam_om_v09.m` → `t52`–`t52e`, ábra `f28`). Amit hozott: a modell
+    a két access-rugalmasságot **külön nem azonosítja**, csak a
+    szorzatukat (`A22`), a küszöb pontos izo-szorzat görbe
+    (`λ·ω = 500,0 ± 0,08%`), és az `F01` át lett fogalmazva erre.
+    Doc: `docs/eredmenyek/2026-08-24_lambda_omega_szetbontas.md`.
+  - **2. — E/D/L dekompozíció** (`-DDECOMP=0..4`, `-DDECOMPW`;
+    `dekomp_edl_v09.m` → `t53`–`t53d`). Amit hozott: a KKV-eredmény
+    **nem technológiai műtermék** — a technológia teljes kiegyenlítése a
+    küszöböt 3%-kal mozdítja (22,36 → 22,95), csak a pénzügyi
+    heterogenitással 22,62 (`A23`). 45/45 BK-stabil.
+    Doc: `docs/eredmenyek/2026-08-24_edl_dekompozicio.md`.
+  - **3. — a D kategória 20 tételének irodalmi átfésülése.** 3 zöld,
+    16 sárga, 1 piros. Legfontosabb: `tbank_j`-re VAN irodalom, és
+    **ellentmond a saját mérésünknek** (`F06`); a `psi_j` méret-sorrendje
+    valószínűleg **fordítva van** (új kockázat); a SAFE magyar bontása a
+    Bizottság éves köréből elérhető, nem a negyedéves euróövezetiből.
+    Doc: `docs/terv/2026-08-24_D_kategoria_irodalmi_kereses.md`.
 - **Teendőlista a csapatnak:** `docs/terv/kalibracio_teendok_csapatnak.md`
 - **Teljes paramétertábla (91 db):** `docs/modszertan/kalibracio_tabla.md`
 - **Részletes átadás:** `docs/archiv/ATADAS_2026-08-12.md`

@@ -61,6 +61,34 @@ közölni a `(λ, ω)` síkon — ahogy a `(ρ, ACCSCALE)` felületet már megte
 Fél nap, és utána a küszöb interpretálható. **Ez a legnagyobb hozamú
 modellezési teendő.**
 
+#### ✅ ELVÉGEZVE — 2026-08-24
+
+Kapcsolók bekötve (`-DLAMSCALE`, `-DOMSCALE`; alapértelmezés `-1` = az
+`ACCSCALE`-t örökli, tehát minden korábbi eredmény bitre változatlan).
+Kód: `sens_lam_om_v09.m`, ábra: `18_lam_om_felulet.py` (`f28`).
+Eredménydoc: [`../eredmenyek/2026-08-24_lambda_omega_szetbontas.md`](../eredmenyek/2026-08-24_lambda_omega_szetbontas.md).
+
+**Az eredmény élesebb lett, mint amit a teendő megfogalmazása várt.**
+A szétbontás után kiderült, hogy a modell a két rugalmasságot
+**külön-külön nem is azonosítja** — kizárólag a **szorzatukon** keresztül
+hatnak. Mérve (`t52c`, `t52e`): a „csak λ" és a „csak ω" marginális
+metszet számjegyre azonos, és az azonos szorzatú, nagyságrendileg
+különböző `(λ, ω)` párok eltérése numerikus nulla.
+
+Ezért a küszöb **nem felület, hanem pontos izo-szorzat görbe**:
+a nulla-kontúron `λ·ω = 500,0 ± 0,08%` 28-szoros λ-tartományon. A
+korábbi „22,3" ennek egyetlen pontja (`√500 = 22,36`), és a `t52d` átló
+regressziósan visszaadja a `t48b`/`t51` mindkét számát (22,36 / 36,56 vs
+22,3 / 36,5).
+
+**Két következmény:**
+- Az `F01` állítás **átfogalmazva** a szorzat-formára.
+- A D kategória négy access-tétele valójában **két** azonosítható objektum
+  (`λ_E·ω_E`, `λ_D·ω_D`) — új állítás: `A22`.
+
+**Ami NEM oldódott meg:** a `λ_E:λ_D = 2,0:2,5` és `ω_E:ω_D = 0,35:0,45`
+**arányok** továbbra is átvettek, és ezeket a scan nem mozgatja.
+
 ### 2. `ACCSCALE`: horgonyzatlan
 
 Ismert, dokumentált (`A06`). A 2021–24-es magyar epizód programvezérelt volt,
@@ -128,6 +156,15 @@ venni, és sokkal jobb, ha mi hozzuk elő. Plusz: a SAFE magyar bontása
 (elutasítási arány és „nem folyamodott, mert…" méret szerint) **közvetlen
 horgony lehet** az `omega_acc_L`-re, és eddig nem néztük meg.
 
+> ⚠ **Pontosítás — 2026-08-24, a D-kategória keresés nyomán.** A
+> *negyedéves* SAFE **euróövezeti**, Magyarország nincs benne. Amit
+> keresünk, az a **Bizottsággal közös, évente futó kör**, ami minden
+> EU-tagállamot lefed, és **mikrocégekre is** bont (1–9, 10–49, 50–249,
+> 250+). A teendő tehát teljesíthető, de **nem abból a kiadványból, amit
+> eddig néztünk** — és ugyanez a forrás oldja meg a 10. pont
+> mikrokör-hiányát is, amiért az `-DOPTEN` alapértelmezése `0` maradt.
+> Részletek: [`2026-08-24_D_kategoria_irodalmi_kereses.md`](2026-08-24_D_kategoria_irodalmi_kereses.md).
+
 ### 5. EGY pre-periódus — semmilyen cégszintű azonosítás nem validálható
 
 Mérve: a programvezéreltség **2021 és 2022 között** tör meg (piaci árazású
@@ -180,6 +217,41 @@ calibration."*
 Ha a KKV-eredmény a **B** és **D** ágon is megvan, akkor tényleg
 finanszírozási heterogenitásról szól. Ha csak az **A**/**C** ágon, akkor
 technológiai műtermék. **Egy nap, makró-kapcsolóval.**
+
+#### ✅ ELVÉGEZVE — 2026-08-24
+
+Kapcsoló: `-DDECOMP=0|1|2|3|4` (+ `-DDECOMPW=0|1` a súlyozási
+ellenpróbához). Kód: `dekomp_edl_v09.m`. Eredménydoc:
+[`../eredmenyek/2026-08-24_edl_dekompozicio.md`](../eredmenyek/2026-08-24_edl_dekompozicio.md).
+Új állítás: `A23`.
+
+**A válasz egyértelmű — és a jó irányba:**
+
+| ág | küszöb (OPTEN=1) | a 0-ághoz képest |
+|---|---:|---:|
+| 0 alap | 22,36 | 1,00× |
+| **B — csak pénzügyi** | **22,62** | **1,01×** |
+| **D — technológia azonos** | **22,95** | **1,03×** |
+| A — csak `phi_j` | 4,48 | 0,20× |
+| C — csak `aa_j` | 1,61 | 0,07× |
+
+A teljes technológiai heterogenitás kivétele a küszöböt **3%-kal**
+mozdítja el; csak a pénzügyi heterogenitást meghagyva **1%-kal**. Az
+eredmény tehát finanszírozási eredetű. 45/45 kombináció BK-stabil, a
+KKV-előny mindenütt pozitív, és a súlyozási ellenpróba nem változtat.
+
+**Két dolgot ki kell mondani, mert a bíráló elő fogja venni:**
+1. Az **A** és a **C** ág nem „csak technológia" — a pénzügyi blokkot is
+   kiegyenlíti, ami mechanikusan felviszi az E típus access-rugalmasságát.
+   A tiszta összevetés a `0 ↔ D` és a `0 ↔ B`.
+2. Az **A** és a **C** ág GDP-sávja (+3,5 / +3,7%) **kilóg** az `A01`
+   közölt +0,3…+2,9%-ából. Ez nem ellentmondás: a dekompozíciós ágak
+   **diagnosztikák, nem alternatív kalibrációk** — az `A01` sávja az
+   `OPTEN=0..3` kalibrációs ágakra vonatkozik.
+
+**Amit a scan NEM válaszol meg:** az `omega_acc_L = 0` feltevést nem tudja
+semlegesíteni (a nagyvállalatnak definíció szerint nincs `acc`-egyenlete).
+Az továbbra is a 4. teendő, és továbbra is a legnagyobb egyetlen feltevés.
 
 ### 7b. Az alapértelmezett ág (`OPTEN=0`) NEM MÉRT exportarányokon fut
 
@@ -331,8 +403,10 @@ első kérdése ez lesz, és jelenleg nincs rá válaszunk.
 
 | # | Teendő | Ráfordítás | Miért |
 |---|---|---|---|
-| **1** | **`ACCSCALE` szétbontása** `λ` és `ω` külön kapcsolóra + kétdimenziós küszöbfelület | fél nap | a küszöb jelenleg két rugalmasság szorzatán van, kvadratikusan — így nem interpretálható |
-| **2** | **E/D/L dekompozíciós scan** (4 ág: csak `phi` / csak pénzügyi / csak `aa` / minden technológia azonos) | 1 nap | ez válaszolja meg a fő referee-kérdést |
+| ~~**1**~~ | ~~**`ACCSCALE` szétbontása**~~ ✅ **KÉSZ 2026-08-24** — és többet hozott: a modell csak a `λ·ω` szorzatot azonosítja (`A22`), a küszöb izo-szorzat görbe | fél nap | ~~a küszöb két rugalmasság szorzatán van~~ |
+| ~~**2**~~ | ~~**E/D/L dekompozíciós scan**~~ ✅ **KÉSZ 2026-08-24** — a technológia teljes kiegyenlítése a küszöböt 3%-kal mozdítja (`A23`) | 1 nap | ~~ez válaszolja meg a fő referee-kérdést~~ |
+| **1★** | **`psi_j` scan a fordított méret-sorrenddel is** | fél nap | **ÚJ, 2026-08-24:** a lumpy-investment irodalom a jelenlegi `psi_S < psi_L` ellenkezőjét sugallja — ez a hetedik gyanús paraméter lehet |
+| **2★** | **`zsov` saját becslés két nyilvános idősorból** | fél nap | **ÚJ:** a húszból a legolcsóbb horgony, és tisztán makró idősorból megy |
 | **3** | **MNB new-business kamat bekérése** — cellaszinten (méret × összeg × fixálás × futamidő + volumenek, 2015–24) | levél + várakozás | az egyetlen tétel, ami **időbeli aggregátum**, tehát nem szenved a pre-periódus problémától |
 | **4** | **`omega_acc_L` scan** | fél nap | ez a legnagyobb egyetlen feltevés |
 | **5** | A `−200 bp` forrása | fél nap | ez viszi a főeredmény nagyságrendjét |
@@ -340,9 +414,20 @@ első kérdése ez lesz, és jelenleg nincs rá válaszunk.
 | **7** | KSH/Eurostat SBS mikrokör-bontás → `om_j`/`shl_j` | fél nap | ez oldja fel az `-DOPTEN` alapértelmezését |
 | **8** | `eps_ces` magyar horgony | 1–2 nap | a szektorális eredmény másik fele |
 
-**Az 1. és 2. tétel együtt másfél nap, és többet ér, mint bármi más ezen a
-listán** — mert nem új eredményt gyártanak, hanem a meglévőt teszik
-védhetővé.
+~~**Az 1. és 2. tétel együtt másfél nap, és többet ér, mint bármi más ezen a
+listán**~~ — **2026-08-24: mindkettő megvan.** Beváltak: nem új eredményt
+gyártottak, hanem a meglévőt tették védhetővé, és mindkettő **többet
+hozott, mint amit a teendő megfogalmazása várt** (a szorzat-azonosítás,
+illetve az, hogy a technológiai hozzájárulás 3%).
+
+A lánc `kalibráció → azonosítás → érzékenység → validáció` szerint a
+projekt a **harmadik lépésnél** tart. A `psi_j` (1★) az egyetlen újonnan
+felmerült kockázat.
+
+**Kapcsolódó új doksik:**
+[λ/ω szétbontás](../eredmenyek/2026-08-24_lambda_omega_szetbontas.md) ·
+[E/D/L dekompozíció](../eredmenyek/2026-08-24_edl_dekompozicio.md) ·
+[D-kategória irodalmi keresés](2026-08-24_D_kategoria_irodalmi_kereses.md)
 
 ---
 
@@ -354,8 +439,8 @@ védhetővé.
 
 Ez nem szándékos manipulációt jelent — hanem azt, hogy a
 `kalibráció → azonosítás → érzékenység → validáció` láncban a projekt
-jelenleg a **második lépésnél** áll. Az 1. és 2. teendő pontosan a
-harmadikat viszi be.
+~~jelenleg a **második lépésnél** áll~~ **2026-08-24 óta a harmadiknál
+tart**: az 1. és 2. teendő pontosan az érzékenységi lépést vitte be.
 
 *Kapcsolódó: [`kalibracio_teendok_csapatnak.md`](kalibracio_teendok_csapatnak.md)
 · [`../../ALLAPOT.md`](../../ALLAPOT.md) ·

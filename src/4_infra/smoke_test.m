@@ -615,6 +615,144 @@ if exist(t51, 'file') == 2
         '(%.1f / %.1f)'], k85, k97), ok, hiba);
 end
 
+% --- t52: AZ ACCSCALE SZETBONTASA (lambda / omega) -----------------------
+% MIT VED. A korlatok-riport 1. teendoje. Eddig EGY szam skalazta a
+% hozzaferesi csatorna mindket lepcsojet, ezert a kozolt "22.3-as kuszob"
+% ket rugalmassag szorzatan ult. A szetbontas utan kiderult, hogy a modell
+% a ket parametert KULON NEM IS AZONOSITJA -- csak a szorzatukat. Ezek az
+% orok ezt a szerkezeti allitast orzik: ha barmelyik elbukik, valaki
+% elrontotta a szorzat-szerkezetet, es a kozolt kuszobforma ervenytelen.
+t52e = fullfile(repo, 'output', 'tables', 't52e_lam_om_szorzat.csv');
+[ok, hiba] = ell(exist(t52e, 'file') == 2, 't52e szorzat-azonossag letezik', ok, hiba);
+if exist(t52e, 'file') == 2
+    Sz = readtable(t52e);
+    maxelt = 0;
+    for pv = unique(Sz.szorzat)'
+        v = Sz.KKV_minus_L_pp(Sz.szorzat == pv & Sz.konvergalt == 1);
+        maxelt = max(maxelt, max(v) - min(v));
+    end
+    [ok, hiba] = ell(maxelt < 1e-9, ...
+        sprintf(['t52e SZERKEZET: a modell CSAK a lambda*omega szorzatot ' ...
+        'azonositja (max elteres %.1e pp)'], maxelt), ok, hiba);
+end
+
+t52b = fullfile(repo, 'output', 'tables', 't52b_lam_om_kontur.csv');
+[ok, hiba] = ell(exist(t52b, 'file') == 2, 't52b lam-om kontur letezik', ok, hiba);
+if exist(t52b, 'file') == 2
+    Kc = readtable(t52b);
+    Kc = Kc(isfinite(Kc.kuszob_omega), :);
+    relszoras = std(Kc.szorzat) / mean(Kc.szorzat);
+    [ok, hiba] = ell(height(Kc) >= 10 && relszoras < 0.01, ...
+        sprintf(['t52b: a kuszob-kontur IZO-SZORZAT gorbe (%d pont, a ' ...
+        'szorzat relativ szorasa %.2f%%)'], height(Kc), 100*relszoras), ...
+        ok, hiba);
+    % SZINT-OR: a kozolt szorzat-kuszob
+    [ok, hiba] = ell(abs(median(Kc.szorzat) - 500) < 5, ...
+        sprintf('t52b SZINT: a szorzat-kuszob a kozolt 500-on (%.1f)', ...
+        median(Kc.szorzat)), ok, hiba);
+    % a kontur MONOTON csokken: nagyobb lambda -> kisebb omega kell
+    Kc = sortrows(Kc, 'lambda_skala');
+    [ok, hiba] = ell(all(diff(Kc.kuszob_omega) < 0), ...
+        sprintf('t52b: a kuszob-omega MONOTON csokken a lambda-ban (%.1f -> %.1f)', ...
+        Kc.kuszob_omega(1), Kc.kuszob_omega(end)), ok, hiba);
+end
+
+t52d = fullfile(repo, 'output', 'tables', 't52d_lam_om_diagonalis.csv');
+[ok, hiba] = ell(exist(t52d, 'file') == 2, 't52d lam-om atlo letezik', ok, hiba);
+if exist(t52d, 'file') == 2
+    Dg = readtable(t52d);
+    a1 = Dg.kuszob_diagonalis(Dg.OPTEN == 1);
+    a0 = Dg.kuszob_diagonalis(Dg.OPTEN == 0);
+    % REGRESSZIOS HID: az atlo (lambda = omega) a REGI, egydimenzios
+    % kuszobot kell visszaadja -- ez koti ossze a t52-t a t48b/t51-gyel.
+    [ok, hiba] = ell(abs(a1 - 22.3) < 0.5 && abs(a0 - 36.5) < 0.5, ...
+        sprintf(['t52d HID: az atlo visszaadja a t48b/t51 kuszobeit ' ...
+        '(%.2f / %.2f vs 22.3 / 36.5)'], a1, a0), ok, hiba);
+end
+
+t52c = fullfile(repo, 'output', 'tables', 't52c_lam_om_marginalis.csv');
+[ok, hiba] = ell(exist(t52c, 'file') == 2, 't52c marginalis scan letezik', ok, hiba);
+if exist(t52c, 'file') == 2
+    Mg = readtable(t52c);
+    Ml = sortrows(Mg(string(Mg.irany) == "lambda" & Mg.konvergalt == 1, :), 'skala');
+    Mo = sortrows(Mg(string(Mg.irany) == "omega"  & Mg.konvergalt == 1, :), 'skala');
+    Me = sortrows(Mg(string(Mg.irany) == "egyutt" & Mg.konvergalt == 1, :), 'skala');
+    [ok, hiba] = ell(height(Ml) == height(Mo) && ...
+        max(abs(Ml.KKV_minus_L_pp - Mo.KKV_minus_L_pp)) < 1e-9, ...
+        't52c: a "csak lambda" es a "csak omega" metszet AZONOS', ok, hiba);
+    % A DIAGNOZIS ORE: az egyuttes skalazas hanyadosa NO (kvadratikus), az
+    % egy-lepcsose CSOKKEN (GE-tompitas). Ha ez megfordul, a szoveget is
+    % javitani kell.
+    hl = Ml.hatas_per_skala(Ml.skala > 0);
+    he = Me.hatas_per_skala(Me.skala > 0);
+    [ok, hiba] = ell(max(he)/min(he) > 3*max(hl)/min(hl), ...
+        sprintf(['t52c DIAGNOZIS: a kvadratikussag a KOZOS skalazas ' ...
+        'mutermeke (egyutt %.1fx vs egy-lepcso %.1fx)'], ...
+        max(he)/min(he), max(hl)/min(hl)), ok, hiba);
+end
+
+% --- t53: E/D/L DEKOMPOZICIO (technologia vagy finanszirozas?) -----------
+% MIT VED. A korlatok-riport 2. teendoje, es a VARHATO FO REFEREE-KERDES:
+% "show me that your main conclusion is not an artifact of the E/D/L
+% calibration". A valasz az, hogy a technologiai heterogenitas teljes
+% kivetele a kuszobot 3%-kal mozditja. Ha ez az or elbukik, a tanulmany fo
+% allitasat at kell fogalmazni -- ezert kap SZINT-ort is.
+t53d = fullfile(repo, 'output', 'tables', 't53d_dekomp_regresszio.csv');
+[ok, hiba] = ell(exist(t53d, 'file') == 2, 't53d dekomp-regresszio letezik', ok, hiba);
+if exist(t53d, 'file') == 2
+    Rg = readtable(t53d);
+    [ok, hiba] = ell(Rg.max_elteres < 1e-9, ...
+        sprintf(['t53d REGRESSZIO: a -DDECOMP=0 ag == t44 baseline ' ...
+        '(elteres %.1e)'], Rg.max_elteres), ok, hiba);
+end
+
+t53b = fullfile(repo, 'output', 'tables', 't53b_dekomp_kuszob.csv');
+[ok, hiba] = ell(exist(t53b, 'file') == 2, 't53b dekomp-kuszob letezik', ok, hiba);
+if exist(t53b, 'file') == 2
+    Dk = readtable(t53b);
+    m1 = Dk.OPTEN == 1;
+    k0 = Dk.kuszob(m1 & Dk.DECOMP == 0);
+    kB = Dk.kuszob(m1 & Dk.DECOMP == 2);
+    kD = Dk.kuszob(m1 & Dk.DECOMP == 4);
+    [ok, hiba] = ell(all(isfinite(Dk.kuszob)), ...
+        't53b: minden dekompozicios agon letezik veges kuszob', ok, hiba);
+    % A FO ALLITAS ORE
+    [ok, hiba] = ell(abs(kD/k0 - 1) < 0.15 && abs(kB/k0 - 1) < 0.15, ...
+        sprintf(['t53b FO ALLITAS: a KKV-eredmeny NEM technologiai ' ...
+        'mutermek (technologia azonos %.2fx, csak penzugyi %.2fx)'], ...
+        kD/k0, kB/k0), ok, hiba);
+    % SZINT-OR a kozolt szamokhoz (22.36 / 22.62 / 22.95)
+    [ok, hiba] = ell(abs(k0 - 22.36) < 0.3 && abs(kB - 22.62) < 0.3 && ...
+        abs(kD - 22.95) < 0.3, ...
+        sprintf('t53b SZINT: a kuszobok a kozolt szamokon (%.2f / %.2f / %.2f)', ...
+        k0, kB, kD), ok, hiba);
+end
+
+t53c = fullfile(repo, 'output', 'tables', 't53c_dekomp_bk.csv');
+[ok, hiba] = ell(exist(t53c, 'file') == 2, 't53c dekomp BK-stressz letezik', ok, hiba);
+if exist(t53c, 'file') == 2
+    Db = readtable(t53c);
+    [ok, hiba] = ell(all(Db.konvergalt == 1), ...
+        sprintf('t53c: mind a %d dekompozicios kombinacio BK-stabil', ...
+        height(Db)), ok, hiba);
+    [ok, hiba] = ell(all(Db.KKV_minus_L_pp > 0), ...
+        't53c: a KKV-elony POZITIV mind az ot agon, minden szcenarioban', ...
+        ok, hiba);
+end
+
+t53 = fullfile(repo, 'output', 'tables', 't53_dekomp_edl.csv');
+[ok, hiba] = ell(exist(t53, 'file') == 2, 't53 dekomp-agak letezik', ok, hiba);
+if exist(t53, 'file') == 2
+    De = readtable(t53);
+    % SULYOZASI ELLENPROBA: a kovetkeztetes nem mulhat azon, hogy a "kozos
+    % erteket" meretsulyozott vagy egyszeru atlagkent kepezzuk.
+    d4w = De.KKV_minus_L_pp(De.DECOMP == 4 & De.DECOMPW == 1 & De.OPTEN == 1);
+    d4u = De.KKV_minus_L_pp(De.DECOMP == 4 & De.DECOMPW == 0 & De.OPTEN == 1);
+    [ok, hiba] = ell(abs(d4w - d4u)/abs(d4w) < 0.05, ...
+        sprintf(['t53 ELLENPROBA: a sulyozas modja nem szamit ' ...
+        '(%.2f vs %.2f pp)'], d4w, d4u), ok, hiba);
+end
+
 % --- PHILLIPS-ASZIMMETRIA OR (kulso biralat, 2026-08-21) -----------------
 % MIT VED. A harom tipus arazasi egyenlete NEM szimmetrikus sokkot kap:
 %   pi_E, pi_D  ->  + eps_md    (NYERS sokk, varexo)

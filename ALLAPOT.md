@@ -5,11 +5,11 @@
 
 # DSGE_mkik — állapotlap
 
-*Generálva a füstteszt 2026-08-21 16:50-kor futott eredményéből · commit `4ccfe34` · ág `main`*
+*Generálva a füstteszt 2026-08-24 12:03-kor futott eredményéből · commit `6c61473` · ág `main`*
 
 **Fő modell:** `src/modell/1_fo_vonal_jv/jv_dsge_v09_access.mod` (Jakab–Világi mag). A `kkv_dsge_*` a referencia-vonal.
 
-**Őrök:** 116 rendben, 0 hiba.
+**Őrök:** 138 rendben, 0 hiba.
 
 ✅ **Minden „áll” állításnak van őre, és minden őr fut.**
 
@@ -17,7 +17,7 @@
 
 ## Mit állítunk ma
 
-### 🟢 Ami ÁLL — 21 db
+### 🟢 Ami ÁLL — 23 db
 
 *Ezekre lehet építeni a tanulmányban.*
 
@@ -126,14 +126,24 @@
 > bizonyíték: `t17` — őr: ✅ `t17: a nominalis bercsokkentes MONOTON csokken a merettel (13.9% > 7.6% > 5.8%)`  
 > *2026-08-16 · KORLÁTOK: egyetlen év-pár (a létszám csak 2023-ra és 2024-re ismert); MAGAS INFLÁCIÓS környezet, ahol a lefelé-merevség kevésbé köt — tehát ez ALSÓ korlát a merevségre; az átlagbér (bérköltség/létszám) összetétel-hatást is visz. Nem cáfolja a JV becsült xi_w = 0,657-ét, de jelzi, hogy a magyar bérmerevség méretfüggő lehet.*
 
-### 🟡 Ami FELTÉTELES — 5 db
+**A22.** A modell a hozzáférési csatorna két rugalmasságát (lambda_acc, omega_acc) KÜLÖN-KÜLÖN NEM AZONOSÍTJA — kizárólag a szorzatukon keresztül hatnak. Azonos szorzatú, nagyságrendileg különböző (λ, ω) párok számjegyre azonos eredményt adnak.
+
+> bizonyíték: `t52c, t52e` — őr: ✅ `t52e SZERKEZET: a modell CSAK a lambda*omega szorzatot azonositja (max elteres 0.0e+00 pp)`  
+> *2026-08-24 · SZERKEZETI (nem empirikus) eredmény: a hosszú távú access-hatás −ω·λ/(1−ρ)·efp alakú. Mérve: a „csak λ” és a „csak ω” marginális metszet számjegyre azonos (t52c), és az azonos szorzatú párok eltérése numerikus nulla (t52e: 0 és 6,7e−16 pp). KÖVETKEZMÉNY A REGISZTERRE: a D kategória négy access-tétele valójában KÉT azonosítható objektum (λ_E·ω_E és λ_D·ω_D). Aki a négyet külön akarja horgonyozni, olyan adatot keres, ami a modellen keresztül nem létezik. Ez nem rontja az eredményt — javítja a közlést.*
+
+**A23.** A KKV-eredmény NEM a technológiai kalibráció műterméke: ha a három típus minden technológiai paraméterét (zeta_j, aa_j) azonosra állítjuk, a küszöb 22,36-ról 22,95-re mozdul (1,03×); csak a pénzügyi heterogenitást meghagyva 22,62 (1,01×). Mind az öt ág, mind a 45 szcenárió-kombináció BK-stabil, és a KKV-előny mindenütt pozitív.
+
+> bizonyíték: `t53, t53b, t53c` — őr: ✅ `t53b FO ALLITAS: a KKV-eredmeny NEM technologiai mutermek (technologia azonos 1.03x, csak penzugyi 1.01x)`  
+> *2026-08-24 · A korlátok-riport 2. teendője; ez válaszolja meg a várható fő referee-kérdést („show me that your main conclusion is not an artifact of the E/D/L calibration”). A döntési szabályt ELŐRE kimondtuk: ha a B és D ágon is megvan az eredmény, finanszírozási; ha csak az A/C ágon, technológiai műtermék. KÉT ÓVATOSSÁG: (1) az A és C ág NEM „csak technológia” — a pénzügyi blokkot is kiegyenlíti, ami mechanikusan felviszi az E típus access-rugalmasságát (omega_acc_E 0,350 → 0,392), ezért a tiszta összevetés a 0↔D és a 0↔B; (2) az A és C ág GDP-sávja (+3,5 / +3,7%) KILÓG az A01 közölt +0,3…+2,9%-ából — de a dekompozíciós ágak DIAGNOSZTIKÁK, nem alternatív kalibrációk, az A01 sávja az OPTEN=0..3 kalibrációs ágakra vonatkozik. AMIT NEM VÁLASZOL MEG: az omega_acc_L = 0 feltevést a scan nem tudja semlegesíteni.*
+
+### 🟡 Ami FELTÉTELES — 6 db
 
 *Csak a feltétellel együtt közölhető — küszöbformában, vagy az elfogadási feltétel kiírásával.*
 
-**F01.** A KKV-blokk SZEGMENS-KIBOCSÁTÁSA akkor előzi meg a nagyvállalatit, ha ACCSCALE ≥ 22,3 | rho_acc = 0,9673 (átvett rho_acc = 0,85 mellett 36,5). A küszöb a két paraméter EGYÜTTES függvénye: a nulla-kontúr 47,8-tól (rho = 0,85) 17,5-ig (rho = 0,98) fut.
+**F01.** A KKV-blokk SZEGMENS-KIBOCSÁTÁSA akkor előzi meg a nagyvállalatit, ha a hozzáférési csatorna két lépcsőjének SZORZATA meghalad egy küszöböt: (λ·ω)* = 500 az átvett kalibrációhoz viszonyított skálán, rho_acc = 0,9673 mellett (átvett rho_acc = 0,85 mellett 1337). A korábban közölt „ACCSCALE ≥ 22,3” ennek EGYETLEN pontja — az, ahol a két lépcsőt azonos arányban skáláztuk: √500 = 22,36.
 
-> bizonyíték: `t48, t48b, t49, t51` — őr: ✅ `t51 KONTUR: a kuszob MONOTON csokken a rho_acc-ban (47.8 -> 17.5)`  
-> *2026-08-16 · KÜSZÖBFORMA, és 2026-08-21-től KÉTDIMENZIÓS (f27/t51): a 22,3 nem becsült küszöb, hanem MODELLBELI KÖZÖMBÖSSÉGI PONT egy adott rho_acc és kalibráció mellett. Mindkét tengely horgonyzatlan (A06, A11), ezért a kondicionálás mindig kiírandó. PONTOSÍTÁS: az összevetés SZEGMENS-KIBOCSÁTÁS (y_j = bruttó kibocsátás), NEM GDP-részesedés — a y_j importált köztes inputot használ, a modellben nincs és nem is lehet y = Σ om_j·y_j azonosság.*
+> bizonyíték: `t48, t48b, t49, t51, t52b, t52d` — őr: ✅ `t51 KONTUR: a kuszob MONOTON csokken a rho_acc-ban (47.8 -> 17.5)`  
+> *2026-08-16 · ÁTFOGALMAZVA 2026-08-24, a λ/ω szétbontás után (korlátok-riport 1. teendő). AMI VÁLTOZOTT: a 22,3 nem hibás, de nem is interpretálható volt, mert KÉT rugalmasság szorzatán ült, előre rögzített λ:ω arány mellett. A szétbontás (-DLAMSCALE / -DOMSCALE) azt is megmutatta, hogy a modell a két paramétert KÜLÖN NEM IS AZONOSÍTJA (lásd A22), tehát a szorzat az egyetlen értelmes küszöb-objektum. A nulla-kontúron a szorzat 28-szoros λ-tartományon 0,08%-on belül állandó (t52b). A régi számokhoz a kötést a t52d átló adja: 22,36 / 36,56 vs a t48b/t51 22,3 / 36,5. A rho_acc-függés VÁLTOZATLANUL áll (t51: 47,8 → 17,5). Mindkét tengely horgonyzatlan (A06, A11), ezért a kondicionálás mindig kiírandó. PONTOSÍTÁS: az összevetés SZEGMENS-KIBOCSÁTÁS (y_j = bruttó kibocsátás), NEM GDP-részesedés.*
 
 **F02.** Az export-KKV kibocsátásának ELŐJELE az eps_ces-en fordul, ~2,3-nál.
 
@@ -154,6 +164,11 @@
 
 > bizonyíték: `t15` — őr: ✅ `t15: a hatas gyakorlatilag teljesen a SZUVEREN csatornan megy (a banki resz 0.22%) — de a v03 ARCHIV modellen`  
 > *2026-08-16 · ELFOGADÁSI FELTÉTEL: ez a jv_dsge_v03 ARCHÍV modellen készült (kétszektoros, háromtípusos szerkezet nélkül, access-margó nélkül). A fő modellen (v09) ÚJRA KELL FUTTATNI, mielőtt közöljük — a v09-ben a banki csatorna az access-margón át is hat, tehát a súlya vélhetően nagyobb. Amíg ez nincs meg, csak a v03-ra vonatkozó megállapításként idézhető.*
+
+**F06.** A méret szerinti kamattranszmissziós különbség iránya az euróövezeti irodalom és a magyar saját mérés között ELLENTÉTES: Horváth–Kotlebová–Širaňová (JFS 2018) szerint a transzmisszió csak a kisvállalati hitelekre teljes, a magyar panelen viszont a pontbecslés mind a négy specifikációban a nagyvállalatnál magasabb (A16).
+
+> bizonyíték: `t25, t25b; Horváth–Kotlebová–Širaňová (2018), JFS 36, 12–21` — őr: ✅ `t25b: mind a 4 CI TARTALMAZZA a nullat - a kulonbseg nem szignifikans`  
+> *2026-08-24 · A D-kategória irodalmi keresés (2026-08-24) találata. EZ NEM ÁLLÍTJA VISSZA a V03-at — megerősíti, hogy a TSCEN=3 (semleges) alapértelmezés volt a helyes döntés, és most már KÉT oldalról indokolható, nem csak adathiánnyal. A tanulmányban így írandó: „a méret szerinti transzmissziós különbség iránya az irodalom és a magyar adat között ellentétes, ezért a modell semleges transzmissziót használ, és a -DTSCEN=1|2 ágakon mindkét irányt megmutatja.” KORLÁT: az irodalmi eredmény euróövezeti panel, a mi mérésünk magyar és nem szignifikáns — egyik sem dönti el a kérdést.*
 
 ### 🔴 Amit VISSZAVONTUNK — 8 db
 
@@ -217,31 +232,31 @@
 
 | Paraméter | Érték | Státusz | Forrás | Kapcsoló | Doksi |
 |---|---:|---|---|---|---|
-| `delta` | 0.025 | 🟢 horgonyzott | Opten-panel 2021–24 (0,0242) ÉS Christensen–Dib (2008) 1. tábla (0,025) | -DOPTEN | [2026-08-16_opten_kalibracio_eredmeny.md](docs/2026-08-16_opten_kalibracio_eredmeny.md) |
-| `om_E` | 0.18 | 🟡 feltételes | Opten-panel, de a 10+ fős körön BELÜLI részesedés — KSH/Eurostat SBS mikrokör-bontás kell az átskálázáshoz (teendők 2.5) | -DOPTEN | [2026-08-16_opten_kalibracio_eredmeny.md](docs/2026-08-16_opten_kalibracio_eredmeny.md) |
-| `om_D` | 0.37 | 🟡 feltételes | Opten-panel, de a 10+ fős körön BELÜLI részesedés — KSH/Eurostat SBS mikrokör-bontás kell az átskálázáshoz (teendők 2.5) | -DOPTEN | [2026-08-16_opten_kalibracio_eredmeny.md](docs/2026-08-16_opten_kalibracio_eredmeny.md) |
-| `om_L` | 0.45 | 🟡 feltételes | Opten-panel, de a 10+ fős körön BELÜLI részesedés — KSH/Eurostat SBS mikrokör-bontás kell az átskálázáshoz (teendők 2.5) | -DOPTEN | [2026-08-16_opten_kalibracio_eredmeny.md](docs/2026-08-16_opten_kalibracio_eredmeny.md) |
-| `phi_E` | 0.56 | 🟡 feltételes | Opten-panel; a definíciótól függ (ALAP 0,376 vs KÜSZÖB25 0,691) | -DOPTEN | [2026-08-16_opten_kalibracio_eredmeny.md](docs/2026-08-16_opten_kalibracio_eredmeny.md) |
-| `phi_D` | 0.05 | 🟡 feltételes | Opten-panel; az ALAP definícióban DEFINÍCIÓ SZERINT 0, nem mérés | -DOPTEN | [2026-08-16_opten_kalibracio_eredmeny.md](docs/2026-08-16_opten_kalibracio_eredmeny.md) |
-| `phi_L` | 0.365 | 🟢 horgonyzott | Opten-panel 2021–24 (0,3649) | -DOPTEN | [2026-08-16_opten_kalibracio_eredmeny.md](docs/2026-08-16_opten_kalibracio_eredmeny.md) |
-| `lev_E` | 1.6 | 🟢 horgonyzott | Opten-panel medián 1,939 (sáv 1,68–1,94); irodalom k/n=2 (C&D 2008 1. tábla) | -DOPTEN | [kalibracio_bgg_blokk.md](docs/kalibracio_bgg_blokk.md) |
-| `lev_D` | 1.6 | 🟢 horgonyzott | Opten-panel medián 1,719 (sáv 1,58–1,72) | -DOPTEN | [kalibracio_bgg_blokk.md](docs/kalibracio_bgg_blokk.md) |
-| `lev_L` | 1.85 | 🟢 horgonyzott | Opten-panel medián 2,337 (sáv 1,81–2,34) | -DOPTEN | [kalibracio_bgg_blokk.md](docs/kalibracio_bgg_blokk.md) |
-| `shl_E` | 0.2 | 🟡 feltételes | Opten-panel, de a 10+ fős körön BELÜLI részesedés — KSH/Eurostat SBS mikrokör-bontás kell az átskálázáshoz (teendők 2.5) | -DOPTEN | [2026-08-16_opten_kalibracio_eredmeny.md](docs/2026-08-16_opten_kalibracio_eredmeny.md) |
-| `shl_D` | 0.5 | 🟡 feltételes | Opten-panel, de a 10+ fős körön BELÜLI részesedés — KSH/Eurostat SBS mikrokör-bontás kell az átskálázáshoz (teendők 2.5) | -DOPTEN | [2026-08-16_opten_kalibracio_eredmeny.md](docs/2026-08-16_opten_kalibracio_eredmeny.md) |
-| `shl_L` | 0.3 | 🟡 feltételes | Opten-panel, de a 10+ fős körön BELÜLI részesedés — KSH/Eurostat SBS mikrokör-bontás kell az átskálázáshoz (teendők 2.5) | -DOPTEN | [2026-08-16_opten_kalibracio_eredmeny.md](docs/2026-08-16_opten_kalibracio_eredmeny.md) |
-| `rho_acc` | 0.85 | 🟢 horgonyzott | Opten-panel van_hitel átmenet-mátrix (0,9673) — ALSÓ KORLÁT | -DOPTEN / -DRHOACC | [2026-08-16_opten_kalibracio_eredmeny.md](docs/2026-08-16_opten_kalibracio_eredmeny.md) |
+| `delta` | 0.025 | 🟢 horgonyzott | Opten-panel 2021–24 (0,0242) ÉS Christensen–Dib (2008) 1. tábla (0,025) | -DOPTEN | [2026-08-16_opten_kalibracio_eredmeny.md](docs/eredmenyek/2026-08-16_opten_kalibracio_eredmeny.md) |
+| `om_E` | 0.18 | 🟡 feltételes | Opten-panel, de a 10+ fős körön BELÜLI részesedés — KSH/Eurostat SBS mikrokör-bontás kell az átskálázáshoz (teendők 2.5) | -DOPTEN | [2026-08-16_opten_kalibracio_eredmeny.md](docs/eredmenyek/2026-08-16_opten_kalibracio_eredmeny.md) |
+| `om_D` | 0.37 | 🟡 feltételes | Opten-panel, de a 10+ fős körön BELÜLI részesedés — KSH/Eurostat SBS mikrokör-bontás kell az átskálázáshoz (teendők 2.5) | -DOPTEN | [2026-08-16_opten_kalibracio_eredmeny.md](docs/eredmenyek/2026-08-16_opten_kalibracio_eredmeny.md) |
+| `om_L` | 0.45 | 🟡 feltételes | Opten-panel, de a 10+ fős körön BELÜLI részesedés — KSH/Eurostat SBS mikrokör-bontás kell az átskálázáshoz (teendők 2.5) | -DOPTEN | [2026-08-16_opten_kalibracio_eredmeny.md](docs/eredmenyek/2026-08-16_opten_kalibracio_eredmeny.md) |
+| `phi_E` | 0.56 | 🟡 feltételes | Opten-panel; a definíciótól függ (ALAP 0,376 vs KÜSZÖB25 0,691) | -DOPTEN / -DDECOMP | [2026-08-16_opten_kalibracio_eredmeny.md](docs/eredmenyek/2026-08-16_opten_kalibracio_eredmeny.md) |
+| `phi_D` | 0.05 | 🟡 feltételes | Opten-panel; az ALAP definícióban DEFINÍCIÓ SZERINT 0, nem mérés | -DOPTEN / -DDECOMP | [2026-08-16_opten_kalibracio_eredmeny.md](docs/eredmenyek/2026-08-16_opten_kalibracio_eredmeny.md) |
+| `phi_L` | 0.365 | 🟢 horgonyzott | Opten-panel 2021–24 (0,3649) | -DOPTEN / -DDECOMP | [2026-08-16_opten_kalibracio_eredmeny.md](docs/eredmenyek/2026-08-16_opten_kalibracio_eredmeny.md) |
+| `lev_E` | 1.6 | 🟢 horgonyzott | Opten-panel medián 1,939 (sáv 1,68–1,94); irodalom k/n=2 (C&D 2008 1. tábla) | -DOPTEN | [kalibracio_bgg_blokk.md](docs/eredmenyek/kalibracio_bgg_blokk.md) |
+| `lev_D` | 1.6 | 🟢 horgonyzott | Opten-panel medián 1,719 (sáv 1,58–1,72) | -DOPTEN | [kalibracio_bgg_blokk.md](docs/eredmenyek/kalibracio_bgg_blokk.md) |
+| `lev_L` | 1.85 | 🟢 horgonyzott | Opten-panel medián 2,337 (sáv 1,81–2,34) | -DOPTEN | [kalibracio_bgg_blokk.md](docs/eredmenyek/kalibracio_bgg_blokk.md) |
+| `shl_E` | 0.2 | 🟡 feltételes | Opten-panel, de a 10+ fős körön BELÜLI részesedés — KSH/Eurostat SBS mikrokör-bontás kell az átskálázáshoz (teendők 2.5) | -DOPTEN | [2026-08-16_opten_kalibracio_eredmeny.md](docs/eredmenyek/2026-08-16_opten_kalibracio_eredmeny.md) |
+| `shl_D` | 0.5 | 🟡 feltételes | Opten-panel, de a 10+ fős körön BELÜLI részesedés — KSH/Eurostat SBS mikrokör-bontás kell az átskálázáshoz (teendők 2.5) | -DOPTEN | [2026-08-16_opten_kalibracio_eredmeny.md](docs/eredmenyek/2026-08-16_opten_kalibracio_eredmeny.md) |
+| `shl_L` | 0.3 | 🟡 feltételes | Opten-panel, de a 10+ fős körön BELÜLI részesedés — KSH/Eurostat SBS mikrokör-bontás kell az átskálázáshoz (teendők 2.5) | -DOPTEN | [2026-08-16_opten_kalibracio_eredmeny.md](docs/eredmenyek/2026-08-16_opten_kalibracio_eredmeny.md) |
+| `rho_acc` | 0.85 | 🟢 horgonyzott | Opten-panel van_hitel átmenet-mátrix (0,9673) — ALSÓ KORLÁT | -DOPTEN / -DRHOACC | [2026-08-16_opten_kalibracio_eredmeny.md](docs/eredmenyek/2026-08-16_opten_kalibracio_eredmeny.md) |
 
 ### B. nyilvános magyar makroadat (KSH) — 11 db
 
 | Paraméter | Érték | Státusz | Forrás | Kapcsoló | Doksi |
 |---|---:|---|---|---|---|
-| `zeta_E` | 0.14 | 🟡 pótolandó | jelenleg JV-érték átvitele; KSH-ból pótolandó (teendők 2.4) |  |  |
-| `zeta_D` | 0.17 | 🟡 pótolandó | jelenleg JV-érték átvitele; KSH-ból pótolandó (teendők 2.4) |  |  |
-| `zeta_L` | 0.155 | 🟡 pótolandó | jelenleg JV-érték átvitele; KSH-ból pótolandó (teendők 2.4) |  |  |
-| `aa_E` | 0.45 | 🟡 pótolandó | jelenleg JV-érték átvitele; KSH-ból pótolandó (teendők 2.4) |  |  |
-| `aa_D` | 0.8 | 🟡 pótolandó | jelenleg JV-érték átvitele; KSH-ból pótolandó (teendők 2.4) |  |  |
-| `aa_L` | 0.6 | 🟡 pótolandó | jelenleg JV-érték átvitele; KSH-ból pótolandó (teendők 2.4) |  |  |
+| `zeta_E` | 0.14 | 🟡 pótolandó | jelenleg JV-érték átvitele; KSH-ból pótolandó (teendők 2.4) | -DDECOMP |  |
+| `zeta_D` | 0.17 | 🟡 pótolandó | jelenleg JV-érték átvitele; KSH-ból pótolandó (teendők 2.4) | -DDECOMP |  |
+| `zeta_L` | 0.155 | 🟡 pótolandó | jelenleg JV-érték átvitele; KSH-ból pótolandó (teendők 2.4) | -DDECOMP |  |
+| `aa_E` | 0.45 | 🟡 pótolandó | jelenleg JV-érték átvitele; KSH-ból pótolandó (teendők 2.4) | -DDECOMP |  |
+| `aa_D` | 0.8 | 🟡 pótolandó | jelenleg JV-érték átvitele; KSH-ból pótolandó (teendők 2.4) | -DDECOMP |  |
+| `aa_L` | 0.6 | 🟡 pótolandó | jelenleg JV-érték átvitele; KSH-ból pótolandó (teendők 2.4) | -DDECOMP |  |
 | `sc` | 0.54 | 🟡 pótolandó | jelenleg JV-érték átvitele; KSH-ból pótolandó (teendők 2.4) |  |  |
 | `si` | 0.23 | 🟡 pótolandó | jelenleg JV-érték átvitele; KSH-ból pótolandó (teendők 2.4) |  |  |
 | `sg` | 0.1 | 🟡 pótolandó | jelenleg JV-érték átvitele; KSH-ból pótolandó (teendők 2.4) |  |  |
@@ -285,26 +300,26 @@
 
 | Paraméter | Érték | Státusz | Forrás | Kapcsoló | Doksi |
 |---|---:|---|---|---|---|
-| `chi_E` | 0.06 | 🔴 horgonyzatlan | Opten-panel: chi_S≈+0,002 (alsó korlát); irodalom 0,042–0,067 (C&D 2008; BGG-konvenció) — méret szerinti bontás NÉLKÜL |  | [kalibracio_bgg_blokk.md](docs/kalibracio_bgg_blokk.md) |
-| `chi_D` | 0.06 | 🔴 horgonyzatlan | Opten-panel: chi_S≈+0,002 (alsó korlát); irodalom 0,042–0,067 |  | [kalibracio_bgg_blokk.md](docs/kalibracio_bgg_blokk.md) |
-| `chi_L` | 0.02 | 🔴 horgonyzatlan | NEM AZONOSÍTOTT: n=230, t=-0,78, rossz előjel (kalibracio_bgg_blokk.md) |  | [kalibracio_bgg_blokk.md](docs/kalibracio_bgg_blokk.md) |
-| `psi_E` | 8 | 🔴 horgonyzatlan | nincs hivatkozható forrás |  |  |
-| `psi_D` | 8 | 🔴 horgonyzatlan | nincs hivatkozható forrás |  |  |
-| `psi_L` | 13 | 🔴 horgonyzatlan | nincs hivatkozható forrás |  |  |
-| `tsov_E` | 0.175 | 🔴 horgonyzatlan | nincs hivatkozható forrás |  | [FIGYELMEZTETES_fo_allitas.md](docs/FIGYELMEZTETES_fo_allitas.md) |
-| `tsov_D` | 0.175 | 🔴 horgonyzatlan | nincs hivatkozható forrás |  | [FIGYELMEZTETES_fo_allitas.md](docs/FIGYELMEZTETES_fo_allitas.md) |
-| `tsov_L` | 0.175 | 🔴 horgonyzatlan | nincs hivatkozható forrás |  | [FIGYELMEZTETES_fo_allitas.md](docs/FIGYELMEZTETES_fo_allitas.md) |
-| `tbank_E` | 0.45 | 🔴 horgonyzatlan | nincs hivatkozható forrás |  | [FIGYELMEZTETES_fo_allitas.md](docs/FIGYELMEZTETES_fo_allitas.md) |
-| `tbank_D` | 0.45 | 🔴 horgonyzatlan | nincs hivatkozható forrás |  | [FIGYELMEZTETES_fo_allitas.md](docs/FIGYELMEZTETES_fo_allitas.md) |
-| `tbank_L` | 0.45 | 🔴 horgonyzatlan | nincs hivatkozható forrás |  | [FIGYELMEZTETES_fo_allitas.md](docs/FIGYELMEZTETES_fo_allitas.md) |
-| `s_kkv` | 0.05 | 🔴 horgonyzatlan | nincs hivatkozható forrás | -DSKKV | [FIGYELMEZTETES_io_tabla_gyanus.md](docs/FIGYELMEZTETES_io_tabla_gyanus.md) |
-| `mu_vert` | 0.5 | 🔴 horgonyzatlan | nincs hivatkozható forrás | -DMUVERT | [FIGYELMEZTETES_io_tabla_gyanus.md](docs/FIGYELMEZTETES_io_tabla_gyanus.md) |
-| `zsov` | 0.5 | 🔴 horgonyzatlan | nincs hivatkozható forrás |  |  |
-| `eps_ces` | 6 | 🔴 horgonyzatlan | nincs hivatkozható forrás | -DEPSCES |  |
-| `lambda_acc_E` | 2 | 🔴 horgonyzatlan | nincs hivatkozható forrás | -DACCSCALE | [2026-08-12_access_horgonyzas_eredmeny.md](docs/2026-08-12_access_horgonyzas_eredmeny.md) |
-| `lambda_acc_D` | 2.5 | 🔴 horgonyzatlan | nincs hivatkozható forrás | -DACCSCALE | [2026-08-12_access_horgonyzas_eredmeny.md](docs/2026-08-12_access_horgonyzas_eredmeny.md) |
-| `omega_acc_E` | 0.35 | 🔴 horgonyzatlan | nincs hivatkozható forrás | -DACCSCALE | [2026-08-12_access_horgonyzas_eredmeny.md](docs/2026-08-12_access_horgonyzas_eredmeny.md) |
-| `omega_acc_D` | 0.45 | 🔴 horgonyzatlan | nincs hivatkozható forrás | -DACCSCALE | [2026-08-12_access_horgonyzas_eredmeny.md](docs/2026-08-12_access_horgonyzas_eredmeny.md) |
+| `chi_E` | 0.06 | 🔴 horgonyzatlan | Opten-panel: chi_S≈+0,002 (alsó korlát); irodalom 0,042–0,067 (C&D 2008; BGG-konvenció). IRÁNY: Loan spreads over the credit cycle (2025) — a KKV-felár tágabban nő szigorú időszakban; méret szerinti SZINT-becslés továbbra sincs. |  | [kalibracio_bgg_blokk.md](docs/eredmenyek/kalibracio_bgg_blokk.md) · [2026-08-24_D_kategoria_irodalmi_kereses.md](docs/terv/2026-08-24_D_kategoria_irodalmi_kereses.md) |
+| `chi_D` | 0.06 | 🔴 horgonyzatlan | Opten-panel: chi_S≈+0,002 (alsó korlát); irodalom 0,042–0,067. IRÁNY: lásd chi_E. |  | [kalibracio_bgg_blokk.md](docs/eredmenyek/kalibracio_bgg_blokk.md) · [2026-08-24_D_kategoria_irodalmi_kereses.md](docs/terv/2026-08-24_D_kategoria_irodalmi_kereses.md) |
+| `chi_L` | 0.02 | 🔴 horgonyzatlan | NEM AZONOSÍTOTT a magyar panelen (n=230, t=-0,78, rossz előjel). JELÖLT: Levin–Natalucci–Zakrajšek (2004) ~900 US kötvénykibocsátóra becsül — ez definíció szerint a NAGYVÁLLALATI kör, tehát chi_L-re releváns. |  | [kalibracio_bgg_blokk.md](docs/eredmenyek/kalibracio_bgg_blokk.md) · [2026-08-24_D_kategoria_irodalmi_kereses.md](docs/terv/2026-08-24_D_kategoria_irodalmi_kereses.md) |
+| `psi_E` | 8 | 🔴 horgonyzatlan | Nincs közvetlen becslés. ⚠ AZ IRODALOM AZ ELLENKEZŐ SORRENDET SUGALLJA: a lumpy-investment irodalom (Khan–Thomas 2008; Bachmann–Caballero–Engel 2013) szerint a KIS cégek beruházása rögösebb → psi_S > psi_L. SCAN KELL. |  | [2026-08-24_D_kategoria_irodalmi_kereses.md](docs/terv/2026-08-24_D_kategoria_irodalmi_kereses.md) |
+| `psi_D` | 8 | 🔴 horgonyzatlan | Nincs közvetlen becslés. ⚠ Lásd psi_E: az irodalom a jelenlegi méret-sorrend ellenkezőjét sugallja. SCAN KELL. |  | [2026-08-24_D_kategoria_irodalmi_kereses.md](docs/terv/2026-08-24_D_kategoria_irodalmi_kereses.md) |
+| `psi_L` | 13 | 🔴 horgonyzatlan | Nincs közvetlen becslés. Khan–Thomas (2008): a kiigazítási-költség paraméterek az AGGREGÁLT eredményt alig mozgatják — alacsony prioritás az A01-hez, de a szektorálishoz nem. |  | [2026-08-24_D_kategoria_irodalmi_kereses.md](docs/terv/2026-08-24_D_kategoria_irodalmi_kereses.md) |
+| `tsov_E` | 0.175 | 🔴 horgonyzatlan | Nincs szint-becslés. SZERKEZETI TÁMOGATÁS: Bottero–Lenzu–Mezzanotti (JIE 2018) — a szuverén sokk mennyiségi átgyűrűzése méret-SEMLEGES, a reálhatás nem. Ez épp a jelenlegi szerkezetet támogatja (semleges tsov + méret-függő access). |  | [FIGYELMEZTETES_fo_allitas.md](docs/figyelmeztetesek/FIGYELMEZTETES_fo_allitas.md) · [2026-08-24_D_kategoria_irodalmi_kereses.md](docs/terv/2026-08-24_D_kategoria_irodalmi_kereses.md) |
+| `tsov_D` | 0.175 | 🔴 horgonyzatlan | Lásd tsov_E: Bottero–Lenzu–Mezzanotti (JIE 2018), méret-semleges átgyűrűzés. |  | [FIGYELMEZTETES_fo_allitas.md](docs/figyelmeztetesek/FIGYELMEZTETES_fo_allitas.md) · [2026-08-24_D_kategoria_irodalmi_kereses.md](docs/terv/2026-08-24_D_kategoria_irodalmi_kereses.md) |
+| `tsov_L` | 0.175 | 🔴 horgonyzatlan | Lásd tsov_E: Bottero–Lenzu–Mezzanotti (JIE 2018), méret-semleges átgyűrűzés. |  | [FIGYELMEZTETES_fo_allitas.md](docs/figyelmeztetesek/FIGYELMEZTETES_fo_allitas.md) · [2026-08-24_D_kategoria_irodalmi_kereses.md](docs/terv/2026-08-24_D_kategoria_irodalmi_kereses.md) |
+| `tbank_E` | 0.45 | 🔴 horgonyzatlan | IRODALOM VAN: Horváth–Kotlebová–Širaňová (JFS 2018, 36:12–21) — a transzmisszió CSAK a kisvállalati hitelekre teljes. ⚠ ELLENTÉTES a saját magyar mérésünkkel (A16/t25). Lásd F06; a TSCEN=3 semleges alapértelmezés marad. |  | [FIGYELMEZTETES_fo_allitas.md](docs/figyelmeztetesek/FIGYELMEZTETES_fo_allitas.md) · [2026-08-24_D_kategoria_irodalmi_kereses.md](docs/terv/2026-08-24_D_kategoria_irodalmi_kereses.md) |
+| `tbank_D` | 0.45 | 🔴 horgonyzatlan | Lásd tbank_E: Horváth et al. (2018) vs A16 — ellentétes irány, TSCEN=3 marad. |  | [FIGYELMEZTETES_fo_allitas.md](docs/figyelmeztetesek/FIGYELMEZTETES_fo_allitas.md) · [2026-08-24_D_kategoria_irodalmi_kereses.md](docs/terv/2026-08-24_D_kategoria_irodalmi_kereses.md) |
+| `tbank_L` | 0.45 | 🔴 horgonyzatlan | Lásd tbank_E: Horváth et al. (2018) vs A16 — ellentétes irány, TSCEN=3 marad. |  | [FIGYELMEZTETES_fo_allitas.md](docs/figyelmeztetesek/FIGYELMEZTETES_fo_allitas.md) · [2026-08-24_D_kategoria_irodalmi_kereses.md](docs/terv/2026-08-24_D_kategoria_irodalmi_kereses.md) |
+| `s_kkv` | 0.05 | 🔴 horgonyzatlan | Az IO-alapú számítás NEM ÁLL (FIGYELMEZTETES_io_tabla_gyanus.md). MEGKERÜLHETŐ: OECD TiVA/ICIO Hungary country note + OECD Economic Surveys: Hungary 2026 KKV-fejezet (a KKV-k a hozzáadott érték 54%-át adják). ÚJRASZÁMOLANDÓ. | -DSKKV | [FIGYELMEZTETES_io_tabla_gyanus.md](docs/figyelmeztetesek/FIGYELMEZTETES_io_tabla_gyanus.md) · [2026-08-24_D_kategoria_irodalmi_kereses.md](docs/terv/2026-08-24_D_kategoria_irodalmi_kereses.md) |
+| `mu_vert` | 0.5 | 🔴 horgonyzatlan | Kerestünk: a beszállítói ár-átgyűrűzés rugalmasságára nem találtunk becslést. A húszból ez az EGYETLEN, amiről a keresés után is azt mondjuk, hogy nincs mit megnézni. | -DMUVERT | [FIGYELMEZTETES_io_tabla_gyanus.md](docs/figyelmeztetesek/FIGYELMEZTETES_io_tabla_gyanus.md) · [2026-08-24_D_kategoria_irodalmi_kereses.md](docs/terv/2026-08-24_D_kategoria_irodalmi_kereses.md) |
+| `zsov` | 0.5 | 🔴 horgonyzatlan | KÖZVETLENÜL MÉRHETŐ két nyilvános idősorból (magyar szuverén felár vs. BUBOR–EURIBOR különbözet). Irodalmi támpont: Vonnák (MNB WP 2010/1). A húszból ez a legolcsóbb horgony — és tisztán makró idősorból megy. |  | [2026-08-24_D_kategoria_irodalmi_kereses.md](docs/terv/2026-08-24_D_kategoria_irodalmi_kereses.md) |
+| `eps_ces` | 6 | 🔴 horgonyzatlan | Magyar markup-becslés LÉTEZIK: Dobrinsky–Kőrösi–Markov–Halpern (JCE 2006, 34(1):92–110). ⚠ DE MÁS OBJEKTUM: nálunk az eps_ces a VÁLLALATTÍPUSOK, az irodalmi markup a TERMÉKVÁLTOZATOK közti helyettesítés. Plauzibilitási sáv, nem horgony. | -DEPSCES | [2026-08-24_D_kategoria_irodalmi_kereses.md](docs/terv/2026-08-24_D_kategoria_irodalmi_kereses.md) |
+| `lambda_acc_E` | 2 | 🔴 horgonyzatlan | ⚠ CSAK A SZORZAT AZONOSÍTHATÓ (A22): a modell a lambda_acc-ot és az omega_acc-ot külön nem különbözteti meg. Forrásjelölt a szorzatra: EIBIS, EC/ECB SAFE éves kör (magyar + mikro bontással). | -DACCSCALE / -DLAMSCALE | [2026-08-12_access_horgonyzas_eredmeny.md](docs/eredmenyek/2026-08-12_access_horgonyzas_eredmeny.md) · [2026-08-24_D_kategoria_irodalmi_kereses.md](docs/terv/2026-08-24_D_kategoria_irodalmi_kereses.md) |
+| `lambda_acc_D` | 2.5 | 🔴 horgonyzatlan | ⚠ CSAK A SZORZAT AZONOSÍTHATÓ (A22). Lásd lambda_acc_E. | -DACCSCALE / -DLAMSCALE | [2026-08-12_access_horgonyzas_eredmeny.md](docs/eredmenyek/2026-08-12_access_horgonyzas_eredmeny.md) · [2026-08-24_D_kategoria_irodalmi_kereses.md](docs/terv/2026-08-24_D_kategoria_irodalmi_kereses.md) |
+| `omega_acc_E` | 0.35 | 🔴 horgonyzatlan | ⚠ CSAK A SZORZAT AZONOSÍTHATÓ (A22). IRÁNY: a pénzügyileg nem korlátozott cégek nettó beruházási rátája ~7,8 pp-tal magasabb, és a hatás kisebb a nagyvállalatoknál. ⚠ A BIS WP 984 magyar program-hatását TILOS omega_acc-nak nevezni (CLAUDE.md). | -DACCSCALE / -DOMSCALE | [2026-08-12_access_horgonyzas_eredmeny.md](docs/eredmenyek/2026-08-12_access_horgonyzas_eredmeny.md) · [2026-08-24_D_kategoria_irodalmi_kereses.md](docs/terv/2026-08-24_D_kategoria_irodalmi_kereses.md) |
+| `omega_acc_D` | 0.45 | 🔴 horgonyzatlan | ⚠ CSAK A SZORZAT AZONOSÍTHATÓ (A22). Lásd omega_acc_E. | -DACCSCALE / -DOMSCALE | [2026-08-12_access_horgonyzas_eredmeny.md](docs/eredmenyek/2026-08-12_access_horgonyzas_eredmeny.md) · [2026-08-24_D_kategoria_irodalmi_kereses.md](docs/terv/2026-08-24_D_kategoria_irodalmi_kereses.md) |
 
 ### E. származtatott vagy technikai — 18 db
 
@@ -331,7 +346,7 @@
 
 ---
 
-## Őrök (116 db)
+## Őrök (138 db)
 
 *A füstteszt minden ellenőrzése. Ez a projekt egyetlen olyan nyilvántartása, ami nem tud némán elcsúszni: ha egy állítás megdől, itt megbukik egy sor.*
 
@@ -449,9 +464,31 @@
 - ✅ t51 kuszobfelulet-kontur letezik
 - ✅ t51 KONTUR: a kuszob MONOTON csokken a rho_acc-ban (47.8 -> 17.5)
 - ✅ t51 SZINT: a kontur vegpontjai az F01-ben kozolt szamokon (47.8 / 22.2)
+- ✅ t52e szorzat-azonossag letezik
+- ✅ t52e SZERKEZET: a modell CSAK a lambda*omega szorzatot azonositja (max elteres 0.0e+00 pp)
+- ✅ t52b lam-om kontur letezik
+- ✅ t52b: a kuszob-kontur IZO-SZORZAT gorbe (12 pont, a szorzat relativ szorasa 0.08%)
+- ✅ t52b SZINT: a szorzat-kuszob a kozolt 500-on (500.1)
+- ✅ t52b: a kuszob-omega MONOTON csokken a lambda-ban (100.0 -> 3.6)
+- ✅ t52d lam-om atlo letezik
+- ✅ t52d HID: az atlo visszaadja a t48b/t51 kuszobeit (22.36 / 36.56 vs 22.3 / 36.5)
+- ✅ t52c marginalis scan letezik
+- ✅ t52c: a "csak lambda" es a "csak omega" metszet AZONOS
+- ✅ t52c DIAGNOZIS: a kvadratikussag a KOZOS skalazas mutermeke (egyutt 12.5x vs egy-lepcso 2.3x)
+- ✅ t53d dekomp-regresszio letezik
+- ✅ t53d REGRESSZIO: a -DDECOMP=0 ag == t44 baseline (elteres 6.7e-16)
+- ✅ t53b dekomp-kuszob letezik
+- ✅ t53b: minden dekompozicios agon letezik veges kuszob
+- ✅ t53b FO ALLITAS: a KKV-eredmeny NEM technologiai mutermek (technologia azonos 1.03x, csak penzugyi 1.01x)
+- ✅ t53b SZINT: a kuszobok a kozolt szamokon (22.36 / 22.62 / 22.95)
+- ✅ t53c dekomp BK-stressz letezik
+- ✅ t53c: mind a 45 dekompozicios kombinacio BK-stabil
+- ✅ t53c: a KKV-elony POZITIV mind az ot agon, minden szcenarioban
+- ✅ t53 dekomp-agak letezik
+- ✅ t53 ELLENPROBA: a sulyozas modja nem szamit (4.07 vs 4.05 pp)
 - ✅ t00 PHILLIPS: az aszimmetrikus arsokkok (eps_md / eps_mx) egyik szcenarioban sincsenek hajtva
 - ✅ t00 SZERKEZET: mind a 4 modell-vonal megvan, README-vel
 - ✅ t00 SZERKEZET: a FO MODELL a helyen van (1_fo_vonal_jv)
-- ✅ t00 SZERKEZET: minden futtato letezo .mod-ot hiv (29 futtato, 19 modell)
+- ✅ t00 SZERKEZET: minden futtato letezo .mod-ot hiv (31 futtato, 19 modell)
 
 </details>

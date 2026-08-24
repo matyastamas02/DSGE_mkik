@@ -1,117 +1,139 @@
 or,rendben,idopont
-"opten_panel.csv letezik",1,2026-08-24 10:25
-"panel sorszam = 150982 (tenyleges: 150982)",1,2026-08-24 10:25
-"irf_v01.csv letezik",1,2026-08-24 10:25
-"aszimmetria: |i_S| > |i_L| banki sokkra",1,2026-08-24 10:25
-"aszimmetria: |efp_S| > |efp_L|",1,2026-08-24 10:25
-"szcenario_v03_hosszutav letezik",1,2026-08-24 10:25
-"alap hosszu tavu GDP plauzibilis (0.492%)",1,2026-08-24 10:25
-"KKV-tobblet minden szcenarioban (y_S > y_L)",1,2026-08-24 10:25
-"szcenario-sorrend: opt > alap > pessz",1,2026-08-24 10:25
-"t09 lekepezes letezik",1,2026-08-24 10:25
-"t09: 3 szcenario x 5 szegmens",1,2026-08-24 10:25
-"t09: minden szegmensben kamatCSOKKENES",1,2026-08-24 10:25
-"t21 jv_v05 hosszutav letezik",1,2026-08-24 10:25
-"v05 alap GDP plauzibilis (0.426%)",1,2026-08-24 10:25
-"v05 realarfolyam plauzibilis (0.8%) - unio-zaras OK",1,2026-08-24 10:25
-"v05: meret-aszimmetria minden szcenarioban (i_S > i_L)",1,2026-08-24 10:25
-"t22 v05-lekepezes letezik",1,2026-08-24 10:25
-"t22: 3 szcenario x 5 szegmens",1,2026-08-24 10:25
-"t22: a KKV hitelfelar-nyeresege > nagyvallalatie (modell-eredmeny)",1,2026-08-24 10:25
-"t34 jv_v06 hosszutav letezik",1,2026-08-24 10:25
-"v06 alap GDP plauzibilis (0.428%)",1,2026-08-24 10:25
-"v06: efp_S =/= efp_L a hosszu tavon (-1.01 bp) - a kozos-rk patologia megoldva",1,2026-08-24 10:25
-"v06: rk_S =/= rk_L (-0.25 pp) - szegmens-specifikus tokehozam",1,2026-08-24 10:25
-"v06 aggregalt GDP = v05 (0.428% vs 0.426%) - a termelesi atalakitas nem mozditotta el",1,2026-08-24 10:25
-"t35 v06 chi/psi dekompozicio letezik",1,2026-08-24 10:25
-"t35: mind a 7 eset konvergalt",1,2026-08-24 10:25
-"t35: a psi_i a steady state-et nem erinti (q=0) - Euler OK",1,2026-08-24 10:25
-"t35: chi forditasa MEGFORDITJA a szegmens-sorrendet",1,2026-08-24 10:25
-"t29 v07_access hosszutav letezik",1,2026-08-24 10:25
-"v07 alap GDP plauzibilis (0.764%)",1,2026-08-24 10:25
-"v07 replikacio: y_D=0.870% (kozolt 0.870), y_L=0.772% (kozolt 0.772)",1,2026-08-24 10:25
-"t33 v07 kuszob-osszefoglalo letezik",1,2026-08-24 10:25
-"t33 replikacio: a KKV>=L kuszob ~101 (a baseline 100 -- borotvael!)",1,2026-08-24 10:25
-"t39b calib-kuszob osszegzes letezik",1,2026-08-24 10:25
-"t39b: a CALIB=1 ag reprodukalja a kozolt kuszobet (101.0)",1,2026-08-24 10:25
-"t39b: JV-keszlettel a kuszob 100 ALATT (94.2) - a szektoralis sorrend megfordul",1,2026-08-24 10:25
-"t40 jv_3type stresszteszt letezik",1,2026-08-24 10:25
-"t40: mind a 18 kombinacio BK-stabil (2. lepcso ATMENT)",1,2026-08-24 10:25
-"t40: realarfolyam es NFA plauzibilis savban",1,2026-08-24 10:25
-"t40: a tipus-kibocsatas sorrendje a phi_j sorrendje (dokumentalt KORLAT, nem eredmeny)",1,2026-08-24 10:25
-"t41 jv_3type_arak stressz letezik",1,2026-08-24 10:25
-"t41: mind a 18 kombinacio BK-stabil (3. lepcso ATMENT - az arszint-szetvalasztas nem tori el a JV-magot)",1,2026-08-24 10:25
-"t41: relativar-normalizacio tart (max 6.9e-18) - v01 egyseggyok elkerulve",1,2026-08-24 10:25
-"t41: realarfolyam es NFA plauzibilis savban",1,2026-08-24 10:25
-"t42 eps_ces erzekenyseg letezik",1,2026-08-24 10:25
-"t42: az aggregalt GDP eps_ces-re ERZEKETLEN (sav 0.008 pp)",1,2026-08-24 10:25
-"t42: az y_E ELOJELE eps_ces-fuggo (dokumentalt KORLAT, kuszobforma kell)",1,2026-08-24 10:25
-"t43 fuggetlen ellenorzes letezik",1,2026-08-24 10:25
-"t43: mind a 18 fuggetlen ellenorzes atment",1,2026-08-24 10:25
-"t43 SZIMMETRIA: azonos parameterek -> azonos tipusok (max 4.4e-16)",1,2026-08-24 10:25
-"t43 NULLA-SOKK: sokk nelkul minden valtozo 0",1,2026-08-24 10:25
-"t44 jv_access stressz letezik",1,2026-08-24 10:25
-"t44: mind a 18 kombinacio BK-stabil (4. lepcso)",1,2026-08-24 10:25
-"t44: realarfolyam es NFA plauzibilis savban",1,2026-08-24 10:25
-"t45b jv_access kuszob letezik",1,2026-08-24 10:25
-"t45b NESTING: ACCSCALE=0 == v08 (elteres 0.0e+00)",1,2026-08-24 10:25
-"t45b: veges access-kuszob a JV-magon (ACCSCALE=36.3)",1,2026-08-24 10:25
-"t46 opten-kalibracio letezik",1,2026-08-24 10:25
-"t46: mind a 14 parameter megvan (14)",1,2026-08-24 10:25
-"t46: az om_j es az shl_j sulyok 1-re osszegzodnek",1,2026-08-24 10:25
-"t46: phi_L = 0.3649 megerositi az atvett 0.365-ot",1,2026-08-24 10:25
-"t46: delta = 0.0242 megerositi az atvett 0.0250-et",1,2026-08-24 10:25
-"t46: a lev_E = lev_D kenyszeritett egyenloseg NEM ALL (1.939 vs 1.719)",1,2026-08-24 10:25
-"t47 opten stressz letezik",1,2026-08-24 10:25
-"t47: mind a 36 kombinacio BK-stabil (az OPTEN=1 phi_D=0 is)",1,2026-08-24 10:25
-"t47 SZINT: az aggregalt GDP-sav az A01-ben kozolt +0,3...+2,9%-on belul (0.52% ... 2.89%)",1,2026-08-24 10:25
-"t47 REGRESSZIO: OPTEN=0 == t44 baseline (elteres 0.0e+00)",1,2026-08-24 10:25
-"t48b opten-kuszob letezik",1,2026-08-24 10:25
-"t48b: minden agon letezik veges kuszob",1,2026-08-24 10:25
-"t48b: a kuszob-sorrend D < sulyozott KKV < E minden agon",1,2026-08-24 10:25
-"t48b: az empirikus horgony LEVISZI a kuszobot (36.5 -> 22.3)",1,2026-08-24 10:25
-"t48b SZINT: a kuszobok az F01-ben kozolt szamokon (36.5 / 22.3)",1,2026-08-24 10:25
-"t49b rho_acc erzekenyseg letezik",1,2026-08-24 10:25
-"t49b: a kuszob MONOTON csokken a rho_acc-ban (47.8 -> 17.5)",1,2026-08-24 10:25
-"t49b: a GDP-hatas MONOTON no a rho_acc-ban",1,2026-08-24 10:25
-"t49b KORLAT: a horgonyzott rho_acc mellett a GDP-hatas TULMEGY a korabbi savon (1.75% > 1.04%)",1,2026-08-24 10:25
-"t37 access szegmens-evek letezik",1,2026-08-24 10:25
-"t37: az export-KKV hozzaferese 13x a hazaie (12.8x: 61.9% vs 4.8%)",1,2026-08-24 10:25
-"t37: a nagyvallalati hozzaferes ALACSONYABB az export-KKV-enal (43.5% < 61.9%)",1,2026-08-24 10:25
-"t37 PROGRAMVEZERELTSEG: a BUBOR 12.8 pontot mozgott, a hozzaferes legfeljebb 2.2-et",1,2026-08-24 10:25
-"t37: a hazai KKV hozzaferese NOTT a kamatcsucs fele (4.5% -> 5.1%)",1,2026-08-24 10:25
-"t50 bgg-blokk letezik",1,2026-08-24 10:25
-"t50: a tokeattetel-sorrend L > E > D (2.337 > 1.939 > 1.719)",1,2026-08-24 10:25
-"t50: mindharom lev az irodalmi k/n = 2 kornyeken (+-0.4)",1,2026-08-24 10:25
-"t50 SZINT: a lev_j ertekek az A07-ben kozolt szamokon (1.939 / 1.719 / 2.337)",1,2026-08-24 10:25
-"t50b chi-specifikaciok letezik",1,2026-08-24 10:25
-"t50b: a chi elojele atfordul a nevezo javitasaval (A: -0.01167 -> C: +0.00857) - a negativ eredmeny mutermek volt",1,2026-08-24 10:25
-"t25 transzmisszio letezik",1,2026-08-24 10:25
-"t25: mind a 4 becslesben a NAGYVALLALATI atgyuruzes a magasabb",1,2026-08-24 10:25
-"t25: egyik meret szerinti kulonbseg sem szignifikans 5%-on",1,2026-08-24 10:25
-"t11 hozzaferes kiigazitott letezik",1,2026-08-24 10:25
-"t11: a hozzaferesi res OSSZETETEL-HATAS (nyers 14.3 pp -> kiigazitott 2.5 pp)",1,2026-08-24 10:25
-"t12 rata-eloszlas letezik",1,2026-08-24 10:25
-"t12 LESZAKADAS: 2023-ban a BUBOR 14.3%, a median KKV-rata csak 4.5% (2021: 2.3%)",1,2026-08-24 10:25
-"t12: 2023-ban a ratak mindossze 18.7%-a volt piaci arazasu",1,2026-08-24 10:25
-"t13 piaci alminta letezik",1,2026-08-24 10:25
-"t13: a piaci alminta rataja a teljes minta tobbszorose (A: 3.5x, B: 3.1x, C: 2.6x)",1,2026-08-24 10:25
-"t13: a piaci almintaban a kockazati sorrend ELTUNIK (A 12.92% > C 12.64%)",1,2026-08-24 10:25
-"t14 tamogatasi ek letezik",1,2026-08-24 10:25
-"t14: 2023-ban az implicit tamogatasi ek 557 Mrd Ft (az allomany 9.6%-a), a cegek 78.5%-a alularazott",1,2026-08-24 10:25
-"t15 csatorna-dekompozicio letezik",1,2026-08-24 10:25
-"t15: a hatas gyakorlatilag teljesen a SZUVEREN csatornan megy (a banki resz 0.22%) — de a v03 ARCHIV modellen",1,2026-08-24 10:25
-"t17 beralkalmazkodas letezik",1,2026-08-24 10:25
-"t17: a nominalis bercsokkentes MONOTON csokken a merettel (13.9% > 7.6% > 5.8%)",1,2026-08-24 10:25
-"t17: GYENGE nominalis merevseg 2023-24-ben (10.1% csokkentett, csak 2.8% fagyasztott)",1,2026-08-24 10:25
-"t25b transzmisszio-CI letezik",1,2026-08-24 10:25
-"t25b: mind a 4 becslesben L > S (egyiranyu pontbecslesek)",1,2026-08-24 10:25
-"t25b: mind a 4 CI TARTALMAZZA a nullat - a kulonbseg nem szignifikans",1,2026-08-24 10:25
-"t25b: 0 szignifikans kulonbseg (max |t| = 1.85)",1,2026-08-24 10:25
-"t51 kuszobfelulet-kontur letezik",1,2026-08-24 10:25
-"t51 KONTUR: a kuszob MONOTON csokken a rho_acc-ban (47.8 -> 17.5)",1,2026-08-24 10:25
-"t51 SZINT: a kontur vegpontjai az F01-ben kozolt szamokon (47.8 / 22.2)",1,2026-08-24 10:25
-"t00 PHILLIPS: az aszimmetrikus arsokkok (eps_md / eps_mx) egyik szcenarioban sincsenek hajtva",1,2026-08-24 10:25
-"t00 SZERKEZET: mind a 4 modell-vonal megvan, README-vel",1,2026-08-24 10:25
-"t00 SZERKEZET: a FO MODELL a helyen van (1_fo_vonal_jv)",1,2026-08-24 10:25
-"t00 SZERKEZET: minden futtato letezo .mod-ot hiv (29 futtato, 19 modell)",1,2026-08-24 10:25
+"opten_panel.csv letezik",1,2026-08-24 12:03
+"panel sorszam = 150982 (tenyleges: 150982)",1,2026-08-24 12:03
+"irf_v01.csv letezik",1,2026-08-24 12:03
+"aszimmetria: |i_S| > |i_L| banki sokkra",1,2026-08-24 12:03
+"aszimmetria: |efp_S| > |efp_L|",1,2026-08-24 12:03
+"szcenario_v03_hosszutav letezik",1,2026-08-24 12:03
+"alap hosszu tavu GDP plauzibilis (0.492%)",1,2026-08-24 12:03
+"KKV-tobblet minden szcenarioban (y_S > y_L)",1,2026-08-24 12:03
+"szcenario-sorrend: opt > alap > pessz",1,2026-08-24 12:03
+"t09 lekepezes letezik",1,2026-08-24 12:03
+"t09: 3 szcenario x 5 szegmens",1,2026-08-24 12:03
+"t09: minden szegmensben kamatCSOKKENES",1,2026-08-24 12:03
+"t21 jv_v05 hosszutav letezik",1,2026-08-24 12:03
+"v05 alap GDP plauzibilis (0.426%)",1,2026-08-24 12:03
+"v05 realarfolyam plauzibilis (0.8%) - unio-zaras OK",1,2026-08-24 12:03
+"v05: meret-aszimmetria minden szcenarioban (i_S > i_L)",1,2026-08-24 12:03
+"t22 v05-lekepezes letezik",1,2026-08-24 12:03
+"t22: 3 szcenario x 5 szegmens",1,2026-08-24 12:03
+"t22: a KKV hitelfelar-nyeresege > nagyvallalatie (modell-eredmeny)",1,2026-08-24 12:03
+"t34 jv_v06 hosszutav letezik",1,2026-08-24 12:03
+"v06 alap GDP plauzibilis (0.428%)",1,2026-08-24 12:03
+"v06: efp_S =/= efp_L a hosszu tavon (-1.01 bp) - a kozos-rk patologia megoldva",1,2026-08-24 12:03
+"v06: rk_S =/= rk_L (-0.25 pp) - szegmens-specifikus tokehozam",1,2026-08-24 12:03
+"v06 aggregalt GDP = v05 (0.428% vs 0.426%) - a termelesi atalakitas nem mozditotta el",1,2026-08-24 12:03
+"t35 v06 chi/psi dekompozicio letezik",1,2026-08-24 12:03
+"t35: mind a 7 eset konvergalt",1,2026-08-24 12:03
+"t35: a psi_i a steady state-et nem erinti (q=0) - Euler OK",1,2026-08-24 12:03
+"t35: chi forditasa MEGFORDITJA a szegmens-sorrendet",1,2026-08-24 12:03
+"t29 v07_access hosszutav letezik",1,2026-08-24 12:03
+"v07 alap GDP plauzibilis (0.764%)",1,2026-08-24 12:03
+"v07 replikacio: y_D=0.870% (kozolt 0.870), y_L=0.772% (kozolt 0.772)",1,2026-08-24 12:03
+"t33 v07 kuszob-osszefoglalo letezik",1,2026-08-24 12:03
+"t33 replikacio: a KKV>=L kuszob ~101 (a baseline 100 -- borotvael!)",1,2026-08-24 12:03
+"t39b calib-kuszob osszegzes letezik",1,2026-08-24 12:03
+"t39b: a CALIB=1 ag reprodukalja a kozolt kuszobet (101.0)",1,2026-08-24 12:03
+"t39b: JV-keszlettel a kuszob 100 ALATT (94.2) - a szektoralis sorrend megfordul",1,2026-08-24 12:03
+"t40 jv_3type stresszteszt letezik",1,2026-08-24 12:03
+"t40: mind a 18 kombinacio BK-stabil (2. lepcso ATMENT)",1,2026-08-24 12:03
+"t40: realarfolyam es NFA plauzibilis savban",1,2026-08-24 12:03
+"t40: a tipus-kibocsatas sorrendje a phi_j sorrendje (dokumentalt KORLAT, nem eredmeny)",1,2026-08-24 12:03
+"t41 jv_3type_arak stressz letezik",1,2026-08-24 12:03
+"t41: mind a 18 kombinacio BK-stabil (3. lepcso ATMENT - az arszint-szetvalasztas nem tori el a JV-magot)",1,2026-08-24 12:03
+"t41: relativar-normalizacio tart (max 6.9e-18) - v01 egyseggyok elkerulve",1,2026-08-24 12:03
+"t41: realarfolyam es NFA plauzibilis savban",1,2026-08-24 12:03
+"t42 eps_ces erzekenyseg letezik",1,2026-08-24 12:03
+"t42: az aggregalt GDP eps_ces-re ERZEKETLEN (sav 0.008 pp)",1,2026-08-24 12:03
+"t42: az y_E ELOJELE eps_ces-fuggo (dokumentalt KORLAT, kuszobforma kell)",1,2026-08-24 12:03
+"t43 fuggetlen ellenorzes letezik",1,2026-08-24 12:03
+"t43: mind a 18 fuggetlen ellenorzes atment",1,2026-08-24 12:03
+"t43 SZIMMETRIA: azonos parameterek -> azonos tipusok (max 4.4e-16)",1,2026-08-24 12:03
+"t43 NULLA-SOKK: sokk nelkul minden valtozo 0",1,2026-08-24 12:03
+"t44 jv_access stressz letezik",1,2026-08-24 12:03
+"t44: mind a 18 kombinacio BK-stabil (4. lepcso)",1,2026-08-24 12:03
+"t44: realarfolyam es NFA plauzibilis savban",1,2026-08-24 12:03
+"t45b jv_access kuszob letezik",1,2026-08-24 12:03
+"t45b NESTING: ACCSCALE=0 == v08 (elteres 0.0e+00)",1,2026-08-24 12:03
+"t45b: veges access-kuszob a JV-magon (ACCSCALE=36.3)",1,2026-08-24 12:03
+"t46 opten-kalibracio letezik",1,2026-08-24 12:03
+"t46: mind a 14 parameter megvan (14)",1,2026-08-24 12:03
+"t46: az om_j es az shl_j sulyok 1-re osszegzodnek",1,2026-08-24 12:03
+"t46: phi_L = 0.3649 megerositi az atvett 0.365-ot",1,2026-08-24 12:03
+"t46: delta = 0.0242 megerositi az atvett 0.0250-et",1,2026-08-24 12:03
+"t46: a lev_E = lev_D kenyszeritett egyenloseg NEM ALL (1.939 vs 1.719)",1,2026-08-24 12:03
+"t47 opten stressz letezik",1,2026-08-24 12:03
+"t47: mind a 36 kombinacio BK-stabil (az OPTEN=1 phi_D=0 is)",1,2026-08-24 12:03
+"t47 SZINT: az aggregalt GDP-sav az A01-ben kozolt +0,3...+2,9%-on belul (0.52% ... 2.89%)",1,2026-08-24 12:03
+"t47 REGRESSZIO: OPTEN=0 == t44 baseline (elteres 0.0e+00)",1,2026-08-24 12:03
+"t48b opten-kuszob letezik",1,2026-08-24 12:03
+"t48b: minden agon letezik veges kuszob",1,2026-08-24 12:03
+"t48b: a kuszob-sorrend D < sulyozott KKV < E minden agon",1,2026-08-24 12:03
+"t48b: az empirikus horgony LEVISZI a kuszobot (36.5 -> 22.3)",1,2026-08-24 12:03
+"t48b SZINT: a kuszobok az F01-ben kozolt szamokon (36.5 / 22.3)",1,2026-08-24 12:03
+"t49b rho_acc erzekenyseg letezik",1,2026-08-24 12:03
+"t49b: a kuszob MONOTON csokken a rho_acc-ban (47.8 -> 17.5)",1,2026-08-24 12:03
+"t49b: a GDP-hatas MONOTON no a rho_acc-ban",1,2026-08-24 12:03
+"t49b KORLAT: a horgonyzott rho_acc mellett a GDP-hatas TULMEGY a korabbi savon (1.75% > 1.04%)",1,2026-08-24 12:03
+"t37 access szegmens-evek letezik",1,2026-08-24 12:03
+"t37: az export-KKV hozzaferese 13x a hazaie (12.8x: 61.9% vs 4.8%)",1,2026-08-24 12:03
+"t37: a nagyvallalati hozzaferes ALACSONYABB az export-KKV-enal (43.5% < 61.9%)",1,2026-08-24 12:03
+"t37 PROGRAMVEZERELTSEG: a BUBOR 12.8 pontot mozgott, a hozzaferes legfeljebb 2.2-et",1,2026-08-24 12:03
+"t37: a hazai KKV hozzaferese NOTT a kamatcsucs fele (4.5% -> 5.1%)",1,2026-08-24 12:03
+"t50 bgg-blokk letezik",1,2026-08-24 12:03
+"t50: a tokeattetel-sorrend L > E > D (2.337 > 1.939 > 1.719)",1,2026-08-24 12:03
+"t50: mindharom lev az irodalmi k/n = 2 kornyeken (+-0.4)",1,2026-08-24 12:03
+"t50 SZINT: a lev_j ertekek az A07-ben kozolt szamokon (1.939 / 1.719 / 2.337)",1,2026-08-24 12:03
+"t50b chi-specifikaciok letezik",1,2026-08-24 12:03
+"t50b: a chi elojele atfordul a nevezo javitasaval (A: -0.01167 -> C: +0.00857) - a negativ eredmeny mutermek volt",1,2026-08-24 12:03
+"t25 transzmisszio letezik",1,2026-08-24 12:03
+"t25: mind a 4 becslesben a NAGYVALLALATI atgyuruzes a magasabb",1,2026-08-24 12:03
+"t25: egyik meret szerinti kulonbseg sem szignifikans 5%-on",1,2026-08-24 12:03
+"t11 hozzaferes kiigazitott letezik",1,2026-08-24 12:03
+"t11: a hozzaferesi res OSSZETETEL-HATAS (nyers 14.3 pp -> kiigazitott 2.5 pp)",1,2026-08-24 12:03
+"t12 rata-eloszlas letezik",1,2026-08-24 12:03
+"t12 LESZAKADAS: 2023-ban a BUBOR 14.3%, a median KKV-rata csak 4.5% (2021: 2.3%)",1,2026-08-24 12:03
+"t12: 2023-ban a ratak mindossze 18.7%-a volt piaci arazasu",1,2026-08-24 12:03
+"t13 piaci alminta letezik",1,2026-08-24 12:03
+"t13: a piaci alminta rataja a teljes minta tobbszorose (A: 3.5x, B: 3.1x, C: 2.6x)",1,2026-08-24 12:03
+"t13: a piaci almintaban a kockazati sorrend ELTUNIK (A 12.92% > C 12.64%)",1,2026-08-24 12:03
+"t14 tamogatasi ek letezik",1,2026-08-24 12:03
+"t14: 2023-ban az implicit tamogatasi ek 557 Mrd Ft (az allomany 9.6%-a), a cegek 78.5%-a alularazott",1,2026-08-24 12:03
+"t15 csatorna-dekompozicio letezik",1,2026-08-24 12:03
+"t15: a hatas gyakorlatilag teljesen a SZUVEREN csatornan megy (a banki resz 0.22%) — de a v03 ARCHIV modellen",1,2026-08-24 12:03
+"t17 beralkalmazkodas letezik",1,2026-08-24 12:03
+"t17: a nominalis bercsokkentes MONOTON csokken a merettel (13.9% > 7.6% > 5.8%)",1,2026-08-24 12:03
+"t17: GYENGE nominalis merevseg 2023-24-ben (10.1% csokkentett, csak 2.8% fagyasztott)",1,2026-08-24 12:03
+"t25b transzmisszio-CI letezik",1,2026-08-24 12:03
+"t25b: mind a 4 becslesben L > S (egyiranyu pontbecslesek)",1,2026-08-24 12:03
+"t25b: mind a 4 CI TARTALMAZZA a nullat - a kulonbseg nem szignifikans",1,2026-08-24 12:03
+"t25b: 0 szignifikans kulonbseg (max |t| = 1.85)",1,2026-08-24 12:03
+"t51 kuszobfelulet-kontur letezik",1,2026-08-24 12:03
+"t51 KONTUR: a kuszob MONOTON csokken a rho_acc-ban (47.8 -> 17.5)",1,2026-08-24 12:03
+"t51 SZINT: a kontur vegpontjai az F01-ben kozolt szamokon (47.8 / 22.2)",1,2026-08-24 12:03
+"t52e szorzat-azonossag letezik",1,2026-08-24 12:03
+"t52e SZERKEZET: a modell CSAK a lambda*omega szorzatot azonositja (max elteres 0.0e+00 pp)",1,2026-08-24 12:03
+"t52b lam-om kontur letezik",1,2026-08-24 12:03
+"t52b: a kuszob-kontur IZO-SZORZAT gorbe (12 pont, a szorzat relativ szorasa 0.08%)",1,2026-08-24 12:03
+"t52b SZINT: a szorzat-kuszob a kozolt 500-on (500.1)",1,2026-08-24 12:03
+"t52b: a kuszob-omega MONOTON csokken a lambda-ban (100.0 -> 3.6)",1,2026-08-24 12:03
+"t52d lam-om atlo letezik",1,2026-08-24 12:03
+"t52d HID: az atlo visszaadja a t48b/t51 kuszobeit (22.36 / 36.56 vs 22.3 / 36.5)",1,2026-08-24 12:03
+"t52c marginalis scan letezik",1,2026-08-24 12:03
+"t52c: a ""csak lambda"" es a ""csak omega"" metszet AZONOS",1,2026-08-24 12:03
+"t52c DIAGNOZIS: a kvadratikussag a KOZOS skalazas mutermeke (egyutt 12.5x vs egy-lepcso 2.3x)",1,2026-08-24 12:03
+"t53d dekomp-regresszio letezik",1,2026-08-24 12:03
+"t53d REGRESSZIO: a -DDECOMP=0 ag == t44 baseline (elteres 6.7e-16)",1,2026-08-24 12:03
+"t53b dekomp-kuszob letezik",1,2026-08-24 12:03
+"t53b: minden dekompozicios agon letezik veges kuszob",1,2026-08-24 12:03
+"t53b FO ALLITAS: a KKV-eredmeny NEM technologiai mutermek (technologia azonos 1.03x, csak penzugyi 1.01x)",1,2026-08-24 12:03
+"t53b SZINT: a kuszobok a kozolt szamokon (22.36 / 22.62 / 22.95)",1,2026-08-24 12:03
+"t53c dekomp BK-stressz letezik",1,2026-08-24 12:03
+"t53c: mind a 45 dekompozicios kombinacio BK-stabil",1,2026-08-24 12:03
+"t53c: a KKV-elony POZITIV mind az ot agon, minden szcenarioban",1,2026-08-24 12:03
+"t53 dekomp-agak letezik",1,2026-08-24 12:03
+"t53 ELLENPROBA: a sulyozas modja nem szamit (4.07 vs 4.05 pp)",1,2026-08-24 12:03
+"t00 PHILLIPS: az aszimmetrikus arsokkok (eps_md / eps_mx) egyik szcenarioban sincsenek hajtva",1,2026-08-24 12:03
+"t00 SZERKEZET: mind a 4 modell-vonal megvan, README-vel",1,2026-08-24 12:03
+"t00 SZERKEZET: a FO MODELL a helyen van (1_fo_vonal_jv)",1,2026-08-24 12:03
+"t00 SZERKEZET: minden futtato letezo .mod-ot hiv (31 futtato, 19 modell)",1,2026-08-24 12:03

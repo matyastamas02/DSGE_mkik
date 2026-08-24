@@ -46,6 +46,17 @@ def git(*args: str) -> str:
         return "?"
 
 
+def _doksi_link(nev: str) -> str:
+    """Egy doksi-fajlnevbol markdown link. A fajlok a docs/ ALMAPPAIBAN
+    vannak (figyelmeztetesek/, eredmenyek/, terv/, modszertan/), ezert a
+    valodi utvonalat megkeressuk; ha nincs meg, a puszta nevet adjuk vissza
+    link nelkul, hogy ne kepzodjon torott hivatkozas."""
+    talalt = list((REPO / "docs").rglob(nev))
+    if not talalt:
+        return nev
+    return f"[{nev}]({talalt[0].relative_to(REPO).as_posix()})"
+
+
 def main() -> None:
     hianyzo = [p for p in [REG / "allitasok.csv", REG / "parameterek.csv",
                            REPO / "output" / "tables" / "t00_orok.csv",
@@ -201,7 +212,12 @@ def main() -> None:
             f_ = r["forras"] if isinstance(r["forras"], str) else ""
             k_ = r["kapcsolo"] if isinstance(r["kapcsolo"], str) else ""
             d_ = r["doksi"] if isinstance(r["doksi"], str) else ""
-            d_ = f"[{d_}](docs/{d_})" if d_ else ""
+            # A doksi mezo TOBB fajlnevet is tarthat, `; `-vel elvalasztva
+            # (2026-08-24 ota van ilyen). Korabban a generator egyetlen
+            # sztringkent linkelte, amitol `[a; b](docs/a; b)` lett -- torott
+            # link. Emellett a fajlok almappakban vannak (figyelmeztetesek/,
+            # eredmenyek/, terv/), ezert a valodi utvonalat megkeressuk.
+            d_ = " · ".join(_doksi_link(x.strip()) for x in d_.split(";") if x.strip())
             w(f"| `{r['parameter']}` | {e} | {STAT_JEL.get(r['statusz'], '')} "
               f"{r['statusz']} | {f_} | {k_} | {d_} |")
         w("")
