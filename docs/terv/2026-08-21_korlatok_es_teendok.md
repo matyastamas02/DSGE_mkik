@@ -381,6 +381,61 @@ mozognak: a **7,6%-os margóról**.
 
 *Az eredeti objektum-eltérési észrevétel változatlanul áll:*
 
+### 9c. „Nem kuka az egész, mert pont erre az időszakra van adatunk?" (2026-08-24)
+
+Külső komment kérdezte, hogy a 2021–2024-es ablak nem teszi-e értelmetlenné az
+egészet, és nem elengedhetetlenek-e a korábbi időszak adatai. **A válasz
+kettéválik, és a két fele ellentétes irányba mutat.**
+
+**A MÉRÉS.** Évről évre, a kalibrációt adó momentumok:
+
+| év | n | hitele van | medián tőkeáttétel | eladósodottság | exportáló |
+|---|---:|---:|---:|---:|---:|
+| 2021 | 36 115 | 11,9% | 1,777 | 0,379 | 13,0% |
+| 2022 | 36 908 | 12,6% | 1,777 | 0,379 | 13,6% |
+| 2023 | 37 475 | 13,1% | 1,754 | 0,375 | 14,2% |
+| 2024 | 37 727 | 12,9% | 1,719 | 0,363 | 14,2% |
+
+Szegmensenkénti hitelhozzáférés (a `t37` magja):
+
+| év | exportáló | hazai | különbség |
+|---|---:|---:|---:|
+| 2021 | 59,5% | 4,8% | 54,6 pp |
+| 2022 | 60,7% | 5,0% | 55,7 pp |
+| 2023 | 60,0% | 5,4% | 54,6 pp |
+| 2024 | 58,6% | 5,4% | 53,2 pp |
+
+**1. A SZINT-MOMENTUMOKRA: NEM, ÉS ERRE VAN BIZONYÍTÉK.** Ezek a momentumok
+alig mozdulnak — a hitelhozzáférés 1,2 pp-os sávban, a szegmens-különbség
+2,5 pp-os sávban. És ez **a közelmúlt egyik legzaklatottabb magyar
+makro-ablakában** történik: COVID-kilábalás, a hitelmoratórium kivezetése,
+energiaársokk, 25%-os infláció, 0,6% → 18% → 6,5%-os alapkamat-ciklus. Egy
+keresztmetszeti strukturális momentum, amely ezt ±1,2 pp-on belül átvészeli,
+nem valószínű, hogy az ablak műterméke. **Korábbi adat jó lenne, de ezekhez az
+objektumokhoz nem elengedhetetlen.**
+
+⚠ *Egy fenntartás a stabilitás-érvhez:* a panel a túlélő cégeket látja
+(n: 36,1k → 37,7k), és a túlélőkre való szelekció mechanikusan is
+stabilizálhat. A stabilitás tehát alátámasztó, nem döntő bizonyíték.
+
+**2. A DINAMIKUS OBJEKTUMOKRA: IGEN, A KOMMENTNEK IGAZA VAN** — és ez
+ugyanaz a seb, mint a 9. pontban, csak más szögből. Négy év, és a cégek
+92,4%-a egyszer sem mozdul: **nincs miből dinamikát azonosítani.**
+
+**A CSAVAR:** épp az a stabilitás, amely *megvédi* a szint-kalibrációt, az,
+ami *ellehetetleníti* a dinamikusat. Nem mozdul semmi → nincs mit becsülni.
+
+**3. AMI A KÉRDÉST A HELYÉRE TESZI:** az Opten-panel **nem az euró-hatást
+azonosítja.** Az a DSGE-struktúrából és a feltételezett konvergenciapályából
+jön; a panel **momentumokat szállít**. Ezért az „egyetlen elő-időszak"
+probléma nem úgy öli meg a projektet, ahogy egy diff-in-diff tanulmányt
+megölne — ott az azonosítás múlna rajta, itt a kalibráció pontossága.
+
+**EGY ÉRDEKES MELLÉKLET.** A programvezérelt törés 2021→2022 (a piaci árazású
+hitelállomány aránya 100% → 26,3%), a hitelhozzáférés viszont alig mozdul
+(11,9% → 12,6%). Vagyis a támogatott programok a hitel **árazását** írták át,
+nem az **extenzív margót**. Ez önmagában is egy vizsgálandó állítás.
+
 ### 9b. Az eredeti objektum-eltérés (2026-08-21)
 
 Amit mértünk: **cég-szintű bináris** státusz-perzisztencia. Amit a modell
