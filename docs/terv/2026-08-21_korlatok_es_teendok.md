@@ -88,6 +88,46 @@ mindig van hitele" történet **nincs az adatban**.
 
 **Teendő:** scan rá, ugyanúgy, mint az `ACCSCALE`-re. Fél nap.
 
+#### Irodalmi első keresés — 2026-08-24, külső észrevétel nyomán
+
+Egy artifact-komment vetette fel, hogy erre a feltevésre irodalmat kellene
+keresni. Megtettük (**első keresés, nem szisztematikus review**), és
+megváltoztatja, amit mondanunk kell:
+
+**TÁMOGATJA — és jobb indoklást ad, mint amink volt.** Az ECB SAFE
+(vállalati finanszírozási felmérés) szerint a nagyvállalatok **elutasítási
+aránya 1–2%**, a KKV-ké 5%. Vagyis a nagyvállalatot gyakorlatilag **nem
+adagolják**. Az `acc_L = 0` tehát nem azért védhető, mert „mindig van
+hitele", hanem mert **ha kér, megkapja**. Ez erősebb érv.
+
+**PONTOSÍTJA.** Ugyanez a felmérés: a nagyvállalatoknak csak **45–48%-a
+folyamodik** egyáltalán bankhitelért. Ez feltűnően közel van a mi 43,4%-os
+magyar adatunkhoz (`A03`) — és megerősíti a saját megjegyzésünket, hogy a
+nagyvállalati alacsony hozzáférés **igényhiány, nem korlátozottság**.
+
+**MEGKÉRDŐJELEZI — és ezt nem hallgathatjuk el.** Crouzet–Mehrotra
+(*American Economic Review*, `10.1257/aer.20181499`) amerikai adaton azt
+találja, hogy a méret szerinti ciklikusság-különbség **valószínűleg nem
+pénzügyi eredetű**: (a) recesszióban nincs szignifikáns különbség a
+termelési inputok vagy az adósság viselkedésében; (b) a méret-hatás túléli a
+pénzügyi erő proxyinak kontrollálását; (c) egy egyszerű pénzügyi súrlódásos
+modell épp azt jósolná, hogy a **nem korlátozott (nagy)** cégek esnek vissza
+jobban. Sőt: a kis cégek nagyobb ciklikussága szerintük — a ferdeség miatt —
+**elhanyagolhatóan** mozgatja az aggregátumot.
+
+Ez **közvetlen kihívás a méret-alapú pénzügyi akcelerátor premisszájára**.
+Két érv szól amellett, hogy nálunk mégis áll:
+1. **Amerikai adat.** Ott a nagyvállalatnak mély kötvénypiaca van, a magyar
+   KKV-nak gyakorlatilag csak bankhitele.
+2. **A mi extenzív margónk sokkal szélsőségesebb**, mint bármi az USA-ban:
+   13-szoros hozzáférési rés az exportáló és a hazai KKV között (`A02`).
+
+**Teendő:** a Crouzet–Mehrotra-t **fel kell venni a szakirodalmi
+adatbázisba, és a tanulmányban meg kell hivatkozni** — egy bíráló elő fogja
+venni, és sokkal jobb, ha mi hozzuk elő. Plusz: a SAFE magyar bontása
+(elutasítási arány és „nem folyamodott, mert…" méret szerint) **közvetlen
+horgony lehet** az `omega_acc_L`-re, és eddig nem néztük meg.
+
 ### 5. EGY pre-periódus — semmilyen cégszintű azonosítás nem validálható
 
 Mérve: a programvezéreltség **2021 és 2022 között** tör meg (piaci árazású
