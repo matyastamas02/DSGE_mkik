@@ -171,6 +171,43 @@ A panel nem tartalmazza a mikrocégeket, tehát a súlyok a 10+ populáción
 különbségét jórészt ez magyarázza. **Ezért maradt az `-DOPTEN`
 alapértelmezése `0`.** KSH/Eurostat SBS bontás kell. <span>`F03`</span>
 
+### 10b. A JV-paraméterek 2008-asok — és a minta időszaka nincs rögzítve
+
+**Külső észrevétel (2026-08-24, artifact-komment), és jogos.** A 91-ből
+**28 paraméter** a Jakab–Világi tanulmányból jön (MNB WP **2008/9**) — és épp
+ez volt a fő érv a mag választása mellett: „magyar adaton becsült". Ez igaz,
+de a minta a 2008-as válság *előtt* zárul.
+
+Amit ez érint: bérragadósság (0,657), árragadósság (0,921), szokásformálás
+(0,646), a korlátozott háztartások aránya (0,25), és a sokk-perzisztenciák.
+Mind egy **másik monetáris és pénzügyi rezsimből**.
+
+⚠ **És egy önálló hiányosság:** a **JV-minta pontos időszaka a projekt
+dokumentációjában nincs rögzítve** — vagyis jelenleg meg sem tudjuk mondani,
+mennyire régiek az értékek. Ez fél óra munka, és nélküle a „becsült magyar
+adaton" érv nem ellenőrizhető.
+
+**Miért NEM a megoldás az egyes értékek cserélgetése:** a 28 érték
+**együttesen becsült poszterior**. Ha egyet kiveszünk és beemelünk helyette
+egy újabb, független becslést, elrontjuk a készlet belső konzisztenciáját —
+és a modell megoldása olyan paraméter-kombinációra fut, amit soha senki nem
+becsült együtt.
+
+**A védhető út, két lépésben:**
+
+1. **Direkt mérés ott, ahol létezik.** A korlátozott (likviditáskorlátos)
+   háztartások arányára ez a helyzet: a **háztartási vagyonfelmérés (HFCS)**
+   közvetlenül méri, magyar hullámokkal. Egy direkt mérés **jobb**, mint
+   bármelyik DSGE-becslés — és ez a paraméter amúgy sem becsült poszterior a
+   JV-ben, hanem strukturális/survey feltevés. **Ellenőrizendő, mit ad.**
+2. **A vintage explicit kimondása mindenhol máshol.** Nem cseréljük, hanem
+   megnevezzük: „2008 előtti magyar mintán becsült". Ez a tanulmányban egy
+   lábjegyzet, és elveszi a kritika élét.
+
+*A teljes újrabecslés (28 paraméter, mai magyar adaton) önálló kutatási
+projekt — a decemberi leadás keretében nem reális, és a `2.7`-hez hasonlóan
+opcióként tartjuk nyilván.*
+
 ### 11. A háztartási blokk minimális
 
 **Nem hiányzik** — van optimalizáló (75%) és korlátozott (25%) háztartás,

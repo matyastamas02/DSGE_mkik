@@ -522,6 +522,8 @@ csak ezek után adna érdemi pluszt.
 | **1a** | KSH/Eurostat SBS méretbontás → az `om_j`/`shl_j` átskálázása (2.5) | belső | fél nap |
 | **1b** | A csatorna-dekompozíció (`t15`) újrafuttatása a FŐ modellen — jelenleg a `v03` archív modellen áll (`F05`) | belső | fél nap |
 | **0** | ⚠ **A −200 bp szuverén / −45 bp banki szcenárió-nagyságrend FORRÁSA** — a `.mod` és a doksik a pályát dokumentálják, de a −200 bp maga hivatkozás nélkül áll. Ez viszi az `A01` fő számát. | belső | fél nap |
+| **0b** | ⚠ **A JV-minta időszakának rögzítése** — 28 paraméter forrása MNB WP 2008/9, de a minta pontos periódusa nincs dokumentálva. Nélküle a „becsült magyar adaton” érv nem ellenőrizhető. | belső | fél óra |
+| **0c** | A korlátozott háztartások aránya (`om_no = 0,25`) **direkt mérésből** — HFCS magyar hullámok. Ez nem is becsült poszterior a JV-ben, hanem survey-feltevés. | belső | fél nap |
 | **1c** | **Cutoff-validitási audit** a program-jogosultsági küszöbökre (2.6) | belső | 1 nap |
 | **1d** | **`Jogosultság → hozzáférés` ELSŐ LÉPCSŐ** — NEM `ACCSCALE`-horgony (2.6) | belső | fél nap |
 | **2** | MNB méret szerinti kamatstatisztika **bekérése** | levél | + várakozás |
