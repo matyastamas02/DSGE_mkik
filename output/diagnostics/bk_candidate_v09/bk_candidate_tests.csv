@@ -1,0 +1,14 @@
+teszt,rendben,meroszam,turhatar_vagy_cel,megjegyzes
+main OPTEN0 = candidate rho=.85 norm=0,1,0,1e-10,statuszazonos=1
+main OPTEN1 implicit magas rho = explicit candidate,1,0,1e-10,statuszazonos=1
+main explicit rho=.85 = candidate rho=.85 norm=0,1,0,1e-10,statuszazonos=1
+explicit azonos rho-t az OPTEN=0/1/2 nem irja felul,1,0,1e-12,M_.params rho=[0.9123456789 0.9123456789 0.9123456789]
+ACCSCALE=0 nesting v08 (norm=0),1,4.10782519111308e-15,1e-10,statuszazonos=1
+ACCSCALE=0 nesting v08 (norm=1),1,4.10782519111308e-15,1e-10,statuszazonos=1
+norm=1 LAM100 = legacy LAM3.27 (96.73% hurokero-vagas),1,4.44089209850063e-16,1e-09,statuszazonos=1
+lambda-visszaskalazas visszaadja a legacy dinamikat es BK-hibat,1,1.4166445794217e-13,1e-08,statuszazonos=1
+minden jelolt PF futas megoldodott,1,36,36,darab/cel
+az inicialis uni=0 rezsim mindenhol BK-stabil,1,36,36,darab/cel
+rho=.85 legacy terminalis BK-stabil,1,9,9,darab/cel
+rho=.9673 legacy reprodukalja a terminalis BK-hibat,1,9,9,darab/cel
+rho=.9673 normalizalt jelolt terminalis BK-stabil,1,9,9,darab/cel
