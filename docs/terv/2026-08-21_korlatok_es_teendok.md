@@ -302,7 +302,70 @@ adatból származtatott, de a szegmentáció definíciója kutatói döntés.*
 
 **Teendő:** a küszöb scanelése (10 / 25 / 40%). Fél nap.
 
-### 9. `rho_acc`: objektum-eltérés
+### 9. `rho_acc`: objektum-eltérés — ÉS EGY SÚLYOSABB PROBLÉMA (2026-08-24)
+
+⚠ **Ez a tétel a mai méréssel felkerülne a 🔴 listára is.** Külső komment
+kérdezte, hogyan lehetne a perzisztencia megbízhatóságán javítani —
+utánaszámoltunk, és a válasz átrendezi a képet.
+
+**A MÉRÉS.** A 4 teljes évvel rendelkező 35 982 cégből:
+
+| | db | arány |
+|---|---:|---:|
+| **soha** nem volt hitele | 29 954 | **83,2%** |
+| **mindig** volt hitele | 3 294 | **9,2%** |
+| legalább egyszer változott | 2 734 | **7,6%** |
+
+**A cégek 92,4%-a EGYSZER SEM váltott státuszt négy év alatt.** A
+státuszváltások eloszlása: 33 248 cégnél nulla váltás, 2 172-nél egy,
+522-nél kettő, 40-nél három.
+
+**MIÉRT SÚLYOS EZ.** A `rho_acc = 0,9673` a `p11 − p01` képletből jön, ami
+ezt a magas perzisztenciát méri — **de a perzisztencia forrása nem az, amit a
+modell feltételez.** A modellben
+
+```
+acc_j = rho_acc·acc_j(−1) − lambda·efp_j
+```
+
+egy **dinamikus állapotegyenlet**: a `rho` azt mondja meg, milyen lassan
+alkalmazkodik a szegmens hozzáférési állapota **egy sokkra**. Amit viszont
+mértünk, az túlnyomórészt **állandó cég-heterogenitás**: a legtöbb cég
+tartósan az egyik vagy a másik vödörben ül.
+
+**Vagyis a 0,967 nagyrészt azt méri, hogy a populáció STATIKUS, nem azt, hogy
+a hozzáférés LASSAN alkalmazkodik.** A kettő nem ugyanaz, és a modell
+szempontjából a második számítana.
+
+⚠ **Ez az `A11` „alsó korlát" érvét is árnyalja.** A share-folyamat tényleg
+perzisztens (a Granger-aggregáció áll) — de az *oka* más, mint amit
+sugalltunk. És a modell `acc_j`-je épp azokról a cégekről szól, amelyek
+mozognak: a **7,6%-os margóról**.
+
+**Teendők — az 1. a legfontosabb, és ma már tudjuk, hogy kötő:**
+
+1. **Az állapotfüggőség és a heterogenitás szétválasztása.** Dinamikus panel
+   probit cég-szintű véletlen hatással (Wooldridge/Heckman kezdeti-feltétel
+   kezeléssel), vagy minimum: a `p11`/`p01` külön a valaha váltó almintán.
+   **Ez dönti el, hogy a `rho_acc` egyáltalán a helyes objektumot méri-e.**
+2. **Kalibráció a marginális populációra.** A modell margója a be- és
+   kilépőkről szól; a `p11`/`p01` a 7,6%-os „mozgó" körön egészen más értéket
+   adna — és arguably relevánsabbat.
+3. **Közvetlen szegmens-szintű becslés több cellával.** 4 év × 3 szegmens
+   túl kevés egy AR(1)-hez, de ágazat × méret cellákra bontva (kb. 20 × 3 × 4)
+   már becsülhető — és ez a **helyes objektum**, nem a cég-szintű.
+4. **Az éves → negyedéves lépés ellenőrzése.** A `rho_q = rho_a^(1/4)` a
+   sajátérték gyöke, ami kétállapotú láncnál elvileg helyes — de ellenőrizni
+   kell, hogy az implikált negyedéves átmenetmátrix **érvényes
+   valószínűségeket** ad-e (beágyazhatóság).
+5. **Definíció-robusztusság.** A `van_hitel` öt hitelmező összegén alapul;
+   más definíciók (minimális méret, szállítói hitel kizárása) más
+   perzisztenciát adnak. Olcsó ellenőrzés.
+6. **Több év** — a 2021 előtti panel (2.2) megduplázná a megfigyeléseket.
+
+*Az eredeti objektum-eltérési észrevétel változatlanul áll:*
+
+### 9b. Az eredeti objektum-eltérés (2026-08-21)
 
 Amit mértünk: **cég-szintű bináris** státusz-perzisztencia. Amit a modell
 használ: **szegmens-szintű folytonos** állapot. Két különböző objektum.
