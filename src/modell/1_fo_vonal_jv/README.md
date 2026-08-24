@@ -35,6 +35,8 @@ matlab -batch "cd('src/modell/1_fo_vonal_jv/futtato'); stress_jv_access_v09"
 | Script | Mit csinál | Kimenet |
 |---|---|---|
 | `stress_opten_v09.m` | az Opten-kalibráció hatása + `rho_acc` scan | `t47`–`t49b` |
+| `sens_lam_om_v09.m` | **az `ACCSCALE` szétbontása**: a küszöb a `(λ, ω)` síkon | `t52`–`t52e` |
+| `dekomp_edl_v09.m` | **E/D/L dekompozíció**: technológia vagy finanszírozás? | `t53`–`t53d` |
 | `stress_jv_access_v09.m` | 4. lépcső: BK-stressz, nesting, `ACCSCALE`-küszöb | `t44`, `t45`, `t45b` |
 | `stress_jv_3type_arak.m` | 3. lépcső + `eps_ces` érzékenység | `t41`, `t42` |
 | `stress_jv_3type.m` | 2. lépcső BK-stressz | `t40` |
@@ -45,7 +47,11 @@ matlab -batch "cd('src/modell/1_fo_vonal_jv/futtato'); stress_jv_access_v09"
 
 `-DSCENARIO=1..4` · `-DTSCEN=1|2|3` · `-DACCSCALE=<0..150>` · `-DEPSCES=<x>` ·
 `-DSYM=1` (szimmetria-teszt) · `-DNOVERT=1` · `-DNUUNI=<x>` ·
-**`-DOPTEN=0|1|2|3`** (kalibrációs ág) · **`-DRHOACC=<x>`**
+**`-DOPTEN=0|1|2|3`** (kalibrációs ág) · **`-DRHOACC=<x>`** ·
+**`-DLAMSCALE=<x>` / `-DOMSCALE=<x>`** (az `ACCSCALE` két lépcsője külön;
+alapértelmezés `-1` = az `ACCSCALE`-t örökli, tehát bitre visszafelé
+kompatibilis) · **`-DDECOMP=0|1|2|3|4`** (E/D/L dekompozíciós ág) ·
+**`-DDECOMPW=0|1`** (a közös érték méretsúlyozott vagy számtani átlag)
 
 Kalibrációs változtatás **mindig kapcsolóval**, ne felülírással — így minden
 variáns futtatható és összevethető marad. Az alapértelmezés váltása
@@ -56,6 +62,10 @@ variáns futtatható és összevethető marad. Az alapértelmezés váltása
 - **Szegmens-szintű kibocsátást pontbecslésként** — két horgonyzatlan
   paraméter (`eps_ces`, `ACCSCALE`) viszi, és mindkettőn fordul az előjel.
   Küszöbforma kell.
+- **Az „`ACCSCALE` ≥ 22,3" küszöböt EGY SZÁMKÉNT** — 2026-08-24 óta tudjuk,
+  hogy a modell a `lambda_acc`-ot és az `omega_acc`-ot külön nem
+  azonosítja, csak a szorzatukat (`A22`). A közlendő objektum
+  `(λ·ω)* = 500`; a 22,3 ennek egyetlen pontja (`√500`).
 - **Az `s_kkv` IO-számokat** — a mérés hibás (`docs/figyelmeztetesek/`).
 - **A `t_S > t_L` feltevést** eredményként — nem azonosítható.
 

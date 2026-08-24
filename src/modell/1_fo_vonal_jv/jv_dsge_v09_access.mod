@@ -59,9 +59,11 @@
  * kuszobformaban kell kozolni.
  *
  * Szcenariok: -DSCENARIO=1|2|3|4, -DTSCEN=1|2|3, -DACCSCALE=<0..150>,
- *             -DEPSCES=<x>, -DSYM=1, -DNOVERT=1, -DNUUNI=<x>,
- *             -DOPTEN=0|1|2
- * Futtatas:   stress_jv_access_v09.m
+ *             -DLAMSCALE=<x>, -DOMSCALE=<x>, -DEPSCES=<x>, -DSYM=1,
+ *             -DNOVERT=1, -DNUUNI=<x>, -DOPTEN=0|1|2|3, -DRHOACC=<x>,
+ *             -DDECOMP=0|1|2|3|4, -DDECOMPW=0|1
+ * Futtatas:   stress_jv_access_v09.m, stress_opten_v09.m,
+ *             sens_lam_om_v09.m (2D kuszobfelulet), dekomp_edl_v09.m
  */
 
 @#ifndef SCENARIO
@@ -90,6 +92,76 @@
 // parameterertekek atvetele.
 @#ifndef ACCSCALE
   @#define ACCSCALE = 100
+@#endif
+// --- -DLAMSCALE / -DOMSCALE: AZ ACCSCALE SZETBONTASA --------------------
+// MIERT KELL (kulso biralat, 2026-08-21; korlatok-riport 1. teendo).
+// Az ACCSCALE EGYETLEN szamkent KET kulon mechanizmust skalazott:
+//     1. lepcso  felar -> hozzaferes        lambda_acc_j
+//     2. lepcso  hozzaferes -> beruhazas    omega_acc_j
+// A hosszu tavu beruhazasi hatas -omega*lambda/(1-rho_acc)*efp, tehat az
+// ACCSCALE NEGYZETEVEL aranyos, nem a szintjevel. Kovetkezmeny: a kozolt
+// "22.3-as kuszob" NEM egy rugalmassagon van, hanem KETTO SZORZATAN,
+// ELORE ROGZITETT lambda:omega arany mellett -- es maga az arany
+// (2.0:2.5 illetve 0.35:0.45) is atvett ertek a v07_access-bol. Igy a
+// szam onmagaban nem interpretalhato.
+//
+// Ezert a ket lepcso kulon kapcsolot kap, es a kuszobot nem egy
+// szamkent, hanem a (lambda, omega) sikon KETDIMENZIOS FELULETKENT
+// kozoljuk (sens_lam_om_v09.m -> t52 / t52b).
+//
+// VISSZAFELE KOMPATIBILITAS: az alapertelmezes -1 = "nincs beallitva",
+// ilyenkor MINDKETTO az ACCSCALE-t orokli, tehat minden korabbi futas
+// (t44/t47/t48/t49/t51) valtozatlanul reprodukalodik. A sens_lam_om_v09.m
+// (0) pontja ezt regresszios orkent le is meri.
+@#ifndef LAMSCALE
+  @#define LAMSCALE = -1
+@#endif
+@#ifndef OMSCALE
+  @#define OMSCALE = -1
+@#endif
+@#if LAMSCALE < 0
+  @#define LAMEFF = ACCSCALE
+@#else
+  @#define LAMEFF = LAMSCALE
+@#endif
+@#if OMSCALE < 0
+  @#define OMEFF = ACCSCALE
+@#else
+  @#define OMEFF = OMSCALE
+@#endif
+// --- -DDECOMP: E/D/L DEKOMPOZICIOS SCAN ---------------------------------
+// MIERT KELL (korlatok-riport 2. teendo / 7. szakasz).
+// A harom tipus ELEVE kulonbozo technologiat kapott: a zeta_j es az aa_j
+// a JV export-/hazai szektorabol van ATVIVE, nem becsulve. Ha az E es a D
+// maskepp reagal, abban benne van az is, hogy mi adtunk nekik mas
+// termelesi parametert. A referee elso kerdese ez lesz: "show me that
+// your main conclusion is not an artifact of the E/D/L calibration."
+//
+// A kapcsolo egyszerre EGY heterogenitas-dimenziot hagy meg, a tobbit
+// kozos ertekre allitja:
+//   0 = KI (ALAPERTELMEZES; minden marad ugy, ahogy volt)
+//   1 = A ag: CSAK phi_j (piaci orientacio) heterogen
+//   2 = B ag: CSAK a penzugyi parameterek (chi, lev, psi, access)
+//   3 = C ag: CSAK aa_j (import-intenzitas, a magyar dualis szerkezet)
+//   4 = D ag: minden TECHNOLOGIAI parameter (zeta_j, aa_j) AZONOS; a
+//             phi_j es a penzugyi heterogenitas marad -> a maradek
+//
+// ERTELMEZESI DONTES: mi legyen a "kozos ertek"? A -DDECOMPW=1
+// (alapertelmezes) a MERETSULYOZOTT (om_j) atlagot hasznalja, mert az
+// hagyja valtozatlanul az aggregalt technologiat -- igy a scan tisztan az
+// ATRENDEZODES hatasat meri, nem egy szint-eltolodast. A -DDECOMPW=0 az
+// egyszeru szamtani atlag: robusztussagi ellenproba, hogy a kovetkeztetes
+// ne a semlegesites modjan mulljon.
+//
+// TECHNIKA: nem vezetunk be uj parametert (a regiszter 91 tetele igy
+// valtozatlan marad). Az atlagot eloszor az EGYIK tipus parameterebe
+// irjuk -- a jobb oldal ilyenkor meg vegig EREDETI ertekeket lat --,
+// utana masoljuk a masik kettobe.
+@#ifndef DECOMP
+  @#define DECOMP = 0
+@#endif
+@#ifndef DECOMPW
+  @#define DECOMPW = 1
 @#endif
 // -DOPTEN: a 14 tipus-parameter forrasa (s15_opten_kalibracio.m).
 //   0 = atvett indulo ertekek a kkv_dsge_v07_access-bol (ALAPERTELMEZES,
@@ -269,6 +341,53 @@ tsov_E = 0.175; tsov_D = 0.175; tsov_L = 0.175;
 tbank_E = 0.45; tbank_D = 0.45; tbank_L = 0.45;
 @#endif
 
+// --- -DDECOMP: A HETEROGENITAS-DIMENZIOK SZETVALASZTASA ------------------
+// Itt all, mert (a) minden tipus-specifikus parameter mar megkapta a
+// vegleges erteket (alap -> OPTEN -> SYM), es (b) a szarmaztatott sulyok
+// (wd_j / wx_j / shm_j) MEG NEM keszultek el -- azok igy automatikusan a
+// dekomponalt phi_j / aa_j ertekekbol allnak elo, tehat a modell belsoleg
+// konzisztens marad. Az access-parametereket (lambda_acc, omega_acc) a
+// sajat helyukon, a fajl vegen kezeljuk.
+@#if DECOMP > 0
+@#if DECOMPW == 1
+@#define AVG3_PHI  = "om_E*phi_E + om_D*phi_D + om_L*phi_L"
+@#define AVG3_ZETA = "om_E*zeta_E + om_D*zeta_D + om_L*zeta_L"
+@#define AVG3_AA   = "om_E*aa_E + om_D*aa_D + om_L*aa_L"
+@#define AVG3_CHI  = "om_E*chi_E + om_D*chi_D + om_L*chi_L"
+@#define AVG3_LEV  = "om_E*lev_E + om_D*lev_D + om_L*lev_L"
+@#define AVG3_PSI  = "om_E*psi_E + om_D*psi_D + om_L*psi_L"
+@#else
+@#define AVG3_PHI  = "(phi_E + phi_D + phi_L)/3"
+@#define AVG3_ZETA = "(zeta_E + zeta_D + zeta_L)/3"
+@#define AVG3_AA   = "(aa_E + aa_D + aa_L)/3"
+@#define AVG3_CHI  = "(chi_E + chi_D + chi_L)/3"
+@#define AVG3_LEV  = "(lev_E + lev_D + lev_L)/3"
+@#define AVG3_PSI  = "(psi_E + psi_D + psi_L)/3"
+@#endif
+
+// zeta_j (tokehanyad): MINDEN agon kozos. Az 1/2/3 agban azert, mert nem
+// az a vizsgalt dimenzio; a 4. agban azert, mert epp az a lenyeg.
+zeta_L = @{AVG3_ZETA}; zeta_E = zeta_L; zeta_D = zeta_L;
+
+@#if DECOMP == 1 || DECOMP == 2 || DECOMP == 4
+// aa_j: kozos. A C agban (3) EZ az egyetlen, ami heterogen marad.
+aa_L = @{AVG3_AA}; aa_E = aa_L; aa_D = aa_L;
+@#endif
+
+@#if DECOMP == 2 || DECOMP == 3
+// phi_j: kozos. Az A agban (1) EZ marad egyedul heterogen; a D agban (4)
+// szandekosan marad heterogen, mert nem technologiai parameter.
+phi_L = @{AVG3_PHI}; phi_E = phi_L; phi_D = phi_L;
+@#endif
+
+@#if DECOMP == 1 || DECOMP == 3
+// penzugyi blokk: kozos. A B (2) es a D (4) agban marad heterogen.
+chi_L = @{AVG3_CHI}; chi_E = chi_L; chi_D = chi_L;
+lev_L = @{AVG3_LEV}; lev_E = lev_L; lev_D = lev_L;
+psi_L = @{AVG3_PSI}; psi_E = psi_L; psi_D = psi_L;
+@#endif
+@#endif
+
 // --- SZARMAZTATOTT sulyok (nem szabad parameterek) ----------------------
 // A hazai jószag hatarkoltsege a tipusok mc_j-jenek sulyozott atlaga, a
 // HAZAI ertekesitesi sulyokkal; az export jószage az EXPORT sulyokkal.
@@ -345,8 +464,26 @@ rho_acc = 0.9673;
 @#if RHOACC > 0
 rho_acc = @{RHOACC};
 @#endif
-lambda_acc_E = 2.0*(@{ACCSCALE}/100); lambda_acc_D = 2.5*(@{ACCSCALE}/100);
-omega_acc_E  = 0.35*(@{ACCSCALE}/100); omega_acc_D = 0.45*(@{ACCSCALE}/100);
+// A ket lepcso KULON skalazhato (-DLAMSCALE / -DOMSCALE). Ha egyiket sem
+// adjuk meg, mindketto az ACCSCALE-t orokli -> bitre azonos a korabbival.
+lambda_acc_E = 2.0*(@{LAMEFF}/100); lambda_acc_D = 2.5*(@{LAMEFF}/100);
+omega_acc_E  = 0.35*(@{OMEFF}/100); omega_acc_D = 0.45*(@{OMEFF}/100);
+@#if DECOMP == 1 || DECOMP == 3
+// A / C ag: a penzugyi heterogenitast az ACCESS-bol is ki kell venni,
+// kulonben az ag nem tiszta. FIGYELEM: ez CSAK az E-D kulonbseget tunteti
+// el (2.0 vs 2.5, illetve 0.35 vs 0.45). A nagyvallalatnak DEFINICIO
+// SZERINT nincs acc-egyenlete (omega_acc_L = 0), es azt ez a kapcsolo NEM
+// semlegesiti -- az kulon teendo (korlatok-riport 4. pont).
+@#if DECOMPW == 1
+lambda_acc_D = (om_E*lambda_acc_E + om_D*lambda_acc_D)/(om_E+om_D);
+omega_acc_D  = (om_E*omega_acc_E  + om_D*omega_acc_D )/(om_E+om_D);
+@#else
+lambda_acc_D = (lambda_acc_E + lambda_acc_D)/2;
+omega_acc_D  = (omega_acc_E  + omega_acc_D )/2;
+@#endif
+lambda_acc_E = lambda_acc_D;
+omega_acc_E  = omega_acc_D;
+@#endif
 nu_uni = @{NUUNI};
 rho_a = 0.552; rho_x = 0.625; rho_c = 0.767; rho_w = 0.661;
 rho_i = 0.488; rho_pr = 0.820; rho_mx = 0.318; rho_g = 0.80;
