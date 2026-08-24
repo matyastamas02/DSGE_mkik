@@ -141,6 +141,43 @@ Ha a KKV-eredmény a **B** és **D** ágon is megvan, akkor tényleg
 finanszírozási heterogenitásról szól. Ha csak az **A**/**C** ágon, akkor
 technológiai műtermék. **Egy nap, makró-kapcsolóval.**
 
+### 7b. Az alapértelmezett ág (`OPTEN=0`) NEM MÉRT exportarányokon fut
+
+**Külső észrevétel (2026-08-24) tárta fel, egy bemutatóra adott kommentből:
+„ezeket az arányokat honnan tudjuk?”** Ellenőrizve, és a válasz kellemetlen:
+
+| | modell-alapérték | saját panel, tág def. | saját panel, 25%-os def. | státusz |
+|---|---:|---:|---:|---|
+| `phi_E` | 0,56 | 0,3757 | 0,6911 | 🔴 **átvett, nem mért** |
+| `phi_D` | 0,05 | 0,0000 | 0,0227 | 🔴 **átvett, nem mért** |
+| `phi_L` | 0,365 | 0,3649 | 0,3649 | ✅ mért, négy tizedesig |
+
+A `0,56` és a `0,05` a csapattárs `kkv_dsge_v07_access`-éből átvett
+**kiindulóérték** — a forrásfájl maga is így jelöli (*„Ezek indulok:
+empirikus ujrakalibracio kell”*) —, és a **saját panelünk egyik definíció
+mellett sem adja vissza őket**.
+
+**Mit érint és mit nem:**
+
+- **Az `A01` GDP-sávot NEM érinti**, mert a sáv az `OPTEN=0,1,2,3` ágakon
+  együtt van kiszámolva, tehát a mért értékek is benne vannak.
+- **Bármely EGYETLEN számot érint, amit az `OPTEN=0` ágról idézünk** — és
+  ilyen a `t44`, valamint a `t47`/`t48b` „átvett" oszlopa.
+- És érinti a **kommunikációt**: eddig ezt a három számot egyforma
+  státusszal közöltük, holott csak az egyik mért.
+
+**Teendő:** minden helyen, ahol a `phi_j` szerepel, jelölni kell, melyik
+mért és melyik átvett. A bemutató artifact már javítva. **A `.mod`
+alapértelmezését NEM változtatjuk** — az `OPTEN` váltása csapatdöntés, és
+a `phi` külön nem cserélhető, mert a `wd_j`/`wx_j` súlyok belőle
+származnak.
+
+⚠ **Ez ugyanaz a hibatípus, ami ellen a 13. szakasz figyelmeztet
+(„a precizitás csábít") — és a saját bemutatómban követtem el.** A
+tanulság: **egy prezentációba menő szám ugyanúgy átmenjen az
+állítás-regiszteren, mint egy állítás.** A regiszter elfogta volna;
+a bemutatót nem futtattam át rajta.
+
 ### 8. Az E/D/L szegmentáció küszöbe kutatói döntés
 
 Az `OPTEN=2` ág az `export_arány ≥ 25%` küszöbbel definiálja az E típust.
