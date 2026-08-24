@@ -39,6 +39,30 @@ Az alábbi szakasz a **háttér és a munkamódszer** — az aktuális számokat
 
 ---
 
+## Publikált bemutatók (Artifact) — frissíthetők, kommentelhetők
+
+Két oldal él, és **az MPT kommentel rájuk** — a kommentek a repóba is
+átvezetendők, nem csak megválaszolandók.
+
+| Oldal | URL | Kinek |
+|---|---|---|
+| **Három vállalat, egy valuta** — technikai végigvezetés | `https://claude.ai/code/artifact/029d01e0-500f-49b9-95d8-6548f5a6758e` | szakmai közönség |
+| **Az euró és a magyar KKV-k** — vezetői összefoglaló | `https://claude.ai/code/artifact/7c226eaf-34fa-42bb-b221-b683154d4854` | MKIK |
+
+**Frissítés új munkamenetből:** az `Artifact` eszköznek át kell adni a fenti
+`url`-t, különben ÚJ artifactot hoz létre a meglévő frissítése helyett.
+A kommentek olvasása/válaszolása: `action: "comments"` és `"reply"`.
+
+⚠ **Négy komment már négy valódi találatot hozott** (2026-08-24) — kettő
+hibát a bemutatóban, egy hiányzó módszertani leírást, egy pedig új irodalmat.
+Mind a négy fel van vezetve a
+[`docs/terv/2026-08-21_korlatok_es_teendok.md`](docs/terv/2026-08-21_korlatok_es_teendok.md)-be.
+**A szabály, ami ebből lett: prezentációba menő szám ugyanúgy menjen át az
+állítás-regiszteren, mint egy állítás** — a `phi_E`/`phi_D` hibát a regiszter
+elfogta volna, csak nem futtattam át rajta.
+
+---
+
 ## ⚠ ÁLLAPOT — 2026-08-12. EZT OLVASD EL ELŐSZÖR
 
 ### A fő modell: `src/modell/1_fo_vonal_jv/jv_dsge_v09_access.mod` (Jakab–Világi mag). NEM az EAGLE.
