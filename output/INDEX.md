@@ -3,7 +3,7 @@
 
 # output/ — tartalomjegyzék
 
-*Generálva · commit `8a6a5dc`*
+*Generálva · commit `8e5c2e5`*
 
 A `output/tables/` szándékosan **lapos**: a szétvágás ~90 őrt és ~15 scriptet írt volna át, cserébe a `t35` attól még `t35` maradt volna. A navigálhatóságot ez az index adja.
 
@@ -35,7 +35,7 @@ A `output/tables/` szándékosan **lapos**: a szétvágás ~90 őrt és ~15 scri
 | `t13_piaci_alminta_besorolas.csv` | `src/2_empirikus/s08_tamogatott_hitel_teszt.m`<br>`src/4_infra/smoke_test.m` | empirikus elemzés | A19 | ✅ 3 db | **állítást hordoz** |
 | `t14_tamogatasi_ek.csv` | `src/2_empirikus/s09_tamogatasi_ek.m`<br>`src/4_infra/smoke_test.m` | empirikus elemzés | A20 | ✅ 2 db | **állítást hordoz** |
 | `t15_csatorna_dekompozicio.csv` | `src/3_abrak/s11_fazis_es_dekompozicio.m`<br>`src/4_infra/smoke_test.m` | ábrageneráló | F05 | ✅ 2 db | **állítást hordoz** |
-| `t16_v04_osszevetes.csv` | `src/modell/2_referencia_eagle/futtato/run_v04.m`<br>`src/modell/2_referencia_eagle/futtato/run_v05.m`<br>`src/modell/3_archiv_korai_jv/futtato/run_jv_v03.m` | 🟡 referencia (EAGLE) | — | — | referencia/archív vonal |
+| `t16_v04_osszevetes.csv` | `src/modell/3_archiv_korai_jv/futtato/run_jv_v03.m`<br>`src/modell/2_referencia_eagle/futtato/run_v04.m`<br>`src/modell/2_referencia_eagle/futtato/run_v05.m` | ⚪ archív (korai JV) | — | — | referencia/archív vonal |
 | `t17_beralkalmazkodas.csv` | `src/2_empirikus/s12_berrugalmassag.m`<br>`src/4_infra/smoke_test.m` | empirikus elemzés | A21 | ✅ 3 db | **állítást hordoz** |
 | `t18_v05_berragadossag.csv` | `src/modell/2_referencia_eagle/futtato/run_v05.m` | 🟡 referencia (EAGLE) | — | — | referencia/archív vonal |
 | `t19_jv_hosszutav.csv` | `src/modell/3_archiv_korai_jv/futtato/run_jv_v03.m` | ⚪ archív (korai JV) | — | — | referencia/archív vonal |

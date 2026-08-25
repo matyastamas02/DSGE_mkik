@@ -5,11 +5,11 @@
 
 # DSGE_mkik — állapotlap
 
-*Generálva a füstteszt 2026-08-24 15:00-kor futott eredményéből · commit `8a6a5dc` · ág `main`*
+*Generálva a füstteszt 2026-08-25 21:01-kor futott eredményéből · commit `8e5c2e5` · ág `main`*
 
 **Fő modell:** `src/modell/1_fo_vonal_jv/jv_dsge_v09_access.mod` (Jakab–Világi mag). A `kkv_dsge_*` a referencia-vonal.
 
-**Őrök:** 148 rendben, 0 hiba.
+**Őrök:** 156 rendben, 0 hiba.
 
 ✅ **Minden „áll” állításnak van őre, és minden őr fut.**
 
@@ -220,9 +220,9 @@
 |---|---:|
 | 🟢 horgonyzott | 33 |
 | 🔴 horgonyzatlan | 21 |
-| ⚪ származtatott | 18 |
+| ⚪ származtatott | 17 |
 | 🟡 pótolandó | 11 |
-| 🟡 feltételes | 8 |
+| 🟡 feltételes | 9 |
 
 *Az **érték** oszlop a modellből jön futásidőben (`-DOPTEN=0` ág), nem a CSV-ből — kézzel átírt érték nem tud becsúszni.*
 
@@ -271,8 +271,8 @@
 | `rho_z` | 0.5 | 🟢 horgonyzott | Jakab–Világi, MNB WP 2008/9 (strukturális/survey) |  |  |
 | `xi_p` | 0.921 | 🟢 horgonyzott | Jakab–Világi, MNB WP 2008/9, becsült poszterior átlag |  |  |
 | `vth_p` | 0.431 | 🟢 horgonyzott | Jakab–Világi, MNB WP 2008/9, becsült poszterior átlag |  |  |
-| `xi_x` | 0.81 | 🟢 horgonyzott | Jakab–Világi, MNB WP 2008/9, becsült poszterior átlag |  |  |
-| `vth_x` | 0.494 | 🟢 horgonyzott | Jakab–Világi, MNB WP 2008/9, becsült poszterior átlag |  |  |
+| `xi_x` | 0.81 | 🟢 horgonyzott | Jakab–Világi, MNB WP 2008/9, becsült poszterior átlag ⚠ HALOTT: a v09 egyenleteire nincs hatása (xi_x csak a szintén halott lam_x-et számolja; vth_x sehol). |  |  |
+| `vth_x` | 0.494 | 🟢 horgonyzott | Jakab–Világi, MNB WP 2008/9, becsült poszterior átlag ⚠ HALOTT: a v09 egyenleteire nincs hatása (xi_x csak a szintén halott lam_x-et számolja; vth_x sehol). |  |  |
 | `xi_w` | 0.657 | 🟢 horgonyzott | Jakab–Világi, MNB WP 2008/9, becsült poszterior átlag |  |  |
 | `vth_w` | 0.185 | 🟢 horgonyzott | Jakab–Világi, MNB WP 2008/9, becsült poszterior átlag |  |  |
 | `theta_w` | 3 | 🟢 horgonyzott | Jakab–Világi, MNB WP 2008/9 (strukturális/survey) |  |  |
@@ -280,7 +280,7 @@
 | `mu_x` | 0.534 | 🟢 horgonyzott | Jakab–Világi, MNB WP 2008/9, becsült poszterior átlag |  |  |
 | `gam_i` | 0.761 | 🟢 horgonyzott | Jakab–Világi, MNB WP 2008/9, becsült poszterior átlag |  |  |
 | `phi_pi` | 1.379 | 🟢 horgonyzott | Jakab–Világi, MNB WP 2008/9, becsült poszterior átlag |  |  |
-| `nu_b` | 0.001 | 🟢 horgonyzott | Jakab–Világi, MNB WP 2008/9, becsült poszterior átlag |  |  |
+| `nu_b` | 0.001 | 🟡 feltételes | ⚠ KÉTÉRTELMŰ: a regiszter JV-poszteriorként vette át (MNB WP 2008/9), a modellben viszont technikai NFA-/UIP-zárásként működik a lebegő rezsimben. A pontos JV-tábla és a becslési státusz ellenőrzendő. |  |  |
 | `om_no` | 0.25 | 🟢 horgonyzott | Jakab–Világi, MNB WP 2008/9 (strukturális/survey) |  |  |
 | `eps_qw` | 0.96 | 🟢 horgonyzott | Bernanke–Gertler–Gilchrist (1999) konvenció |  |  |
 | `omega_nw` | 0.95 | 🟢 horgonyzott | Bernanke–Gertler–Gilchrist (1999) konvenció |  |  |
@@ -323,9 +323,9 @@
 
 | Paraméter | Érték | Státusz | Forrás | Kapcsoló | Doksi |
 |---|---:|---|---|---|---|
-| `beta` | 0.99 | ⚪ származtatott | más paraméterekből számolódik / technikai zárás |  |  |
+| `beta` | 0.99 | 🟢 horgonyzott | standard kalibrációs konvenció: negyedéves diszkontfaktor 0,99. A .mod FIXEN beállítja — NEM más paraméterekből számolódik; ellenkezőleg, ő az INPUTJA a lam_p/lam_w-nek. |  |  |
 | `lam_p` | 0.00756633 | ⚪ származtatott | más paraméterekből számolódik / technikai zárás |  |  |
-| `lam_x` | 0.0464679 | ⚪ származtatott | más paraméterekből számolódik / technikai zárás |  |  |
+| `lam_x` | 0.0464679 | ⚪ származtatott | más paraméterekből számolódik / technikai zárás ⚠ HALOTT: a v09 egyenleteire nincs hatása (xi_x csak a szintén halott lam_x-et számolja; vth_x sehol). |  |  |
 | `lam_w` | 0.0260714 | ⚪ származtatott | más paraméterekből számolódik / technikai zárás |  |  |
 | `nu_uni` | 0.25 | ⚪ származtatott | más paraméterekből számolódik / technikai zárás | -DNUUNI |  |
 | `wd_E` | 0.110545 | ⚪ származtatott | más paraméterekből számolódik / technikai zárás |  |  |
@@ -344,7 +344,7 @@
 
 ---
 
-## Őrök (148 db)
+## Őrök (156 db)
 
 *A füstteszt minden ellenőrzése. Ez a projekt egyetlen olyan nyilvántartása, ami nem tud némán elcsúszni: ha egy állítás megdől, itt megbukik egy sor.*
 
@@ -494,6 +494,14 @@
 - ✅ t53: mind a 18 dekompozicios PF/BK diagnosztika lefutott
 - ✅ t53 KORREKCIO: OPTEN0 9/9 BK (13/13), OPTEN1 0/9 BK (15/13)
 - ✅ t53 ELLENPROBA (BK-ervenyes OPTEN0): a sulyozas modja nem szamit (1.414 vs 1.415 pp)
+- ✅ parameter-regiszter es ertek-dump letezik
+- ✅ t54 REGISZTER: a parameterek.csv es a _params_dump.csv ugyanazt a 91 parametert fedi (0 elteres)
+- ✅ t54 REGISZTER: minden parameter kap hatas-minositest (aktiv/halott/orokolt)
+- ✅ t54 HALOTT: a 3 halottnak jelolt parameter egyike sem szerepel a v09 model blokkjaban (xi_x, vth_x, lam_x)
+- ✅ t54: a beta a .mod-ban FIXEN 0.99 (nem szarmaztatott ertek)
+- ✅ t54 alapertelmezes-konfliktus regiszter letezik
+- ✅ t54 KONFLIKTUS: mind a 2 dokumentalt alapertelmezes-konfliktus a leirt allapotban (K01 chi 1, K02 lev 1)
+- ✅ t54 KONFLIKTUS: minden konfliktus letezo allitasra hivatkozik
 - ✅ t00 PHILLIPS: az aszimmetrikus arsokkok (eps_md / eps_mx) egyik szcenarioban sincsenek hajtva
 - ✅ t00 SZERKEZET: mind a 4 modell-vonal megvan, README-vel
 - ✅ t00 SZERKEZET: a FO MODELL a helyen van (1_fo_vonal_jv)

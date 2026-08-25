@@ -95,6 +95,27 @@ Ezért a szabály: **minden KKV/nagyvállalat aszimmetriát, aminek nincs
 hivatkozott forrása, gyanúsnak kell tekinteni**, és a szektorális
 eredményt **küszöbformában** kell közölni (nem pontbecslésként).
 
+### ⚠ AMIT A REGISZTER EDDIG NEM FOGOTT: alapértelmezés-konfliktus
+
+**A `.mod` alapértelmezése két olyan értéket futtat, amit a saját
+állítás-regiszterünk visszavont vagy megcáfolt** — és eddig ezt semmi nem
+ellenőrizte, mert az őrök az *állításokat* és a *táblákat* nézték, a
+*paramétereket* nem:
+
+| # | Állítás | Mit mond | Mit futtat az alapág |
+|---|---|---|---|
+| `K01` | `V04` **VISSZAVONT** | a 3×-os `chi`-aszimmetria nem áll | `chi` = 0,06 / 0,06 / **0,02** |
+| `K02` | `A08` **ÁLL** | a `lev_E = lev_D` kényszer MEGDŐLT | `lev_E = lev_D = 1,6` |
+
+Egyik sem „javítandó hiba": az alapértelmezés cseréje **csapatdöntés**.
+Amit a `t54` őr véd, az a **láthatóság** — hogy a konfliktus ne tudjon
+némán megszűnni vagy némán keletkezni. Nyilvántartás:
+`docs/regiszter/alapertelmezes_konfliktusok.csv`.
+
+⚠ A `K01` nem formai: a `t35` scan szerint a `chi`-sorrend megfordítása
+**megfordítja a szegmenssorrendet** (−1,22 pp → +0,74 pp). Vagyis egy
+visszavont állítás számai viszik ma az egyik legerősebb aszimmetriát.
+
 ### Amit NEM szabad közölni
 
 - **Szegmens-szintű kibocsátást pontbecslésként** — két horgonyzatlan
@@ -152,7 +173,13 @@ megtámadná, és joggal.
 ### Munkamódszer, ami bevált — tartsd meg
 
 1. **Füstteszt push előtt**: `matlab -batch "cd('src/4_infra'); smoke_test"` —
-   jelenleg **138 ellenőrzés**, köztük replikációs és regressziós őrök.
+   jelenleg **156 ellenőrzés**, köztük replikációs és regressziós őrök.
+   ⚠ **2026-08-25 óta a PARAMÉTEREKRE is van őr** (`t54`), nem csak az
+   állításokra és a táblákra. Egy külső paraméteraudit két olyan rést
+   talált, amit egyik korábbi őr sem fogott volna el: **halott
+   paraméterek** (értéket és forrást kapnak, de a `model` blokkban nem
+   szerepelnek) és **alapértelmezés-konfliktusok** (a `.mod` olyan
+   értéket futtat, amit a saját regiszterünk visszavont vagy megcáfolt).
    Ha egy állítást közlünk, tegyünk rá őrt.
 2. **BK-teszt nem elég.** Egy elgépelt index mellett is lehet 18/18
    konvergencia. Kell **független verifikáció**: szimmetria-teszt

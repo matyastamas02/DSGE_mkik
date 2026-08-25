@@ -1,92 +1,92 @@
-parameter,kategoria,kategoria_nev,statusz,forras,kapcsolo,or,doksi
-beta,E,származtatott vagy technikai,származtatott,más paraméterekből számolódik / technikai zárás,,,
-delta,A,saját adat (Opten-panel),horgonyzott,"Opten-panel 2021–24 (0,0242) ÉS Christensen–Dib (2008) 1. tábla (0,025)",-DOPTEN,t46: delta megerositi,2026-08-16_opten_kalibracio_eredmeny.md
-sigma,C,JV-becsült (MNB WP 2008/9 poszterior),horgonyzott,"Jakab–Világi, MNB WP 2008/9, becsült poszterior átlag",,,
-habit,C,JV-becsült (MNB WP 2008/9 poszterior),horgonyzott,"Jakab–Világi, MNB WP 2008/9, becsült poszterior átlag",,,
-fii,C,JV-strukturális / survey,horgonyzott,"Jakab–Világi, MNB WP 2008/9 (strukturális/survey)",,,
-rho_kz,C,JV-strukturális / survey,horgonyzott,"Jakab–Világi, MNB WP 2008/9 (strukturális/survey)",,,
-rho_z,C,JV-strukturális / survey,horgonyzott,"Jakab–Világi, MNB WP 2008/9 (strukturális/survey)",,,
-xi_p,C,JV-becsült (MNB WP 2008/9 poszterior),horgonyzott,"Jakab–Világi, MNB WP 2008/9, becsült poszterior átlag",,,
-vth_p,C,JV-becsült (MNB WP 2008/9 poszterior),horgonyzott,"Jakab–Világi, MNB WP 2008/9, becsült poszterior átlag",,,
-xi_x,C,JV-becsült (MNB WP 2008/9 poszterior),horgonyzott,"Jakab–Világi, MNB WP 2008/9, becsült poszterior átlag",,,
-vth_x,C,JV-becsült (MNB WP 2008/9 poszterior),horgonyzott,"Jakab–Világi, MNB WP 2008/9, becsült poszterior átlag",,,
-xi_w,C,JV-becsült (MNB WP 2008/9 poszterior),horgonyzott,"Jakab–Világi, MNB WP 2008/9, becsült poszterior átlag",,,
-vth_w,C,JV-becsült (MNB WP 2008/9 poszterior),horgonyzott,"Jakab–Világi, MNB WP 2008/9, becsült poszterior átlag",,,
-theta_w,C,JV-strukturális / survey,horgonyzott,"Jakab–Világi, MNB WP 2008/9 (strukturális/survey)",,,
-lam_p,E,származtatott vagy technikai,származtatott,más paraméterekből számolódik / technikai zárás,,,
-lam_x,E,származtatott vagy technikai,származtatott,más paraméterekből számolódik / technikai zárás,,,
-lam_w,E,származtatott vagy technikai,származtatott,más paraméterekből számolódik / technikai zárás,,,
-hx,C,JV-becsült (MNB WP 2008/9 poszterior),horgonyzott,"Jakab–Világi, MNB WP 2008/9, becsült poszterior átlag",,,
-mu_x,C,JV-becsült (MNB WP 2008/9 poszterior),horgonyzott,"Jakab–Világi, MNB WP 2008/9, becsült poszterior átlag",,,
-gam_i,C,JV-becsült (MNB WP 2008/9 poszterior),horgonyzott,"Jakab–Világi, MNB WP 2008/9, becsült poszterior átlag",,,
-phi_pi,C,JV-becsült (MNB WP 2008/9 poszterior),horgonyzott,"Jakab–Világi, MNB WP 2008/9, becsült poszterior átlag",,,
-nu_b,C,JV-becsült (MNB WP 2008/9 poszterior),horgonyzott,"Jakab–Világi, MNB WP 2008/9, becsült poszterior átlag",,,
-nu_uni,E,származtatott vagy technikai,származtatott,más paraméterekből számolódik / technikai zárás,-DNUUNI,,
-om_no,C,JV-strukturális / survey,horgonyzott,"Jakab–Világi, MNB WP 2008/9 (strukturális/survey)",,,
-eps_qw,C,BGG (1999) konvenció,horgonyzott,Bernanke–Gertler–Gilchrist (1999) konvenció,,,
-omega_nw,C,BGG (1999) konvenció,horgonyzott,Bernanke–Gertler–Gilchrist (1999) konvenció,,,
-om_E,A,saját adat (Opten-panel),feltételes,"Opten-panel, de a 10+ fős körön BELÜLI részesedés — KSH/Eurostat SBS mikrokör-bontás kell az átskálázáshoz (teendők 2.5)",-DOPTEN,t46: sulyok 1-re osszegzodnek,2026-08-16_opten_kalibracio_eredmeny.md
-om_D,A,saját adat (Opten-panel),feltételes,"Opten-panel, de a 10+ fős körön BELÜLI részesedés — KSH/Eurostat SBS mikrokör-bontás kell az átskálázáshoz (teendők 2.5)",-DOPTEN,t46: sulyok 1-re osszegzodnek,2026-08-16_opten_kalibracio_eredmeny.md
-om_L,A,saját adat (Opten-panel),feltételes,"Opten-panel, de a 10+ fős körön BELÜLI részesedés — KSH/Eurostat SBS mikrokör-bontás kell az átskálázáshoz (teendők 2.5)",-DOPTEN,t46: sulyok 1-re osszegzodnek,2026-08-16_opten_kalibracio_eredmeny.md
-phi_E,A,saját adat (Opten-panel),feltételes,"Opten-panel; a definíciótól függ (ALAP 0,376 vs KÜSZÖB25 0,691)",-DOPTEN / -DDECOMP,t46,2026-08-16_opten_kalibracio_eredmeny.md
-phi_D,A,saját adat (Opten-panel),feltételes,"Opten-panel; az ALAP definícióban DEFINÍCIÓ SZERINT 0, nem mérés",-DOPTEN / -DDECOMP,t46,2026-08-16_opten_kalibracio_eredmeny.md
-phi_L,A,saját adat (Opten-panel),horgonyzott,"Opten-panel 2021–24 (0,3649)",-DOPTEN / -DDECOMP,t46: phi_L megerositi,2026-08-16_opten_kalibracio_eredmeny.md
-zeta_E,B,nyilvános magyar makroadat (KSH),pótolandó,jelenleg JV-érték átvitele; KSH-ból pótolandó (teendők 2.4),-DDECOMP,,
-zeta_D,B,nyilvános magyar makroadat (KSH),pótolandó,jelenleg JV-érték átvitele; KSH-ból pótolandó (teendők 2.4),-DDECOMP,,
-zeta_L,B,nyilvános magyar makroadat (KSH),pótolandó,jelenleg JV-érték átvitele; KSH-ból pótolandó (teendők 2.4),-DDECOMP,,
-aa_E,B,nyilvános magyar makroadat (KSH),pótolandó,jelenleg JV-érték átvitele; KSH-ból pótolandó (teendők 2.4),-DDECOMP,,
-aa_D,B,nyilvános magyar makroadat (KSH),pótolandó,jelenleg JV-érték átvitele; KSH-ból pótolandó (teendők 2.4),-DDECOMP,,
-aa_L,B,nyilvános magyar makroadat (KSH),pótolandó,jelenleg JV-érték átvitele; KSH-ból pótolandó (teendők 2.4),-DDECOMP,,
-chi_E,D,nem azonosított / több adat kell,horgonyzatlan,"Opten-panel: chi_S≈+0,002 (alsó korlát); irodalom 0,042–0,067 (C&D 2008; BGG-konvenció). IRÁNY: Loan spreads over the credit cycle (2025) — a KKV-felár tágabban nő szigorú időszakban; méret szerinti SZINT-becslés továbbra sincs.",,,kalibracio_bgg_blokk.md; 2026-08-24_D_kategoria_irodalmi_kereses.md
-chi_D,D,nem azonosított / több adat kell,horgonyzatlan,"Opten-panel: chi_S≈+0,002 (alsó korlát); irodalom 0,042–0,067. IRÁNY: lásd chi_E.",,,kalibracio_bgg_blokk.md; 2026-08-24_D_kategoria_irodalmi_kereses.md
-chi_L,D,nem azonosított / több adat kell,horgonyzatlan,"NEM AZONOSÍTOTT a magyar panelen (n=230, t=-0,78, rossz előjel). JELÖLT: Levin–Natalucci–Zakrajšek (2004) ~900 US kötvénykibocsátóra becsül — ez definíció szerint a NAGYVÁLLALATI kör, tehát chi_L-re releváns.",,,kalibracio_bgg_blokk.md; 2026-08-24_D_kategoria_irodalmi_kereses.md
-lev_E,A,saját adat (Opten-panel),horgonyzott,"Opten-panel medián 1,939 (sáv 1,68–1,94); irodalom k/n=2 (C&D 2008 1. tábla)",-DOPTEN,t50: tokeattetel-sorrend,kalibracio_bgg_blokk.md
-lev_D,A,saját adat (Opten-panel),horgonyzott,"Opten-panel medián 1,719 (sáv 1,58–1,72)",-DOPTEN,t50: tokeattetel-sorrend,kalibracio_bgg_blokk.md
-lev_L,A,saját adat (Opten-panel),horgonyzott,"Opten-panel medián 2,337 (sáv 1,81–2,34)",-DOPTEN,t50: tokeattetel-sorrend,kalibracio_bgg_blokk.md
-psi_E,D,nem azonosított / több adat kell,horgonyzatlan,Nincs közvetlen becslés. ⚠ AZ IRODALOM AZ ELLENKEZŐ SORRENDET SUGALLJA: a lumpy-investment irodalom (Khan–Thomas 2008; Bachmann–Caballero–Engel 2013) szerint a KIS cégek beruházása rögösebb → psi_S > psi_L. SCAN KELL.,,,2026-08-24_D_kategoria_irodalmi_kereses.md
-psi_D,D,nem azonosított / több adat kell,horgonyzatlan,Nincs közvetlen becslés. ⚠ Lásd psi_E: az irodalom a jelenlegi méret-sorrend ellenkezőjét sugallja. SCAN KELL.,,,2026-08-24_D_kategoria_irodalmi_kereses.md
-psi_L,D,nem azonosított / több adat kell,horgonyzatlan,"Nincs közvetlen becslés. Khan–Thomas (2008): a kiigazítási-költség paraméterek az AGGREGÁLT eredményt alig mozgatják — alacsony prioritás az A01-hez, de a szektorálishoz nem.",,,2026-08-24_D_kategoria_irodalmi_kereses.md
-tsov_E,D,nem azonosított / több adat kell,horgonyzatlan,"Nincs szint-becslés. SZERKEZETI TÁMOGATÁS: Bottero–Lenzu–Mezzanotti (JIE 2018) — a szuverén sokk mennyiségi átgyűrűzése méret-SEMLEGES, a reálhatás nem. Ez épp a jelenlegi szerkezetet támogatja (semleges tsov + méret-függő access).",,,FIGYELMEZTETES_fo_allitas.md; 2026-08-24_D_kategoria_irodalmi_kereses.md
-tsov_D,D,nem azonosított / több adat kell,horgonyzatlan,"Lásd tsov_E: Bottero–Lenzu–Mezzanotti (JIE 2018), méret-semleges átgyűrűzés.",,,FIGYELMEZTETES_fo_allitas.md; 2026-08-24_D_kategoria_irodalmi_kereses.md
-tsov_L,D,nem azonosított / több adat kell,horgonyzatlan,"Lásd tsov_E: Bottero–Lenzu–Mezzanotti (JIE 2018), méret-semleges átgyűrűzés.",,,FIGYELMEZTETES_fo_allitas.md; 2026-08-24_D_kategoria_irodalmi_kereses.md
-tbank_E,D,nem azonosított / több adat kell,horgonyzatlan,"IRODALOM VAN: Horváth–Kotlebová–Širaňová (JFS 2018, 36:12–21) — a transzmisszió CSAK a kisvállalati hitelekre teljes. ⚠ ELLENTÉTES a saját magyar mérésünkkel (A16/t25). Lásd F06; a TSCEN=3 semleges alapértelmezés marad.",,F06,FIGYELMEZTETES_fo_allitas.md; 2026-08-24_D_kategoria_irodalmi_kereses.md
-tbank_D,D,nem azonosított / több adat kell,horgonyzatlan,"Lásd tbank_E: Horváth et al. (2018) vs A16 — ellentétes irány, TSCEN=3 marad.",,F06,FIGYELMEZTETES_fo_allitas.md; 2026-08-24_D_kategoria_irodalmi_kereses.md
-tbank_L,D,nem azonosított / több adat kell,horgonyzatlan,"Lásd tbank_E: Horváth et al. (2018) vs A16 — ellentétes irány, TSCEN=3 marad.",,F06,FIGYELMEZTETES_fo_allitas.md; 2026-08-24_D_kategoria_irodalmi_kereses.md
-wd_E,E,származtatott vagy technikai,származtatott,más paraméterekből számolódik / technikai zárás,,,
-wd_D,E,származtatott vagy technikai,származtatott,más paraméterekből számolódik / technikai zárás,,,
-wd_L,E,származtatott vagy technikai,származtatott,más paraméterekből számolódik / technikai zárás,,,
-wx_E,E,származtatott vagy technikai,származtatott,más paraméterekből számolódik / technikai zárás,,,
-wx_D,E,származtatott vagy technikai,származtatott,más paraméterekből számolódik / technikai zárás,,,
-wx_L,E,származtatott vagy technikai,származtatott,más paraméterekből számolódik / technikai zárás,,,
-shl_E,A,saját adat (Opten-panel),feltételes,"Opten-panel, de a 10+ fős körön BELÜLI részesedés — KSH/Eurostat SBS mikrokör-bontás kell az átskálázáshoz (teendők 2.5)",-DOPTEN,t46: sulyok 1-re osszegzodnek,2026-08-16_opten_kalibracio_eredmeny.md
-shl_D,A,saját adat (Opten-panel),feltételes,"Opten-panel, de a 10+ fős körön BELÜLI részesedés — KSH/Eurostat SBS mikrokör-bontás kell az átskálázáshoz (teendők 2.5)",-DOPTEN,t46: sulyok 1-re osszegzodnek,2026-08-16_opten_kalibracio_eredmeny.md
-shl_L,A,saját adat (Opten-panel),feltételes,"Opten-panel, de a 10+ fős körön BELÜLI részesedés — KSH/Eurostat SBS mikrokör-bontás kell az átskálázáshoz (teendők 2.5)",-DOPTEN,t46: sulyok 1-re osszegzodnek,2026-08-16_opten_kalibracio_eredmeny.md
-shm_E,E,származtatott vagy technikai,származtatott,más paraméterekből számolódik / technikai zárás,,,
-shm_D,E,származtatott vagy technikai,származtatott,más paraméterekből számolódik / technikai zárás,,,
-shm_L,E,származtatott vagy technikai,származtatott,más paraméterekből számolódik / technikai zárás,,,
-s_kkv,D,nem azonosított / több adat kell,horgonyzatlan,Az IO-alapú számítás NEM ÁLL (FIGYELMEZTETES_io_tabla_gyanus.md). MEGKERÜLHETŐ: OECD TiVA/ICIO Hungary country note + OECD Economic Surveys: Hungary 2026 KKV-fejezet (a KKV-k a hozzáadott érték 54%-át adják). ÚJRASZÁMOLANDÓ.,-DSKKV,,FIGYELMEZTETES_io_tabla_gyanus.md; 2026-08-24_D_kategoria_irodalmi_kereses.md
-mu_vert,D,nem azonosított / több adat kell,horgonyzatlan,"Kerestünk: a beszállítói ár-átgyűrűzés rugalmasságára nem találtunk becslést. A húszból ez az EGYETLEN, amiről a keresés után is azt mondjuk, hogy nincs mit megnézni.",-DMUVERT,,FIGYELMEZTETES_io_tabla_gyanus.md; 2026-08-24_D_kategoria_irodalmi_kereses.md
-zsov,D,nem azonosított / több adat kell,horgonyzatlan,KÖZVETLENÜL MÉRHETŐ két nyilvános idősorból (magyar szuverén felár vs. BUBOR–EURIBOR különbözet). Irodalmi támpont: Vonnák (MNB WP 2010/1). A húszból ez a legolcsóbb horgony — és tisztán makró idősorból megy.,,,2026-08-24_D_kategoria_irodalmi_kereses.md
-eps_ces,D,nem azonosított / több adat kell,horgonyzatlan,"Magyar markup-becslés LÉTEZIK: Dobrinsky–Kőrösi–Markov–Halpern (JCE 2006, 34(1):92–110). ⚠ DE MÁS OBJEKTUM: nálunk az eps_ces a VÁLLALATTÍPUSOK, az irodalmi markup a TERMÉKVÁLTOZATOK közti helyettesítés. Plauzibilitási sáv, nem horgony.",-DEPSCES,,2026-08-24_D_kategoria_irodalmi_kereses.md
-rho_acc,D,nem azonosított / több adat kell,horgonyzatlan,"A 0,9673 csak leíró cég-szintű van_hitel státusz-perzisztencia; a cégek 92,4%-a négy év alatt egyszer sem váltott. Főként állandó heterogenitást mér, nem a modell dinamikus szegmens-rho-ját, és nem alsó korlát. Marginális/váltó alminta vagy közvetlen szegmens-dinamika kell.",-DOPTEN / -DRHOACC,,"2026-08-16_opten_kalibracio_eredmeny.md; 2026-08-21_korlatok_es_teendok.md"
-lambda_acc_E,D,nem azonosított / több adat kell,horgonyzatlan,"⚠ CSAK A SZORZAT AZONOSÍTHATÓ (A22): a modell a lambda_acc-ot és az omega_acc-ot külön nem különbözteti meg. Forrásjelölt a szorzatra: EIBIS, EC/ECB SAFE éves kör (magyar + mikro bontással).",-DACCSCALE / -DLAMSCALE,A22,2026-08-12_access_horgonyzas_eredmeny.md; 2026-08-24_D_kategoria_irodalmi_kereses.md
-lambda_acc_D,D,nem azonosított / több adat kell,horgonyzatlan,⚠ CSAK A SZORZAT AZONOSÍTHATÓ (A22). Lásd lambda_acc_E.,-DACCSCALE / -DLAMSCALE,A22,2026-08-12_access_horgonyzas_eredmeny.md; 2026-08-24_D_kategoria_irodalmi_kereses.md
-omega_acc_E,D,nem azonosított / több adat kell,horgonyzatlan,"⚠ CSAK A SZORZAT AZONOSÍTHATÓ (A22). IRÁNY: a pénzügyileg nem korlátozott cégek nettó beruházási rátája ~7,8 pp-tal magasabb, és a hatás kisebb a nagyvállalatoknál. ⚠ A BIS WP 984 magyar program-hatását TILOS omega_acc-nak nevezni (CLAUDE.md).",-DACCSCALE / -DOMSCALE,A22,2026-08-12_access_horgonyzas_eredmeny.md; 2026-08-24_D_kategoria_irodalmi_kereses.md
-omega_acc_D,D,nem azonosított / több adat kell,horgonyzatlan,⚠ CSAK A SZORZAT AZONOSÍTHATÓ (A22). Lásd omega_acc_E.,-DACCSCALE / -DOMSCALE,A22,2026-08-12_access_horgonyzas_eredmeny.md; 2026-08-24_D_kategoria_irodalmi_kereses.md
-sc,B,nyilvános magyar makroadat (KSH),pótolandó,jelenleg JV-érték átvitele; KSH-ból pótolandó (teendők 2.4),,,
-si,B,nyilvános magyar makroadat (KSH),pótolandó,jelenleg JV-érték átvitele; KSH-ból pótolandó (teendők 2.4),,,
-sg,B,nyilvános magyar makroadat (KSH),pótolandó,jelenleg JV-érték átvitele; KSH-ból pótolandó (teendők 2.4),,,
-sx,B,nyilvános magyar makroadat (KSH),pótolandó,jelenleg JV-érték átvitele; KSH-ból pótolandó (teendők 2.4),,,
-sm,B,nyilvános magyar makroadat (KSH),pótolandó,jelenleg JV-érték átvitele; KSH-ból pótolandó (teendők 2.4),,,
-shd_c,E,származtatott vagy technikai,származtatott,más paraméterekből számolódik / technikai zárás,,,
-shd_i,E,származtatott vagy technikai,származtatott,más paraméterekből számolódik / technikai zárás,,,
-shd_g,E,származtatott vagy technikai,származtatott,más paraméterekből számolódik / technikai zárás,,,
-shd_v,E,származtatott vagy technikai,származtatott,más paraméterekből számolódik / technikai zárás,,,
-rho_a,C,JV-becsült (MNB WP 2008/9 poszterior),horgonyzott,"Jakab–Világi, MNB WP 2008/9, becsült poszterior átlag",,,
-rho_x,C,JV-becsült (MNB WP 2008/9 poszterior),horgonyzott,"Jakab–Világi, MNB WP 2008/9, becsült poszterior átlag",,,
-rho_c,C,JV-becsült (MNB WP 2008/9 poszterior),horgonyzott,"Jakab–Világi, MNB WP 2008/9, becsült poszterior átlag",,,
-rho_w,C,JV-becsült (MNB WP 2008/9 poszterior),horgonyzott,"Jakab–Világi, MNB WP 2008/9, becsült poszterior átlag",,,
-rho_i,C,JV-becsült (MNB WP 2008/9 poszterior),horgonyzott,"Jakab–Világi, MNB WP 2008/9, becsült poszterior átlag",,,
-rho_pr,C,JV-becsült (MNB WP 2008/9 poszterior),horgonyzott,"Jakab–Világi, MNB WP 2008/9, becsült poszterior átlag",,,
-rho_mx,C,JV-becsült (MNB WP 2008/9 poszterior),horgonyzott,"Jakab–Világi, MNB WP 2008/9, becsült poszterior átlag",,,
-rho_g,C,JV-becsült (MNB WP 2008/9 poszterior),horgonyzott,"Jakab–Világi, MNB WP 2008/9, becsült poszterior átlag",,,
+parameter,kategoria,kategoria_nev,statusz,forras,kapcsolo,or,doksi,hatas
+beta,E,származtatott vagy technikai,horgonyzott,"standard kalibrációs konvenció: negyedéves diszkontfaktor 0,99. A .mod FIXEN beállítja — NEM más paraméterekből számolódik; ellenkezőleg, ő az INPUTJA a lam_p/lam_w-nek.",,,,aktív (a model blokkban 29 előfordulás)
+delta,A,saját adat (Opten-panel),horgonyzott,"Opten-panel 2021–24 (0,0242) ÉS Christensen–Dib (2008) 1. tábla (0,025)",-DOPTEN,t46: delta megerositi,2026-08-16_opten_kalibracio_eredmeny.md,aktív
+sigma,C,JV-becsült (MNB WP 2008/9 poszterior),horgonyzott,"Jakab–Világi, MNB WP 2008/9, becsült poszterior átlag",,,,aktív
+habit,C,JV-becsült (MNB WP 2008/9 poszterior),horgonyzott,"Jakab–Világi, MNB WP 2008/9, becsült poszterior átlag",,,,aktív
+fii,C,JV-strukturális / survey,horgonyzott,"Jakab–Világi, MNB WP 2008/9 (strukturális/survey)",,,,aktív
+rho_kz,C,JV-strukturális / survey,horgonyzott,"Jakab–Világi, MNB WP 2008/9 (strukturális/survey)",,,,aktív
+rho_z,C,JV-strukturális / survey,horgonyzott,"Jakab–Világi, MNB WP 2008/9 (strukturális/survey)",,,,aktív
+xi_p,C,JV-becsült (MNB WP 2008/9 poszterior),horgonyzott,"Jakab–Világi, MNB WP 2008/9, becsült poszterior átlag",,,,aktív
+vth_p,C,JV-becsült (MNB WP 2008/9 poszterior),horgonyzott,"Jakab–Világi, MNB WP 2008/9, becsült poszterior átlag",,,,aktív
+xi_x,C,JV-becsült (MNB WP 2008/9 poszterior),horgonyzott,"Jakab–Világi, MNB WP 2008/9, becsült poszterior átlag ⚠ HALOTT: a v09 egyenleteire nincs hatása (xi_x csak a szintén halott lam_x-et számolja; vth_x sehol).",,,,HALOTT — a v09 model blokkjában nem szerepel
+vth_x,C,JV-becsült (MNB WP 2008/9 poszterior),horgonyzott,"Jakab–Világi, MNB WP 2008/9, becsült poszterior átlag ⚠ HALOTT: a v09 egyenleteire nincs hatása (xi_x csak a szintén halott lam_x-et számolja; vth_x sehol).",,,,HALOTT — a v09 model blokkjában nem szerepel
+xi_w,C,JV-becsült (MNB WP 2008/9 poszterior),horgonyzott,"Jakab–Világi, MNB WP 2008/9, becsült poszterior átlag",,,,aktív
+vth_w,C,JV-becsült (MNB WP 2008/9 poszterior),horgonyzott,"Jakab–Világi, MNB WP 2008/9, becsült poszterior átlag",,,,aktív
+theta_w,C,JV-strukturális / survey,horgonyzott,"Jakab–Világi, MNB WP 2008/9 (strukturális/survey)",,,,aktív
+lam_p,E,származtatott vagy technikai,származtatott,más paraméterekből számolódik / technikai zárás,,,,örökölt: xi_p (JV) + beta
+lam_x,E,származtatott vagy technikai,származtatott,más paraméterekből számolódik / technikai zárás ⚠ HALOTT: a v09 egyenleteire nincs hatása (xi_x csak a szintén halott lam_x-et számolja; vth_x sehol).,,,,HALOTT — a v09 model blokkjában nem szerepel
+lam_w,E,származtatott vagy technikai,származtatott,más paraméterekből számolódik / technikai zárás,,,,"örökölt: xi_w, theta_w, fii (JV) + beta"
+hx,C,JV-becsült (MNB WP 2008/9 poszterior),horgonyzott,"Jakab–Világi, MNB WP 2008/9, becsült poszterior átlag",,,,aktív
+mu_x,C,JV-becsült (MNB WP 2008/9 poszterior),horgonyzott,"Jakab–Világi, MNB WP 2008/9, becsült poszterior átlag",,,,aktív
+gam_i,C,JV-becsült (MNB WP 2008/9 poszterior),horgonyzott,"Jakab–Világi, MNB WP 2008/9, becsült poszterior átlag",,,,aktív
+phi_pi,C,JV-becsült (MNB WP 2008/9 poszterior),horgonyzott,"Jakab–Világi, MNB WP 2008/9, becsült poszterior átlag",,,,aktív
+nu_b,C,JV-becsült (MNB WP 2008/9 poszterior),feltételes,"⚠ KÉTÉRTELMŰ: a regiszter JV-poszteriorként vette át (MNB WP 2008/9), a modellben viszont technikai NFA-/UIP-zárásként működik a lebegő rezsimben. A pontos JV-tábla és a becslési státusz ellenőrzendő.",,,,aktív
+nu_uni,E,származtatott vagy technikai,származtatott,más paraméterekből számolódik / technikai zárás,-DNUUNI,,,"technikai uniózárás, nem strukturális becslés"
+om_no,C,JV-strukturális / survey,horgonyzott,"Jakab–Világi, MNB WP 2008/9 (strukturális/survey)",,,,aktív
+eps_qw,C,BGG (1999) konvenció,horgonyzott,Bernanke–Gertler–Gilchrist (1999) konvenció,,,,aktív
+omega_nw,C,BGG (1999) konvenció,horgonyzott,Bernanke–Gertler–Gilchrist (1999) konvenció,,,,aktív
+om_E,A,saját adat (Opten-panel),feltételes,"Opten-panel, de a 10+ fős körön BELÜLI részesedés — KSH/Eurostat SBS mikrokör-bontás kell az átskálázáshoz (teendők 2.5)",-DOPTEN,t46: sulyok 1-re osszegzodnek,2026-08-16_opten_kalibracio_eredmeny.md,aktív
+om_D,A,saját adat (Opten-panel),feltételes,"Opten-panel, de a 10+ fős körön BELÜLI részesedés — KSH/Eurostat SBS mikrokör-bontás kell az átskálázáshoz (teendők 2.5)",-DOPTEN,t46: sulyok 1-re osszegzodnek,2026-08-16_opten_kalibracio_eredmeny.md,aktív
+om_L,A,saját adat (Opten-panel),feltételes,"Opten-panel, de a 10+ fős körön BELÜLI részesedés — KSH/Eurostat SBS mikrokör-bontás kell az átskálázáshoz (teendők 2.5)",-DOPTEN,t46: sulyok 1-re osszegzodnek,2026-08-16_opten_kalibracio_eredmeny.md,aktív
+phi_E,A,saját adat (Opten-panel),feltételes,"Opten-panel; a definíciótól függ (ALAP 0,376 vs KÜSZÖB25 0,691)",-DOPTEN / -DDECOMP,t46,2026-08-16_opten_kalibracio_eredmeny.md,aktív
+phi_D,A,saját adat (Opten-panel),feltételes,"Opten-panel; az ALAP definícióban DEFINÍCIÓ SZERINT 0, nem mérés",-DOPTEN / -DDECOMP,t46,2026-08-16_opten_kalibracio_eredmeny.md,aktív
+phi_L,A,saját adat (Opten-panel),horgonyzott,"Opten-panel 2021–24 (0,3649)",-DOPTEN / -DDECOMP,t46: phi_L megerositi,2026-08-16_opten_kalibracio_eredmeny.md,aktív
+zeta_E,B,nyilvános magyar makroadat (KSH),pótolandó,jelenleg JV-érték átvitele; KSH-ból pótolandó (teendők 2.4),-DDECOMP,,,aktív
+zeta_D,B,nyilvános magyar makroadat (KSH),pótolandó,jelenleg JV-érték átvitele; KSH-ból pótolandó (teendők 2.4),-DDECOMP,,,aktív
+zeta_L,B,nyilvános magyar makroadat (KSH),pótolandó,jelenleg JV-érték átvitele; KSH-ból pótolandó (teendők 2.4),-DDECOMP,,,aktív
+aa_E,B,nyilvános magyar makroadat (KSH),pótolandó,jelenleg JV-érték átvitele; KSH-ból pótolandó (teendők 2.4),-DDECOMP,,,aktív
+aa_D,B,nyilvános magyar makroadat (KSH),pótolandó,jelenleg JV-érték átvitele; KSH-ból pótolandó (teendők 2.4),-DDECOMP,,,aktív
+aa_L,B,nyilvános magyar makroadat (KSH),pótolandó,jelenleg JV-érték átvitele; KSH-ból pótolandó (teendők 2.4),-DDECOMP,,,aktív
+chi_E,D,nem azonosított / több adat kell,horgonyzatlan,"Opten-panel: chi_S≈+0,002 (alsó korlát); irodalom 0,042–0,067 (C&D 2008; BGG-konvenció). IRÁNY: Loan spreads over the credit cycle (2025) — a KKV-felár tágabban nő szigorú időszakban; méret szerinti SZINT-becslés továbbra sincs.",,,kalibracio_bgg_blokk.md; 2026-08-24_D_kategoria_irodalmi_kereses.md,aktív
+chi_D,D,nem azonosított / több adat kell,horgonyzatlan,"Opten-panel: chi_S≈+0,002 (alsó korlát); irodalom 0,042–0,067. IRÁNY: lásd chi_E.",,,kalibracio_bgg_blokk.md; 2026-08-24_D_kategoria_irodalmi_kereses.md,aktív
+chi_L,D,nem azonosított / több adat kell,horgonyzatlan,"NEM AZONOSÍTOTT a magyar panelen (n=230, t=-0,78, rossz előjel). JELÖLT: Levin–Natalucci–Zakrajšek (2004) ~900 US kötvénykibocsátóra becsül — ez definíció szerint a NAGYVÁLLALATI kör, tehát chi_L-re releváns.",,,kalibracio_bgg_blokk.md; 2026-08-24_D_kategoria_irodalmi_kereses.md,aktív
+lev_E,A,saját adat (Opten-panel),horgonyzott,"Opten-panel medián 1,939 (sáv 1,68–1,94); irodalom k/n=2 (C&D 2008 1. tábla)",-DOPTEN,t50: tokeattetel-sorrend,kalibracio_bgg_blokk.md,aktív
+lev_D,A,saját adat (Opten-panel),horgonyzott,"Opten-panel medián 1,719 (sáv 1,58–1,72)",-DOPTEN,t50: tokeattetel-sorrend,kalibracio_bgg_blokk.md,aktív
+lev_L,A,saját adat (Opten-panel),horgonyzott,"Opten-panel medián 2,337 (sáv 1,81–2,34)",-DOPTEN,t50: tokeattetel-sorrend,kalibracio_bgg_blokk.md,aktív
+psi_E,D,nem azonosított / több adat kell,horgonyzatlan,Nincs közvetlen becslés. ⚠ AZ IRODALOM AZ ELLENKEZŐ SORRENDET SUGALLJA: a lumpy-investment irodalom (Khan–Thomas 2008; Bachmann–Caballero–Engel 2013) szerint a KIS cégek beruházása rögösebb → psi_S > psi_L. SCAN KELL.,,,2026-08-24_D_kategoria_irodalmi_kereses.md,aktív
+psi_D,D,nem azonosított / több adat kell,horgonyzatlan,Nincs közvetlen becslés. ⚠ Lásd psi_E: az irodalom a jelenlegi méret-sorrend ellenkezőjét sugallja. SCAN KELL.,,,2026-08-24_D_kategoria_irodalmi_kereses.md,aktív
+psi_L,D,nem azonosított / több adat kell,horgonyzatlan,"Nincs közvetlen becslés. Khan–Thomas (2008): a kiigazítási-költség paraméterek az AGGREGÁLT eredményt alig mozgatják — alacsony prioritás az A01-hez, de a szektorálishoz nem.",,,2026-08-24_D_kategoria_irodalmi_kereses.md,aktív
+tsov_E,D,nem azonosított / több adat kell,horgonyzatlan,"Nincs szint-becslés. SZERKEZETI TÁMOGATÁS: Bottero–Lenzu–Mezzanotti (JIE 2018) — a szuverén sokk mennyiségi átgyűrűzése méret-SEMLEGES, a reálhatás nem. Ez épp a jelenlegi szerkezetet támogatja (semleges tsov + méret-függő access).",,,FIGYELMEZTETES_fo_allitas.md; 2026-08-24_D_kategoria_irodalmi_kereses.md,aktív
+tsov_D,D,nem azonosított / több adat kell,horgonyzatlan,"Lásd tsov_E: Bottero–Lenzu–Mezzanotti (JIE 2018), méret-semleges átgyűrűzés.",,,FIGYELMEZTETES_fo_allitas.md; 2026-08-24_D_kategoria_irodalmi_kereses.md,aktív
+tsov_L,D,nem azonosított / több adat kell,horgonyzatlan,"Lásd tsov_E: Bottero–Lenzu–Mezzanotti (JIE 2018), méret-semleges átgyűrűzés.",,,FIGYELMEZTETES_fo_allitas.md; 2026-08-24_D_kategoria_irodalmi_kereses.md,aktív
+tbank_E,D,nem azonosított / több adat kell,horgonyzatlan,"IRODALOM VAN: Horváth–Kotlebová–Širaňová (JFS 2018, 36:12–21) — a transzmisszió CSAK a kisvállalati hitelekre teljes. ⚠ ELLENTÉTES a saját magyar mérésünkkel (A16/t25). Lásd F06; a TSCEN=3 semleges alapértelmezés marad.",,F06,FIGYELMEZTETES_fo_allitas.md; 2026-08-24_D_kategoria_irodalmi_kereses.md,aktív
+tbank_D,D,nem azonosított / több adat kell,horgonyzatlan,"Lásd tbank_E: Horváth et al. (2018) vs A16 — ellentétes irány, TSCEN=3 marad.",,F06,FIGYELMEZTETES_fo_allitas.md; 2026-08-24_D_kategoria_irodalmi_kereses.md,aktív
+tbank_L,D,nem azonosított / több adat kell,horgonyzatlan,"Lásd tbank_E: Horváth et al. (2018) vs A16 — ellentétes irány, TSCEN=3 marad.",,F06,FIGYELMEZTETES_fo_allitas.md; 2026-08-24_D_kategoria_irodalmi_kereses.md,aktív
+wd_E,E,származtatott vagy technikai,származtatott,más paraméterekből számolódik / technikai zárás,,,,örökölt: om_j (feltételes) + phi_j (feltételes)
+wd_D,E,származtatott vagy technikai,származtatott,más paraméterekből számolódik / technikai zárás,,,,örökölt: om_j (feltételes) + phi_j (feltételes)
+wd_L,E,származtatott vagy technikai,származtatott,más paraméterekből számolódik / technikai zárás,,,,örökölt: om_j (feltételes) + phi_j (feltételes)
+wx_E,E,származtatott vagy technikai,származtatott,más paraméterekből számolódik / technikai zárás,,,,örökölt: om_j (feltételes) + phi_j (feltételes)
+wx_D,E,származtatott vagy technikai,származtatott,más paraméterekből számolódik / technikai zárás,,,,örökölt: om_j (feltételes) + phi_j (feltételes)
+wx_L,E,származtatott vagy technikai,származtatott,más paraméterekből számolódik / technikai zárás,,,,örökölt: om_j (feltételes) + phi_j (feltételes)
+shl_E,A,saját adat (Opten-panel),feltételes,"Opten-panel, de a 10+ fős körön BELÜLI részesedés — KSH/Eurostat SBS mikrokör-bontás kell az átskálázáshoz (teendők 2.5)",-DOPTEN,t46: sulyok 1-re osszegzodnek,2026-08-16_opten_kalibracio_eredmeny.md,aktív
+shl_D,A,saját adat (Opten-panel),feltételes,"Opten-panel, de a 10+ fős körön BELÜLI részesedés — KSH/Eurostat SBS mikrokör-bontás kell az átskálázáshoz (teendők 2.5)",-DOPTEN,t46: sulyok 1-re osszegzodnek,2026-08-16_opten_kalibracio_eredmeny.md,aktív
+shl_L,A,saját adat (Opten-panel),feltételes,"Opten-panel, de a 10+ fős körön BELÜLI részesedés — KSH/Eurostat SBS mikrokör-bontás kell az átskálázáshoz (teendők 2.5)",-DOPTEN,t46: sulyok 1-re osszegzodnek,2026-08-16_opten_kalibracio_eredmeny.md,aktív
+shm_E,E,származtatott vagy technikai,származtatott,más paraméterekből számolódik / technikai zárás,,,,"örökölt: om_j (feltételes) + aa_j (átvett, pótolandó)"
+shm_D,E,származtatott vagy technikai,származtatott,más paraméterekből számolódik / technikai zárás,,,,"örökölt: om_j (feltételes) + aa_j (átvett, pótolandó)"
+shm_L,E,származtatott vagy technikai,származtatott,más paraméterekből számolódik / technikai zárás,,,,"örökölt: om_j (feltételes) + aa_j (átvett, pótolandó)"
+s_kkv,D,nem azonosított / több adat kell,horgonyzatlan,Az IO-alapú számítás NEM ÁLL (FIGYELMEZTETES_io_tabla_gyanus.md). MEGKERÜLHETŐ: OECD TiVA/ICIO Hungary country note + OECD Economic Surveys: Hungary 2026 KKV-fejezet (a KKV-k a hozzáadott érték 54%-át adják). ÚJRASZÁMOLANDÓ.,-DSKKV,,FIGYELMEZTETES_io_tabla_gyanus.md; 2026-08-24_D_kategoria_irodalmi_kereses.md,aktív
+mu_vert,D,nem azonosított / több adat kell,horgonyzatlan,"Kerestünk: a beszállítói ár-átgyűrűzés rugalmasságára nem találtunk becslést. A húszból ez az EGYETLEN, amiről a keresés után is azt mondjuk, hogy nincs mit megnézni.",-DMUVERT,,FIGYELMEZTETES_io_tabla_gyanus.md; 2026-08-24_D_kategoria_irodalmi_kereses.md,aktív
+zsov,D,nem azonosított / több adat kell,horgonyzatlan,KÖZVETLENÜL MÉRHETŐ két nyilvános idősorból (magyar szuverén felár vs. BUBOR–EURIBOR különbözet). Irodalmi támpont: Vonnák (MNB WP 2010/1). A húszból ez a legolcsóbb horgony — és tisztán makró idősorból megy.,,,2026-08-24_D_kategoria_irodalmi_kereses.md,aktív
+eps_ces,D,nem azonosított / több adat kell,horgonyzatlan,"Magyar markup-becslés LÉTEZIK: Dobrinsky–Kőrösi–Markov–Halpern (JCE 2006, 34(1):92–110). ⚠ DE MÁS OBJEKTUM: nálunk az eps_ces a VÁLLALATTÍPUSOK, az irodalmi markup a TERMÉKVÁLTOZATOK közti helyettesítés. Plauzibilitási sáv, nem horgony.",-DEPSCES,,2026-08-24_D_kategoria_irodalmi_kereses.md,aktív
+rho_acc,D,nem azonosított / több adat kell,horgonyzatlan,"A 0,9673 csak leíró cég-szintű van_hitel státusz-perzisztencia; a cégek 92,4%-a négy év alatt egyszer sem váltott. Főként állandó heterogenitást mér, nem a modell dinamikus szegmens-rho-ját, és nem alsó korlát. Marginális/váltó alminta vagy közvetlen szegmens-dinamika kell.",-DOPTEN / -DRHOACC,,2026-08-16_opten_kalibracio_eredmeny.md; 2026-08-21_korlatok_es_teendok.md,aktív
+lambda_acc_E,D,nem azonosított / több adat kell,horgonyzatlan,"⚠ CSAK A SZORZAT AZONOSÍTHATÓ (A22): a modell a lambda_acc-ot és az omega_acc-ot külön nem különbözteti meg. Forrásjelölt a szorzatra: EIBIS, EC/ECB SAFE éves kör (magyar + mikro bontással).",-DACCSCALE / -DLAMSCALE,A22,2026-08-12_access_horgonyzas_eredmeny.md; 2026-08-24_D_kategoria_irodalmi_kereses.md,aktív
+lambda_acc_D,D,nem azonosított / több adat kell,horgonyzatlan,⚠ CSAK A SZORZAT AZONOSÍTHATÓ (A22). Lásd lambda_acc_E.,-DACCSCALE / -DLAMSCALE,A22,2026-08-12_access_horgonyzas_eredmeny.md; 2026-08-24_D_kategoria_irodalmi_kereses.md,aktív
+omega_acc_E,D,nem azonosított / több adat kell,horgonyzatlan,"⚠ CSAK A SZORZAT AZONOSÍTHATÓ (A22). IRÁNY: a pénzügyileg nem korlátozott cégek nettó beruházási rátája ~7,8 pp-tal magasabb, és a hatás kisebb a nagyvállalatoknál. ⚠ A BIS WP 984 magyar program-hatását TILOS omega_acc-nak nevezni (CLAUDE.md).",-DACCSCALE / -DOMSCALE,A22,2026-08-12_access_horgonyzas_eredmeny.md; 2026-08-24_D_kategoria_irodalmi_kereses.md,aktív
+omega_acc_D,D,nem azonosított / több adat kell,horgonyzatlan,⚠ CSAK A SZORZAT AZONOSÍTHATÓ (A22). Lásd omega_acc_E.,-DACCSCALE / -DOMSCALE,A22,2026-08-12_access_horgonyzas_eredmeny.md; 2026-08-24_D_kategoria_irodalmi_kereses.md,aktív
+sc,B,nyilvános magyar makroadat (KSH),pótolandó,jelenleg JV-érték átvitele; KSH-ból pótolandó (teendők 2.4),,,,aktív
+si,B,nyilvános magyar makroadat (KSH),pótolandó,jelenleg JV-érték átvitele; KSH-ból pótolandó (teendők 2.4),,,,aktív
+sg,B,nyilvános magyar makroadat (KSH),pótolandó,jelenleg JV-érték átvitele; KSH-ból pótolandó (teendők 2.4),,,,aktív
+sx,B,nyilvános magyar makroadat (KSH),pótolandó,jelenleg JV-érték átvitele; KSH-ból pótolandó (teendők 2.4),,,,aktív
+sm,B,nyilvános magyar makroadat (KSH),pótolandó,jelenleg JV-érték átvitele; KSH-ból pótolandó (teendők 2.4),,,,aktív
+shd_c,E,származtatott vagy technikai,származtatott,más paraméterekből számolódik / technikai zárás,,,,örökölt: s_kkv (HORGONYZATLAN)
+shd_i,E,származtatott vagy technikai,származtatott,más paraméterekből számolódik / technikai zárás,,,,örökölt: s_kkv (HORGONYZATLAN)
+shd_g,E,származtatott vagy technikai,származtatott,más paraméterekből számolódik / technikai zárás,,,,örökölt: s_kkv (HORGONYZATLAN)
+shd_v,E,származtatott vagy technikai,származtatott,más paraméterekből számolódik / technikai zárás,,,,örökölt: s_kkv (HORGONYZATLAN)
+rho_a,C,JV-becsült (MNB WP 2008/9 poszterior),horgonyzott,"Jakab–Világi, MNB WP 2008/9, becsült poszterior átlag",,,,aktív
+rho_x,C,JV-becsült (MNB WP 2008/9 poszterior),horgonyzott,"Jakab–Világi, MNB WP 2008/9, becsült poszterior átlag",,,,aktív
+rho_c,C,JV-becsült (MNB WP 2008/9 poszterior),horgonyzott,"Jakab–Világi, MNB WP 2008/9, becsült poszterior átlag",,,,aktív
+rho_w,C,JV-becsült (MNB WP 2008/9 poszterior),horgonyzott,"Jakab–Világi, MNB WP 2008/9, becsült poszterior átlag",,,,aktív
+rho_i,C,JV-becsült (MNB WP 2008/9 poszterior),horgonyzott,"Jakab–Világi, MNB WP 2008/9, becsült poszterior átlag",,,,aktív
+rho_pr,C,JV-becsült (MNB WP 2008/9 poszterior),horgonyzott,"Jakab–Világi, MNB WP 2008/9, becsült poszterior átlag",,,,aktív
+rho_mx,C,JV-becsült (MNB WP 2008/9 poszterior),horgonyzott,"Jakab–Világi, MNB WP 2008/9, becsült poszterior átlag",,,,aktív
+rho_g,C,JV-becsült (MNB WP 2008/9 poszterior),horgonyzott,"Jakab–Világi, MNB WP 2008/9, becsült poszterior átlag",,,,aktív

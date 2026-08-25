@@ -826,6 +826,107 @@ if exist(t53, 'file') == 2
         d4w.KKV_minus_L_pp, d4u.KKV_minus_L_pp), ok, hiba);
 end
 
+% --- PARAMETER-REGISZTER INTEGRITAS (parameteraudit, 2026-08-25) ---------
+% MIT VED. Eddig az orok az ALLITASOKAT es a TABLAKAT ellenoriztek, a
+% PARAMETEREKET nem. Egy fuggetlen audit (kollega + Codex-vonal) ket olyan
+% rest talalt, amit egyik meglevo or sem fogott volna el:
+%   (1) HALOTT PARAMETEREK: xi_x, vth_x es lam_x kap erteket es forras-
+%       megjelolest a regiszterben, de a v09 model blokkjaban NEM SZEREPEL.
+%       Aki ranez a regiszterre, azt hiszi, szamit -- pedig nem.
+%   (2) ALAPERTELMEZES-KONFLIKTUS: a .mod alapertelmezese olyan ertekeket
+%       futtat, amiket a sajat allitas-regiszterunk VISSZAVONT (V04) vagy
+%       MEGCAFOLT (A08). Ez a legalattomosabb hibatipus: a regiszter szerint
+%       nem allitjuk, a modell szerint viszont ez fut.
+reg = fullfile(repo, 'docs', 'regiszter', 'parameterek.csv');
+dmp = fullfile(repo, 'docs', 'regiszter', '_params_dump.csv');
+[ok, hiba] = ell(exist(reg, 'file') == 2 && exist(dmp, 'file') == 2, ...
+    'parameter-regiszter es ertek-dump letezik', ok, hiba);
+if exist(reg, 'file') == 2 && exist(dmp, 'file') == 2
+    Pr = readtable(reg, 'TextType', 'string', 'Delimiter', ',', 'VariableNamingRule', 'preserve');
+    Pd = readtable(dmp, 'TextType', 'string', 'Delimiter', ',', 'VariableNamingRule', 'preserve');
+    % NEVHALMAZ-EGYEZES: a regiszter es az elo modellertekek ugyanarrol a
+    % 91 parameterrol szoljanak. Ha valaki uj parametert vezet be a .mod-ba
+    % es nem veszi fel a regiszterbe (vagy forditva), ez fogja el.
+    [ok, hiba] = ell(height(Pr) == 91 && height(Pd) == 91 && ...
+        isempty(setxor(Pr.parameter, Pd.parameter)), ...
+        sprintf(['t54 REGISZTER: a parameterek.csv es a _params_dump.csv ' ...
+        'ugyanazt a %d parametert fedi (0 elteres)'], height(Pr)), ok, hiba);
+    [ok, hiba] = ell(any(strcmp(Pr.Properties.VariableNames, 'hatas')) && ...
+        all(strlength(Pr.hatas) > 0), ...
+        't54 REGISZTER: minden parameter kap hatas-minositest (aktiv/halott/orokolt)', ...
+        ok, hiba);
+
+    % --- HALOTT PARAMETEREK ORE ----------------------------------------
+    % A regiszter szerint halott parametereknek TENYLEG nem szabad
+    % szerepelniuk a fo modell egyenleteiben. Ez ketiranyu or: ha valaki
+    % bekoti oket, elbukik (a regiszter elavult); ha valaki kiveszi a
+    % halott jelolest, szinten elbukik.
+    fo = fullfile(repo, 'src', 'modell', '1_fo_vonal_jv', 'jv_dsge_v09_access.mod');
+    if isfile(fo)
+        sz = fileread(fo);
+        mblokk = regexp(sz, '\nmodel;(.*?)\nend;', 'tokens', 'once');
+        mblokk = regexprep(mblokk{1}, '//[^\n]*', '');      % sorkommentek le
+        mblokk = regexprep(mblokk, '/\*.*?\*/', '');        % blokkommentek le
+        halottak = Pr.parameter(startsWith(Pr.hatas, "HALOTT"));
+        elo = strings(0, 1);
+        for i = 1:numel(halottak)
+            if ~isempty(regexp(mblokk, ['\<' char(halottak(i)) '\>'], 'once'))
+                elo(end+1) = halottak(i); %#ok<AGROW>
+            end
+        end
+        [ok, hiba] = ell(numel(halottak) == 3 && isempty(elo), ...
+            sprintf(['t54 HALOTT: a %d halottnak jelolt parameter egyike sem ' ...
+            'szerepel a v09 model blokkjaban (%s)'], numel(halottak), ...
+            strjoin(cellstr(halottak), ', ')), ok, hiba);
+        if ~isempty(elo)
+            fprintf(2, ['          %s MEGIS SZEREPEL a model blokkban -- ' ...
+                'a regiszter halott-jelolese elavult.\n'], strjoin(cellstr(elo), ', '));
+        end
+        % beta: a regiszter szerint NEM szarmaztatott, hanem hard-coded
+        [ok, hiba] = ell(~isempty(regexp(sz, 'beta\s*=\s*0\.99\s*;', 'once')), ...
+            't54: a beta a .mod-ban FIXEN 0.99 (nem szarmaztatott ertek)', ...
+            ok, hiba);
+    end
+
+    % --- ALAPERTELMEZES-KONFLIKTUSOK ------------------------------------
+    % MIERT KULON CSV. A konfliktus nem hiba, amit "meg kell javitani" a
+    % kodban: az alapertelmezes csereje CSAPATDONTES (CLAUDE.md 4.). Amit az
+    % or ved, az a LATHATOSAG -- hogy a konfliktus ne tudjon nemam
+    % megszunni vagy nemam keletkezni. Ha egy konfliktus FELOLDVA lesz,
+    % ezt az or eszreveszi, es a CSV-t is at kell irni.
+    kf = fullfile(repo, 'docs', 'regiszter', 'alapertelmezes_konfliktusok.csv');
+    [ok, hiba] = ell(exist(kf, 'file') == 2, ...
+        't54 alapertelmezes-konfliktus regiszter letezik', ok, hiba);
+    if exist(kf, 'file') == 2
+        % A mezokben pontosvesszo is van (parameterek, relacio), ezert a
+        % delimitert KI KELL irni -- kulonben a readtable ';'-t detektal.
+        Kf = readtable(kf, 'TextType', 'string', 'Delimiter', ',', 'VariableNamingRule', 'preserve');
+        ert = @(n) Pd.ertek_OPTEN0(Pd.parameter == n);
+        % K01 -- a visszavont V04 chi-aszimmetriaja
+        k01 = abs(ert("chi_E") - ert("chi_D")) < 1e-12 && ert("chi_L") < ert("chi_E");
+        % K02 -- az A08 altal megcafolt lev_E = lev_D kenyszer
+        k02 = abs(ert("lev_E") - ert("lev_D")) < 1e-12;
+        merve = [k01; k02];
+        vart = Kf.statusz(1:2) == "FENNALL";
+        [ok, hiba] = ell(height(Kf) == 2 && all(Kf.id(1:2) == ["K01"; "K02"]) && ...
+            all(merve == vart), ...
+            sprintf(['t54 KONFLIKTUS: mind a %d dokumentalt alapertelmezes-' ...
+            'konfliktus a leirt allapotban (K01 chi %d, K02 lev %d)'], ...
+            height(Kf), k01, k02), ok, hiba);
+        if any(merve ~= vart)
+            fprintf(2, ['          A .mod alapertelmezese es a konfliktus-' ...
+                'regiszter SZETCSUSZOTT. Ha szandekos volt a valtoztatas, ' ...
+                'ird at a docs/regiszter/alapertelmezes_konfliktusok.csv-t.\n']);
+        end
+        % Minden konfliktus letezo allitasra hivatkozzon
+        Al = readtable(fullfile(repo, 'docs', 'regiszter', 'allitasok.csv'), ...
+            'TextType', 'string', 'Delimiter', ',', 'VariableNamingRule', 'preserve');
+        [ok, hiba] = ell(all(ismember(Kf.allitas, Al.id)), ...
+            't54 KONFLIKTUS: minden konfliktus letezo allitasra hivatkozik', ...
+            ok, hiba);
+    end
+end
+
 % --- PHILLIPS-ASZIMMETRIA OR (kulso biralat, 2026-08-21) -----------------
 % MIT VED. A harom tipus arazasi egyenlete NEM szimmetrikus sokkot kap:
 %   pi_E, pi_D  ->  + eps_md    (NYERS sokk, varexo)
