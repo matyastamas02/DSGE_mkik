@@ -47,3 +47,7 @@ Thumbs.db
 .vscode/
 .idea/
 *.swp
+
+# munkakonyvtarak (mas session-ok), soha ne kerüljenek be
+outputs/
+node_modules/
