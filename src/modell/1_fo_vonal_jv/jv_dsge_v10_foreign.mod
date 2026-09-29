@@ -1,7 +1,49 @@
 /*
- * jv_dsge_v09_access.mod — 4. LEPCSO: HITELHOZZAFERESI (EXTENZIV) MARGO
- *                          A JAKAB-VILAGI HAROMTIPUSOS MAGON
+ * jv_dsge_v10_foreign.mod — 5. LEPCSO: KULFOLDI KERESLET/KAMAT CSATORNA
+ *                           (ystar / r_for) A v09 HITELHOZZAFERESI MAGON
  * =====================================================================
+ * ELOZMENY: Samu jelezte (2026-09-28), hogy a v09 nem oroklte az EAGLE-mag
+ * (kkv_dsge_v07_access) kulfoldi kereslet/kamat csatornajat. Ket kulon
+ * adversarial review-kor utan (lasd docs/terv/2026-09-28_ystar_rstar_
+ * implementacios_terv.md, jovahagyva) ez a fajl VALOSITJA MEG a tervet.
+ *
+ * A v09-hez kepest EGYETLEN erdemi valtoztatas van: az uj -DFOREIGN=1
+ * kapcsolo alatt megjelenik egy megfigyelt/exogen kulfoldi kereslet
+ * (ystar) es kulfoldi kamat (r_for) allapot, es ezek bekotodnek az
+ * exportkeresletbe, illetve a rezsimfuggo monetaris/UIP-blokkba.
+ * -DFOREIGN=0 (ALAPERTELMEZES) MELLETT A MODELL FORDITASI IDOBEN
+ * PONTOSAN A v09-et ADJA VISSZA -- minden korabbi eredmeny (t46-t55)
+ * erintetlen marad, mert az uj valtozok/parameterek/egyenletek ilyenkor
+ * ki sem keriilnek a modellbe.
+ *
+ * MI HIANYZOTT ES MIERT (a teljes diagnozis a tervben):
+ *   - az EAGLE exportegyenlete `x_E = ystar + eta_x*rer - eps_ces*p_E`,
+ *     a v09-e csak `x_E = hx*x_E(-1) + (1-hx)*(-mu_x*(p_E-rer)) + e_x_ar`
+ *     -- nincs kulfoldi kereslet tag, csak sajat ar/rer es egy KOZOS
+ *     (nem idioszinkratikus!) rezidualis exportkeresleti sokk (e_x_ar).
+ *   - az EAGLE monetaris/UIP-blokkja mindket rezsimagon hasznalja
+ *     `rstar`-t, a v09-bol ez a tag egyszeruen hianyzik mindket agon.
+ *
+ * MIT NEM OLD MEG EZ A FAJL (explicit korlatok, lasd terv 9. szakasz):
+ *   - az e_x_ar es ystar egyuttes EMPIRIKUS azonosithatosaga nyitott --
+ *     ez a bovites DETERMINISZTIKUS PERFECT-FORESIGHT forgatokonyvekhez
+ *     jo, KULONOSEN ha a -DFOREIGN=1 forgatokonyvekben eps_x=0.
+ *     Sztochasztikus becsleshez, vagy ha ystar- ES eps_x-sokkot egyszerre
+ *     aktivalunk, az azonositas MEG NEM megfelelo;
+ *   - a rho_ystar/rho_rfor kalibracio ERZEKENYSEGI RACS (0.40/0.625/0.85),
+ *     NEM igazolt irodalmi ertek -- a tervben hivatkozott harom kulso
+ *     forras (MNB WP 2008/9, ECB EAGLE WP1195, MNB WP 2013/1) meg nincs
+ *     tenylegesen ellenorizve;
+ *   - a szintpalya->innovacio konverziot (terv 8. szakasz) a hivo
+ *     scriptnek kell elvegeznie, ez a .mod fajl csak az AR-folyamatot
+ *     definialja;
+ *   - -DFOREIGN=1 eseten a docs/regiszter/parameterek.csv es a smoke_test
+ *     t54 ore MEG NINCS bovitve 94 parameterre -- ez implementacios
+ *     kovetkezo lepes, lasd a terv 6. szakaszat.
+ *
+ * ====================================================================
+ * MINDEN TOBBI (v09-bol valtozatlanul orokolve):
+ * ====================================================================
  * Ezzel a JV-vonal MINDENT tud, amit a kkv_dsge_v07_access (Samu,
  * EAGLE-mag) -- de a magyar adaton BECSULT parametereken es a JV
  * gazdagabb (harominputos, import-intenzitast megkulonbozteto) termelesi
@@ -11,11 +53,10 @@
  *   1. lepcso  jv_dsge_v06          szegmens-specifikus tokehozam   PF 18/18; BK nem merve
  *   2. lepcso  jv_dsge_v07_3type    harom tipus, kozos ar           PF 18/18; BK nem merve
  *   3. lepcso  jv_dsge_v08_3type_arak  tipusonkenti ar es kereslet  PF 18/18; BK nem merve
- *   + fuggetlen verifikacio (szimmetria, aggregacio, nulla-sokk,
- *     egymasba agyazas): 17/17 -- t43.
+ *   4. lepcso  jv_dsge_v09_access   hitelhozzaferesi (extenziv) margo  OPTEN=0 agon 9/9 BK
+ *   5. lepcso  jv_dsge_v10_foreign  kulfoldi kereslet/kamat csatorna  MEG NINCS futtatva/merve
  *
- * =====================================================================
- * A FORDITAS: MIERT NEM MASOLHATO AT AZ EAGLE-BLOKK
+ * A FORDITAS: MIERT NEM MASOLHATO AT AZ EAGLE-BLOKK (beruhazas, v09 ota valtozatlan)
  * =====================================================================
  * Samu v07_access-eben (EAGLE-mag) a beruhazas Tobin-Q-bol adodik:
  *     q_j = phi_i*(i_j - k_j(-1) - omega_acc_j*acc_j)
@@ -63,8 +104,12 @@
  *             -DNOVERT=1, -DNUUNI=<x>, -DOPTEN=0|1|2|3, -DRHOACC=<x>,
  *             -DDECOMP=0|1|2|3|4, -DDECOMPW=0|1
  *             -DCALIB26=0|1|2|3
+ *             -DFOREIGN=0|1 (UJ), -DRHOYSTAR=<x>, -DRHORFOR=<x>,
+ *             -DETAYSTAR=<x> (csak FOREIGN=1 mellett hatnak)
  * Futtatas:   stress_jv_access_v09.m, stress_opten_v09.m,
  *             sens_lam_om_v09.m (2D kuszobfelulet), dekomp_edl_v09.m
+ *             (a fenti futtatok a v09-re epulnek; a v10/-DFOREIGN=1
+ *             agra meg nincs kulon futtato -- lasd a terv 10. szakaszat)
  */
 
 @#ifndef SCENARIO
@@ -214,6 +259,30 @@
 @#ifndef OPTEN
   @#define OPTEN = 0
 @#endif
+// --- -DFOREIGN: KULFOLDI KERESLET/KAMAT CSATORNA (UJ, v10) --------------
+// Lasd docs/terv/2026-09-28_ystar_rstar_implementacios_terv.md.
+//   0 = KI (ALAPERTELMEZES; a v09-cel BITRE AZONOS modell -- a ystar/
+//       r_for valtozok, az uj parameterek es a modositott egyenletek
+//       forditasi idoben ki sem kerulnek a modellbe)
+//   1 = BE; uj `ystar` (kulfoldi kereslet) es `r_for` (kulfoldi kamat)
+//       exogen AR(1) allapot, bekotve az exportkeresletbe es a
+//       rezsimfuggo monetaris/UIP-blokkba.
+@#ifndef FOREIGN
+  @#define FOREIGN = 0
+@#endif
+// -DRHOYSTAR / -DRHORFOR / -DETAYSTAR: csak FOREIGN=1 mellett hatnak.
+// Alapertekuk 0.625 (=rho_x, a mar hasznalt exportkeresleti perzisztencia
+// -- lasd terv D4/5. szakasz: ERZEKENYSEGI PONT, nem igazolt irodalmi
+// ertek). Az ajanlott erzekenysegi racs: 0.40 / 0.625 / 0.85.
+@#ifndef RHOYSTAR
+  @#define RHOYSTAR = 0.625
+@#endif
+@#ifndef RHORFOR
+  @#define RHORFOR = 0.625
+@#endif
+@#ifndef ETAYSTAR
+  @#define ETAYSTAR = 1.0
+@#endif
 
 var
     // haztartas es aggregatumok
@@ -237,11 +306,18 @@ var
     k_L i_L q_L ret_L efp_L nw_L rk_L wz_L mc_L z_L l_L y_L
     // sokk-folyamatok
     a g e_c_ar e_x_ar e_w_ar e_i_ar e_pr_ar e_mx_ar
+@#if FOREIGN == 1
+    // --- kulfoldi kereslet/kamat (5. lepcso, UJ) ---
+    ystar r_for
+@#endif
 ;
 
 varexo
     sov bank uni
     eps_a eps_x eps_c eps_md eps_mx eps_w eps_i eps_q eps_r eps_pr eps_g
+@#if FOREIGN == 1
+    eps_ystar eps_rfor
+@#endif
 ;
 
 parameters
@@ -264,6 +340,9 @@ parameters
     rho_acc lambda_acc_E lambda_acc_D omega_acc_E omega_acc_D
     sc si sg sx sm shd_c shd_i shd_g shd_v
     rho_a rho_x rho_c rho_w rho_i rho_pr rho_mx rho_g
+@#if FOREIGN == 1
+    rho_ystar rho_rfor eta_ystar
+@#endif
 ;
 
 // --- JV-mag: VALTOZATLAN becsult ertekek (jv_dsge_v05/v06) --------------
@@ -591,6 +670,15 @@ rho_i = 0.488; rho_pr = 0.820; rho_mx = 0.318; rho_g = 0.80;
 @#if CALIB26 == 1 || CALIB26 == 2
 rho_a = 0.50;   // Eurostat munkatermelekenysegi proxy, HP1600 ciklus AR(1)
 @#endif
+// --- -DFOREIGN: kulfoldi kereslet/kamat kalibracio (UJ, v10) ------------
+// Csak akkor kerul a modellbe, ha FOREIGN==1 -- lasd terv 4.2b szakasz.
+// rho_ystar/rho_rfor: ERZEKENYSEGI PONT (nem igazolt irodalmi ertek, lasd
+// a fajl fejleceben es a tervben felsorolt nyitott kerdeseket).
+@#if FOREIGN == 1
+rho_ystar = @{RHOYSTAR};
+rho_rfor  = @{RHORFOR};
+eta_ystar = @{ETAYSTAR};
+@#endif
 
 model;
 
@@ -711,9 +799,17 @@ d_E = y_d - eps_ces*p_E;
 d_D = y_d - eps_ces*p_D;
 d_L = y_d - eps_ces*p_L;
 // TIPUSONKENTI exportkereslet, JV-stilusu reszleges alkalmazkodassal.
+// -DFOREIGN=1: kiegeszitve a kulfoldi kereslettel (ystar), additiv,
+// eta_ystar sullyal, a (1-hx) zarojelen BELUL -- lasd terv D2/3.2-3.3.
+@#if FOREIGN == 1
+x_E = hx*x_E(-1) + (1-hx)*(-mu_x*(p_E - rer) + eta_ystar*ystar) + e_x_ar;
+x_D = hx*x_D(-1) + (1-hx)*(-mu_x*(p_D - rer) + eta_ystar*ystar) + e_x_ar;
+x_L = hx*x_L(-1) + (1-hx)*(-mu_x*(p_L - rer) + eta_ystar*ystar) + e_x_ar;
+@#else
 x_E = hx*x_E(-1) + (1-hx)*(-mu_x*(p_E - rer)) + e_x_ar;
 x_D = hx*x_D(-1) + (1-hx)*(-mu_x*(p_D - rer)) + e_x_ar;
 x_L = hx*x_L(-1) + (1-hx)*(-mu_x*(p_L - rer)) + e_x_ar;
+@#endif
 // Aggregalt export-index es -ar (bstar-hoz es riportalashoz).
 xx = wx_E*x_E + wx_D*x_D + wx_L*x_L;
 px = wx_E*p_E + wx_D*p_D + wx_L*p_L;
@@ -722,9 +818,19 @@ y  = sc*c + si*ii + sg*g + sx*xx - sm*im;
 bstar = (1/beta)*bstar(-1) + sx*(px + xx) - sm*(rer + im);
 
 // === 7. Rezsimfuggo monetaris blokk (JV v03/v05/v06) ====================
+// -DFOREIGN=1: mindket rezsimagon visszakerul a kulfoldi kamat (r_for) --
+// unios agon a hazai kamatot horgonyozza, lebego agon az UIP-ban jelenik
+// meg. A hazai Taylor-szabalyt (gam_i/phi_pi) NEM egeszitjuk ki r_for-ral,
+// mert az EAGLE-ben sem oda kotodik -- lasd terv D-tablazat, 6. pont.
+@#if FOREIGN == 1
+(1-uni)*(r - gam_i*r(-1) - (1-gam_i)*phi_pi*infl - eps_r)
+    + uni*(r - r_for - zsov*sov + nu_uni*bstar) = 0;
+(1-uni)*(r - r_for - dep(+1) + nu_b*bstar - zsov*sov - e_pr_ar) + uni*dep = 0;
+@#else
 (1-uni)*(r - gam_i*r(-1) - (1-gam_i)*phi_pi*infl - eps_r)
     + uni*(r - zsov*sov + nu_uni*bstar) = 0;
 (1-uni)*(r - dep(+1) + nu_b*bstar - zsov*sov - e_pr_ar) + uni*dep = 0;
+@#endif
 rer = rer(-1) + dep - infl;
 
 // === 8. Sokk-folyamatok =================================================
@@ -736,30 +842,52 @@ e_i_ar  = rho_i*e_i_ar(-1) + eps_i;
 e_pr_ar = rho_pr*e_pr_ar(-1) + eps_pr;
 e_mx_ar = rho_mx*e_mx_ar(-1) + eps_mx;
 g       = rho_g*g(-1) + eps_g;
+@#if FOREIGN == 1
+// Kulfoldi kereslet/kamat, tisztan hatranezo AR(1), lead nelkul -- lasd
+// terv D8/7. szakasz: BK-szempontbol ket uj stabil gyokot varunk, a
+// meglevo hazai gyokoket nem erinti.
+ystar = rho_ystar*ystar(-1) + eps_ystar;
+r_for = rho_rfor*r_for(-1) + eps_rfor;
+@#endif
 
 end;
 
 initval;
 sov = 0; bank = 0; uni = 0;
+@#if FOREIGN == 1
+ystar = 0; r_for = 0;
+@#endif
 end;
 
 @#if SCENARIO == 1
 endval;
 sov = -0.005; bank = -0.001125; uni = 1;
+@#if FOREIGN == 1
+ystar = 0; r_for = 0;
+@#endif
 end;
 @#elseif SCENARIO == 2
 endval;
 sov = -0.00625; bank = -0.00175; uni = 1;
+@#if FOREIGN == 1
+ystar = 0; r_for = 0;
+@#endif
 end;
 @#elseif SCENARIO == 3
 endval;
 sov = -0.00375; bank = -0.0005; uni = 1;
+@#if FOREIGN == 1
+ystar = 0; r_for = 0;
+@#endif
 end;
 @#else
 // SCENARIO=4: NULLA SOKK (ellenorzo eset). Minden valtozonak vegig 0-nak
 // kell lennie -- ha nem, valahol konstans szivarog be a modellbe.
 endval;
 sov = 0; bank = 0; uni = 0;
+@#if FOREIGN == 1
+ystar = 0; r_for = 0;
+@#endif
 end;
 @#endif
 
