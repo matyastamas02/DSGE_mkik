@@ -3,7 +3,7 @@
 *2026-09-28 · Tomi. Előzmény: Samu jelezte, hogy az EAGLE-mag (`kkv_dsge_v07_access.mod`)
 külkereskedelmi csatornája nem került át a JV fő modellbe
 (`jv_dsge_v09_access.mod`) — ezt megerősítettem a kód közvetlen összevetésével.
-Az első tervet ([`outputs/2026-09-28_tomi_chatgpt_review_ystar_rstar_terv.md`](../../outputs/2026-09-28_tomi_chatgpt_review_ystar_rstar_terv.md))
+Az első tervet ([`2026-09-28_tomi_chatgpt_review_ystar_rstar_terv.md`](2026-09-28_tomi_chatgpt_review_ystar_rstar_terv.md))
 adversarial review-ra küldtem; a review egy valódi diagnosztikai hibát talált
 (lásd 1. szakasz) és több konkrét, kód-alapú hiányosságot a bevezetési tervben.
 Ez a dokumentum a **javított, implementálásra kész terv** — csak azután
