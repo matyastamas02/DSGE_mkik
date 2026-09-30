@@ -5,7 +5,7 @@
 
 # DSGE_mkik — állapotlap
 
-*Generálva a füstteszt 2026-08-25 21:01-kor futott eredményéből · commit `8e5c2e5` · ág `main`*
+*Generálva a füstteszt 2026-09-30 17:59-kor futott eredményéből · commit `3075529` · ág `main`*
 
 **Fő modell:** `src/modell/1_fo_vonal_jv/jv_dsge_v09_access.mod` (Jakab–Világi mag). A `kkv_dsge_*` a referencia-vonal.
 
@@ -505,6 +505,6 @@
 - ✅ t00 PHILLIPS: az aszimmetrikus arsokkok (eps_md / eps_mx) egyik szcenarioban sincsenek hajtva
 - ✅ t00 SZERKEZET: mind a 4 modell-vonal megvan, README-vel
 - ✅ t00 SZERKEZET: a FO MODELL a helyen van (1_fo_vonal_jv)
-- ✅ t00 SZERKEZET: minden futtato letezo .mod-ot hiv (31 futtato, 19 modell)
+- ✅ t00 SZERKEZET: minden futtato letezo .mod-ot hiv (32 futtato, 20 modell)
 
 </details>
