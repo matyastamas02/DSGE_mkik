@@ -1,3 +1,5 @@
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Az euró útja a modellben</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Source+Sans+3:ital,wght@0,400;0,600;0,700;1,400&family=IBM+Plex+Mono:wght@400;600&display=swap&subset=latin-ext">
@@ -192,6 +194,19 @@ ul.clean { padding-left: 20px; margin: 0; display: grid; gap: 6px; max-width: 70
 .small { font-size: 14.5px; }
 footer { margin-top: 64px; padding-top: 20px; border-top: 1px solid var(--rule); color: var(--muted); font-size: 14px; }
 @media (prefers-reduced-motion: no-preference) { html { scroll-behavior: smooth; } }
+
+/* teaching additions: sub-heads, mechanism chain, room questions */
+h4.sub { font-size: 18px; padding-top: 10px; border-top: 1px solid var(--rule); }
+ol.chain { list-style: none; padding: 0; margin: 0; display: grid; gap: 8px; counter-reset: lanc; max-width: 72ch; }
+ol.chain li { counter-increment: lanc; display: grid; grid-template-columns: 30px max-content minmax(0, 1fr); gap: 10px; align-items: baseline; font-size: 15.5px; }
+ol.chain li::before { content: counter(lanc); font-family: var(--f-display); font-weight: 800; color: var(--gold); text-align: right; }
+ol.chain .tag { font-family: var(--f-mono); font-size: 12px; color: var(--muted); background: var(--grey-soft); padding: 1px 7px; border-radius: 999px; }
+@media (max-width: 520px) { ol.chain li { grid-template-columns: 24px minmax(0, 1fr); } ol.chain .tag { grid-column: 2; justify-self: start; } ol.chain li > span:last-child { grid-column: 2; } }
+.q { border: 1px dashed var(--euro); border-radius: 12px; padding: 14px 18px; display: grid; gap: 8px; }
+.q h4 { font-size: 16px; color: var(--euro); }
+.grid2 .card .eq { font-size: 13.5px; padding: 8px 10px; }
+.q .who { font-family: var(--f-mono); font-size: 12px; color: var(--muted); margin-right: 6px; }
+.q .who::before { content: "["; } .q .who::after { content: "]"; }
 </style>
 
 <div class="wrap">
@@ -428,28 +443,119 @@ footer { margin-top: 64px; padding-top: 20px; border-top: 1px solid var(--rule);
 
 <section id="termeles" class="stack-lg">
   <div class="card tint-D">
-    <div class="block-head"><span class="num">4. blokk</span><h3>Termelés: ki mit, kinek és miből gyárt</h3><span class="badge b-pot">zeta, aa: KSH, pótolandó</span><span class="badge b-sajat">phi: saját adat</span></div>
-    <p>Minden típus három inputból termel: tőkéből, munkából és importból. A határköltség a saját tőkehozamból és a munka–import kompozit árából áll. <b>Minden típus mindkét piacon értékesít</b>: \(\phi_j\) arányban külföldre, a többit itthon. Így az export-KKV is ad el itthon, a nagyvállalat is exportál.</p>
+    <div class="block-head"><span class="num">4. blokk</span><h3>Termelés: ki mit, kinek és miből gyárt</h3><span class="badge b-pot">zeta, aa: KSH, pótolandó</span><span class="badge b-sajat">phi: saját adat</span><span class="badge b-horg">s_kkv, mu_vert horgonyzatlan</span></div>
+    <p>A termelési blokk négy kérdésre felel: <b>miből</b> gyárt egy típus (tőke, munka, import), <b>mennyibe kerül</b> neki egy további egység (határköltség), <b>mennyi tőke és munka kell</b> a kereslet kiszolgálásához, és <b>kinek ad el</b> (hazai vagy külföldi vevő). A három típus ugyanazt a szerkezetet használja, csak más paraméterekkel. Az eltérő paraméterek miatt ugyanaz a sokk háromféleképpen hat.</p>
+
+    <h4 class="sub">4a · Három input, két lépésben</h4>
+    <p class="small">A munkát és az importot a cég először egy <b>kompozit</b> inputtá keveri (\(wz_j\)), majd ezt kombinálja a tőkével. A határköltség e két „ár” súlyozott átlaga, mínusz a termelékenység.</p>
     <div class="eq">\[ wz_{j,t} = \alpha_j\,w_t + (1-\alpha_j)\,rer_t \]
-    \[ mc_{j,t} = \zeta_j\,rk_{j,t} + (1-\zeta_j)\,wz_{j,t} - a_t \]
-    \[ y_{j,t} = (1-\phi_j)\,d_{j,t} + \phi_j\,x_{j,t} \]</div>
-    <div class="words"><p><b>Szavakban:</b> ha gyengül a forint (\(rer\) nő), drágul az import, és annál jobban nő a határköltség, minél importintenzívebb a típus (\(1-\alpha_j\)). A kibocsátás (\(y_j\)) a hazai (\(d_j\)) és a külföldi (\(x_j\)) kereslet súlyozott összege.</p></div>
+    \[ mc_{j,t} = \zeta_j\,rk_{j,t} + (1-\zeta_j)\,wz_{j,t} - a_t \]</div>
+    <div class="words"><p><b>Szavakban:</b> \(\alpha_j\) a munka súlya a kompozitban, tehát \(1-\alpha_j\) az <b>importintenzitás</b>. Ha a forint reálértéken gyengül (\(rer\) nő), az importált input drágul, és a határköltség annál jobban nő, minél importintenzívebb a típus. A \(\zeta_j\) a tőkehányad: a típus határköltségét ekkora súllyal mozgatja a saját tőkehozama (\(rk_j\)), amit a 2. blokk pénzügyi feltételei alakítanak.</p></div>
+
+    <div class="tbl"><table>
+      <thead><tr><th>Típus</th><th>Tőkehányad \(\zeta_j\)</th><th>Munka a kompozitban \(\alpha_j\)</th><th>Importintenzitás \(1-\alpha_j\)</th><th>Exportarány \(\phi_j\)</th><th>Méretsúly \(\omega_j\)</th><th>Foglalkoztatási súly</th></tr></thead>
+      <tbody>
+        <tr><td><span class="chip E"><i></i>E</span></td><td class="n">0,14</td><td class="n">0,45</td><td class="n"><b>55%</b></td><td class="n">0,56</td><td class="n">0,18</td><td class="n">0,20</td></tr>
+        <tr><td><span class="chip D"><i></i>D</span></td><td class="n">0,17</td><td class="n">0,80</td><td class="n">20%</td><td class="n">0,05</td><td class="n">0,37</td><td class="n">0,50</td></tr>
+        <tr><td><span class="chip L"><i></i>L</span></td><td class="n">0,155</td><td class="n">0,60</td><td class="n">40%</td><td class="n">0,365</td><td class="n">0,45</td><td class="n">0,30</td></tr>
+      </tbody>
+    </table></div>
+    <p class="small muted">Az alapág (<code>OPTEN=0</code>) értékei a v10 <code>.mod</code>-ból. A \(\zeta_j\) és \(\alpha_j\) a Jakab–Világi-féle kétszektoros értékek átvitele: az export-jellegű E az exportszektor (0,14 / 0,45), a hazai D a hazai szektor (0,17 / 0,80) értékét kapja, L a kettő közé esik. Ez <b>átvitel, nem becslés</b>. A <code>CALIB26</code>-ág ennél jóval kisebb tőkehányadot (0,06–0,09) és munkasúlyt (0,20–0,31) használ, a kettő közt a KSH-pótlás dönt.</p>
+
+    <div class="callout info small"><h4>Tanulság: az export-KKV „természetes fedezete”</h4><p>Az E típus importintenzitása a legnagyobb (55%), és a legnagyobb az exportaránya is (0,56). Ha a forint gyengül, az inputjai drágulnak, de a termékei külföldön olcsóbbak lesznek. A két hatás részben kioltja egymást. A D típusnál mindkettő kicsi: alig importál és alig exportál, ezért az árfolyam közvetlenül alig érinti, a hazai kereslet annál inkább. Euróban a nominális árfolyam rögzül, a reálárfolyam pedig csak az inflációkülönbségen keresztül mozdul, lassan (lásd 5d). Így az árfolyam mint alkalmazkodási csatorna mindhárom típusnál gyengül, de a legjobban annál, amelyik a legjobban rá volt hangolva.</p></div>
+
+    <h4 class="sub">4b · Tényezőkereslet: mennyi tőke és munka kell?</h4>
+    <div class="eq">\[ z_{j,t} = \rho_{kz}\,\zeta_j\,\big(rk_{j,t} - wz_{j,t}\big) + y_{j,t} - a_t \]
+    \[ k_{j,t-1} = z_{j,t} - \rho_{kz}\,\big(rk_{j,t} - wz_{j,t}\big) \qquad l_{j,t} = z_{j,t} - \rho_{z}\,\big(w_t - wz_{j,t}\big) \]</div>
+    <div class="words"><p><b>Szavakban:</b> a tőke <b>előre rögzített</b> (\(k_{t-1}\)): amit ma használni lehet, azt már tegnap be kellett ruházni. Ha ma váratlanul nő a kereslet, a tőke nem tud azonnal követni. Ilyenkor a második egyenlet átrendezve megmutatja, mi igazodik helyette:</p></div>
+    <div class="eq">\[ rk_{j,t} = wz_{j,t} + \frac{z_{j,t} - k_{j,t-1}}{\rho_{kz}} \]</div>
+    <div class="words"><p>A <b>tőkehozam a kapacitáskihasználtság mérője</b>. Ha a kereslet (\(z_j\)) a beépített tőke (\(k_{j,t-1}\)) fölé szalad, \(rk_j\) nő, vele a határköltség és végül az ár is. A \(\rho_{kz} = 0{,}8\) a tőke és a kompozit, a \(\rho_z = 0{,}5\) a munka és az import közti helyettesítési rugalmasság (JV-becslés).</p></div>
+
+    <h4 class="sub">4c · Kibocsátás két piacról</h4>
+    <div class="eq">\[ y_{j,t} = (1-\phi_j)\,d_{j,t} + \phi_j\,x_{j,t} \]</div>
+    <div class="words"><p><b>Szavakban:</b> <b>minden típus mindkét piacon értékesít</b>: \(\phi_j\) arányban külföldre, a többit itthon. Így az export-KKV is ad el itthon, és a nagyvállalat is exportál. A típusok súlyából és exportarányából a modell kiszámolja, mekkora részt visz egy-egy típus az egyes piacokból:</p></div>
+    <div class="tbl"><table>
+      <thead><tr><th>Típus</th><th>Hazai piac súlya \(w^d_j\)</th><th>Export súlya \(w^x_j\)</th><th>Import súlya</th></tr></thead>
+      <tbody>
+        <tr><td><span class="chip E"><i></i>E</span></td><td class="n">0,11</td><td class="n">0,36</td><td class="n">0,28</td></tr>
+        <tr><td><span class="chip D"><i></i>D</span></td><td class="n"><b>0,49</b></td><td class="n">0,07</td><td class="n">0,21</td></tr>
+        <tr><td><span class="chip L"><i></i>L</span></td><td class="n">0,40</td><td class="n"><b>0,58</b></td><td class="n"><b>0,51</b></td></tr>
+      </tbody>
+    </table></div>
+    <p class="small muted">Származtatott súlyok, a fenti paraméterekből számolva (\(w^d_j \propto \omega_j(1-\phi_j)\), \(w^x_j \propto \omega_j\phi_j\), import \(\propto \omega_j(1-\alpha_j)\)). Az exportsúlyok egy független úton is pontosan visszaadják az EAGLE-vonal értékeit (0,356 / 0,065 / 0,579).</p>
+    <div class="words"><p><b>Amit ebből érdemes megjegyezni:</b> a hazai piacon a D típus a legnagyobb szereplő (49%), az exportban a nagyvállalat (58%). Az E típus kicsi (a méretsúlya 18%), mégis az export 36%-át adja. Egy hazai keresleti sokk ezért elsősorban a D-t, egy exportsokk elsősorban az L-t és az E-t éri.</p></div>
+
+    <h4 class="sub">4d · Beszállítói kapcsolat</h4>
+    <div class="eq">\[ h^{dx}_t = x_t - \mu_{vert}\,s_{kkv}\,\big(mc^{d}_t - mc^{x,rel}_t\big), \qquad y^{d}_t = \dots + s^{d}_{v}\,h^{dx}_t \]</div>
+    <div class="words"><p><b>Szavakban:</b> az export egy része hazai beszállítóktól vett inputot tartalmaz. Ha nő az export, nő a hazai beszállítók iránti kereslet is (\(h^{dx}\)), és ez a hazai keresletbe (\(y^d\)) épül be. A \(s_{kkv}\) a beszállítói kapcsolat súlya, a \(\mu_{vert}\) az ár-átgyűrűzés erőssége.</p></div>
+    <div class="callout warn small"><h4>Itt két horgonyzatlan paraméter van</h4><p>Az \(s_{kkv}\) IO-tábla-alapú mérése nem áll meg (V02, <code>FIGYELMEZTETES_io_tabla_gyanus.md</code>), és a \(\mu_{vert}\)-re nem találtunk becslést. Az alapág kis értékekkel fut (\(s_{kkv} = 0{,}05\), \(\mu_{vert} = 0{,}5\)), így a beszállítói tag a hazai kereslet kb. 3%-át adja. A <code>CALIB26</code>-ág \(s_{kkv} = 0{,}363\)-at használ. Ez a review szerint felső korlát, és a tag súlyát kb. hétszeresére növelné.</p></div>
+
+    <h4 class="sub">Összerakva: hogyan jut el a pénzügyi feltétel a termelésig?</h4>
+    <ol class="chain">
+      <li><span class="tag">2. blokk</span><span>Csökken a finanszírozási felár (\(efp_j\)).</span></li>
+      <li><span class="tag">2–3. blokk</span><span>Nő a tőke értéke (\(q_j\)) és a beruházás (\(i_j\)); a KKV-knál a hozzáférés is javul.</span></li>
+      <li><span class="tag">3. blokk</span><span>Lassan nő a tőkeállomány: negyedévente a beruházás 2,5%-a (\(\delta\)) épül be.</span></li>
+      <li><span class="tag">4. blokk</span><span>Több tőke mellett csökken a tőkehozam (\(rk_j\)), és vele a határköltség (\(mc_j\)).</span></li>
+      <li><span class="tag">5. blokk</span><span>Az alacsonyabb határköltség lassan alacsonyabb relatív árba (\(p_j\)) fordul.</span></li>
+      <li><span class="tag">6. blokk</span><span>Az olcsóbb típus felé fordul a hazai kereslet, \(\varepsilon_{ces}\) erővel.</span></li>
+    </ol>
+    <p class="small muted">Ez a lánc magyarázza, miért évek alatt bontakozik ki az euróhatás, és miért éppen a helyettesítési rugalmasság (\(\varepsilon_{ces}\)) tudja megfordítani az export-KKV kibocsátásának előjelét (F02, 6. blokk).</p>
+
     <dl class="kv">
-      <dt>\(\phi_j\)</dt><dd>exportarány. A nagyvállalatnál 0,365 (Opten, négy tizedesig egyezik). Az export-KKV-nál definíciófüggő: 0,376 vagy 0,691</dd>
-      <dt>\(\zeta_j, \alpha_j\)</dt><dd>tőke- és munkaintenzitás típusonként: KSH-ból pótolandó</dd>
+      <dt>\(\phi_j\)</dt><dd>exportarány. A nagyvállalatnál 0,365, ez négy tizedesig egyezik az Opten-méréssel (A10). Az export-KKV-nál definíciófüggő: 0,56 (alapág), 0,376 („exportál valamennyit”) vagy 0,691 („árbevétele legalább negyede export”)</dd>
+      <dt>\(\zeta_j, \alpha_j\)</dt><dd>tőkehányad és munkasúly típusonként: a JV-értékek átvitele, KSH-ból pótolandó</dd>
+      <dt>\(\rho_{kz}, \rho_z\)</dt><dd>helyettesítési rugalmasságok: JV-becslés</dd>
     </dl>
-    <div class="callout ok small"><h4>Nem a technológia viszi az eredményt</h4><p>Ha a három típus minden technológiai paraméterét kiegyenlítjük, a KKV-küszöb csak 3%-kal mozdul. A KKV-eredményt tehát a pénzügyi heterogenitás hajtja, nem a technológiai kalibráció (A23).</p></div>
+    <div class="callout ok small"><h4>Nem a technológia viszi az eredményt</h4><p>Ha a három típus minden technológiai paraméterét kiegyenlítjük, a KKV-küszöb csak 3%-kal mozdul (22,36 → 22,95). A KKV-eredményt tehát a pénzügyi heterogenitás hajtja, nem a technológiai kalibráció (A23). Ezért nem baj, hogy a \(\zeta_j\) és az \(\alpha_j\) még átvett érték, de a KSH-pótlás így is a teendők között marad.</p></div>
+    <div class="q"><h4>Kérdés a teremnek</h4><ul class="clean">
+      <li><span class="who">hallgatók</span> Miért emelkedik a tőkehozam, ha váratlanul nő a kereslet, és miért nem a tőkeállomány?</li>
+      <li><span class="who">szakértők</span> Melyik definíció illik a kérdésünkhöz: az „exportál valamennyit” vagy az „árbevételének legalább negyede export”?</li>
+      <li><span class="who">szakértők</span> Melyik KSH vagy Eurostat SBS táblából lehet a tőke- és importintenzitást a legtisztábban méret × exportstátusz bontásban kinyerni?</li>
+    </ul></div>
   </div>
 </section>
 
 <section id="arak" class="stack-lg">
   <div class="card tint-L">
     <div class="block-head"><span class="num">5. blokk</span><h3>Árak és bérek: ragadós árazás</h3><span class="badge b-becsult">JV-mag, becsült</span></div>
-    <p>A vállalatok nem tudják minden negyedévben átárazni a termékeiket (Calvo-árazás). Ezért az infláció részben előre, részben visszatekint: a várható jövőbeli inflációt és a múltbeli inflációt is figyelembe veszi. Minden típusnak saját Phillips-görbéje van, amit a saját határköltsége hajt.</p>
-    <div class="eq">\[ \pi_{j,t} = \frac{\beta}{1+\beta\vartheta_p}\,\pi_{j,t+1} + \frac{\vartheta_p}{1+\beta\vartheta_p}\,\pi_{j,t-1} + \frac{\lambda_p}{1+\beta\vartheta_p}\,\big(mc_{j,t} - p_{j,t}\big) + \varepsilon_t \]
-    \[ p_{j,t} = p_{j,t-1} + \pi_{j,t} - \pi_t, \qquad 0 = \textstyle\sum_j w^{d}_j\,p_{j,t} \]</div>
-    <div class="words"><p><b>Szavakban:</b> ha egy típus határköltsége a saját ára fölé kerül (\(mc_j > p_j\)), a típus áremelésbe kezd. A \(p_j\) a típus relatív ára. A súlyozott relatív árak összege nulla: ez rögzíti az átlagos árszintet, és kiküszöböli a korai verzióban dokumentált egységgyök-csapdát.</p></div>
-    <p class="small muted">A bérek hasonló, ragadós Phillips-görbét követnek (\(\vartheta_w\), \(\lambda_w\)). A bérmerevség egy saját mérés szerint a magyar cégpanelen 2023–24-ben gyenge (A21).</p>
+    <p>A New Keynesian modellek kulcsa, hogy az árak és a bérek <b>nem igazodnak azonnal</b>. A vállalatok nem tudnak minden negyedévben átárazni (Calvo-árazás). Emiatt egy sokk után a mennyiségek mozdulnak elsőként, az árak csak később követik őket. Ettől van valódi hatása a kamatnak, az árfolyamnak és a felárnak. És ettől függ az is, milyen gyorsan tud alkalmazkodni a gazdaság, ha euróban megszűnik az árfolyam.</p>
+
+    <h4 class="sub">5a · Típusonkénti Phillips-görbe</h4>
+    <div class="eq">\[ \pi_{j,t} = \underbrace{\frac{\beta}{1+\beta\vartheta_p}}_{0{,}69}\,\pi_{j,t+1} + \underbrace{\frac{\vartheta_p}{1+\beta\vartheta_p}}_{0{,}30}\,\pi_{j,t-1} + \underbrace{\frac{\lambda_p}{1+\beta\vartheta_p}}_{0{,}0053}\,\big(mc_{j,t} - p_{j,t}\big) + \varepsilon^{p}_{j,t} \]
+    \[ \lambda_p = \frac{(1-\xi_p)(1-\beta\xi_p)}{\xi_p} \]</div>
+    <div class="words"><p><b>Szavakban:</b> egy típus inflációját három dolog viszi. Kb. 70%-ban a <b>várt jövőbeli</b> infláció, kb. 30%-ban a <b>múltbeli</b> (indexálás, \(\vartheta_p = 0{,}431\)), és a <b>határköltség-rés</b>: ha a típus határköltsége a saját relatív ára fölé kerül (\(mc_j > p_j\)), áremelésbe kezd. A rés hatása azonban kicsi: 1% határköltség-rés negyedévente csak kb. 0,005 százalékpont inflációt okoz. Ez egy <b>lapos Phillips-görbe</b>. Az \(\varepsilon^p\) költségsokk, az euró-forgatókönyvekben 0.</p></div>
+
+    <div class="card dashed widget" aria-label="Calvo-kalkulátor">
+      <h4>Kalkulátor: mit jelent a \(\xi_p\)?</h4>
+      <p class="small">A \(\xi_p\) annak a valószínűsége, hogy egy cég egy adott negyedévben <b>nem</b> áraz át. Húzd a csúszkát, és nézd, hogyan változik az átlagos ártartam és a Phillips-görbe meredeksége (\(\beta = 0{,}99\), \(\vartheta_p = 0{,}431\)).</p>
+      <div class="slider"><label for="xi">\(\xi_p\)</label><input type="range" id="xi" min="0.50" max="0.97" step="0.001" value="0.921"><span class="bar-val" id="xiv">0,921</span></div>
+      <div class="grid2">
+        <div class="stat"><span class="big" id="durv">12,7</span><span class="cap">negyedév az átlagos ártartam, \(1/(1-\xi_p)\)</span></div>
+        <div class="stat"><span class="big" id="slopev">0,0053</span><span class="cap">a határköltség-rés együtthatója a Phillips-görbében</span></div>
+      </div>
+      <p class="small muted" id="xinote">A JV-becslés (\(\xi_p = 0{,}921\)): a cégek átlagosan kb. 3 évig tartják az árukat.</p>
+    </div>
+
+    <h4 class="sub">5b · Relatív árak és az árszint</h4>
+    <div class="eq">\[ p_{j,t} = p_{j,t-1} + \pi_{j,t} - \pi_t, \qquad 0 = \textstyle\sum_j w^{d}_j\,p_{j,t} \;\;\Rightarrow\;\; \pi_t = \sum_j w^{d}_j\,\pi_{j,t} \]</div>
+    <div class="words"><p><b>Szavakban:</b> a \(p_j\) a típus <b>relatív ára</b>, vagyis az átlagos hazai árszinthez mérve. Ha egy típus inflációja az átlag fölött van, drágul a többiekhez képest. A második egyenlet a súlyozott relatív árak összegét nullára köti. Ebből következik, hogy a hazai infláció (\(\pi\)) a típusinflációk súlyozott átlaga, a 4c táblázat hazai súlyaival: kb. fele a D típusé. Ez a kötés szüntette meg a korai verzióban dokumentált egységgyök-csapdát is: naiv felírás mellett az árszint szabadon „elsodródhatott” volna.</p></div>
+    <div class="callout info small"><h4>Ahol a típusok tényleg különböznek</h4><p>A három Phillips-görbe <b>ugyanazokkal</b> a Calvo-paraméterekkel fut. A típusok közti árkülönbség tehát teljes egészében a határköltségből (\(mc_j\)) jön: a saját tőkehozamból, vagyis a pénzügyi feltételekből, és a saját import-kitettségből. Ez a pont köti össze a pénzügyi blokkot (2–3.) a kereslettel (6.): a pénzügyi előnyből itt lesz árelőny.</p></div>
+
+    <h4 class="sub">5c · Bérek</h4>
+    <div class="eq">\[ \pi^{w}_t = \frac{\beta}{1+\beta\vartheta_w}\,\pi^{w}_{t+1} + \frac{\vartheta_w}{1+\beta\vartheta_w}\,\pi^{w}_{t-1} + \frac{\lambda_w}{1+\beta\vartheta_w}\Big(\underbrace{\tfrac{\sigma}{1-h}\,(c_t - h\,c_{t-1}) + \varphi\,l_t}_{\text{a munka „belső ára”}} - w_t\Big) \]
+    \[ w_t = w_{t-1} + \pi^{w}_t - \pi_t \]</div>
+    <div class="words"><p><b>Szavakban:</b> a háztartás akkor kér béremelést, ha a munka „belső ára” (mennyit ér neki a szabadidő a fogyasztáshoz képest) a reálbér fölé kerül. Ez akkor történik, ha sokat dolgozik (\(l\) magas), vagy ha a fogyasztása a megszokott szint fölé nő. A bérek a modellben <b>rugalmasabbak</b> az áraknál: \(\xi_w = 0{,}657\) mellett az átlagos bértartam kb. 2,9 negyedév, a görbe meredeksége 0,022, kb. négyszerese az árakénak.</p></div>
+    <div class="callout warn small"><h4>Saját mérés: a magyar bérek még ennél is rugalmasabbak lehetnek</h4><p>A cégpanelünk szerint 2023–24-ben a cégek 10,1%-a nominálisan <b>csökkentette</b> az átlagbért, csak 2,8%-a fagyasztotta be, a medián emelés 11,6% volt (A21). A csökkentés gyakorisága a mérettel csökken (13,9% / 7,6% / 5,8%). Ha a KKV-k bérei rugalmasabbak, az egy újabb méretaszimmetria, amit a modell ma nem ábrázol: mindhárom típus ugyanazon a bérpiacon van. Kérdés viszont, hogy egy magas inflációs időszak mérése átvihető-e az euróövezet alacsony inflációs környezetére.</p></div>
+
+    <h4 class="sub">5d · Miért döntő ez euróban?</h4>
+    <div class="eq">\[ rer_t = rer_{t-1} + dep_t - \pi_t \;\;\xrightarrow{\;\text{euróban } dep_t = 0\;}\;\; rer_t = rer_{t-1} - \pi_t \]</div>
+    <div class="words"><p><b>Szavakban:</b> forintban egy versenyképességi sokkot a nominális árfolyam egy lépésben tud korrigálni. Euróban ez a szelep megszűnik. A reálárfolyam ilyenkor csak úgy javulhat, ha a hazai infláció tartósan az euróövezeti alatt marad (<b>belső leértékelés</b>). A lapos Phillips-görbe és a 12,7 negyedéves ártartam azt jelenti, hogy ez a modellben <b>lassú</b>. Ezért fontos a bérrugalmasság: ha a bérek gyorsan alkalmazkodnak, a határköltség és vele az ár is gyorsabban követi.</p></div>
+    <div class="what-if"><b>Ha az árak rugalmasak lennének (\(\xi_p \to 0\)):</b> a New Keynesian logika szerint a nominális változók (kamat, árfolyam) reálhatása nagyrészt eltűnne, és az euró hatását szinte csak a felárak reálcsatornája vinné. A ragadósság tehát nem technikai részlet, hanem az, ami a rezsimváltást egyáltalán érdekessé teszi.</div>
+    <div class="q"><h4>Kérdés a teremnek</h4><ul class="clean">
+      <li><span class="who">hallgatók</span> Miért fontosabb a bérrugalmasság egy valutaunióban, mint önálló árfolyam mellett?</li>
+      <li><span class="who">hallgatók</span> Ha a három típus ugyanazzal a Calvo-paraméterrel áraz, honnan jön mégis a köztük lévő árkülönbség?</li>
+      <li><span class="who">szakértők</span> Egy magas inflációs időszak (2023–24) bérmerevségi mérése mennyire vihető át egy alacsony inflációs euróövezeti környezetre?</li>
+    </ul></div>
   </div>
 </section>
 
@@ -467,28 +573,112 @@ footer { margin-top: 64px; padding-top: 20px; border-top: 1px solid var(--rule);
 
 <section id="monetaris" class="stack-lg">
   <div class="card tint-euro">
-    <div class="block-head"><span class="num">7. blokk</span><h3>Monetáris rezsim: forint vagy euró</h3><span class="badge b-becsult">Taylor-szabály becsült</span><span class="badge b-horg">zsov horgonyzatlan</span></div>
-    <p>Ez a blokk tartalmazza magát a rezsimváltást. Az \(u_t\) kapcsoló 0, amíg forint van, és 1 a csatlakozástól. Forintrezsimben a jegybank Taylor-szabállyal állítja a kamatot, az árfolyamot pedig a kamatparitás határozza meg. Euróban a hazai kamat a közös kamatot és a maradék szuverén felárat követi, az árfolyam pedig rögzül.</p>
+    <div class="block-head"><span class="num">7. blokk</span><h3>Monetáris rezsim: forint vagy euró</h3><span class="badge b-becsult">Taylor-szabály becsült</span><span class="badge b-horg">zsov horgonyzatlan</span><span class="badge b-szarm">ν: technikai zárás</span></div>
+    <p>Ebben a blokkban zajlik maga a rezsimváltás. A technika egyszerű és átlátható. Mindkét rezsim egyenletei végig a modellben vannak, és egy exogén kapcsoló, \(u_t\) dönti el, melyik érvényes: \(u_t = 0\), amíg forint van, \(u_t = 1\) a csatlakozástól. Mivel \(u_t\) csak 0 vagy 1 lehet, mindkét egyenletből minden negyedévben pontosan az egyik rezsim fele marad meg.</p>
     <div class="eq">\[ (1-u_t)\big[r_t - \gamma\,r_{t-1} - (1-\gamma)\,\phi_\pi\,\pi_t - \varepsilon^{r}_t\big] + u_t\big[r_t - z_{sov}\,sov_t + \nu\,b^{*}_t\big] = 0 \]
     \[ (1-u_t)\big[r_t - dep_{t+1} + \nu_b\,b^{*}_t - z_{sov}\,sov_t - e^{pr}_t\big] + u_t\,dep_t = 0 \]
     \[ rer_t = rer_{t-1} + dep_t - \pi_t \]</div>
-    <div class="words"><p><b>Szavakban:</b> ha \(u_t = 0\), az első egyenlet a Taylor-szabály, a második a fedezetlen kamatparitás. Ha \(u_t = 1\), az első azt mondja, hogy a kamat a szuverén felárral együtt mozog, a második pedig azt, hogy a leértékelődés nulla. A \(z_{sov}\) megadja, a szuverén felár mekkora része gyűrűzik át a kamatba.</p></div>
-    <div class="callout warn small"><h4>Mi viszi az euróhatást? Még nyitott</h4><p>Az első negyedévben a banki csatorna a teljes hatás 0,22%-át adja (F05, feltételes). Ez azonban nem jelenti azt, hogy a banki csatorna gyenge. A szcenárióban a banki felár csak a 13. negyedévtől csökken, így az első negyedévben csak az előre látott jövőbeli csökkenés hat. A két csatorna arányát a tartós hatáson még újra kell mérni. A \(z_{sov}\) horgonyzása ettől függetlenül olcsó: két nyilvános idősorból mérhető.</p></div>
+    <p class="small muted">A v09 alakja. A v10 mindkét szögletes zárójelbe beírja a külföldi kamatot is (\(-\,r^{for}_t\)); ezt lásd a 8. blokkban.</p>
+
+    <h4 class="sub">7a · A két rezsim, kibontva</h4>
+    <div class="grid2">
+      <div class="card">
+        <h4>Forint (\(u_t = 0\))</h4>
+        <div class="eq">\[ r_t = \gamma\,r_{t-1} + (1-\gamma)\,\phi_\pi\,\pi_t + \varepsilon^{r}_t \]
+        \[ dep_{t+1} = r_t - z_{sov}\,sov_t + \nu_b\,b^{*}_t - e^{pr}_t \]</div>
+        <p class="small"><b>Taylor-szabály:</b> a jegybank az infláció szerint állítja a kamatot, simítva. <b>Kamatparitás (UIP):</b> a hazai és a külföldi befektetés várható hozama a kockázati felárral korrigálva megegyezik. Ha a hazai kamat magasabb, a piac a forint jövőbeli gyengülésére számít.</p>
+      </div>
+      <div class="card">
+        <h4>Euró (\(u_t = 1\))</h4>
+        <div class="eq">\[ r_t = z_{sov}\,sov_t - \nu\,b^{*}_t \]
+        \[ dep_t = 0 \]</div>
+        <p class="small"><b>Nincs saját kamatpolitika:</b> a hazai kamat a közös kamatot (a v09-ben 0 eltérés, a v10-ben \(r^{for}\)) és a megmaradó szuverén felár egy részét követi. <b>Rögzített árfolyam:</b> a nominális leértékelés nulla.</p>
+      </div>
+    </div>
+
+    <div class="tbl"><table>
+      <thead><tr><th></th><th>Forint (\(u_t = 0\))</th><th>Euró (\(u_t = 1\))</th></tr></thead>
+      <tbody>
+        <tr><td><b>Ki állítja a kamatot?</b></td><td>a hazai jegybank, Taylor-szabállyal</td><td>a közös monetáris politika + a szuverén felár</td></tr>
+        <tr><td><b>Mi mozgatja az árfolyamot?</b></td><td>a kamatparitás; az árfolyam szabadon ugorhat</td><td>semmi: a nominális árfolyam rögzített</td></tr>
+        <tr><td><b>Mi alkalmazkodik egy sokk után?</b></td><td>a kamat és a nominális árfolyam</td><td>csak a hazai árak és bérek, lassan (5d)</td></tr>
+        <tr><td><b>Mi zárja a külső adósságot?</b></td><td>\(\nu_b = 0{,}001\): gyenge, mert az árfolyam is stabilizál</td><td>\(\nu = 0{,}25\): 250-szer erősebb, mert az árfolyam nem segít</td></tr>
+        <tr><td><b>A szuverén felár szerepe</b></td><td>kockázati felár az UIP-ban</td><td>közvetlenül a hazai kamat része, \(z_{sov}\) arányban</td></tr>
+      </tbody>
+    </table></div>
+
+    <h4 class="sub">7b · A paraméterek, és amit közvetlenül mondanak</h4>
+    <dl class="kv">
+      <dt>\(\gamma = 0{,}761\), \(\phi_\pi = 1{,}379\)</dt><dd>kamatsimítás és inflációs reakció (JV-becslés). Rövid távon 1 pont infláció 0,33 pont kamatemelést vált ki, hosszú távon 1,379-et. Mivel ez több mint 1, a reálkamat is nő: ez a <b>Taylor-elv</b>, a forintrezsim határozottságának feltétele.</dd>
+      <dt>\(z_{sov} = 0{,}5\)</dt><dd>a szuverén felár ennyi része gyűrűzik át a kamatba. Horgonyzatlan, de a D kategóriában ez a legolcsóbb: két nyilvános idősorból mérhető (szuverén felár vs. BUBOR–EURIBOR különbözet; támpont: Vonnák, MNB WP 2010/1).</dd>
+      <dt>\(\nu_b\), \(\nu\)</dt><dd>technikai zárás, nem strukturális becslés. A nettó külföldi eszközök (\(b^*\)) emelkedése csökkenti a kamatot, ezért a külső pozíció nem sodródhat el. E tag nélkül a \(b^*\)-nak egységgyöke lenne, és a modellnek nem lenne egyértelmű hosszú távú egyensúlya.</dd>
+    </dl>
+    <div class="callout info small"><h4>Mechanikus számolás, nem modelleredmény</h4><p>Az alap-forgatókönyv tartósan −200 bp szuverén felárat ír elő (évesítve). Euróban \(z_{sov} = 0{,}5\) mellett ebből a hazai kamatra <b>0,5 × (−200 bp) = −100 bp</b> jut, a \(b^*\) tag és a közös kamat változása nélkül. Ez az egyenlet közvetlen olvasata, nem szimulált eredmény. Megmutatja viszont, miért ennyire érzékeny az euróhatás a \(z_{sov}\) horgonyzására: a kamatcsatorna ereje egyenesen arányos vele.</p></div>
+
+    <h4 class="sub">7c · Két tankönyvi következmény, a modell egyenleteiben</h4>
+    <div class="grid2">
+      <div class="card"><h4>A reálkamat euróban procikikus</h4><p class="small">A fogyasztási és beruházási döntést a <b>reálkamat</b> (\(r_t - \pi_{t+1}\)) viszi (1–2. blokk). Euróban a nominális kamat közös, ezért ha a hazai infláció nő, a reálkamat <b>csökken</b>, ami tovább fűti a keresletet. Forintban a Taylor-elv épp ennek az ellenkezőjét biztosítja. Ezt a jelenséget Walters-kritikaként ismeri az irodalom.</p></div>
+      <div class="card"><h4>Az átmenetet előre árazzák</h4><p class="small">Tökéletes előrelátás mellett a szereplők az 1. negyedévtől tudják, hogy a 13.-ban rögzül az árfolyam. A lebegő szakaszban a kamatparitás ezért már a jövőbeli rögzítést árazza. Az árfolyam azon a szinten rögzül, ahová a 12. negyedévig eljutott: a modell <b>nem ír elő külön átváltási árfolyamot</b>, az a lebegő szakasz pályájából adódik.</p></div>
+    </div>
+
+    <div class="callout warn small"><h4>Mi viszi az euróhatást? Még nyitott</h4><p>Az első negyedévben a banki csatorna a teljes hatás 0,22%-át adja (F05, feltételes). Ez azonban nem jelenti azt, hogy a banki csatorna gyenge. A szcenárióban a banki felár csak a 13. negyedévtől csökken, így az első negyedévben csak az előre látott jövőbeli csökkenés hat. A két csatorna arányát a tartós hatáson még újra kell mérni.</p></div>
+    <div class="callout ok small"><h4>Mindkét rezsimnek külön is stabilnak kell lennie</h4><p>Egy rezsimváltó modellnél nem elég, hogy a csatlakozás utáni euró-egyensúly BK-stabil. A kiinduló forintrezsimnek is annak kell lennie, különben a lebegő szakasz pályája nem egyértelmű. A v10 ellenőrző scriptje 2026. október 3. óta mindkettőt külön teszteli (8. blokk).</p></div>
+    <div class="what-if"><b>Ha kivennénk (\(z_{sov} = 0\)):</b> euróban a hazai kamat nem reagálna a szuverén felár csökkenésére, és a felárcsökkenés csak a vállalati felárakon (\(\tau^{sov}_j\), 2. blokk) keresztül hatna. A kamatcsatorna eltűnne, a pénzügyi gyorsító megmaradna.</div>
+    <div class="q"><h4>Kérdés a teremnek</h4><ul class="clean">
+      <li><span class="who">hallgatók</span> Mit jelent tökéletes előrelátás mellett, hogy egy csak a 13. negyedévben induló sokk már az 1. negyedévben hat?</li>
+      <li><span class="who">hallgatók</span> Miért kell euróban sokkal erősebb külső adósság-zárás (\(\nu\)), mint forintban (\(\nu_b\))?</li>
+      <li><span class="who">szakértők</span> A BUBOR–EURIBOR különbözet jó közelítése-e annak, ami euróban megmarad a szuverén felárból? Mit tanít erről a szlovák vagy a horvát csatlakozás?</li>
+      <li><span class="who">szakértők</span> Melyik mérés a releváns a közléshez: az azonnali, a csatlakozás körüli vagy a tartós csatorna-hozzájárulás?</li>
+    </ul></div>
   </div>
 </section>
 
 <section id="v10" class="stack-lg">
   <div class="card tint-gold dashed">
-    <div class="block-head"><span class="num">8. blokk · v10</span><h3>Külföldi kereslet és kamat</h3><span class="badge b-epul">épül: megépült, nem validált</span></div>
-    <p>A legfrissebb bővítés visszaépíti azt a külföldi csatornát, ami a referencia-modellben (EAGLE-mag) megvolt, de a fő modellbe nem került át. A külföldi kereslet (\(y^{*}\)) mindhárom típus exportegyenletébe bekerül, a külföldi kamat (\(r^{for}\)) pedig a monetáris blokk mindkét rezsimágába.</p>
+    <div class="block-head"><span class="num">8. blokk · v10</span><h3>Külföldi kereslet és kamat</h3><span class="badge b-epul">épül: megépült, nem validált</span><span class="badge b-horg">ρ, η horgonyzatlan</span></div>
+    <p>A v09-ből hiányzott valami, ami a referencia-modellben (EAGLE-mag) megvolt: a <b>külvilág</b>. Az exportot csak a saját ár és a reálárfolyam mozgatta, a külföldi kereslet nem. Az euróágon pedig a közös kamat implicit módon végig 0 eltérésű volt. Samu 2026. szeptember 28-án jelezte a hiányt. Két külső bírálati kör után a v10 egy kapcsolóval (<code>-DFOREIGN=1</code>) visszaépíti a csatornát.</p>
+
+    <h4 class="sub">8a · Mi kerül be?</h4>
     <div class="eq">\[ x_{j,t} = h_x\,x_{j,t-1} + (1-h_x)\big(-\mu_x\,(p_{j,t} - rer_t) + \eta\,y^{*}_t\big) + e^{x}_t \]
-    \[ y^{*}_t = \rho_{y^*}\,y^{*}_{t-1} + \varepsilon^{y^*}_t, \qquad r^{for}_t = \rho_{r^{for}}\,r^{for}_{t-1} + \varepsilon^{r^{for}}_t \]
-    \[ \text{euróban: } r_t = r^{for}_t + z_{sov}\,sov_t - \nu\,b^{*}_t, \qquad \text{forintban: } r_t - r^{for}_t - dep_{t+1} + \dots = 0 \]</div>
-    <div class="words"><p><b>Szavakban:</b> ha az euróövezet kereslete nő, mindhárom típus exportja nő, a saját exportarányuk szerint. A két új változó tisztán visszatekintő AR(1), ezért nem várható, hogy a modell stabilitását megváltoztatják.</p></div>
+    \[ y^{*}_t = \rho_{y^*}\,y^{*}_{t-1} + \varepsilon^{y^*}_t, \qquad r^{for}_t = \rho_{r^{for}}\,r^{for}_{t-1} + \varepsilon^{r^{for}}_t \]</div>
+    <div class="words"><p><b>Szavakban:</b> két új, kívülről adott (exogén) változó van. Az \(y^{*}\) az euróövezeti kereslet, az \(r^{for}\) a közös (EKB-) kamat. Az \(y^{*}\) mindhárom típus exportegyenletébe ugyanazzal az \(\eta\) súllyal kerül be, a \((1-h_x)\) zárójelen <b>belül</b>. Ezért hosszú távon pontosan \(\eta\) a rugalmasság: 1% tartós külföldi kereslet-növekedés \(\eta\) százalékkal emeli a típus exportját. Hogy egy típus <b>kibocsátását</b> ez mennyire mozdítja, azt az exportaránya (\(\phi_j\), 4c) dönti el.</p></div>
+
+    <h4 class="sub">8b · Hogyan hat a két új változó a két rezsimben?</h4>
+    <div class="tbl"><table>
+      <thead><tr><th></th><th>Forint (\(u_t = 0\))</th><th>Euró (\(u_t = 1\))</th></tr></thead>
+      <tbody>
+        <tr><td><b>Külföldi kereslet \(y^*\)</b></td><td>közvetlenül az exportban, rezsimtől függetlenül</td><td>ugyanígy, de az árfolyam nem tudja tompítani a hatását</td></tr>
+        <tr><td><b>Külföldi kamat \(r^{for}\)</b></td><td>a kamatparitáson át: \(dep_{t+1} = r_t - r^{for}_t - \dots\). A hazai kamatot a jegybank állítja, a különbséget az árfolyam viszi</td><td>egy az egyben a hazai kamatba: \(r_t = r^{for}_t + z_{sov}\,sov_t - \nu\,b^{*}_t\)</td></tr>
+        <tr><td><b>Taylor-szabály</b></td><td colspan="2">szándékosan <b>nem</b> kapja meg az \(r^{for}\)-t, ahogy az EAGLE-ben sem</td></tr>
+      </tbody>
+    </table></div>
+    <div class="callout info small"><h4>Ezért fontos ez az euró szempontjából</h4><p>A csatlakozással a hazai kamat az EKB kamatához kötődik. Ha a csatlakozás idején az EKB épp szigorít, az a v10-ben teljes erővel átgyűrűzik a hazai kamatba, és a felárcsökkenés kamathatásának egy részét elviheti. A v09 ezt nem tudta ábrázolni. Hasonló kérdés: mi történik, ha a csatlakozás egy euróövezeti recesszióval esik egybe (\(y^*\) negatív)?</p></div>
+
+    <dl class="kv">
+      <dt>\(\rho_{y^*}, \rho_{r^{for}}\)</dt><dd>alapérték 0,625 (= \(\rho_x\), a már használt exportkeresleti perzisztencia). Érzékenységi rács: 0,40 / 0,625 / 0,85. A három jelölt forrás (MNB WP 2008/9, ECB EAGLE WP1195, MNB WP 2013/1) még nincs ténylegesen ellenőrizve.</dd>
+      <dt>\(\eta\)</dt><dd>alapérték 1,0: a külföldi kereslet hosszú távú exportrugalmassága. Horgonyzatlan.</dd>
+    </dl>
+    <div class="callout warn small"><h4>A mai számokat a v10 nem változtatja meg</h4><p>Az euró-forgatókönyvekben végig \(y^* = r^{for} = 0\). A <code>FOREIGN=1</code> ág ezért a meglévő szcenáriókban pontosan a v09 pályáját kell adnia, és egyetlen eddig közölt szám sem változik. A csatorna csak új szcenáriókban (EKB-szigorítás, euróövezeti recesszió) hoz új információt, ezek még nincsenek definiálva.</p></div>
+
+    <h4 class="sub">8c · Hol tart a validálás?</h4>
     <div class="grid2">
-      <div class="callout info small"><h4>Mit tudunk már</h4><ul class="clean"><li>A kapcsoló kikapcsolt állásában (<code>FOREIGN=0</code>) a modell bitre azonos a v09-cel.</li><li>Kész az ellenőrző protokoll: regresszió, beágyazás, BK-teszt, nulla-sokk, impulzus-előjel (<code>t56</code>).</li></ul></div>
-      <div class="callout warn small"><h4>Mit nem tudunk még</h4><ul class="clean"><li>A <code>FOREIGN=1</code> ág még nincs lefuttatva, ezért nincs belőle eredmény.</li><li>A \(\rho_{y^*}\)-ra 0,40 / 0,625 / 0,85-ös érzékenységi rácsot használunk. A három jelölt forrás még nincs ellenőrizve.</li><li>A közös exportsokk (\(e^x\)) és az \(y^*\) szétválasztása ma csak a perzisztencián múlik.</li></ul></div>
+      <div class="callout info small"><h4>Ami kész</h4><ul class="clean">
+        <li>A <code>FOREIGN=0</code> ág fordításkor pontosan a v09 lesz: az új változók be sem kerülnek a modellbe.</li>
+        <li>Egy független kódellenőrzés (2026. október 3.) a <code>.mod</code> implementációját elfogadta: az előjelek, a bekötés helye és a Dynare-szerkezet rendben van.</li>
+        <li>Kész a hétlépéses ellenőrző protokoll (<code>check_v10_foreign.m</code> → <code>t56</code>): v09-regresszió, beágyazás, BK a kezdeti és a záró rezsimben, nulla-sokk, impulzus-előjel és AR-perzisztencia, \(r^{for}\)-impulzus a rezsimváltás körül a monetáris egyenletek reziduumával, és a sajátértékek összevetése.</li>
+      </ul></div>
+      <div class="callout warn small"><h4>Ami még hiányzik</h4><ul class="clean">
+        <li>A <code>FOREIGN=1</code> ág <b>még nincs lefuttatva</b>, tehát nincs <code>t56</code> és nincs eredmény.</li>
+        <li>A paraméter-regiszter és a <code>t54</code> őr még 91 paraméterre szól, a három új paraméter nincs benne.</li>
+        <li>A közös exportsokk (\(e^x\)) és az \(y^*\) szétválasztása ma csak az előre rögzített perzisztenciákon múlik. Determinisztikus forgatókönyvekhez ez elég, becsléshez nem.</li>
+        <li>Addig a <b>v09 marad az operatív alapmodell</b>.</li>
+      </ul></div>
     </div>
+    <div class="q"><h4>Kérdés a teremnek</h4><ul class="clean">
+      <li><span class="who">hallgatók</span> Miért tompíthatja egy lebegő árfolyam egy külföldi kamatemelés hatását, és miért nem egy rögzített?</li>
+      <li><span class="who">szakértők</span> Kell-e egyáltalán két külön exportkeresleti csatorna (\(e^x\) és \(y^*\)), vagy elég egy, megfigyelt euróövezeti kereslettel kalibrálva?</li>
+      <li><span class="who">szakértők</span> Mi a magyar DSGE-gyakorlatban a standard érték a külföldi kereslet perzisztenciájára? És kellene-e egy „EKB szigorít a csatlakozáskor” szcenárió?</li>
+    </ul></div>
   </div>
 </section>
 
@@ -768,5 +958,22 @@ footer { margin-top: 64px; padding-top: 20px; border-top: 1px solid var(--rule);
     es.forEach(e => { if (e.isIntersecting) { links.forEach(a => a.classList.toggle('on', a.getAttribute('href') === '#' + e.target.id)); } });
   }, { rootMargin: '-30% 0px -60% 0px' });
   secs.forEach(s => io.observe(s));
+})();
+
+// --- Calvo kalkulator (5. blokk)
+(function () {
+  const xi = document.getElementById('xi'); if (!xi) return;
+  const beta = 0.99, vth = 0.431;
+  const f = (v, d) => v.toLocaleString('hu-HU', { minimumFractionDigits: d, maximumFractionDigits: d });
+  function upd() {
+    const x = +xi.value, lam = (1 - x) * (1 - beta * x) / x, slope = lam / (1 + beta * vth), dur = 1 / (1 - x);
+    document.getElementById('xiv').textContent = f(x, 3);
+    document.getElementById('durv').textContent = f(dur, 1);
+    document.getElementById('slopev').textContent = f(slope, 4);
+    document.getElementById('xinote').textContent = Math.abs(x - 0.921) < 0.0005
+      ? 'A JV-becslés (0,921): a cégek átlagosan kb. 3 évig tartják az árukat.'
+      : 'Összevetésül: a JV-becslés 0,921, ott az ártartam kb. 12,7 negyedév, a meredekség 0,0053. Itt ' + f(dur / 4, 1) + ' év és ' + f(slope / 0.0053, 1) + '-szoros meredekség.';
+  }
+  xi.addEventListener('input', upd); upd();
 })();
 </script>
