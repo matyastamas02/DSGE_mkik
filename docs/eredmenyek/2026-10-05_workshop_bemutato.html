@@ -268,18 +268,18 @@ ol.chain .tag { font-family: var(--f-mono); font-size: 12px; color: var(--muted)
     </div>
     <div class="card tint-E">
       <h3>Miért három vállalattípus?</h3>
-      <p>A „KKV kontra nagyvállalat” felosztás túl durva. Az exportáló KKV és a hazai piacra termelő KKV hitelhelyzete teljesen más: <b>az export-KKV 13-szor nagyobb eséllyel fér hozzá hitelhez</b>, mint a hazai KKV. Ez saját mérés az Opten-cégpanelből, és a projekt egyik legerősebb ténye.</p>
+      <p>A „KKV kontra nagyvállalat” felosztás túl durva. Az exportáló KKV és a hazai piacra termelő KKV hitelhelyzete teljesen más: az export-KKV-k <b>61,9%-ának volt bankhitele</b>, a hazai KKV-knak csak <b>4,8%-ának</b>. Ez az Opten-cégpanelből mért, erős leíró különbség. Hitelkínálati korlátot önmagában nem azonosít, mert a hitelkeresletet nem figyeljük meg.</p>
     </div>
   </div>
   <div class="card">
-    <h3>Hitelhozzáférés a három típusnál, 2021–24</h3>
-    <p class="muted small">A cégek aránya, amelyeknek volt banki hitele. Forrás: Opten-panel, saját számítás (állítás-regiszter A02, A03).</p>
+    <h3>Bankhitellel rendelkező cégek aránya, 2021–24</h3>
+    <p class="muted small">A cégek aránya, amelyeknek volt banki hitele. Forrás: Opten-panel, 10+ fős cégek, saját számítás (állítás-regiszter A02, A03). Szegmentáció: a korábbi „bármilyen pozitív export = E” definíció, lásd a 4. blokkot.</p>
     <div class="bars">
       <div class="bar-row"><span>E · export-KKV</span><div class="bar-track"><div class="bar-fill" style="width:61.9%;background:var(--E)"></div></div><span class="bar-val">61,9%</span></div>
       <div class="bar-row"><span>L · nagyvállalat</span><div class="bar-track"><div class="bar-fill" style="width:43.4%;background:var(--L)"></div></div><span class="bar-val">43,4%</span></div>
       <div class="bar-row"><span>D · hazai KKV</span><div class="bar-track"><div class="bar-fill" style="width:4.8%;background:var(--D)"></div></div><span class="bar-val">4,8%</span></div>
     </div>
-    <p class="small">Meglepő, hogy a nagyvállalat <b>kevesebbszer</b> van hitelben, mint az exportáló KKV. Ez cáfolja a „nagyvállalatnak mindig van hitele” képet, és gyengíti azt a modellfeltevést, hogy a nagyvállalatnak egyáltalán nincs hozzáférési korlátja.</p>
+    <p class="small">Meglepő, hogy a nagyvállalatok kisebb hányadának van bankhitele, mint az exportáló KKV-knak. Ebből azonban <b>nem</b> következik, hogy a nagyvállalat hitelkorlátosabb. Az eltérést okozhatja eltérő hitelkereslet, belső vagy csoporton belüli finanszírozás, kötvény és lízing, eltérő beruházási igény, illetve szelekció és vállalati életkor. Ami következik: a „nagyvállalatnak mindig van bankhitele” kép nem áll, és a modell feltevését, hogy a nagyvállalatnak nincs hozzáférési margója, külön alá kellene támasztani.</p>
   </div>
 </section>
 
@@ -287,78 +287,101 @@ ol.chain .tag { font-family: var(--f-mono); font-size: 12px; color: var(--muted)
   <div class="stack">
     <div class="eyebrow">Áttekintés</div>
     <h2>A modell egy ábrán</h2>
-    <p>Az euró négy csatornán lép be. Mindegyik a vállalatok finanszírozási költségén és hitelhozzáférésén át ér el a három vállalattípushoz, onnan pedig a beruházáson, az exporton és a kereslet összetételén át a GDP-hez. A szaggatott elemek még nem részei a validált eredménynek.</p>
+    <p>A térkép két forrást választ szét. <b>Az euró három dolgot változtat meg</b>: csökkennek a felárak, megszűnik az önálló kamatpolitika, és rögzül az árfolyam. A <b>külső környezet</b> (euróövezeti kereslet, EKB-kamat) ezzel szemben nem az euró következménye. Ezt mindkét összevetett pályán azonosan kell tartani, csak a hatása tér el a két rezsimben. A csatornák egy része a finanszírozáson keresztül hat, más része közvetlenül: a kamat a háztartások fogyasztásán, az árfolyam az importköltségen és az exporton, a külföldi kereslet az exporton át. A szaggatott elemek még nem részei a validált eredménynek.</p>
   </div>
-  <div class="map" role="img" aria-label="Transzmissziós térkép: az euró négy csatornája a finanszírozáson és a három vállalattípuson át a GDP-ig">
-    <svg viewBox="0 0 900 620" xmlns="http://www.w3.org/2000/svg">
+  <div class="map" role="img" aria-label="Transzmissziós térkép: az euró három változása és a külső környezet két változója, a finanszírozáson, a kamaton és az árfolyamon át a vállalattípusokig, a háztartásokig és a GDP-ig">
+    <svg viewBox="0 0 900 690" xmlns="http://www.w3.org/2000/svg">
       <defs>
         <marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" class="m-arrow"/></marker>
         <marker id="arg" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" class="m-arrow-g"/></marker>
       </defs>
-      <!-- euro -->
-      <rect x="330" y="16" width="240" height="52" rx="12" class="m-euro"/>
-      <text x="450" y="48" text-anchor="middle" class="m-tb">Euróbevezetés</text>
-      <!-- channels -->
-      <rect x="20" y="118" width="190" height="62" rx="10" class="m-box"/>
-      <text x="115" y="144" text-anchor="middle" class="m-tb">Szuverén felár</text>
-      <text x="115" y="164" text-anchor="middle" class="m-s">−200 bp, 16 negyedév alatt</text>
-      <rect x="240" y="118" width="190" height="62" rx="10" class="m-box"/>
-      <text x="335" y="144" text-anchor="middle" class="m-tb">Banki felár</text>
-      <text x="335" y="164" text-anchor="middle" class="m-s">−45 bp, a 13–16. negyedévben</text>
-      <rect x="460" y="118" width="200" height="62" rx="10" class="m-box"/>
-      <text x="560" y="144" text-anchor="middle" class="m-tb">Közös monetáris politika</text>
-      <text x="560" y="164" text-anchor="middle" class="m-s">a 13. negyedévtől</text>
-      <rect x="690" y="118" width="190" height="62" rx="10" class="m-dash"/>
-      <text x="785" y="144" text-anchor="middle" class="m-tb">Külső kereslet, kamat</text>
-      <text x="785" y="164" text-anchor="middle" class="m-s">v10: megépült, nem validált</text>
-      <path d="M390 68 L140 116" class="m-line" marker-end="url(#ar)"/>
-      <path d="M420 68 L340 116" class="m-line" marker-end="url(#ar)"/>
-      <path d="M480 68 L555 116" class="m-line" marker-end="url(#ar)"/>
-      <path d="M510 68 L770 116" class="m-line dash" marker-end="url(#arg)"/>
-      <!-- finance -->
-      <rect x="150" y="232" width="600" height="66" rx="12" class="m-gold"/>
-      <text x="450" y="260" text-anchor="middle" class="m-tb">Finanszírozási költség (efp) és hitelhozzáférés (acc)</text>
-      <text x="450" y="282" text-anchor="middle" class="m-s">BGG pénzügyi gyorsító + extenzív hozzáférési margó (csak a KKV-knál)</text>
-      <path d="M115 180 L250 230" class="m-line" marker-end="url(#ar)"/>
-      <path d="M335 180 L380 230" class="m-line" marker-end="url(#ar)"/>
-      <path d="M560 180 L520 230" class="m-line" marker-end="url(#ar)"/>
-      <path d="M785 180 L700 230" class="m-line dash" marker-end="url(#arg)"/>
-      <!-- types -->
-      <rect x="60" y="350" width="220" height="70" rx="12" class="m-E"/>
-      <text x="170" y="380" text-anchor="middle" class="m-tb">E · export-KKV</text>
-      <text x="170" y="402" text-anchor="middle" class="m-s">hitel: 61,9% · tőkeáttétel 1,94</text>
-      <rect x="340" y="350" width="220" height="70" rx="12" class="m-D"/>
-      <text x="450" y="380" text-anchor="middle" class="m-tb">D · hazai KKV</text>
-      <text x="450" y="402" text-anchor="middle" class="m-s">hitel: 4,8% · tőkeáttétel 1,72</text>
-      <rect x="620" y="350" width="220" height="70" rx="12" class="m-L"/>
-      <text x="730" y="380" text-anchor="middle" class="m-tb">L · nagyvállalat</text>
-      <text x="730" y="402" text-anchor="middle" class="m-s">hitel: 43,4% · tőkeáttétel 2,34</text>
-      <path d="M280 298 L180 348" class="m-line" marker-end="url(#ar)"/>
-      <path d="M450 298 L450 348" class="m-line" marker-end="url(#ar)"/>
-      <path d="M620 298 L720 348" class="m-line" marker-end="url(#ar)"/>
-      <!-- outcomes -->
-      <rect x="40" y="470" width="190" height="52" rx="10" class="m-box"/>
-      <text x="135" y="501" text-anchor="middle" class="m-tb">Beruházás, tőke</text>
-      <rect x="250" y="470" width="190" height="52" rx="10" class="m-box"/>
-      <text x="345" y="501" text-anchor="middle" class="m-tb">Export</text>
-      <rect x="460" y="470" width="190" height="52" rx="10" class="m-box"/>
-      <text x="555" y="501" text-anchor="middle" class="m-tb">Hazai kereslet, árak</text>
-      <rect x="670" y="470" width="200" height="52" rx="10" class="m-warn"/>
-      <text x="770" y="494" text-anchor="middle" class="m-tb">Beszállítói kapcsolat</text>
-      <text x="770" y="512" text-anchor="middle" class="m-s">az IO-mérés hibás, nem közölhető</text>
-      <path d="M170 420 L140 468" class="m-line" marker-end="url(#ar)"/>
-      <path d="M200 420 L330 468" class="m-line" marker-end="url(#ar)"/>
-      <path d="M450 420 L530 468" class="m-line" marker-end="url(#ar)"/>
-      <path d="M730 420 L580 468" class="m-line" marker-end="url(#ar)"/>
-      <path d="M700 420 L760 468" class="m-line" marker-end="url(#ar)"/>
+      <!-- 1. sor: ket forras -->
+      <rect x="10" y="10" width="610" height="150" rx="14" class="m-euro"/>
+      <text x="315" y="36" text-anchor="middle" class="m-tb">Euróbevezetés: ezt változtatja meg</text>
+      <rect x="25" y="52" width="180" height="94" rx="10" class="m-box"/>
+      <text x="115" y="84" text-anchor="middle" class="m-tb">Szuverén felár</text>
+      <text x="115" y="104" text-anchor="middle" class="m-s">−200 bp,</text>
+      <text x="115" y="120" text-anchor="middle" class="m-s">16 negyedév alatt</text>
+      <rect x="220" y="52" width="180" height="94" rx="10" class="m-box"/>
+      <text x="310" y="84" text-anchor="middle" class="m-tb">Banki felár</text>
+      <text x="310" y="104" text-anchor="middle" class="m-s">−45 bp,</text>
+      <text x="310" y="120" text-anchor="middle" class="m-s">a 13–16. negyedévben</text>
+      <rect x="415" y="52" width="190" height="94" rx="10" class="m-box"/>
+      <text x="510" y="80" text-anchor="middle" class="m-tb">Monetáris rezsim</text>
+      <text x="510" y="100" text-anchor="middle" class="m-s">nincs saját kamatpolitika,</text>
+      <text x="510" y="116" text-anchor="middle" class="m-s">rögzül az árfolyam</text>
+      <text x="510" y="132" text-anchor="middle" class="m-s">(a 13. negyedévtől)</text>
+      <rect x="645" y="10" width="245" height="150" rx="14" class="m-dash"/>
+      <text x="767" y="36" text-anchor="middle" class="m-tb">Külső környezet (v10)</text>
+      <text x="767" y="54" text-anchor="middle" class="m-s">nem az euró következménye;</text>
+      <text x="767" y="70" text-anchor="middle" class="m-s">mindkét pályán azonos</text>
+      <rect x="660" y="84" width="105" height="62" rx="10" class="m-box"/>
+      <text x="712" y="110" text-anchor="middle" class="m-tb">Külföldi</text>
+      <text x="712" y="130" text-anchor="middle" class="m-tb">kereslet</text>
+      <rect x="775" y="84" width="105" height="62" rx="10" class="m-box"/>
+      <text x="827" y="110" text-anchor="middle" class="m-tb">EKB-</text>
+      <text x="827" y="130" text-anchor="middle" class="m-tb">kamat</text>
+      <!-- 2. sor: ket kozvetito -->
+      <rect x="40" y="215" width="430" height="66" rx="12" class="m-gold"/>
+      <text x="255" y="243" text-anchor="middle" class="m-tb">Finanszírozási költség és hozzáférés</text>
+      <text x="255" y="265" text-anchor="middle" class="m-s">BGG-felár (efp) + hozzáférési margó (acc, csak KKV)</text>
+      <rect x="510" y="215" width="250" height="66" rx="12" class="m-box"/>
+      <text x="635" y="243" text-anchor="middle" class="m-tb">Kamat és reálárfolyam</text>
+      <text x="635" y="265" text-anchor="middle" class="m-s">r, rer</text>
+      <path d="M115 146 L190 213" class="m-line" marker-end="url(#ar)"/>
+      <path d="M150 146 L540 213" class="m-line" marker-end="url(#ar)"/>
+      <path d="M310 146 L300 213" class="m-line" marker-end="url(#ar)"/>
+      <path d="M510 146 L600 213" class="m-line" marker-end="url(#ar)"/>
+      <path d="M827 146 L720 213" class="m-line dash" marker-end="url(#arg)"/>
+      <path d="M510 248 L472 248" class="m-line" marker-end="url(#ar)"/>
+      <text x="491" y="240" text-anchor="middle" class="m-s">r</text>
+      <!-- 3. sor: tipusok -->
+      <rect x="20" y="340" width="200" height="70" rx="12" class="m-E"/>
+      <text x="120" y="370" text-anchor="middle" class="m-tb">E · export-KKV</text>
+      <text x="120" y="392" text-anchor="middle" class="m-s">bankhitel: 61,9% · tőkeáttétel 1,94</text>
+      <rect x="235" y="340" width="200" height="70" rx="12" class="m-D"/>
+      <text x="335" y="370" text-anchor="middle" class="m-tb">D · hazai KKV</text>
+      <text x="335" y="392" text-anchor="middle" class="m-s">bankhitel: 4,8% · tőkeáttétel 1,72</text>
+      <rect x="450" y="340" width="200" height="70" rx="12" class="m-L"/>
+      <text x="550" y="370" text-anchor="middle" class="m-tb">L · nagyvállalat</text>
+      <text x="550" y="392" text-anchor="middle" class="m-s">bankhitel: 43,4% · tőkeáttétel 2,34</text>
+      <rect x="670" y="340" width="210" height="70" rx="12" class="m-box"/>
+      <text x="775" y="370" text-anchor="middle" class="m-tb">Háztartások</text>
+      <text x="775" y="392" text-anchor="middle" class="m-s">fogyasztás a reálkamaton át</text>
+      <path d="M150 281 L120 338" class="m-line" marker-end="url(#ar)"/>
+      <path d="M255 281 L335 338" class="m-line" marker-end="url(#ar)"/>
+      <path d="M380 281 L520 338" class="m-line" marker-end="url(#ar)"/>
+      <path d="M700 281 L760 338" class="m-line" marker-end="url(#ar)"/>
+      <!-- 4. sor: kimenetek -->
+      <rect x="20" y="470" width="190" height="56" rx="10" class="m-box"/>
+      <text x="115" y="503" text-anchor="middle" class="m-tb">Beruházás, tőke</text>
+      <rect x="230" y="470" width="190" height="56" rx="10" class="m-box"/>
+      <text x="325" y="503" text-anchor="middle" class="m-tb">Export</text>
+      <rect x="440" y="470" width="210" height="56" rx="10" class="m-box"/>
+      <text x="545" y="503" text-anchor="middle" class="m-tb">Hazai kereslet, árak</text>
+      <rect x="670" y="470" width="210" height="56" rx="10" class="m-warn"/>
+      <text x="775" y="494" text-anchor="middle" class="m-tb">Beszállítói kapcsolat</text>
+      <text x="775" y="512" text-anchor="middle" class="m-s">az IO-mérés hibás, nem közölhető</text>
+      <path d="M120 410 L115 468" class="m-line" marker-end="url(#ar)"/>
+      <path d="M160 410 L300 468" class="m-line" marker-end="url(#ar)"/>
+      <path d="M335 410 L520 468" class="m-line" marker-end="url(#ar)"/>
+      <path d="M550 410 L570 468" class="m-line" marker-end="url(#ar)"/>
+      <path d="M600 410 L740 468" class="m-line" marker-end="url(#ar)"/>
+      <path d="M775 410 L620 468" class="m-line" marker-end="url(#ar)"/>
+      <!-- rer kozvetlenul az exportba es az importkoltsegbe -->
+      <path d="M560 281 C 470 310, 400 420, 345 468" class="m-line" marker-end="url(#ar)"/>
+      <!-- kulfoldi kereslet kozvetlenul az exportba -->
+      <path d="M690 146 C 650 190, 470 300, 405 468" class="m-line dash" marker-end="url(#arg)"/>
       <!-- GDP -->
-      <rect x="330" y="560" width="240" height="50" rx="12" class="m-euro"/>
-      <text x="450" y="591" text-anchor="middle" class="m-tb">GDP: +0,52% … +1,18%</text>
-      <path d="M135 522 L360 558" class="m-line" marker-end="url(#ar)"/>
-      <path d="M345 522 L420 558" class="m-line" marker-end="url(#ar)"/>
-      <path d="M555 522 L480 558" class="m-line" marker-end="url(#ar)"/>
+      <rect x="330" y="600" width="240" height="56" rx="12" class="m-euro"/>
+      <text x="450" y="634" text-anchor="middle" class="m-tb">GDP: +0,52% … +1,18%</text>
+      <path d="M115 526 L360 598" class="m-line" marker-end="url(#ar)"/>
+      <path d="M325 526 L420 598" class="m-line" marker-end="url(#ar)"/>
+      <path d="M545 526 L480 598" class="m-line" marker-end="url(#ar)"/>
+      <path d="M775 526 L545 598" class="m-line" marker-end="url(#ar)"/>
     </svg>
   </div>
+  <p class="small muted">Hogyan olvasd: a „Kamat és reálárfolyam” dobozból a kamat (\(r\)) a finanszírozási költségbe és a háztartások fogyasztásába, a reálárfolyam (\(rer\)) közvetlenül az exportba és az importköltségbe fut. A külföldi kereslet (\(y^*\)) a finanszírozást megkerülve, egyenesen az exportba lép be. A szuverén felár kétfelé hat: a vállalati felárakon és euróban közvetlenül a hazai kamaton keresztül (\(z_{sov}\)). Arany szaggatott: a v10 külső környezete, még nem validált.</p>
   <div class="callout info">
     <h4>A közös „boncolás” négy kérdése minden nyílnál</h4>
     <ol class="steps">
@@ -453,7 +476,7 @@ ol.chain .tag { font-family: var(--f-mono); font-size: 12px; color: var(--muted)
     <div class="words"><p><b>Szavakban:</b> \(\alpha_j\) a munka súlya a kompozitban, tehát \(1-\alpha_j\) az <b>importintenzitás</b>. Ha a forint reálértéken gyengül (\(rer\) nő), az importált input drágul, és a határköltség annál jobban nő, minél importintenzívebb a típus. A \(\zeta_j\) a tőkehányad: a típus határköltségét ekkora súllyal mozgatja a saját tőkehozama (\(rk_j\)), amit a 2. blokk pénzügyi feltételei alakítanak.</p></div>
 
     <div class="tbl"><table>
-      <thead><tr><th>Típus</th><th>Tőkehányad \(\zeta_j\)</th><th>Munka a kompozitban \(\alpha_j\)</th><th>Importintenzitás \(1-\alpha_j\)</th><th>Exportarány \(\phi_j\)</th><th>Méretsúly \(\omega_j\)</th><th>Foglalkoztatási súly</th></tr></thead>
+      <thead><tr><th>Típus</th><th>Tőkehányad \(\zeta_j\)</th><th>Munka a kompozitban \(\alpha_j\)</th><th>Importintenzitás \(1-\alpha_j\)</th><th>Exportarány \(\phi_j\)</th><th>Méretsúly \(\Omega_j\)</th><th>Foglalkoztatási súly</th></tr></thead>
       <tbody>
         <tr><td><span class="chip E"><i></i>E</span></td><td class="n">0,14</td><td class="n">0,45</td><td class="n"><b>55%</b></td><td class="n">0,56</td><td class="n">0,18</td><td class="n">0,20</td></tr>
         <tr><td><span class="chip D"><i></i>D</span></td><td class="n">0,17</td><td class="n">0,80</td><td class="n">20%</td><td class="n">0,05</td><td class="n">0,37</td><td class="n">0,50</td></tr>
@@ -462,7 +485,7 @@ ol.chain .tag { font-family: var(--f-mono); font-size: 12px; color: var(--muted)
     </table></div>
     <p class="small muted">Az alapág (<code>OPTEN=0</code>) értékei a v10 <code>.mod</code>-ból. A \(\zeta_j\) és \(\alpha_j\) a Jakab–Világi-féle kétszektoros értékek átvitele: az export-jellegű E az exportszektor (0,14 / 0,45), a hazai D a hazai szektor (0,17 / 0,80) értékét kapja, L a kettő közé esik. Ez <b>átvitel, nem becslés</b>. A <code>CALIB26</code>-ág ennél jóval kisebb tőkehányadot (0,06–0,09) és munkasúlyt (0,20–0,31) használ, a kettő közt a KSH-pótlás dönt.</p>
 
-    <div class="callout info small"><h4>Tanulság: az export-KKV „természetes fedezete”</h4><p>Az E típus importintenzitása a legnagyobb (55%), és a legnagyobb az exportaránya is (0,56). Ha a forint gyengül, az inputjai drágulnak, de a termékei külföldön olcsóbbak lesznek. A két hatás részben kioltja egymást. A D típusnál mindkettő kicsi: alig importál és alig exportál, ezért az árfolyam közvetlenül alig érinti, a hazai kereslet annál inkább. Euróban a nominális árfolyam rögzül, a reálárfolyam pedig csak az inflációkülönbségen keresztül mozdul, lassan (lásd 5d). Így az árfolyam mint alkalmazkodási csatorna mindhárom típusnál gyengül, de a legjobban annál, amelyik a legjobban rá volt hangolva.</p></div>
+    <div class="callout info small"><h4>A modell logikája: az export-KKV „természetes fedezete”</h4><p>A jelenlegi, még nem adatokkal horgonyzott technológiai kalibrációban az E típus importintenzitása a legnagyobb (55%), és a legnagyobb az exportaránya is (0,56). Ha a forint gyengül, az inputjai drágulnak, de a termékei külföldön olcsóbbak lesznek. A két hatás részben kioltja egymást. A D típusnál mindkettő kicsi: alig importál és alig exportál, ezért az árfolyam közvetlenül alig érinti, a hazai kereslet annál inkább. Euróban a nominális árfolyam rögzül, a reálárfolyam pedig csak az inflációkülönbségen keresztül mozdul, lassan (lásd 5d). Így az árfolyam mint alkalmazkodási csatorna mindhárom típusnál gyengül, de a legjobban annál, amelyik a legjobban rá volt hangolva.</p><p>Ez <b>modellfeltevés, nem empirikus tanulság</b>: az 55% átvett JV-érték. A természetes fedezet tényleges erejéhez az import és az export devizaneme, országa, időzítése és árfolyam-átgyűrűzése is számít.</p></div>
 
     <h4 class="sub">4b · Tényezőkereslet: mennyi tőke és munka kell?</h4>
     <div class="eq">\[ z_{j,t} = \rho_{kz}\,\zeta_j\,\big(rk_{j,t} - wz_{j,t}\big) + y_{j,t} - a_t \]
@@ -482,7 +505,7 @@ ol.chain .tag { font-family: var(--f-mono); font-size: 12px; color: var(--muted)
         <tr><td><span class="chip L"><i></i>L</span></td><td class="n">0,40</td><td class="n"><b>0,58</b></td><td class="n"><b>0,51</b></td></tr>
       </tbody>
     </table></div>
-    <p class="small muted">Származtatott súlyok, a fenti paraméterekből számolva (\(w^d_j \propto \omega_j(1-\phi_j)\), \(w^x_j \propto \omega_j\phi_j\), import \(\propto \omega_j(1-\alpha_j)\)). Az exportsúlyok egy független úton is pontosan visszaadják az EAGLE-vonal értékeit (0,356 / 0,065 / 0,579).</p>
+    <p class="small muted">Származtatott súlyok, a fenti paraméterekből számolva (\(w^d_j \propto \Omega_j(1-\phi_j)\), \(w^x_j \propto \Omega_j\phi_j\), import \(\propto \Omega_j(1-\alpha_j)\); a \(\Omega_j\) méretsúly nem azonos a 3. blokk \(\omega_j\)-jével). Az exportsúlyok egy független úton is pontosan visszaadják az EAGLE-vonal értékeit (0,356 / 0,065 / 0,579).</p>
     <div class="words"><p><b>Amit ebből érdemes megjegyezni:</b> a hazai piacon a D típus a legnagyobb szereplő (49%), az exportban a nagyvállalat (58%). Az E típus kicsi (a méretsúlya 18%), mégis az export 36%-át adja. Egy hazai keresleti sokk ezért elsősorban a D-t, egy exportsokk elsősorban az L-t és az E-t éri.</p></div>
 
     <h4 class="sub">4d · Beszállítói kapcsolat</h4>
@@ -502,14 +525,15 @@ ol.chain .tag { font-family: var(--f-mono); font-size: 12px; color: var(--muted)
     <p class="small muted">Ez a lánc magyarázza, miért évek alatt bontakozik ki az euróhatás, és miért éppen a helyettesítési rugalmasság (\(\varepsilon_{ces}\)) tudja megfordítani az export-KKV kibocsátásának előjelét (F02, 6. blokk).</p>
 
     <dl class="kv">
-      <dt>\(\phi_j\)</dt><dd>exportarány. A nagyvállalatnál 0,365, ez négy tizedesig egyezik az Opten-méréssel (A10). Az export-KKV-nál definíciófüggő: 0,56 (alapág), 0,376 („exportál valamennyit”) vagy 0,691 („árbevétele legalább negyede export”)</dd>
+      <dt>\(\phi_j\)</dt><dd>exportarány. A nagyvállalatnál 0,365, ez négy tizedesig egyezik az Opten-méréssel (A10). Az export-KKV-nál a szegmentációs küszöbtől függ, lásd lent.</dd>
       <dt>\(\zeta_j, \alpha_j\)</dt><dd>tőkehányad és munkasúly típusonként: a JV-értékek átvitele, KSH-ból pótolandó</dd>
       <dt>\(\rho_{kz}, \rho_z\)</dt><dd>helyettesítési rugalmasságok: JV-becslés</dd>
     </dl>
-    <div class="callout ok small"><h4>Nem a technológia viszi az eredményt</h4><p>Ha a három típus minden technológiai paraméterét kiegyenlítjük, a KKV-küszöb csak 3%-kal mozdul (22,36 → 22,95). A KKV-eredményt tehát a pénzügyi heterogenitás hajtja, nem a technológiai kalibráció (A23). Ezért nem baj, hogy a \(\zeta_j\) és az \(\alpha_j\) még átvett érték, de a KSH-pótlás így is a teendők között marad.</p></div>
+    <div class="callout warn small"><h4>Melyik cég export-KKV? A fődefiníció: exportarány ≥ 50%</h4><p>A csapat 2026. szeptember 28-i adatrendezési irányelve szerint a javasolt fődefiníció: <b>az export-KKV az, amelynek árbevétele legalább 50%-ban export</b>, egyébként hazai KKV. Az oldalon szereplő Opten-számok (bankhitel-arányok, tőkeáttételek, a 0,376-os \(\phi_E\)) még a korábbi, „bármilyen pozitív export” definícióból jönnek, a <code>OPTEN=2</code> ág pedig egy 25%-os küszöbbel fut (\(\phi_E = 0{,}691\)). Ezek <b>robusztussági változatok</b>, nem a fődefiníció. Az 50%-os definícióhoz tartozó súlyokat, hitelarányokat és tőkeáttételeket újra kell számolni, és nem szabad a régi számokkal keverni. A <code>CALIB26</code>-ág már 50%-kal dolgozik, ott \(\phi_E = 0{,}821\), de ez körkörös: a küszöbből következik.</p></div>
+    <div class="callout ok small"><h4>A közvetlen technológiai különbség nem a fő mozgató</h4><p>Ha a három típus minden technológiai paraméterét kiegyenlítjük, a KKV-küszöb csak 3%-kal mozdul (22,36 → 22,95, A23). A vizsgált dekompozícióban tehát a közvetlen technológiai heterogenitás nem a KKV-küszöb fő mozgatója, az eredmény elsősorban a pénzügyi blokk paramétereitől függ. Ebből nem következik, hogy a kalibráció általában nem számít: a pénzügyi paraméterek közül több előjelfordító (\(\chi_j\), \(\varepsilon_{ces}\)). Ezért nem baj, hogy a \(\zeta_j\) és az \(\alpha_j\) még átvett érték, de a KSH-pótlás így is a teendők között marad.</p></div>
     <div class="q"><h4>Kérdés a teremnek</h4><ul class="clean">
       <li><span class="who">hallgatók</span> Miért emelkedik a tőkehozam, ha váratlanul nő a kereslet, és miért nem a tőkeállomány?</li>
-      <li><span class="who">szakértők</span> Melyik definíció illik a kérdésünkhöz: az „exportál valamennyit” vagy az „árbevételének legalább negyede export”?</li>
+      <li><span class="who">szakértők</span> Az 50%-os fődefiníció mellett mennyire érzékeny az eredmény az alternatív küszöbökre (pozitív export, 25%)?</li>
       <li><span class="who">szakértők</span> Melyik KSH vagy Eurostat SBS táblából lehet a tőke- és importintenzitást a legtisztábban méret × exportstátusz bontásban kinyerni?</li>
     </ul></div>
   </div>
@@ -545,7 +569,7 @@ ol.chain .tag { font-family: var(--f-mono); font-size: 12px; color: var(--muted)
     <div class="eq">\[ \pi^{w}_t = \frac{\beta}{1+\beta\vartheta_w}\,\pi^{w}_{t+1} + \frac{\vartheta_w}{1+\beta\vartheta_w}\,\pi^{w}_{t-1} + \frac{\lambda_w}{1+\beta\vartheta_w}\Big(\underbrace{\tfrac{\sigma}{1-h}\,(c_t - h\,c_{t-1}) + \varphi\,l_t}_{\text{a munka „belső ára”}} - w_t\Big) \]
     \[ w_t = w_{t-1} + \pi^{w}_t - \pi_t \]</div>
     <div class="words"><p><b>Szavakban:</b> a háztartás akkor kér béremelést, ha a munka „belső ára” (mennyit ér neki a szabadidő a fogyasztáshoz képest) a reálbér fölé kerül. Ez akkor történik, ha sokat dolgozik (\(l\) magas), vagy ha a fogyasztása a megszokott szint fölé nő. A bérek a modellben <b>rugalmasabbak</b> az áraknál: \(\xi_w = 0{,}657\) mellett az átlagos bértartam kb. 2,9 negyedév, a görbe meredeksége 0,022, kb. négyszerese az árakénak.</p></div>
-    <div class="callout warn small"><h4>Saját mérés: a magyar bérek még ennél is rugalmasabbak lehetnek</h4><p>A cégpanelünk szerint 2023–24-ben a cégek 10,1%-a nominálisan <b>csökkentette</b> az átlagbért, csak 2,8%-a fagyasztotta be, a medián emelés 11,6% volt (A21). A csökkentés gyakorisága a mérettel csökken (13,9% / 7,6% / 5,8%). Ha a KKV-k bérei rugalmasabbak, az egy újabb méretaszimmetria, amit a modell ma nem ábrázol: mindhárom típus ugyanazon a bérpiacon van. Kérdés viszont, hogy egy magas inflációs időszak mérése átvihető-e az euróövezet alacsony inflációs környezetére.</p></div>
+    <div class="callout warn small"><h4>Saját mérés: a cégszintű átlagbérek nagyobb nominális mozgást mutatnak</h4><p>A cégpanelünk szerint 2023–24-ben a cégek 10,1%-a nominálisan <b>csökkentette</b> az átlagbért, csak 2,8%-a fagyasztotta be, a medián emelés 11,6% volt (A21). Ez nagyobb nominális mozgás, mint amit egy erősen merev bérkép sugallna. A Calvo-bérparamétert viszont nem azonosítja közvetlenül: a cégszintű átlagbér csökkenhet összetételváltozás, létszámcsere, részmunkaidő vagy elmaradt bónusz miatt is, miközben az egyéni bérek nem csökkennek. A csökkentés gyakorisága a mérettel csökken (13,9% / 7,6% / 5,8%). Ha a KKV-k bérei valóban rugalmasabbak, az egy újabb méretaszimmetria, amit a modell ma nem ábrázol: mindhárom típus ugyanazon a bérpiacon van. Kérdés viszont, hogy egy magas inflációs időszak mérése átvihető-e az euróövezet alacsony inflációs környezetére.</p></div>
 
     <h4 class="sub">5d · Miért döntő ez euróban?</h4>
     <div class="eq">\[ rer_t = rer_{t-1} + dep_t - \pi_t \;\;\xrightarrow{\;\text{euróban } dep_t = 0\;}\;\; rer_t = rer_{t-1} - \pi_t \]</div>
@@ -610,7 +634,7 @@ ol.chain .tag { font-family: var(--f-mono); font-size: 12px; color: var(--muted)
     <h4 class="sub">7b · A paraméterek, és amit közvetlenül mondanak</h4>
     <dl class="kv">
       <dt>\(\gamma = 0{,}761\), \(\phi_\pi = 1{,}379\)</dt><dd>kamatsimítás és inflációs reakció (JV-becslés). Rövid távon 1 pont infláció 0,33 pont kamatemelést vált ki, hosszú távon 1,379-et. Mivel ez több mint 1, a reálkamat is nő: ez a <b>Taylor-elv</b>, a forintrezsim határozottságának feltétele.</dd>
-      <dt>\(z_{sov} = 0{,}5\)</dt><dd>a szuverén felár ennyi része gyűrűzik át a kamatba. Horgonyzatlan, de a D kategóriában ez a legolcsóbb: két nyilvános idősorból mérhető (szuverén felár vs. BUBOR–EURIBOR különbözet; támpont: Vonnák, MNB WP 2010/1).</dd>
+      <dt>\(z_{sov} = 0{,}5\)</dt><dd>a szuverén felár ennyi része gyűrűzik át a kamatba. Horgonyzatlan. Kézenfekvő kiindulópont a szuverén felár és a BUBOR–EURIBOR különbözet összevetése (támpont: Vonnák, MNB WP 2010/1), de ez <b>nem egyszerű mérés</b>. A különbözetben monetáris politikai várakozás, deviza- és árfolyamkockázat, likviditási és banki prémium, valamint futamidő- és instrumentumhatás is van, a BUBOR és a szuverén felár pedig a saját korábbi elemzésünkben is erősen együtt mozgott (multikollinearitás).</dd>
       <dt>\(\nu_b\), \(\nu\)</dt><dd>technikai zárás, nem strukturális becslés. A nettó külföldi eszközök (\(b^*\)) emelkedése csökkenti a kamatot, ezért a külső pozíció nem sodródhat el. E tag nélkül a \(b^*\)-nak egységgyöke lenne, és a modellnek nem lenne egyértelmű hosszú távú egyensúlya.</dd>
     </dl>
     <div class="callout info small"><h4>Mechanikus számolás, nem modelleredmény</h4><p>Az alap-forgatókönyv tartósan −200 bp szuverén felárat ír elő (évesítve). Euróban \(z_{sov} = 0{,}5\) mellett ebből a hazai kamatra <b>0,5 × (−200 bp) = −100 bp</b> jut, a \(b^*\) tag és a közös kamat változása nélkül. Ez az egyenlet közvetlen olvasata, nem szimulált eredmény. Megmutatja viszont, miért ennyire érzékeny az euróhatás a \(z_{sov}\) horgonyzására: a kamatcsatorna ereje egyenesen arányos vele.</p></div>
@@ -622,7 +646,7 @@ ol.chain .tag { font-family: var(--f-mono); font-size: 12px; color: var(--muted)
     </div>
 
     <div class="callout warn small"><h4>Mi viszi az euróhatást? Még nyitott</h4><p>Az első negyedévben a banki csatorna a teljes hatás 0,22%-át adja (F05, feltételes). Ez azonban nem jelenti azt, hogy a banki csatorna gyenge. A szcenárióban a banki felár csak a 13. negyedévtől csökken, így az első negyedévben csak az előre látott jövőbeli csökkenés hat. A két csatorna arányát a tartós hatáson még újra kell mérni.</p></div>
-    <div class="callout ok small"><h4>Mindkét rezsimnek külön is stabilnak kell lennie</h4><p>Egy rezsimváltó modellnél nem elég, hogy a csatlakozás utáni euró-egyensúly BK-stabil. A kiinduló forintrezsimnek is annak kell lennie, különben a lebegő szakasz pályája nem egyértelmű. A v10 ellenőrző scriptje 2026. október 3. óta mindkettőt külön teszteli (8. blokk).</p></div>
+    <div class="callout ok small"><h4>Mindkét rezsimnek külön is stabilnak kell lennie</h4><p>Egy rezsimváltó modellnél nem elég, hogy a csatlakozás utáni euró-egyensúly BK-stabil. A kiinduló forintrezsimnek is annak kell lennie, különben a lebegő szakasz pályája nem egyértelmű. A v10 bővített ellenőrző scriptje mindkettőt külön teszteli, de még nincs lefuttatva (8. blokk).</p></div>
     <div class="what-if"><b>Ha kivennénk (\(z_{sov} = 0\)):</b> euróban a hazai kamat nem reagálna a szuverén felár csökkenésére, és a felárcsökkenés csak a vállalati felárakon (\(\tau^{sov}_j\), 2. blokk) keresztül hatna. A kamatcsatorna eltűnne, a pénzügyi gyorsító megmaradna.</div>
     <div class="q"><h4>Kérdés a teremnek</h4><ul class="clean">
       <li><span class="who">hallgatók</span> Mit jelent tökéletes előrelátás mellett, hogy egy csak a 13. negyedévben induló sokk már az 1. negyedévben hat?</li>
@@ -662,13 +686,13 @@ ol.chain .tag { font-family: var(--f-mono); font-size: 12px; color: var(--muted)
 
     <h4 class="sub">8c · Hol tart a validálás?</h4>
     <div class="grid2">
-      <div class="callout info small"><h4>Ami kész</h4><ul class="clean">
+      <div class="callout info small"><h4>Ami megvan</h4><ul class="clean">
         <li>A <code>FOREIGN=0</code> ág fordításkor pontosan a v09 lesz: az új változók be sem kerülnek a modellbe.</li>
         <li>Egy független kódellenőrzés (2026. október 3.) a <code>.mod</code> implementációját elfogadta: az előjelek, a bekötés helye és a Dynare-szerkezet rendben van.</li>
-        <li>Kész a hétlépéses ellenőrző protokoll (<code>check_v10_foreign.m</code> → <code>t56</code>): v09-regresszió, beágyazás, BK a kezdeti és a záró rezsimben, nulla-sokk, impulzus-előjel és AR-perzisztencia, \(r^{for}\)-impulzus a rezsimváltás körül a monetáris egyenletek reziduumával, és a sajátértékek összevetése.</li>
+        <li>Megírva (2026. október 3.) a hétlépéses ellenőrző protokoll (<code>check_v10_foreign.m</code> → <code>t56</code>): v09-regresszió, beágyazás, BK a kezdeti és a záró rezsimben, nulla-sokk, impulzus-előjel és AR-perzisztencia, \(r^{for}\)-impulzus a rezsimváltás körül a monetáris egyenletek reziduumával, és a sajátértékek összevetése. A bővített script még <b>nincs lefuttatva és nincs feltöltve a GitHubra</b>: a <code>main</code>-en a korábbi, ötlépéses változat van.</li>
       </ul></div>
       <div class="callout warn small"><h4>Ami még hiányzik</h4><ul class="clean">
-        <li>A <code>FOREIGN=1</code> ág <b>még nincs lefuttatva</b>, tehát nincs <code>t56</code> és nincs eredmény.</li>
+        <li>A <code>FOREIGN=1</code> ág <b>még nincs lefuttatva</b>, tehát nincs <code>t56</code> és nincs eredmény. Az ellenőrzés addig terv, nem bizonyíték.</li>
         <li>A paraméter-regiszter és a <code>t54</code> őr még 91 paraméterre szól, a három új paraméter nincs benne.</li>
         <li>A közös exportsokk (\(e^x\)) és az \(y^*\) szétválasztása ma csak az előre rögzített perzisztenciákon múlik. Determinisztikus forgatókönyvekhez ez elég, becsléshez nem.</li>
         <li>Addig a <b>v09 marad az operatív alapmodell</b>.</li>
@@ -731,19 +755,19 @@ ol.chain .tag { font-family: var(--f-mono); font-size: 12px; color: var(--muted)
     </div>
     <div class="card tint-gold">
       <h3>A KKV-előny küszöbfüggő</h3>
-      <p>A KKV-k relatív előnye akkor jelenik meg, ha a hozzáférési csatorna ereje egy küszöb fölött van. A küszöb: \((\lambda\cdot\omega)^{*} \approx 500\), a feltételes \(\rho_{acc} = 0{,}9673\) mellett (A22, F01).</p>
-      <p class="small muted">Ezt küszöbformában közöljük, nem pontbecslésként. Magyar precedense is van (Szabó Bakos, 2006).</p>
+      <p>A jelenlegi baseline kalibráció és \(\rho_{acc} = 0{,}9673\) mellett a KKV-előny határa közelítőleg \((\lambda\cdot\omega)^{*} \approx 500\) (A22, F01). A küszöb <b>nem univerzális</b>: függhet a \(\chi_j\)-től, az \(\varepsilon_{ces}\)-től, a \(lev_j\)-től, a felárpályától, az E/D szegmentációtól és a makrosúlyoktól, ezért ezek változtatásakor újra kell mérni.</p>
+      <p class="small muted">Ezt küszöbformában közöljük, nem pontbecslésként. Magyar precedense is van (Szabó Bakos, 2006). ⚠ Az alapág a visszavont 3×-os \(\chi\)-aszimmetriával fut (K01). A küszöb újramérése szimmetrikus \(\chi\) mellett nyitott teendő.</p>
     </div>
   </div>
   <div class="card">
-    <h3>A KKV-eredmény nem technológiai műtermék</h3>
+    <h3>A közvetlen technológiai különbség nem a fő mozgató</h3>
     <p class="small muted">A KKV-küszöb az ACCSCALE-skálán (ahol \(\sqrt{500} \approx 22{,}36\)), három dekompozíciós ágon · A23</p>
     <div class="bars">
       <div class="bar-row"><span>Teljes modell</span><div class="bar-track"><div class="bar-fill" style="width:92%;background:var(--gold)"></div></div><span class="bar-val">22,36</span></div>
       <div class="bar-row"><span>Csak pénzügyi különbség</span><div class="bar-track"><div class="bar-fill" style="width:93.1%;background:var(--E)"></div></div><span class="bar-val">22,62</span></div>
       <div class="bar-row"><span>Technológia kiegyenlítve</span><div class="bar-track"><div class="bar-fill" style="width:94.4%;background:var(--L)"></div></div><span class="bar-val">22,95</span></div>
     </div>
-    <p class="small">A technológia teljes kiegyenlítése a küszöböt mindössze 3%-kal mozdítja el. A várható fő bírálói kérdésre („nem a kalibráció csinálja az eredményt?”) ez a válasz.</p>
+    <p class="small">A technológia teljes kiegyenlítése a küszöböt mindössze 3%-kal mozdítja el. Ez a vizsgált baseline-környezetben azt mutatja, hogy a közvetlen technológiai heterogenitás nem a fő mozgató, és az eredmény elsősorban a pénzügyi blokktól függ. Arra a kérdésre, hogy „nem a kalibráció csinálja-e az eredményt?”, ez csak részválasz: a pénzügyi kalibráció több eleme bizonyítottan előjelfordító.</p>
   </div>
   <div class="callout info">
     <h4>A projekt azonosítási álláspontja</h4>
@@ -755,7 +779,7 @@ ol.chain .tag { font-family: var(--f-mono); font-size: 12px; color: var(--muted)
   <div class="stack">
     <div class="eyebrow">Kipróbálható</div>
     <h2>A küszöb: csak a szorzat számít</h2>
-    <p>A modell a hozzáférési csatorna két rugalmasságát külön nem különbözteti meg: a KKV-előny határa egy <b>izo-szorzat görbe</b>, \(\lambda \cdot \omega = 500\), ±0,08% pontossággal. Mozgasd a két skálázót, és nézd meg, melyik oldalra esel. Két nagyon különböző kombináció ugyanazt az eredményt adja, ha a szorzatuk azonos.</p>
+    <p>A modell a hozzáférési csatorna két rugalmasságát külön nem különbözteti meg: a jelenlegi baseline kalibráció mellett a KKV-előny határa egy <b>izo-szorzat görbe</b>, \(\lambda \cdot \omega = 500\), ±0,08% pontossággal. Mozgasd a két skálázót, és nézd meg, melyik oldalra esel. Két nagyon különböző kombináció ugyanazt az eredményt adja, ha a szorzatuk azonos.</p>
   </div>
   <div class="card tint-gold widget">
     <div class="slider"><label for="lam">λ skálázó</label><input id="lam" type="range" min="0" max="100" step="1" value="50"><output id="lamv" class="bar-val">10,0</output></div>
