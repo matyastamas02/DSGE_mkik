@@ -150,6 +150,16 @@ tartós viselkedést?
 5. Addig az A25 kommunikációja: „a jelenlegi redukált specifikáció
    tulajdonsága”, strukturális BGG-következtetésként nem.
 
+### 3.2a Eredmény (2026-10-04)
+
+A levezetés elkészült: [`2026-10-04_v11_W0_nettovagyon_levezetes.md`](2026-10-04_v11_W0_nettovagyon_levezetes.md).
+A redukált egyenlet elhagyja a vállalkozói jövedelem / belépő transzfer tagját, ami
+az `omega_nw = 0,95` miatt ebben a kalibrációban nem kicsi (a nettó vagyon kb. 4%-a
+negyedévente). Visszatéve a hazai KKV tartós nettó vagyona az ACC=100 esetekben
+előjelet vált. **A 4. pont szabálya szerint W0b indul** (`-DNWSPEC=1`, a levezetés
+8. szakasza szerint). A döntés a (C) tag specifikációján múlik
+(`w^e_j = y_j` vs. szintben állandó), ezt a 2. review-körnek ellenőriznie kell.
+
 ### 3.3 Munka
 
 Kb. 1–2 nap (levezetés, a JV-forrás összevetése). Ha W0b kell: +2 nap.

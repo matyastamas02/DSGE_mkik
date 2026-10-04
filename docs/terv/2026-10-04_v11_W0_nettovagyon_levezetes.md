@@ -1,0 +1,178 @@
+# v11 / W0 — a nettóvagyon-egyenlet levezetése és a K-1 auditja
+
+*2026-10-04 · Tomi. A [v11-terv](2026-10-04_v11_implementacios_terv.md) 3. szakaszának
+végrehajtása. Kérdés: a „hosszú távon fékező gyorsító” (K-1, A25) a teljes BGG-modell
+tulajdonsága, vagy a modellben használt redukált nettóvagyon-egyenlet műterméke?*
+
+> **Eredmény röviden.** A redukált egyenletből **egy nem elhanyagolható tag hiányzik**:
+> a vállalkozói jövedelem / belépő transzfer. A BGG-ben ez azért hagyható el, mert
+> kicsi; ebben a modellben az `omega_nw = 0,95` miatt az állandósult azonosság
+> negyedévente a nettó vagyon kb. **4%-ának** megfelelő transzfert követel, a BGG-kalibráció
+> kb. 1%-a helyett. Ha a tagot visszatesszük, a tartós nettó vagyon az alapágban az export-KKV-nál
+> kb. **felére** csökken, a hazai KKV-nál **előjelet vált** (−0,75% → +0,57%).
+> A terv előre rögzített döntési szabálya (3.2/4. pont) szerint ez **W0b-t indít**:
+> a nettóvagyon-egyenletet a levezetett alakra kell cserélni (`-DNWSPEC=1`), és az A25-öt
+> azon újra kell mérni. **Ez a dokumentum nem futtat újra modellt**: a lenti számok a
+> jelenlegi modell tartós értékeinek behelyettesítései, nem egy újraoldott modell
+> eredményei (lásd 6. szakasz).
+
+---
+
+## 1. Honnan jön a jelenlegi egyenlet
+
+```
+nw_j = omega_nw*(nw_j(-1) + lev_j*(ret_j - (r(-1) - infl)));
+```
+
+- Nem a Jakab–Világi-forrásból (MNB WP 2008/9) származik: a JV-magban nincs BGG-blokk.
+  A projekt saját „BGG-lite” blokkja, először az EAGLE-vonal `kkv_dsge_v01.mod`-jában
+  (160. sor, „nettó vagyon perzisztencia (túlélési ráta)” kommenttel), onnan került át.
+- A kalibrációs dokumentum ([`kalibracio_bgg_blokk.md`](../eredmenyek/kalibracio_bgg_blokk.md))
+  a `lev`-et Christensen–Dib (2008) 1. táblázatához köti (`k/n = 2`), és 2026-08-16-án
+  már jelezte: a C–D/BGG túlélési ráta 0,9728, a modellé 0,95, „ez külön megnézendő”.
+  Ez a W0 ezt a nyitott pontot is lezárja.
+
+## 2. A nemlineáris azonosság
+
+A BGG (1999) nettóvagyon-dinamikája a használt jelölésekkel:
+
+$$V_t = R^k_t\,Q_{t-1}K_t - R^b_t\,\big(Q_{t-1}K_t - N_{t-1}\big), \qquad
+N_t = \gamma\,V_t + W^e_t$$
+
+ahol $V_t$ a túlélő vállalkozók saját tőkéje a hozamok realizálása után, $R^k$ a tőke
+bruttó hozama, $R^b$ a hitel bruttó költsége, $\gamma$ a túlélési ráta, $W^e$ pedig a
+vállalkozói munkajövedelem vagy a belépők induló transzfere. A modell konvenciója
+szerint a hitel költsége a biztonságos reálkamat (`r(-1) - infl`), ezért $R^b = R$.
+
+**Állandósult állapot** ($L = QK/N$ tőkeáttétel, $\pi = R^k - R^b$ prémium):
+
+$$\frac{W^e}{N} = 1 - \gamma\big[R^k L - R^b(L-1)\big] = 1 - \gamma R^b - \gamma\,\pi\,L$$
+
+## 3. Log-linearizálás
+
+$Q K - N$ log-eltérése $\big(L(q+k) - n\big)/(L-1)$, ezért
+
+$$n_t = \gamma\Big[R^k L\,r^k_t - R^b(L-1)\,r^b_t + (R^k - R^b)\,L\,(q_{t-1} + k_t) + R^b\,n_{t-1}\Big] + \frac{W^e}{N}\,w^e_t$$
+
+$\omega \equiv \gamma R^b$ jelöléssel és átrendezve:
+
+$$n_t = \underbrace{\omega\big[n_{t-1} + L\,(r^k_t - r^b_t)\big]}_{\text{a modell mostani alakja}}
+\;+\; \underbrace{\omega\,r^b_t}_{\text{(A)}}
+\;+\; \underbrace{\gamma\,\pi\,L\,(r^k_t + q_{t-1} + k_t)}_{\text{(B)}}
+\;+\; \underbrace{\frac{W^e}{N}\,w^e_t}_{\text{(C)}}$$
+
+A modell tehát három tagot hagy el:
+
+| Tag | Tartalom | Tartós fixpontban |
+|---|---|---|
+| (A) | a saját tőke biztonságos hozama | **0**: a háztartási Euler-egyenlet tartósan nulla reálkamat-eltérést ad (változatlan β mellett) |
+| (B) | a prémium az egész eszközállományon keresztül: nagyobb tőkeállomány nagyobb prémiumjövedelmet hoz | kicsi–közepes, a prémiumszinttől ($\pi$) függ |
+| (C) | vállalkozói jövedelem / belépő transzfer | **nagy**, lásd 4. szakasz |
+
+## 4. Miért nem hagyható el a (C) tag ebben a modellben
+
+A (C) súlya, $W^e/N$, nem szabad paraméter: a 2. szakasz azonossága rögzíti.
+
+| | $\gamma$ | $W^e/N$ ($\pi$ = 0,5% negyedévente, $L$ = 1,6) |
+|---|---|---|
+| BGG / Christensen–Dib | 0,9728 | kb. 0,0096 |
+| **ez a modell** (`omega_nw = 0,95`) | 0,9405 | **kb. 0,0425** |
+
+A tartós fixpontban a tag $1/(1-\omega) = 20$-szoros szorzót kap, tehát a (C)
+hozzájárulása kb. $0{,}85 \cdot w^e$. Ha a vállalkozói jövedelem a típus kibocsátásával
+arányos ($w^e_j = y_j$, a BGG-féle vállalkozói munkajövedelem), akkor egy 1%-os tartós
+kibocsátás-növekedés kb. 0,85%-kal emeli a tartós nettó vagyont. Ez ugyanakkora
+nagyságrend, mint a felárcsökkenés közvetlen hatása (kb. −1%).
+
+**A lényeg:** a 0,95-ös túlélési ráta csak akkor konzisztens egy állandósult
+állapottal, ha a vállalkozók negyedévente a nettó vagyon kb. 4%-át kapják kívülről.
+Ezt a beáramlást a redukált egyenlet elhagyja, és ezzel a tartós viselkedést is
+megváltoztatja.
+
+## 5. Számszerű összevetés
+
+Tartós fixpont (`n = n(-1)`, $r^b = 0$, $r^k = efp$):
+
+$$n^{\text{red}} = \frac{\omega L\,efp}{1-\omega}, \qquad
+n^{\text{teljes}} = n^{\text{red}} + \frac{\gamma\pi L\,(efp + q + k) + (W^e/N)\,w^e}{1-\omega}$$
+
+A jobb oldalra a jelenlegi modell tartós értékeit tesszük (2026-10-04-i diagnosztika
+és `t58`; OPTEN=0, SC=1, TSCEN=3), $w^e_j = y_j$, $\pi$ = 0,5% negyedévente.
+**Ellenőrzés:** a redukált képlet mind a 12 esetben 0,02 pp-n belül visszaadja a
+modell mért tartós nettó vagyonát.
+
+| Konfiguráció | Típus | nw (modell) | $n^{\text{red}}$ | $n^{\text{teljes}}$ | arány | (B) | (C) |
+|---|---|---|---|---|---|---|---|
+| aszimm. χ, ACC=100 | E | −1,08 | −1,06 | −0,57 | 0,53 | +0,09 | +0,41 |
+| | D | −0,75 | −0,76 | **+0,57** | **−0,74** | +0,17 | +1,16 |
+| | L | −2,37 | −2,39 | −2,49 | 1,04 | +0,19 | −0,29 |
+| aszimm. χ, ACC=0 | E | −1,09 | −1,09 | −1,19 | 1,09 | +0,09 | −0,19 |
+| | D | −0,95 | −0,94 | −0,64 | 0,67 | +0,12 | +0,19 |
+| | L | −2,21 | −2,21 | −1,68 | 0,76 | +0,26 | +0,28 |
+| χ=0,04, ACC=100 | E | −1,37 | −1,37 | −0,50 | **0,36** | +0,14 | +0,73 |
+| | D | −1,01 | −1,00 | **+0,87** | **−0,86** | +0,24 | +1,63 |
+| | L | −1,76 | −1,76 | −2,36 | 1,34 | +0,07 | −0,67 |
+| χ=0,04, ACC=0 | E | −1,37 | −1,37 | −1,24 | 0,90 | +0,14 | −0,01 |
+| | D | −1,26 | −1,25 | −0,77 | 0,61 | +0,17 | +0,31 |
+| | L | −1,47 | −1,48 | −1,26 | 0,85 | +0,16 | +0,07 |
+
+**Érzékenység a prémiumszintre** ($\pi$ = 0,25% / 0,5% / 0,75% negyedévente): a hazai
+KKV előjelváltása az ACC=100 esetekben mindhárom értéknél megmarad (+0,58 / +0,57 /
++0,55, illetve +0,89 / +0,87 / +0,84). A $\pi$ a (B)-t mozgatja, a (C)-t alig.
+
+**Érzékenység a (C) specifikációjára:** ha a vállalkozói jövedelem szintben állandó
+($w^e = 0$), csak a (B) marad, és az arány minden esetben 0,76–0,96 között van, tehát
+a ±50%-os sávon belül. **A döntés tehát a (C) tag specifikációján múlik.** A BGG-ben a
+vállalkozói jövedelem munkajövedelem, a kibocsátással arányos; a Gertler–Karadi-típusú
+belépő transzfer az eszközállománnyal arányos. Mindkét irodalmi forma a gazdaság
+méretével együtt mozog; a szintben állandó transzfer a legkevésbé szokásos. Ezért a
+$w^e_j = y_j$ a megalapozottabb választás, de ezt a 2. review-körnek ellenőriznie kell.
+
+## 6. Korlátok — amit ez a levezetés NEM mond
+
+1. **Nem újraoldott modell.** A számok a *jelenlegi* tartós értékek behelyettesítései.
+   A valódi hatás más lesz, mert a nettó vagyon a χ-tagon keresztül visszahat a
+   felárra, a felár a beruházásra és a kibocsátásra. Hogy az A25 (szimmetrikus χ
+   mellett nincs küszöb) fennmarad-e, csak a W0b-ben, újrafuttatással derül ki.
+2. **A $\pi$ szintje** a log-lineáris modellből nem olvasható ki; a 0,25–0,75%-os
+   negyedéves sáv a BGG-féle kb. 2% évesített prémium körül van.
+3. **A (C) specifikációja** (5. szakasz) a döntés kulcsa, és feltevés.
+4. **Forrás-ellenőrzés:** a BGG (1999) és a Christensen–Dib (2008) pontos
+   log-lineáris nettóvagyon-egyenletét nem vetettük össze tételesen a 3. szakasz
+   levezetésével. A levezetés az alap-azonosságból indul, nem a cikkek végső alakjából.
+5. **A permanens fixpont** továbbra is a log-lineáris rendszer fixpontja (v11-terv 1.3).
+
+## 7. Döntés az előre rögzített szabály szerint
+
+A v11-terv 3.2/4. pontja: *„ha ellentétes irányt ad, vagy a nagyságrend [a ±50%-os
+sávon túl] eltér: a nw-egyenletet a levezetett alakra cseréljük (`-DNWSPEC=1`), és ez
+W0b munkacsomag lesz.”*
+
+- A hazai KKV-nál az ACC=100 esetekben az irány **ellentétes**, mindhárom $\pi$ mellett.
+- Az export-KKV-nál szimmetrikus χ és ACC=100 mellett az arány 0,36, a sávon kívül.
+
+**→ W0b indul.** A K-1 a jelenlegi formájában **nem** tekinthető a modell
+közgazdasági tulajdonságának. Valószínűbb, hogy annak a következménye, hogy a
+redukált egyenlet egy, ebben a kalibrációban nagy tagot elhagy.
+
+## 8. W0b — előre rögzítve, a futtatás előtt
+
+1. **Kapcsoló:** `-DNWSPEC=1` a v11-ben. A nettóvagyon-egyenlet a 3. szakasz teljes
+   alakja: az (A), (B) és (C) taggal, $w^e_j = y_j$ mellett.
+2. **Paraméterek:** $\pi$ = 0,005 (alap), érzékenységként 0,0025 és 0,0075;
+   $W^e/N$ és $\gamma$ az azonosságból, **nem szabad paraméterként**.
+3. **Alternatív (C):** $w^e = 0$ (csak (A)+(B)), összevetésként, alacsonyabb rangon.
+4. **Mérés:** a `t58` (szimmetrikus-χ küszöb) és a `t48b` újramérése `NWSPEC=1`
+   mellett, mindkét χ-változattal; az A25 sorsa ettől függ, és **akármi lesz az
+   eredmény, közöljük**.
+5. **Technikai elfogadás:** a v11-terv 7.1 szerint (BK mindkét rezsimben, nulla-sokk,
+   regresszió `NWSPEC=0` mellett a v10-re).
+6. A 2. review-kör ezt a dokumentumot is megkapja, implementáció előtt.
+
+## 9. Ami ebből most következik a már közölt anyagokra
+
+- **A25:** az állítás a *jelenlegi* modellben áll (az őre rendben van), de a mögötte
+  lévő mechanizmus valószínűleg a redukált egyenlet műterméke. A regiszter
+  megjegyzésébe ez bekerül; az állítás státuszáról a W0b után dönt a csapat.
+- **A workshop-anyag:** az A25-öt jelenleg „új mérésként” mutatja. Ezt a W0 nyomán
+  óvatosabban kellene keretezni, vagy elhagyni; ez a csapat döntése.
