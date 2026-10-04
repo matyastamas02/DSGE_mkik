@@ -6,7 +6,9 @@
  *
  * W0b (2026-10-04): -DNWSPEC=0|1|2 -- a nettovagyon-egyenlet specifikacioja.
  *   0 = a v10 redukalt "BGG-lite" alakja (ALAPERTELMEZES)
- *   1 = a BGG-azonossagbol levezetett teljes alak: (A) a sajat toke
+ *   1 = KIBOVITETT BGG-LITE alak, FELTARO (2a review): a (C) tag AD HOC,
+ *       kibocsatassal indexalt belepoforras, mikroalap es GE-lezaras nelkul.
+ *       Tagok: (A) a sajat toke
  *       biztonsagos hozama, (B) a premium a teljes eszkozallomanyon,
  *       (C) vallalkozoi jovedelem / belepo transzfer, w^e_j = y_j
  *   2 = csak (A)+(B), osszevetesre (szintben allando vallalkozoi jovedelem)
@@ -760,7 +762,8 @@ nw_E = omega_nw*(nw_E(-1) + lev_E*(ret_E - (r(-1) - infl)));
 nw_D = omega_nw*(nw_D(-1) + lev_D*(ret_D - (r(-1) - infl)));
 nw_L = omega_nw*(nw_L(-1) + lev_L*(ret_L - (r(-1) - infl)));
 @#else
-// v11 / W0b: a BGG N = gam*V + W^e azonossagbol levezetett teljes alak.
+// v11 / W0b: kibovitett BGG-lite alak (N = gam*V + W^e egyszerusitett azonossagbol);
+// a (C) tag ad hoc (w^e_j = y_j), FELTARO -- lasd docs/terv/2026-10-04_v11_W0b_review_2a.md
 // (A) omega_nw*(r(-1)-infl): a sajat toke biztonsagos hozama
 // (B) gam_nw*pi_nw*lev*(ret + q(-1) + k(-1)): premium a teljes eszkozallomanyon
 //     (Q_{t-1}K_t a modellben q(-1)+k(-1): a termeles is k(-1)-et hasznal)

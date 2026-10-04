@@ -4,6 +4,8 @@
 végrehajtása. Kérdés: a „hosszú távon fékező gyorsító” (K-1, A25) a teljes BGG-modell
 tulajdonsága, vagy a modellben használt redukált nettóvagyon-egyenlet műterméke?*
 
+> **⚠⚠ 2a review (2026-10-04, [`2026-10-04_v11_W0b_review_2a.md`](2026-10-04_v11_W0b_review_2a.md)):** az (A)–(B) algebra, az időzítés és a kód helyes, de a „teljes” egyenlet valójában **kibővített BGG-lite**: a (C) tag (`w^e_j = y_j`) ad hoc, nem BGG-bér és nem Christensen–Dib-seed money, és nincs GE-lezárása. A `NWSPEC=1` számai ezért **feltáró diagnosztikák**; a lezárás a v11-terv W0c munkacsomagja.
+>
 > **⚠ FRISSÍTVE a W0b újrafuttatása után (10. szakasz):** az A25 a teljes egyenlettel is
 > fennáll; a műtermék-gyanú csak a hazai KKV tartós nettó vagyonára igazolódott. Új,
 > kontraintuitív eredmény: a közölt GDP-sáv az `omega_nw`-tól függ (F08).

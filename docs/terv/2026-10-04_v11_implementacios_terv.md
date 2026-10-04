@@ -172,6 +172,36 @@ kapcsoló van: `-DNWSPEC`, `-DPINW`, `-DOMEGANW`; alapból a v10-et adják.
 nemlineáris steady state-tel; a W0b-t a 2. review-kör előtt futtattuk; az
 `omega_nw`-scan utólagos.
 
+### 3.2c W0c — a 2a review nyomán (2026-10-04), a `NWSPEC`-döntés előfeltétele
+
+A 2a review ([`2026-10-04_v11_W0b_review_2a.md`](2026-10-04_v11_W0b_review_2a.md))
+szerint a `NWSPEC=1` jelenleg csak feltáró. Amíg a W0c nincs kész, **nincs
+`NWSPEC`- és `omega_nw`-alapérték-választás**, az A26 és az F08 feltételes.
+
+1. **A (C) tag mikroalapja, egyetlen lezárás:** BGG-vállalkozói bér (külön
+   vállalkozói munkainput, `w^e_j` faktorár, várhatóan `y_j + mc_j`) VAGY
+   Christensen–Dib-seed money (`g_t` forrása és dinamikája). Választás és
+   levezetés futtatás előtt, ebbe a dokumentumba.
+2. **Stock-flow konzisztens GE-lezárás:** a (C) forrása a háztartási oldalon, a
+   kilépők `(1−γ)V` fogyasztása az erőforrás-korlátban, vagy igazolt kis-tag közelítés.
+3. **A BGG/CD adósságköltség és monitoring leképezése** a `ret`, `efp`, `pi_nw`,
+   `r − infl` változókra („kibővített BGG-lite” név, S3).
+4. **Használható tartomány, előre rögzítve:** mindkét rezsim BK-érvényes,
+   PF-konvergens, a statikus Jacobi jól kondicionált (legkisebb szinguláris érték,
+   kondíciószám), rácsfinomításra folytonos, és lokalitási korlát a %-eltérésekre.
+   A `polus_a_racson` jelző neve: `elojelvaltas_vagy_szingularitas`.
+5. **Mindkét rezsim BK-ja** minden rácsponton (S5).
+6. **π-scan a gazdasági eredményekre** (küszöb, GDP-sáv, `wen_j`), `NWSPEC=1`,
+   χ = 0,04, mindkét OPTEN, három ω (K9).
+7. **`wen_j ≥ 0` őr** minden kalibráció- és kapcsolókombinációra (K4). Ismert
+   negatív eset: ω = 0,9826, π = 0,0075, CALIB26 `lev_L = 2,882` → kb. −0,004.
+8. **Hosszú horizont** (D7) és terminális reziduum (K10).
+9. **χ = 0,02 / 0,06** és finomabb ACCSCALE-rács az A26-hoz; **`rho_acc`-izoláló
+   futás** (`OPTEN=3` / `-DRHOACC`).
+10. **Tagonkénti export** ((A)/(B)/(C), `nw`, `efp`) minden érzékenységi futásban (K7).
+11. **Megerősítő futás:** a javított specifikációt tiszta, automatizált futás,
+    mentett loggal ismételje meg; csak utána alapérték-döntés (A1–A2).
+
 ### 3.3 Munka
 
 Kb. 1–2 nap (levezetés, a JV-forrás összevetése). Ha W0b kell: +2 nap.
