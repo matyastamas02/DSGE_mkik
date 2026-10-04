@@ -160,6 +160,14 @@ előjelet vált. **A 4. pont szabálya szerint W0b indul** (`-DNWSPEC=1`, a leve
 8. szakasza szerint). A döntés a (C) tag specifikációján múlik
 (`w^e_j = y_j` vs. szintben állandó), ezt a 2. review-körnek ellenőriznie kell.
 
+### 3.2b W0b eredménye (2026-10-04)
+
+Lefutott (levezetés-dokumentum 10. szakasza). Az A25 a teljes egyenlettel és
+három `omega_nw`-értékkel is fennáll (A26). Új, kontraintuitív eredmény: a közölt
+GDP-sáv az `omega_nw`-tól függ, BGG-konzisztens értéknél kb. +0,3…+0,7/0,8% (F08).
+A teljes egyenlet és `OPTEN=1` mellett nagy ACCSCALE-nél pólus. A v11-ben két új
+kapcsoló van: `-DNWSPEC`, `-DOMEGANW`; alapból mindkettő a v10-et adja.
+
 ### 3.3 Munka
 
 Kb. 1–2 nap (levezetés, a JV-forrás összevetése). Ha W0b kell: +2 nap.

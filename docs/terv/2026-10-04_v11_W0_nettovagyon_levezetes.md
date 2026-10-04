@@ -4,7 +4,11 @@
 végrehajtása. Kérdés: a „hosszú távon fékező gyorsító” (K-1, A25) a teljes BGG-modell
 tulajdonsága, vagy a modellben használt redukált nettóvagyon-egyenlet műterméke?*
 
-> **Eredmény röviden.** A redukált egyenletből **egy nem elhanyagolható tag hiányzik**:
+> **⚠ FRISSÍTVE a W0b újrafuttatása után (10. szakasz):** az A25 a teljes egyenlettel is
+> fennáll; a műtermék-gyanú csak a hazai KKV tartós nettó vagyonára igazolódott. Új,
+> kontraintuitív eredmény: a közölt GDP-sáv az `omega_nw`-tól függ (F08).
+>
+> **Eredmény röviden (W0, behelyettesítés alapján).** A redukált egyenletből **egy nem elhanyagolható tag hiányzik**:
 > a vállalkozói jövedelem / belépő transzfer. A BGG-ben ez azért hagyható el, mert
 > kicsi; ebben a modellben az `omega_nw = 0,95` miatt az állandósult azonosság
 > negyedévente a nettó vagyon kb. **4%-ának** megfelelő transzfert követel, a BGG-kalibráció
@@ -176,3 +180,75 @@ redukált egyenlet egy, ebben a kalibrációban nagy tagot elhagy.
   megjegyzésébe ez bekerül; az állítás státuszáról a W0b után dönt a csapat.
 - **A workshop-anyag:** az A25-öt jelenleg „új mérésként” mutatja. Ezt a W0 nyomán
   óvatosabban kellene keretezni, vagy elhagyni; ez a csapat döntése.
+
+---
+
+## 10. W0b — az újrafuttatás eredménye (2026-10-04)
+
+Futtatók: `sens_nwspec_v11.m` (→ `t61`–`t61e`), `sens_omeganw_v11.m` (→ `t61f`, `t61g`).
+Modell: `jv_dsge_v11.mod`, `-DNWSPEC=0|1|2`, `-DPINW`, `-DOMEGANW`.
+
+### 10.1 Technikai
+- `NWSPEC=0` mellett a v11 **bitre a v10**, SC=1..4 (az `OMEGANW` kapcsoló felvétele után is).
+- `NWSPEC=1` és `2`, `PINW = 0,0025 / 0,005 / 0,0075`: BK a kezdeti és a záró
+  rezsimben is 13/13, nulla-sokk pontosan 0.
+
+### 10.2 Mi lett a W0 jóslatából
+
+| | W0 (behelyettesítés) | W0b (újraoldva) |
+|---|---|---|
+| hazai KKV tartós nw, aszimm. χ, ACC=100 | −0,76 → **+0,57** | −0,75 → **+1,51** |
+| export-KKV, ugyanott | −1,06 → −0,57 | −1,08 → −0,64 |
+| ACC=0 esetek | kis változás | kis változás (pl. E −1,09 → −1,19) |
+
+Az irány stimmelt; a visszahatások a hazai KKV-nál felerősítették a változást.
+
+### 10.3 Az A25 sorsa: **fennáll** (A26)
+
+| | aszimm. χ küszöb (OPTEN=0 / 1) | szimm. χ küszöb |
+|---|---|---|
+| NWSPEC=0 (v10) | 36,50 / 22,25 | 0 / 0 |
+| NWSPEC=1 (teljes) | 32,19 / 19,55 | 0 / 0 |
+| NWSPEC=2 (csak A+B) | 35,78 / 21,94 | 0 / 0 |
+
+Az `omega_nw = 0,9728` és `0,9826` mellett is ugyanez a minta (12/12 + 12/12).
+**A szimmetrikus-χ eredmény tehát nem a redukált nettóvagyon-egyenlet műterméke.**
+A korábbi „fékező gyorsító” mechanizmus-leírás viszont a teljes egyenlettel nem
+igaz minden típusra: a hazai KKV tartós nettó vagyona erős hozzáférési csatornával nő.
+
+### 10.4 Kontraintuitív: a GDP-sáv az `omega_nw`-tól függ (F08)
+
+Utólagos, a W0b-ben nem előre rögzített scan, de a 4. szakaszból következik: a
+vállalkozói jövedelem tag súlya és a tartós szorzó is az `omega_nw`-tól függ.
+
+| `omega_nw` | redukált nw | teljes nw |
+|---|---|---|
+| 0,95 (v10 alapág) | +0,52 … +1,18% | +0,62 … +1,81% |
+| 0,9728 | +0,39 … +0,89% | +0,45 … +1,17% |
+| 0,9826 (BGG-konzisztens: 0,9728/β) | +0,30 … +0,68% | +0,34 … +0,83% |
+
+A 9 konfiguráció mindenhol pozitív és BK-érvényes. **Kontraintuitív, hogy a
+nagyobb perzisztencia kisebb GDP-hatást ad:** nagyobb `omega_nw` mellett a tartós
+fixpontban nagyobb az `1/(1−omega_nw)` szorzó, a felárcsökkenés erősebben csökkenti
+a nettó vagyont, és a χ-fék erősebb. A regiszter a 0,95-öt korábban „BGG-konvenció”
+címkével horgonyzottnak jelölte; ez nem a BGG-érték (a paraméter-regiszterben javítva).
+
+### 10.5 Kontraintuitív: pólus a teljes egyenlettel, magas `rho_acc` mellett
+
+`NWSPEC=1` és `OPTEN=1` (`rho_acc = 0,9673`) mellett a KKV−L tartós értéke 60 és 80
+közötti ACCSCALE-nél előjelet vált és felrobban (pl. −87 pp), mindhárom
+`omega_nw`-vel, miközben a pont formálisan BK-érvényes. Ok: a teljes egyenlet egy
+új, önerősítő hurkot nyit (kibocsátás → vállalkozói jövedelem → nettó vagyon →
+felár → hozzáférés → beruházás → kibocsátás), amelynek hosszú távú erősítése itt
+eléri az 1-et. Ezen a tartományon a tartós érték nem értelmezhető. A küszöbök
+(19–41) ettől távol vannak, ezeket nem érinti. `OPTEN=0` mellett nincs pólus.
+
+### 10.6 Ami ebből következik
+
+- **A26 (áll):** az A25 robusztus a nw-specifikációra és az `omega_nw`-re.
+- **F08 (feltételes):** az A01 GDP-sáv `omega_nw`-függő; elfogadási feltétel az
+  `omega_nw` horgonyzása vagy sávként közlése. **Ez a projekt fő közölt számát érinti.**
+- **Az `omega_nw` státusza** a paraméter-regiszterben „feltételes”.
+- **A v11 alapértelmezéséről** (`NWSPEC`, `OMEGANW`) a csapat dönt; a W0b ehhez
+  adja a számokat, nem dönt helyette.
+- A 2. review-kör ezt a szakaszt is megkapja.

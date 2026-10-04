@@ -5,11 +5,11 @@
 
 # DSGE_mkik — állapotlap
 
-*Generálva a füstteszt 2026-10-04 15:29-kor futott eredményéből · commit `7435d7a` · ág `main`*
+*Generálva a füstteszt 2026-10-04 16:53-kor futott eredményéből · commit `1c3928e` · ág `main`*
 
 **Fő modell:** `src/modell/1_fo_vonal_jv/jv_dsge_v09_access.mod` (Jakab–Világi mag). A `kkv_dsge_*` a referencia-vonal.
 
-**Őrök:** 163 rendben, 0 hiba.
+**Őrök:** 168 rendben, 0 hiba.
 
 ✅ **Minden „áll” állításnak van őre, és minden őr fut.**
 
@@ -17,14 +17,14 @@
 
 ## Mit állítunk ma
 
-### 🟢 Ami ÁLL — 24 db
+### 🟢 Ami ÁLL — 25 db
 
 *Ezekre lehet építeni a tanulmányban.*
 
 **A01.** A −200 bp szuverén és −45 bp banki felár-konvergenciát feltételező euró-szcenárióban a terminálisan determinált OPTEN=0 ágon a modell tartós GDP-hatása +0,52% … +1,18% a három szcenárió × három transzmissziós változat mindegyikében (9/9) pozitív.
 
 > bizonyíték: `t47` — — őr: ✅ `t47 ERVENYES SZINT: a terminalisan determinált GDP-sav 0.52% ... 1.18%`
-> *2026-08-16 · BK-KORREKCIÓ 2026-08-24: a korábbi +0,3%…+2,9%-os sáv BK-invalid OPTEN=1/2/3 sorokat is tartalmazott, ezért nem közölhető modell-eredményként. A perfect-foresight solver mind a 36 sort megoldja, de a terminális lokális BK-feltétel csak az OPTEN=0 ág 9 sorában teljesül. A −200 bp szcenárió maga továbbra is hivatkozás nélküli kalibrált kontrafaktuális, nem empirikusan azonosított euróhatás.*
+> *2026-08-16 · ⚠ 2026-10-04 (F08): a sáv az omega_nw = 0,95-ön áll; BGG-konzisztens 0,9826 mellett +0,30…+0,68% (redukált) / +0,34…+0,83% (teljes nw). BK-KORREKCIÓ 2026-08-24: a korábbi +0,3%…+2,9%-os sáv BK-invalid OPTEN=1/2/3 sorokat is tartalmazott, ezért nem közölhető modell-eredményként. A perfect-foresight solver mind a 36 sort megoldja, de a terminális lokális BK-feltétel csak az OPTEN=0 ág 9 sorában teljesül. A −200 bp szcenárió maga továbbra is hivatkozás nélküli kalibrált kontrafaktuális, nem empirikusan azonosított euróhatás.*
 
 **A02.** Az exportáló KKV hitelhozzáférése 13-szorosa a hazai KKV-énak (61,9% vs 4,8%).
 
@@ -139,9 +139,14 @@
 **A25.** A KKV-küszöb (F01) a visszavont 3×-os chi-aszimmetria (V04, alapértelmezés-konfliktus K01) következménye. Szimmetrikus chi (0,02 / 0,04 / 0,06) mellett a KKV−L tartós kibocsátás-különbség hozzáférési csatorna nélkül (ACCSCALE = 0) is pozitív, tehát pozitív küszöb nincs; chi = 0,04 mellett +0,17 pp (OPTEN=0) és +0,07 pp (OPTEN=1). Az aszimmetrikus alapágban ugyanez −0,26 pp és −0,41 pp.
 
 > bizonyíték: `t58, t58b` — — őr: ✅ `t58 FO ALLITAS: szimmetrikus chi mellett a KKV-L hozzaferesi csatorna nelkul is pozitiv es nincs kuszob`
-> *2026-10-04 · ⚠⚠ 2026-10-04, v11 W0-levezetés (docs/terv/2026-10-04_v11_W0_nettovagyon_levezetes.md): a mechanizmus VALÓSZÍNŰLEG a redukált nw-egyenlet MŰTERMÉKE — az elhagyott vállalkozói jövedelem tag az omega_nw = 0,95 miatt nem kicsi, és visszatéve a hazai KKV tartós nettó vagyona előjelet vált (behelyettesítés, nem újraoldott modell). Az állítás a jelenlegi modellben áll, a státuszáról a W0b újramérése után dönt a csapat. ⚠ 2026-10-04, 1. v11-review (S1, S3): ez a JELENLEGI REDUKÁLT LOG-LINEÁRIS SPECIFIKÁCIÓ tulajdonsága; hogy a teljes nemlineáris BGG-modellnek is tulajdonsága-e, nem igazolt (v11-terv W0), és a „tartós” érték a log-lineáris rendszer permanens forcing melletti fixpontja. KONTRAINTUITÍV MECHANIZMUS a jelenlegi specifikációban: a tartós fixpontban a saját tőke a felárral arányos (nw = omega_nw·lev·efp/(1−omega_nw)), ezért tartós felárcsökkenésnél a saját tőke CSÖKKEN, a tőkeáttétel nő, és a chi·(q+k−nw) tag a felárcsökkenés egy részét visszaveszi. Hosszú távon tehát a gyorsító FÉKKÉNT hat, és a nagyobb chi a KKV-t bünteti. Kontrollként az aszimmetrikus ág bitre visszaadja a t48b-t. ⚠ A küszöbforma közlése (F01) ezért a K01 csapatdöntésétől függ. ⚠ Egy diagnosztikai dekompozíció szerint szimmetrikus chi és ACCSCALE = 0 mellett a maradék kis KKV-előny főként az aa_j (importintenzitás, átvett JV-érték, horgonyzatlan) heterogenitásából jön; ehhez még nincs őr, ezért nem állítás.*
+> *2026-10-04 · ⚠ 2026-10-04 W0b (A26): az A25 a teljes nw-egyenlettel és omega_nw = 0,95 / 0,9728 / 0,9826 mellett is fennáll; a mechanizmus-leírás (fékező gyorsító) a hazai KKV-ra ACCSCALE=100 mellett NEM áll. Korábbi W0-levezetés (docs/terv/2026-10-04_v11_W0_nettovagyon_levezetes.md): a mechanizmus VALÓSZÍNŰLEG a redukált nw-egyenlet MŰTERMÉKE — az elhagyott vállalkozói jövedelem tag az omega_nw = 0,95 miatt nem kicsi, és visszatéve a hazai KKV tartós nettó vagyona előjelet vált (behelyettesítés, nem újraoldott modell). Az állítás a jelenlegi modellben áll, a státuszáról a W0b újramérése után dönt a csapat. ⚠ 2026-10-04, 1. v11-review (S1, S3): ez a JELENLEGI REDUKÁLT LOG-LINEÁRIS SPECIFIKÁCIÓ tulajdonsága; hogy a teljes nemlineáris BGG-modellnek is tulajdonsága-e, nem igazolt (v11-terv W0), és a „tartós” érték a log-lineáris rendszer permanens forcing melletti fixpontja. KONTRAINTUITÍV MECHANIZMUS a jelenlegi specifikációban: a tartós fixpontban a saját tőke a felárral arányos (nw = omega_nw·lev·efp/(1−omega_nw)), ezért tartós felárcsökkenésnél a saját tőke CSÖKKEN, a tőkeáttétel nő, és a chi·(q+k−nw) tag a felárcsökkenés egy részét visszaveszi. Hosszú távon tehát a gyorsító FÉKKÉNT hat, és a nagyobb chi a KKV-t bünteti. Kontrollként az aszimmetrikus ág bitre visszaadja a t48b-t. ⚠ A küszöbforma közlése (F01) ezért a K01 csapatdöntésétől függ. ⚠ Egy diagnosztikai dekompozíció szerint szimmetrikus chi és ACCSCALE = 0 mellett a maradék kis KKV-előny főként az aa_j (importintenzitás, átvett JV-érték, horgonyzatlan) heterogenitásából jön; ehhez még nincs őr, ezért nem állítás.*
 
-### 🟡 Ami FELTÉTELES — 7 db
+**A26.** A szimmetrikus-χ eredmény (A25) robusztus a nettóvagyon-egyenlet specifikációjára és a nettóvagyon-perzisztenciára: a v10 redukált és a BGG-azonosságból levezetett teljes egyenlettel (v11 -DNWSPEC=0/1), omega_nw = 0,95 / 0,9728 / 0,9826 mellett, mindkét rho_acc-ágon szimmetrikus χ mellett nincs KKV-küszöb (12/12), aszimmetrikus χ mellett van (12/12, 19–41 az ACCSCALE-skálán).
+
+> bizonyíték: `t61, t61g` — — őr: ✅ `t61g A25 ROBUSZTUS: szimmetrikus chi mellett minden nw-specifikacio es omega_nw mellett nincs kuszob`
+> *2026-10-04 · A W0-levezetés gyanúja (a K-1 a redukált egyenlet műterméke) RÉSZBEN igazolódott: a teljes egyenlettel a hazai KKV tartós nettó vagyona ACCSCALE=100 mellett előjelet vált (−0,75% → +1,51%). Az A25 ettől függetlenül fennáll. A teljes egyenlet és rho_acc = 0,9673 (OPTEN=1) mellett nagy ACCSCALE-nél a tartós fixpont pólushoz ér (önerősítő hurok: kibocsátás → vállalkozói jövedelem → nettó vagyon → felár → hozzáférés → kibocsátás); ott a tartós érték nem értelmezhető, a küszöböket ez nem érinti.*
+
+### 🟡 Ami FELTÉTELES — 8 db
 
 *Csak a feltétellel együtt közölhető — küszöbformában, vagy az elfogadási feltétel kiírásával.*
 
@@ -179,6 +184,11 @@
 
 > bizonyíték: `t56` — — őr: ✅ `t56 SZINT: az EKB-atgyuruzes euroban becsapodaskor (0.69 / 0.73)`
 > *2026-10-04 · KONTRAINTUITÍV: valutaunióban 1:1-es átgyűrűzés volna várható. A különbséget a −nu_uni·bstar tag viszi: a kamatemelés még abban a negyedévben javítja a külkereskedelmi mérleget, a bstar nő, és ez a hazai kamatot lefelé húzza. A nu_uni = 0,25 a regiszter szerint technikai zárás, nem becsült paraméter, tehát az átgyűrűzés mértéke egy technikai paraméteren múlik. Elfogadási feltétel: a nu_uni horgonyzása vagy érzékenységi scan.*
+
+**F08.** KONTRAINTUITÍV: az aggregált tartós GDP-hatás sávja (A01: +0,52% … +1,18%) a nettóvagyon-perzisztenciától (omega_nw = 0,95) függ, és magasabb perzisztenciánál KISEBB. A BGG/Christensen–Dib túlélési rátának megfelelő omega_nw = 0,9826 mellett +0,30% … +0,68% (redukált nw-egyenlet), illetve +0,34% … +0,83% (teljes nw-egyenlet); a 9 konfiguráció mindegyike pozitív és BK-érvényes marad.
+
+> bizonyíték: `t61g` — — őr: ✅ `t61g SZINT: az A01 GDP-sav omega_nw-fuggo (0.95: 0.52..1.18; 0.9826: 0.30..0.68; teljes nw 0.9826: 0.34..0.83)`
+> *2026-10-04 · A regiszter az omega_nw = 0,95-öt korábban „BGG (1999) konvenció”-ként horgonyzottnak jelölte; ez nem a BGG-érték (a paraméter-regiszterben javítva). Mechanizmus: nagyobb omega_nw mellett a tartós fixpontban nagyobb az 1/(1−omega_nw) szorzó, a felárcsökkenés erősebben csökkenti a nettó vagyont, és a χ-fék erősebb. ELFOGADÁSI FELTÉTEL: az omega_nw horgonyzása vagy a GDP-sáv omega_nw-sávként való közlése.*
 
 ### 🔴 Amit VISSZAVONTUNK — 9 db
 
@@ -233,11 +243,11 @@
 
 | Státusz | db |
 |---|---:|
-| 🟢 horgonyzott | 33 |
+| 🟢 horgonyzott | 32 |
 | 🔴 horgonyzatlan | 21 |
 | ⚪ származtatott | 17 |
 | 🟡 pótolandó | 11 |
-| 🟡 feltételes | 9 |
+| 🟡 feltételes | 10 |
 
 *Az **érték** oszlop a modellből jön futásidőben (`-DOPTEN=0` ág), nem a CSV-ből — kézzel átírt érték nem tud becsúszni.*
 
@@ -298,7 +308,7 @@
 | `nu_b` | 0.001 | 🟡 feltételes | ⚠ KÉTÉRTELMŰ: a regiszter JV-poszteriorként vette át (MNB WP 2008/9), a modellben viszont technikai NFA-/UIP-zárásként működik a lebegő rezsimben. A pontos JV-tábla és a becslési státusz ellenőrzendő. |  |  |
 | `om_no` | 0.25 | 🟢 horgonyzott | Jakab–Világi, MNB WP 2008/9 (strukturális/survey) |  |  |
 | `eps_qw` | 0.96 | 🟢 horgonyzott | Bernanke–Gertler–Gilchrist (1999) konvenció |  |  |
-| `omega_nw` | 0.95 | 🟢 horgonyzott | Bernanke–Gertler–Gilchrist (1999) konvenció |  |  |
+| `omega_nw` | 0.95 | 🟡 feltételes | ⚠ 2026-10-04 (v11 W0b): a 0,95 NEM a BGG-érték — a BGG/Christensen–Dib túlélési ráta 0,9728, a modell jelölésében omega_nw = 0,9728/beta = 0,9826. Az A01 GDP-sáv ettől függ (F08); a redukált nw-egyenlettel együtt a nettó vagyon kb. 4%-ának megfelelő negyedéves transzfert implikál (W0) | -DOMEGANW (v11) | docs/terv/2026-10-04_v11_W0_nettovagyon_levezetes.md |
 | `rho_a` | 0.552 | 🟢 horgonyzott | Jakab–Világi, MNB WP 2008/9, becsült poszterior átlag |  |  |
 | `rho_x` | 0.625 | 🟢 horgonyzott | Jakab–Világi, MNB WP 2008/9, becsült poszterior átlag |  |  |
 | `rho_c` | 0.767 | 🟢 horgonyzott | Jakab–Világi, MNB WP 2008/9, becsült poszterior átlag |  |  |
@@ -359,7 +369,7 @@
 
 ---
 
-## Őrök (163 db)
+## Őrök (168 db)
 
 *A füstteszt minden ellenőrzése. Ez a projekt egyetlen olyan nyilvántartása, ami nem tud némán elcsúszni: ha egy állítás megdől, itt megbukik egy sor.*
 
@@ -509,6 +519,11 @@
 - ✅ t58 KONTROLL: az aszimmetrikus ag bitre visszaadja a t48b kuszobot
 - ✅ t58 FO ALLITAS: szimmetrikus chi mellett a KKV-L hozzaferesi csatorna nelkul is pozitiv es nincs kuszob
 - ✅ t58 SZINT: KKV-L hozzaferesi csatorna nelkul (aszimm -0.26 / -0.41, chi=0.04 +0.17 / +0.07)
+- ✅ t61 v11 nwspec letezik
+- ✅ t61 v11: NWSPEC=0 bitre a v10, NWSPEC=1/2 BK-stabil mindket rezsimben
+- ✅ t61g A25 ROBUSZTUS: szimmetrikus chi mellett minden nw-specifikacio es omega_nw mellett nincs kuszob
+- ✅ t61g SZINT: az A01 GDP-sav omega_nw-fuggo (0.95: 0.52..1.18; 0.9826: 0.30..0.68; teljes nw 0.9826: 0.34..0.83)
+- ✅ t61g KORLAT: teljes nw-egyenlet es OPTEN=1 mellett a tartos fixpont polushoz er
 - ✅ t53c dekomp BK-stressz letezik
 - ✅ t53c: mind a 45 PF/BK diagnosztika technikailag lefutott
 - ✅ t53c KORREKCIO: az OPTEN1 ACC100 racs pontosan 0/45 terminalis BK-stabil (gyok/elo=15/13)
@@ -527,6 +542,6 @@
 - ✅ t00 PHILLIPS: az aszimmetrikus arsokkok (eps_md / eps_mx) egyik szcenarioban sincsenek hajtva
 - ✅ t00 SZERKEZET: mind a 4 modell-vonal megvan, README-vel
 - ✅ t00 SZERKEZET: a FO MODELL a helyen van (1_fo_vonal_jv)
-- ✅ t00 SZERKEZET: minden futtato letezo .mod-ot hiv (34 futtato, 20 modell)
+- ✅ t00 SZERKEZET: minden futtato letezo .mod-ot hiv (36 futtato, 21 modell)
 
 </details>

@@ -24,7 +24,7 @@ nu_b,C,JV-becsült (MNB WP 2008/9 poszterior),feltételes,"⚠ KÉTÉRTELMŰ: a 
 nu_uni,E,származtatott vagy technikai,származtatott,más paraméterekből számolódik / technikai zárás,-DNUUNI,,,"technikai uniózárás, nem strukturális becslés"
 om_no,C,JV-strukturális / survey,horgonyzott,"Jakab–Világi, MNB WP 2008/9 (strukturális/survey)",,,,aktív
 eps_qw,C,BGG (1999) konvenció,horgonyzott,Bernanke–Gertler–Gilchrist (1999) konvenció,,,,aktív
-omega_nw,C,BGG (1999) konvenció,horgonyzott,Bernanke–Gertler–Gilchrist (1999) konvenció,,,,aktív
+omega_nw,C,BGG (1999) konvenció,feltételes,"⚠ 2026-10-04 (v11 W0b): a 0,95 NEM a BGG-érték — a BGG/Christensen–Dib túlélési ráta 0,9728, a modell jelölésében omega_nw = 0,9728/beta = 0,9826. Az A01 GDP-sáv ettől függ (F08); a redukált nw-egyenlettel együtt a nettó vagyon kb. 4%-ának megfelelő negyedéves transzfert implikál (W0)",-DOMEGANW (v11),t61g SZINT: az A01 GDP-sav omega_nw-fuggo,docs/terv/2026-10-04_v11_W0_nettovagyon_levezetes.md,aktív
 om_E,A,saját adat (Opten-panel),feltételes,"Opten-panel, de a 10+ fős körön BELÜLI részesedés — KSH/Eurostat SBS mikrokör-bontás kell az átskálázáshoz (teendők 2.5)",-DOPTEN,t46: sulyok 1-re osszegzodnek,2026-08-16_opten_kalibracio_eredmeny.md,aktív
 om_D,A,saját adat (Opten-panel),feltételes,"Opten-panel, de a 10+ fős körön BELÜLI részesedés — KSH/Eurostat SBS mikrokör-bontás kell az átskálázáshoz (teendők 2.5)",-DOPTEN,t46: sulyok 1-re osszegzodnek,2026-08-16_opten_kalibracio_eredmeny.md,aktív
 om_L,A,saját adat (Opten-panel),feltételes,"Opten-panel, de a 10+ fős körön BELÜLI részesedés — KSH/Eurostat SBS mikrokör-bontás kell az átskálázáshoz (teendők 2.5)",-DOPTEN,t46: sulyok 1-re osszegzodnek,2026-08-16_opten_kalibracio_eredmeny.md,aktív
