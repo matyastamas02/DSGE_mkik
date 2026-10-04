@@ -5,7 +5,7 @@
 
 # DSGE_mkik — állapotlap
 
-*Generálva a füstteszt 2026-10-04 15:29-kor futott eredményéből · commit `f73a133` · ág `main`*
+*Generálva a füstteszt 2026-10-04 15:29-kor futott eredményéből · commit `ebd7c4f` · ág `main`*
 
 **Fő modell:** `src/modell/1_fo_vonal_jv/jv_dsge_v09_access.mod` (Jakab–Világi mag). A `kkv_dsge_*` a referencia-vonal.
 
@@ -139,7 +139,7 @@
 **A25.** A KKV-küszöb (F01) a visszavont 3×-os chi-aszimmetria (V04, alapértelmezés-konfliktus K01) következménye. Szimmetrikus chi (0,02 / 0,04 / 0,06) mellett a KKV−L tartós kibocsátás-különbség hozzáférési csatorna nélkül (ACCSCALE = 0) is pozitív, tehát pozitív küszöb nincs; chi = 0,04 mellett +0,17 pp (OPTEN=0) és +0,07 pp (OPTEN=1). Az aszimmetrikus alapágban ugyanez −0,26 pp és −0,41 pp.
 
 > bizonyíték: `t58, t58b` — — őr: ✅ `t58 FO ALLITAS: szimmetrikus chi mellett a KKV-L hozzaferesi csatorna nelkul is pozitiv es nincs kuszob`
-> *2026-10-04 · KONTRAINTUITÍV MECHANIZMUS: a tartós egyensúlyban a saját tőke a felárral arányos (nw = omega_nw·lev·efp/(1−omega_nw)), ezért tartós felárcsökkenésnél a saját tőke CSÖKKEN, a tőkeáttétel nő, és a chi·(q+k−nw) tag a felárcsökkenés egy részét visszaveszi. Hosszú távon tehát a gyorsító FÉKKÉNT hat, és a nagyobb chi a KKV-t bünteti. Kontrollként az aszimmetrikus ág bitre visszaadja a t48b-t. ⚠ A küszöbforma közlése (F01) ezért a K01 csapatdöntésétől függ. ⚠ Egy diagnosztikai dekompozíció szerint szimmetrikus chi és ACCSCALE = 0 mellett a maradék kis KKV-előny főként az aa_j (importintenzitás, átvett JV-érték, horgonyzatlan) heterogenitásából jön; ehhez még nincs őr, ezért nem állítás.*
+> *2026-10-04 · ⚠ 2026-10-04, 1. v11-review (S1, S3): ez a JELENLEGI REDUKÁLT LOG-LINEÁRIS SPECIFIKÁCIÓ tulajdonsága; hogy a teljes nemlineáris BGG-modellnek is tulajdonsága-e, nem igazolt (v11-terv W0), és a „tartós” érték a log-lineáris rendszer permanens forcing melletti fixpontja. KONTRAINTUITÍV MECHANIZMUS a jelenlegi specifikációban: a tartós fixpontban a saját tőke a felárral arányos (nw = omega_nw·lev·efp/(1−omega_nw)), ezért tartós felárcsökkenésnél a saját tőke CSÖKKEN, a tőkeáttétel nő, és a chi·(q+k−nw) tag a felárcsökkenés egy részét visszaveszi. Hosszú távon tehát a gyorsító FÉKKÉNT hat, és a nagyobb chi a KKV-t bünteti. Kontrollként az aszimmetrikus ág bitre visszaadja a t48b-t. ⚠ A küszöbforma közlése (F01) ezért a K01 csapatdöntésétől függ. ⚠ Egy diagnosztikai dekompozíció szerint szimmetrikus chi és ACCSCALE = 0 mellett a maradék kis KKV-előny főként az aa_j (importintenzitás, átvett JV-érték, horgonyzatlan) heterogenitásából jön; ehhez még nincs őr, ezért nem állítás.*
 
 ### 🟡 Ami FELTÉTELES — 7 db
 
