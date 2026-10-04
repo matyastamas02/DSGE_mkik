@@ -1,0 +1,32 @@
+teszt,reszlet,ertek,kuszob,rendben
+0_regresszio,"SC=1 TS=3",0,1e-12,1
+0_regresszio,"SC=2 TS=3",0,1e-12,1
+0_regresszio,"SC=3 TS=3",0,1e-12,1
+0_regresszio,"SC=4 TS=3",0,1e-12,1
+1_beagyazas,"SC=1 TS=3",3.88578058618805e-16,1e-09,1
+1_beagyazas,"SC=2 TS=3",4.30211422042248e-16,1e-09,1
+1_beagyazas,"SC=3 TS=3",1.38777878078145e-16,1e-09,1
+2_bk,"SC=1 TS=1 (gyok/elo kezdeti=13/13, terminalis=13/13, PF=1)",13,13,1
+2_bk,"SC=1 TS=2 (gyok/elo kezdeti=13/13, terminalis=13/13, PF=1)",13,13,1
+2_bk,"SC=1 TS=3 (gyok/elo kezdeti=13/13, terminalis=13/13, PF=1)",13,13,1
+2_bk,"SC=2 TS=1 (gyok/elo kezdeti=13/13, terminalis=13/13, PF=1)",13,13,1
+2_bk,"SC=2 TS=2 (gyok/elo kezdeti=13/13, terminalis=13/13, PF=1)",13,13,1
+2_bk,"SC=2 TS=3 (gyok/elo kezdeti=13/13, terminalis=13/13, PF=1)",13,13,1
+2_bk,"SC=3 TS=1 (gyok/elo kezdeti=13/13, terminalis=13/13, PF=1)",13,13,1
+2_bk,"SC=3 TS=2 (gyok/elo kezdeti=13/13, terminalis=13/13, PF=1)",13,13,1
+2_bk,"SC=3 TS=3 (gyok/elo kezdeti=13/13, terminalis=13/13, PF=1)",13,13,1
+2_bk,"SC=1 TS=3 rho=0.4 (gyok/elo kezdeti=13/13, terminalis=13/13, PF=1)",13,13,1
+2_bk,"SC=1 TS=3 rho=0.625 (gyok/elo kezdeti=13/13, terminalis=13/13, PF=1)",13,13,1
+2_bk,"SC=1 TS=3 rho=0.85 (gyok/elo kezdeti=13/13, terminalis=13/13, PF=1)",13,13,1
+3_nulla_sokk,"SC=4 TS=3 (PF-konvergens)",0,1e-12,1
+4_ystar_elojel,"x_E,x_D,x_L az 1. periodusban > 0",0.00474105679942818,0,1
+4_ar_perzisztencia,"ystar_{k+1}/ystar_k = 0.625000 (rho_ystar = 0.625)",0,1e-10,1
+4_rfor_info,"rer (1. per.) -- csak info",0.00676411273969403,NaN,1
+4_ar_perzisztencia,"r_for_{k+1}/r_for_k = 0.625000 (rho_rfor = 0.625)",0,1e-10,1
+5_rfor_rezsim,"k=12 (uni=0) monetaris reziduum",8.67361737988404e-19,1e-07,1
+5_rfor_rezsim,"k=13 (uni=1) monetaris reziduum",8.67361737988404e-19,1e-07,1
+5_rfor_euro_elojel,"k=13 dr/dr_for = 0.6896",0.00172406608210741,0,1
+5_rfor_rezsim,"k=14 (uni=1) monetaris reziduum",8.67361737988404e-19,1e-07,1
+5_rfor_euro_elojel,"k=14 dr/dr_for = 0.7297",0.0018243492254372,0,1
+6_sajatertek,"terminalis: uj gyokok = [0.4 0.85]",2.22044604925031e-16,1e-06,1
+6_sajatertek,"kezdeti: uj gyokok = [0.4 0.85]",1.11022302462516e-16,1e-06,1

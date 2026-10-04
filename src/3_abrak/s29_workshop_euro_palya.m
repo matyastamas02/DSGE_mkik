@@ -18,9 +18,16 @@
 % irjuk be kezzel. Az "alatta" pont a kuszob fele, a "felette" pont a
 % .mod alapertelmezese (ACCSCALE=100), amely a t47 szerint BK-ervenyes.
 %
-% MINDEN futasra terminalis BK-ellenorzes (bk_check_metrics). Ha barmelyik
+% MINDEN futasra BK-ellenorzes (bk_check_metrics) a KEZDETI (uni=0) ES a
+% TERMINALIS (uni=1) rezsimben is -- a kezdeti a bk_candidate_compare_v09.m
+% mintajat koveti (nulla endogen es exogen steady state). Ha barmelyik
 % nem BK-ervenyes, a script ABRA NELKUL leall -- BK-invalid palyat nem
 % rajzolunk ki (lasd a 2026-08-24-i BK-korrekciot).
+%
+% Mertekegyseg: a modell negyedeves (beta=0.99), a 2. panel kamata
+% negyedeves szazalekpont, NEM evesitett. Az 1. panel felarai viszont
+% EVESITETT bazispontban vannak (x4), hogy egyezzenek a bemutato
+% -200 / -45 bp-s szcenario-leirasaval.
 %
 % Kimenet: output/figures/f29_euro_palya_v09.png   (1-5. panel)
 %          output/figures/f30_kkv_kuszob_palya.png  (6. panel, kulon)
@@ -69,17 +76,17 @@ title(tl, sprintf(['Alap euro-szcenario, v09 fo modell (OPTEN=0, SCENARIO=1, ' .
     'ACCSCALE=%d) — BK-ervenyes'], acc_felett), 'FontWeight', 'bold');
 
 nexttile; hold on
-plot(t, 1e4*R.x('sov'), 'LineWidth', 2);
-plot(t, 1e4*R.x('bank'), 'LineWidth', 2);
+plot(t, 4e4*R.x('sov'), 'LineWidth', 2);   % negyedeves -> evesitett bp
+plot(t, 4e4*R.x('bank'), 'LineWidth', 2);
 xline(12, ':', 'csatlakozas');
-title('1. Bemenet: felar-konvergencia'); ylabel('bazispont');
+title('1. Bemenet: felar-konvergencia'); ylabel('evesitett bazispont');
 legend({'szuveren felar', 'banki felar'}, 'Location', 'southwest'); grid on
 
 nexttile; hold on
 plot(t, 100*R.v('r'), 'LineWidth', 2);
 plot(t, 100*R.v('rer'), 'LineWidth', 2);
 xline(12, ':');
-title('2. Kamat es realarfolyam'); ylabel('elteres, szazalekpont / %');
+title('2. Kamat es realarfolyam'); ylabel('elteres, negyedeves szazalekpont / %');
 legend({'kamat (r)', 'realarfolyam (rer)'}, 'Location', 'best'); grid on
 
 nexttile; hold on
@@ -129,10 +136,11 @@ close(f);
 
 % --- osszegzo tabla ----------------------------------------------------
 T = table([acc_alatt; acc_felett], [R_alatt.ervenyes; R_felett.ervenyes], ...
+    [R_alatt.n_unstable_kezdeti; R_felett.n_unstable_kezdeti], ...
     [R_alatt.n_unstable; R_felett.n_unstable], [R_alatt.n_forward; R_felett.n_forward], ...
     100*[R_alatt.y_vegso; R_felett.y_vegso], ...
     [R_alatt.kkv_l(end); R_felett.kkv_l(end)], ...
-    'VariableNames', {'accscale', 'bk_ervenyes', 'n_unstable', 'n_forward', ...
+    'VariableNames', {'accscale', 'bk_ervenyes', 'n_unstable_kezdeti', 'n_unstable', 'n_forward', ...
     'GDP_tartos_pct', 'KKV_minus_L_tartos_pp'});
 writetable(T, fullfile(tablak, 't57_workshop_palya.csv'));
 disp(T);
@@ -146,9 +154,15 @@ M_  = evalin('base', 'M_');
 oo_ = evalin('base', 'oo_');
 options_ = evalin('base', 'options_');
 B = bk_check_metrics(M_, options_, oo_);
+oo0 = oo_;                   % kezdeti (uni=0) rezsim: nulla steady state
+oo0.steady_state = zeros(M_.endo_nbr, 1);
+oo0.exo_steady_state = zeros(M_.exo_nbr, 1);
+oo0.exo_det_steady_state = zeros(M_.exo_det_nbr, 1);
+B0 = bk_check_metrics(M_, options_, oo0);
 R.ervenyes = double(oo_.deterministic_simulation.status == 1 && ...
-    B.check_ok == 1 && B.bk_ok == 1);
+    B.check_ok == 1 && B.bk_ok == 1 && B0.check_ok == 1 && B0.bk_ok == 1);
 R.n_unstable = B.n_unstable;  R.n_forward = B.n_forward;
+R.n_unstable_kezdeti = B0.n_unstable;
 n  = cellstr(M_.endo_names);
 xn = cellstr(M_.exo_names);
 t1 = M_.maximum_lag + 1;     % az 1. szimulacios periodus sora

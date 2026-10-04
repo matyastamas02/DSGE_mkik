@@ -391,6 +391,17 @@ aa_E   = 0.45; aa_D   = 0.80; aa_L   = 0.60;
 // A kalibracios tabla jelzi, hogy a lev_E = lev_D kenyszeritett egyenloseg
 // az Opten-panelbol szetszamolhato.
 chi_E = 0.06; chi_D = 0.06; chi_L = 0.02;
+// -DCHISYM=<x>: SZIMMETRIKUS chi ERZEKENYSEGI KAPCSOLO (2026-10-04).
+// Mindharom tipus chi-jet x-re allitja. A 3x-os aszimmetriat a regiszter
+// visszavonta (V04), az alapag megis azt futtatja (K01) -- ez a kapcsolo
+// azt meri, mennyit szamit. Kapcsolo nelkul a modell bitre az alapag; az
+// alapertelmezes cserje csapatdontes. Futtato: sens_chi_szimm_kuszob_v09.m
+@#ifndef CHISYM
+  @#define CHISYM = -1
+@#endif
+@#if CHISYM > 0
+chi_E = @{CHISYM}; chi_D = @{CHISYM}; chi_L = @{CHISYM};
+@#endif
 lev_E = 1.6;  lev_D = 1.6;  lev_L = 1.85;
 psi_E = 8.0;  psi_D = 8.0;  psi_L = 13.0;
 
