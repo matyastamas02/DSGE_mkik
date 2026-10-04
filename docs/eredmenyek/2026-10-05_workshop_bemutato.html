@@ -473,7 +473,10 @@ ol.chain .tag { font-family: var(--f-mono); font-size: 12px; color: var(--muted)
       <dt>\(\tau^{bank}_j\)</dt><dd>a banki felár átgyűrűzése: az irodalom és a saját mérésünk <b>ellentmond</b> (F06), lásd lent.</dd>
       <dt>\(\epsilon\), \(\omega^{nw}\)</dt><dd>0,96 és 0,95: JV-értékek</dd>
     </dl>
-    <div class="callout warn small"><h4>Két ismert alapértelmezés-konfliktus</h4><p><b>K01:</b> az alapág a visszavont 3×-os \(\chi\)-aszimmetriát futtatja. Ez nem formai: a \(\chi\)-sorrend megfordítása megfordítja a szegmenssorrendet (−1,22 pp → +0,74 pp, <code>t35</code>). <b>K02:</b> az alapág <code>lev_E = lev_D = 1,6</code>-ot futtat, pedig az Opten-adat szerint az export-KKV tőkeáttételesebb (A08). Mindkét csere csapatdöntés, ezért látható helyen tartjuk.</p></div>
+    <div class="callout warn small"><h4>Kontraintuitív: hosszú távon a gyorsító fékez</h4><p>A fenti kör az <b>átmenetet</b> írja le. A tartós egyensúlyban fordítva működik. A 2c egyenletből a tartós saját tőke a felárral arányos:</p>
+      <div class="eq">\[ nw_j = \frac{\omega^{nw}\,lev_j}{1-\omega^{nw}}\;efp_j \]</div>
+      <p>Ha a felár tartósan csökken, kisebb a többlethozam, és a saját tőke tartósan <b>csökken</b>. A beruházás közben nő, a tőkeáttétel (\(q+k-nw\)) emelkedik, és a \(\chi_j\)-tag a felárcsökkenés egy részét visszaveszi. Az alapágban a közvetlen −55 bp-es felárcsökkenésből az export-KKV-nál kb. negyed, a nagyvállalatnál kb. fele marad meg (diagnosztikai futás). Ezért <b>a nagyobb \(\chi\) a KKV-t bünteti</b>, nem segíti, és ezért fordítja meg a \(\chi\)-aszimmetria a KKV-eredményt (A25). Ez közvetlenül a modell 2c egyenletéből következik. Az „euró → jobb mérleg → olcsóbb hitel” narratíva tehát csak az átmenetre igaz, a tartós hatásra nem.</p></div>
+    <div class="callout warn small"><h4>Két ismert alapértelmezés-konfliktus</h4><p><b>K01:</b> az alapág a visszavont 3×-os \(\chi\)-aszimmetriát futtatja. Ez nem formai: a \(\chi\)-sorrend megfordítása megfordítja a szegmenssorrendet (−1,22 pp → +0,74 pp, <code>t35</code>). <b>K02:</b> az alapág <code>lev_E = lev_D = 1,6</code>-ot futtat, pedig az Opten-adat szerint az export-KKV tőkeáttételesebb (A08). Mindkét csere csapatdöntés, ezért látható helyen tartjuk. 2026. október 4. óta tudjuk, hogy a K01 nem mellékes: a szimmetrikus \(\chi\) eltünteti a KKV-küszöböt (A25).</p></div>
     <div class="callout warn small"><h4>A banki átgyűrűzés iránya: az irodalom és a saját mérésünk ellentmond</h4><p>Horváth–Kotlebová–Širaňová (JFS 2018) szerint az euróövezetben a kamattranszmisszió csak a kisvállalati hitelekre teljes. A magyar panelen viszont a pontbecslés mind a négy specifikációban a nagyvállalatnál magasabb (F06, A16), csak a különbség nem szignifikáns (t = 1,17…1,85). Ha a csatlakozás után az euróövezeti mintázat érvényesül, a banki csatorna a KKV-k felé billentené az eredményt. Ha a magyar, akkor a nagyvállalat felé.</p></div>
     <div class="what-if"><b>Ha kivennénk (\(\chi = 0\)):</b> a felár nem függne a mérlegtől, és a kör az 5. lépésnél megszakadna. A felárcsökkenés ekkor csak egyszer, közvetlenül hatna (2b), gyorsító nélkül. A vállalattípusok közti pénzügyi különbség nagy része ezzel együtt eltűnne.</div>
     <div class="q"><h4>Kérdés a teremnek</h4><ul class="clean">
@@ -731,7 +734,7 @@ ol.chain .tag { font-family: var(--f-mono); font-size: 12px; color: var(--muted)
     </div>
 
     <div class="callout warn small"><h4>Mi viszi az euróhatást? Még nyitott</h4><p>Az első negyedévben a banki csatorna a teljes hatás 0,22%-át adja (F05, feltételes). Ez azonban nem jelenti azt, hogy a banki csatorna gyenge. A szcenárióban a banki felár csak a 13. negyedévtől csökken, így az első negyedévben csak az előre látott jövőbeli csökkenés hat. A két csatorna arányát a tartós hatáson még újra kell mérni.</p></div>
-    <div class="callout ok small"><h4>Mindkét rezsimnek külön is stabilnak kell lennie</h4><p>Egy rezsimváltó modellnél nem elég, hogy a csatlakozás utáni euró-egyensúly BK-stabil. A kiinduló forintrezsimnek is annak kell lennie, különben a lebegő szakasz pályája nem egyértelmű. A v10 bővített ellenőrző scriptje mindkettőt külön teszteli, de még nincs lefuttatva (8. blokk).</p></div>
+    <div class="callout ok small"><h4>Mindkét rezsimnek külön is stabilnak kell lennie</h4><p>Egy rezsimváltó modellnél nem elég, hogy a csatlakozás utáni euró-egyensúly BK-stabil. A kiinduló forintrezsimnek is annak kell lennie, különben a lebegő szakasz pályája nem egyértelmű. A v10 ellenőrzése mindkettőt külön teszteli, és mindkettő 13/13-mal teljesül (8. blokk).</p></div>
     <div class="what-if"><b>Ha kivennénk (\(z_{sov} = 0\)):</b> euróban a hazai kamat nem reagálna a szuverén felár csökkenésére, és a felárcsökkenés csak a vállalati felárakon (\(\tau^{sov}_j\), 2. blokk) keresztül hatna. A kamatcsatorna eltűnne, a pénzügyi gyorsító megmaradna.</div>
     <div class="q"><h4>Kérdés a teremnek</h4><ul class="clean">
       <li><span class="who">hallgatók</span> Mit jelent tökéletes előrelátás mellett, hogy egy csak a 13. negyedévben induló sokk már az 1. negyedévben hat?</li>
@@ -744,7 +747,7 @@ ol.chain .tag { font-family: var(--f-mono); font-size: 12px; color: var(--muted)
 
 <section id="v10" class="stack-lg">
   <div class="card tint-gold dashed">
-    <div class="block-head"><span class="num">8. blokk · v10</span><h3>Külföldi kereslet és kamat</h3><span class="badge b-epul">épül: megépült, nem validált</span><span class="badge b-horg">ρ, η horgonyzatlan</span></div>
+    <div class="block-head"><span class="num">8. blokk · v10</span><h3>Külföldi kereslet és kamat</h3><span class="badge b-becsult">technikailag validált (A24)</span><span class="badge b-horg">ρ, η horgonyzatlan</span></div>
     <p>A v09-ből hiányzott valami, ami a referencia-modellben (EAGLE-mag) megvolt: a <b>külvilág</b>. Az exportot csak a saját ár és a reálárfolyam mozgatta, a külföldi kereslet nem. Az euróágon pedig a közös kamat implicit módon végig 0 eltérésű volt. Samu 2026. szeptember 28-án jelezte a hiányt. Két külső bírálati kör után a v10 egy kapcsolóval (<code>-DFOREIGN=1</code>) visszaépíti a csatornát.</p>
 
     <h4 class="sub">8a · Mi kerül be?</h4>
@@ -757,7 +760,7 @@ ol.chain .tag { font-family: var(--f-mono); font-size: 12px; color: var(--muted)
       <thead><tr><th></th><th>Forint (\(u_t = 0\))</th><th>Euró (\(u_t = 1\))</th></tr></thead>
       <tbody>
         <tr><td><b>Külföldi kereslet \(y^*\)</b></td><td>közvetlenül az exportban, rezsimtől függetlenül</td><td>ugyanígy, de az árfolyam nem tudja tompítani a hatását</td></tr>
-        <tr><td><b>Külföldi kamat \(r^{for}\)</b></td><td>a kamatparitáson át: \(dep_{t+1} = r_t - r^{for}_t - \dots\). A hazai kamatot a jegybank állítja, a különbséget az árfolyam viszi</td><td>egy az egyben a hazai kamatba: \(r_t = r^{for}_t + z_{sov}\,sov_t - \nu\,b^{*}_t\)</td></tr>
+        <tr><td><b>Külföldi kamat \(r^{for}\)</b></td><td>a kamatparitáson át: \(dep_{t+1} = r_t - r^{for}_t - \dots\). A hazai kamatot a jegybank állítja, a különbséget az árfolyam viszi</td><td>a hazai kamatba: \(r_t = r^{for}_t + z_{sov}\,sov_t - \nu\,b^{*}_t\). Becsapódáskor csak <b>0,69–0,73-szorosan</b> (F07), lásd lent</td></tr>
         <tr><td><b>Taylor-szabály</b></td><td colspan="2">szándékosan <b>nem</b> kapja meg az \(r^{for}\)-t, ahogy az EAGLE-ben sem</td></tr>
       </tbody>
     </table></div>
@@ -769,18 +772,26 @@ ol.chain .tag { font-family: var(--f-mono); font-size: 12px; color: var(--muted)
     </dl>
     <div class="callout warn small"><h4>A mai számokat a v10 nem változtatja meg</h4><p>Az euró-forgatókönyvekben végig \(y^* = r^{for} = 0\). A <code>FOREIGN=1</code> ág ezért a meglévő szcenáriókban pontosan a v09 pályáját kell adnia, és egyetlen eddig közölt szám sem változik. A csatorna csak új szcenáriókban (EKB-szigorítás, euróövezeti recesszió) hoz új információt, ezek még nincsenek definiálva.</p></div>
 
+    <div class="grid2">
+      <div class="callout warn small"><h4>Kontraintuitív 1: euróban az EKB-kamat nem 1:1-ben gyűrűzik át</h4><p>Valutaunióban azt várnánk, hogy egy EKB-kamatemelés egy az egyben megjelenik a hazai kamatban. A modellben egy +25 bp-es (negyedéves) emelés a hazai kamatot becsapódáskor csak <b>0,69–0,73-szorosan</b> emeli (F07). Az ok a \(-\nu\,b^*\) tag: a kamatemelés még abban a negyedévben javítja a külkereskedelmi mérleget, a nettó külföldi eszközállomány nő, és ez a hazai kamatot lefelé húzza. A \(\nu = 0{,}25\) technikai zárás, nem becsült érték, tehát az átgyűrűzés mértéke egy technikai paraméteren múlik. Horgonyzás vagy érzékenységi scan nélkül ezt nem szabad közölni.</p></div>
+      <div class="callout warn small"><h4>Kontraintuitív 2: forintban a külföldi kamatemelés növeli a GDP-t</h4><p>Lebegő árfolyam mellett egy +25 bp-es külföldi kamatemelés becsapódáskor <b>+0,19%-kal növeli</b> a GDP-t (csak tájékoztató sor a <code>t56</code>-ban). A forint 0,68%-kal leértékelődik, és ez lendíti az exportot, a hazai Taylor-szabály pedig az \(r^{for}\)-t nem követi. Feltörekvő gazdaságoknál a külföldi szigorítás a tapasztalat szerint inkább lassító. A modellből hiányzik a devizaadósság mérleghatása, ami ezt ellensúlyozná.</p></div>
+    </div>
+
     <h4 class="sub">8c · Hol tart a validálás?</h4>
     <div class="grid2">
-      <div class="callout info small"><h4>Ami megvan</h4><ul class="clean">
-        <li>A <code>FOREIGN=0</code> ág fordításkor pontosan a v09 lesz: az új változók be sem kerülnek a modellbe.</li>
-        <li>Egy független kódellenőrzés (2026. október 3.) a <code>.mod</code> implementációját elfogadta: az előjelek, a bekötés helye és a Dynare-szerkezet rendben van.</li>
-        <li>Megírva (2026. október 3.) a hétlépéses ellenőrző protokoll (<code>check_v10_foreign.m</code> → <code>t56</code>): v09-regresszió, beágyazás, BK a kezdeti és a záró rezsimben, nulla-sokk, impulzus-előjel és AR-perzisztencia, \(r^{for}\)-impulzus a rezsimváltás körül a monetáris egyenletek reziduumával, és a sajátértékek összevetése. A bővített script még <b>nincs lefuttatva és nincs feltöltve a GitHubra</b>: a <code>main</code>-en a korábbi, ötlépéses változat van.</li>
+      <div class="callout ok small"><h4>Ami kész (2026. október 4.)</h4><ul class="clean">
+        <li><b>Az ellenőrzés lefutott: 31/31 sor rendben</b> (<code>t56</code>, regiszter A24).</li>
+        <li><code>FOREIGN=0</code> mellett a v10 bitre azonos a v09-cel, mind a négy forgatókönyvben.</li>
+        <li><code>FOREIGN=1</code> mellett, nulla külföldi sokkal, gépi pontossággal (4e−16) a v09 pályáját adja.</li>
+        <li>A kezdeti (forint) és a záró (euró) rezsimben is BK-stabil, 12 esetben 13/13.</li>
+        <li>A monetáris egyenletek a rezsimváltás előtt, alatt és után is pontosan teljesülnek (reziduum ~1e−18).</li>
+        <li>A két új sajátérték pontosan \(\rho_{y^*}\) és \(\rho_{r^{for}}\), a régi gyökök nem mozdultak.</li>
       </ul></div>
       <div class="callout warn small"><h4>Ami még hiányzik</h4><ul class="clean">
-        <li>A <code>FOREIGN=1</code> ág <b>még nincs lefuttatva</b>, tehát nincs <code>t56</code> és nincs eredmény. Az ellenőrzés addig terv, nem bizonyíték.</li>
-        <li>A paraméter-regiszter és a <code>t54</code> őr még 91 paraméterre szól, a három új paraméter nincs benne.</li>
+        <li>A \(\rho_{y^*}\), \(\rho_{r^{for}}\) és \(\eta\) horgonyzatlan, a paraméter-regiszter és a <code>t54</code> őr még nem tartalmazza őket.</li>
         <li>A közös exportsokk (\(e^x\)) és az \(y^*\) szétválasztása ma csak az előre rögzített perzisztenciákon múlik. Determinisztikus forgatókönyvekhez ez elég, becsléshez nem.</li>
-        <li>Addig a <b>v09 marad az operatív alapmodell</b>.</li>
+        <li>Nincs még olyan forgatókönyv, amelyben \(y^*\) vagy \(r^{for}\) mozog. A meglévő eredményeket a v10 ezért nem változtatja meg.</li>
+        <li>A „technikailag helyes” nem azonos a „közgazdaságilag hihető” minősítéssel: lásd a két kontraintuitív pontot fent.</li>
       </ul></div>
     </div>
     <div class="q"><h4>Kérdés a teremnek</h4><ul class="clean">
@@ -815,6 +826,7 @@ ol.chain .tag { font-family: var(--f-mono); font-size: 12px; color: var(--muted)
       <tr><td>Nulla-sokk (SCENARIO=4)</td><td class="n">0</td><td class="n">0</td><td>ellenőrző eset: mindennek 0-nak kell lennie</td></tr>
     </tbody>
   </table></div>
+  <div class="callout warn small"><h4>Kontraintuitív: a GDP-pálya évtizedekig hullámzik</h4><p>Az alapágban (ACCSCALE = 100) a GDP nem egyenletesen áll be a tartós szintre, hanem az első negyedévekben kb. −0,7%-os visszaeséssel indul, utána kb. 7 éves ciklusokban leng, nagyjából 0 és +1,5% között. A ciklus nagyon lassan csillapodik, mert a modell legnagyobb komplex gyöke közel van az egységkörhöz. Hozzáférési csatorna nélkül ez a hullámzás gyorsan elhal. Egy valódi gazdaságban évtizedes, alig csillapodó ciklus egy egyszeri rezsimváltás után nem hihető, ezért ez a hozzáférési csatorna kalibrációjának gyenge pontja.</p><p><b>Mi megbízható és mi nem:</b> a tartós GDP-hatás (a záró egyensúly) a szimulációs horizonttól független. Ezt 120 és 400 negyedéves futással is ellenőriztük, és bitre azonos. Az első 60 negyedév pályája alig változik, legfeljebb 0,05 pp-ot. A 80. negyedév utáni pálya viszont a 120 negyedéves horizont műterméke, legfeljebb 0,7 pp torzítással. Ezt a részt nem szabad ábrázolni vagy értelmezni. (Diagnosztika, nem regiszter-állítás.)</p></div>
   <p class="small muted">A −200 bp hivatkozás nélküli, kalibrált kontrafaktuális, nem empirikusan azonosított euróhatás. Ennek a horgonyzása az 1. nyitott kérdés.</p>
 </section>
 
@@ -839,9 +851,10 @@ ol.chain .tag { font-family: var(--f-mono); font-size: 12px; color: var(--muted)
       </svg>
     </div>
     <div class="card tint-gold">
-      <h3>A KKV-előny küszöbfüggő</h3>
+      <h3>A KKV-előny küszöbfüggő, de csak a vitatott χ-aszimmetria mellett</h3>
       <p>A jelenlegi baseline kalibráció és \(\rho_{acc} = 0{,}9673\) mellett a KKV-előny határa közelítőleg \((\lambda\cdot\omega)^{*} \approx 500\) (A22, F01). A küszöb <b>nem univerzális</b>: függhet a \(\chi_j\)-től, az \(\varepsilon_{ces}\)-től, a \(lev_j\)-től, a felárpályától, az E/D szegmentációtól és a makrosúlyoktól, ezért ezek változtatásakor újra kell mérni.</p>
-      <p class="small muted">Ezt küszöbformában közöljük, nem pontbecslésként. Magyar precedense is van (Szabó Bakos, 2006). ⚠ Az alapág a visszavont 3×-os \(\chi\)-aszimmetriával fut (K01). A küszöb újramérése szimmetrikus \(\chi\) mellett nyitott teendő.</p>
+      <div class="callout warn small"><h4>Új mérés, 2026. október 4. (A25): a küszöb a χ-aszimmetriából jön</h4><p>Az alapág a visszavont 3×-os \(\chi\)-aszimmetriával fut (K01). Ha a \(\chi\) mindhárom típusnál azonos (0,02, 0,04 vagy 0,06), a KKV-k tartós kibocsátás-előnye <b>hozzáférési csatorna nélkül is pozitív</b>, pozitív küszöb tehát nincs. \(\chi = 0{,}04\) mellett a KKV−L különbség csatorna nélkül +0,17 pp (\(\rho_{acc}=0{,}85\)) és +0,07 pp (\(\rho_{acc}=0{,}9673\)); az aszimmetrikus alapágban ugyanez −0,26 pp és −0,41 pp. A hozzáférési csatorna szimmetrikus \(\chi\) mellett csak felerősíti az előnyt, nem hozza létre.</p><p><b>Mit jelent ez a közlésre:</b> a „küszöbfüggő KKV-előny” üzenet a K01 csapatdöntésén áll. Ha a szimmetrikus \(\chi\) a védhetőbb alapértelmezés, az üzenet így módosul: a KKV-k relatív előnye feltétel nélkül megjelenik, de kicsi, és a nagyságát a horgonyzatlan hozzáférési csatorna viszi.</p></div>
+      <p class="small muted">Ezt küszöbformában közöljük, nem pontbecslésként. Magyar precedense is van (Szabó Bakos, 2006).</p>
     </div>
   </div>
   <div class="card">
@@ -853,6 +866,7 @@ ol.chain .tag { font-family: var(--f-mono); font-size: 12px; color: var(--muted)
       <div class="bar-row"><span>Technológia kiegyenlítve</span><div class="bar-track"><div class="bar-fill" style="width:94.4%;background:var(--L)"></div></div><span class="bar-val">22,95</span></div>
     </div>
     <p class="small">A technológia teljes kiegyenlítése a küszöböt mindössze 3%-kal mozdítja el. Ez a vizsgált baseline-környezetben azt mutatja, hogy a közvetlen technológiai heterogenitás nem a fő mozgató, és az eredmény elsősorban a pénzügyi blokktól függ. Arra a kérdésre, hogy „nem a kalibráció csinálja-e az eredményt?”, ez csak részválasz: a pénzügyi kalibráció több eleme bizonyítottan előjelfordító.</p>
+    <p class="small muted">⚠ Ez a dekompozíció az aszimmetrikus \(\chi\)-vel készült. Egy előzetes diagnosztikai futás szerint szimmetrikus \(\chi\) és kikapcsolt hozzáférési csatorna mellett a maradék kis KKV-előny főként az importintenzitás (\(\alpha_j\), átvett JV-érték) különbségéből jön, vagyis ott éppen a technológia viszi. Ehhez még nincs őr, ezért nem állítás, de a „nem a technológia” üzenetet csak az aszimmetrikus alapágra szabad mondani.</p>
   </div>
   <div class="callout info">
     <h4>A projekt azonosítási álláspontja</h4>
@@ -871,7 +885,7 @@ ol.chain .tag { font-family: var(--f-mono); font-size: 12px; color: var(--muted)
     <div class="slider"><label for="om">ω skálázó</label><input id="om" type="range" min="0" max="100" step="1" value="50"><output id="omv" class="bar-val">10,0</output></div>
     <div class="bar-row"><span>λ · ω</span><div class="bar-track"><div class="bar-fill" id="prodbar" style="width:0%;background:var(--gold)"></div></div><span class="bar-val" id="prodv">100</span></div>
     <div id="verdict" class="verdict no">A küszöb alatt: nincs KKV-előny</div>
-    <p class="small muted">Illusztráció a regiszter A22 állítására (\(\rho_{acc} = 0{,}9673\) mellett). A skálázók logaritmikusan mozognak 1 és 100 között. A modell nem fut itt, a küszöb a már lemért érték. \(\rho_{acc} = 0{,}85\) mellett a küszöb magasabb: 36,5 az ACCSCALE-skálán.</p>
+    <p class="small muted">Illusztráció a regiszter A22 állítására (\(\rho_{acc} = 0{,}9673\) mellett, az aszimmetrikus \(\chi\)-s alapágban; szimmetrikus \(\chi\) mellett nincs küszöb, A25). A skálázók logaritmikusan mozognak 1 és 100 között. A modell nem fut itt, a küszöb a már lemért érték. \(\rho_{acc} = 0{,}85\) mellett a küszöb magasabb: 36,5 az ACCSCALE-skálán.</p>
   </div>
 </section>
 
@@ -979,7 +993,7 @@ ol.chain .tag { font-family: var(--f-mono); font-size: 12px; color: var(--muted)
     <div class="card tint-euro"><h4>1. A −200 bp horgonya</h4><p class="small">Melyik csatlakozási tapasztalat (szlovák, balti, horvát) és milyen módszer adná a legjobb horgonyt a magyar szuverén és banki felárra?</p></div>
     <div class="card tint-E"><h4>2. A λ·ω azonosítása</h4><p class="small">Van-e olyan kvázi-kísérlet (programküszöb, szabályváltozás időzítése), amely a csatorna strukturális erejét azonosítja, nem a program teljes finanszírozási hatását?</p></div>
     <div class="card tint-gold"><h4>3. A külföldi csatorna (v10)</h4><p class="small">Mi a magyar standard \(\rho_{y^*}\)? És kell-e egyáltalán két külön exportkeresleti csatorna (\(e^x\) és \(y^*\))?</p></div>
-    <div class="card tint-L"><h4>4. Alapértelmezések</h4><p class="small">Ha nincs forrás egy KKV/nagyvállalati aszimmetriára, a szimmetrikus alapértelmezés a védhetőbb, vagy a legjobb, de horgonyzatlan becslésünk?</p></div>
+    <div class="card tint-L"><h4>4. Alapértelmezések</h4><p class="small">Ha nincs forrás egy KKV/nagyvállalati aszimmetriára, a szimmetrikus alapértelmezés a védhetőbb, vagy a legjobb, de horgonyzatlan becslésünk? Ez már nem elvi kérdés: a \(\chi\) esetében ezen múlik, hogy a KKV-előny küszöbfüggő-e egyáltalán (A25).</p></div>
   </div>
   <div class="thesis">Ha egyetlen bizonytalan paramétert mérhetnénk meg tökéletesen, melyik lenne az?</div>
 </section>
