@@ -431,7 +431,7 @@ a csomag indoklását nézzük újra, nem az értékét hangoljuk.
 ## 9. Review-eljárás
 
 1. **1. kör: kész** (2026-10-04), a fenti változások ennek nyomán.
-2. **2. kör: ez a 2. változat**, a W0 levezetésével és az `ACCSPEC=1` szintbeli
+2. **2. kör, két részben** (2026-10-04-i döntés): **2a** = W0 + W0b (csomag: `outputs/2026-10-04_tomi_chatgpt_review_W0b/`); **2b** = az 5.3a levezetés, külön csomagban. Eredeti szöveg: ez a 2. változat, a W0 levezetésével és az `ACCSPEC=1` szintbeli
    levezetésével (5.3a) együtt, *mielőtt* bármit implementálnánk. Kifejezett
    kérdések:
    - A W0 levezetése helyes-e, és a ±50%-os döntési szabály indokolt-e?
