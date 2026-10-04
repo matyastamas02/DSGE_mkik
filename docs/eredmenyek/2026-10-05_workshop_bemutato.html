@@ -428,39 +428,124 @@ ol.chain .tag { font-family: var(--f-mono); font-size: 12px; color: var(--muted)
 
 <section id="bgg" class="stack-lg">
   <div class="card tint-gold">
-    <div class="block-head"><span class="num">2. blokk</span><h3>Pénzügyi gyorsító típusonként (BGG)</h3><span class="badge b-horg">chi, tsov, tbank horgonyzatlan</span><span class="badge b-sajat">lev: saját adat</span></div>
-    <p>Ez a modell pénzügyi szíve, Bernanke–Gertler–Gilchrist (1999) nyomán. A vállalat a tőkéjét részben hitelből finanszírozza, és a bank <b>felárat</b> kér a kockázatért. A felár annál nagyobb, minél kevesebb saját tőke áll a hitel mögött. A felárat mindhárom típus a saját mérlegével, a saját tőkeáttételével kapja.</p>
+    <div class="block-head"><span class="num">2. blokk</span><h3>Pénzügyi gyorsító típusonként (BGG)</h3><span class="badge b-horg">chi, tsov, tbank horgonyzatlan</span><span class="badge b-sajat">lev: saját adat</span><span class="badge b-becsult">eps_qw, omega_nw: JV</span></div>
+    <p>Ez a modell pénzügyi szíve, Bernanke–Gertler–Gilchrist (1999) nyomán. Az alapgondolat egyszerű. A bank nem látja pontosan, mennyire jó egy vállalat projektje, ezért <b>felárat</b> kér a kockázatért. A felár annál kisebb, minél több saját tőkét tesz a vállalat a hitel mellé. Ebből egy önerősítő kör lesz: ha a vállalat jól jár, nő a saját tőkéje, csökken a felára, olcsóbban fektet be, és ettől még jobban jár. Ez a <b>gyorsító</b>. A modellben mindhárom típusnak saját mérlege, saját tőkeáttétele és saját felára van.</p>
+
+    <h4 class="sub">2a · A tőke hozama és a felár</h4>
     <div class="eq">\[ ret_{j,t} = (1-\epsilon)\,rk_{j,t} + \epsilon\,q_{j,t} - q_{j,t-1} \]
-    \[ ret_{j,t+1} = r_t - \pi_{t+1} + efp_{j,t} \]
-    \[ efp_{j,t} = \chi_j\,\big(q_{j,t} + k_{j,t} - nw_{j,t}\big) + \tau^{sov}_j\,sov_t + \tau^{bank}_j\,bank_t \]
-    \[ nw_{j,t} = \omega^{nw}\Big(nw_{j,t-1} + lev_j\,\big(ret_{j,t} - (r_{t-1} - \pi_t)\big)\Big) \]</div>
-    <div class="words"><p><b>Szavakban:</b> a tőke hozama (\(ret\)) = a kamat + a külső finanszírozási felár (\(efp\)). A felár két részből áll. Az egyik a mérlegből jön: az eszközök (\(q + k\)) és a saját tőke (\(nw\)) különbsége, \(\chi_j\) érzékenységgel. A másik az euróval csökkenő <b>szuverén</b> és <b>banki</b> felár. Ha a vállalat jól jár, nő a saját tőkéje, csökken a felára, és ez tovább javítja a helyzetét. Ettől „gyorsító”.</p></div>
+    \[ ret_{j,t+1} = r_t - \pi_{t+1} + efp_{j,t} \]</div>
+    <div class="words"><p><b>Szavakban:</b> az első egyenlet a tőke egy negyedéves <b>hozama</b>: a működésből jövő tőkehozam (\(rk_j\)) és a tőke értékének (\(q_j\), a Tobin-féle q) változása. Az \(\epsilon = 0{,}96\) miatt a negyedéves hozam nagy része az értékváltozásból jön, nem a működésből. A második egyenlet a <b>befektetői feltétel</b>: a tőkének várhatóan annyit kell hoznia, mint a biztonságos reálkamat (\(r - \pi\)), plusz a külső finanszírozási felár (\(efp_j\)). Ha a felár csökken, kisebb hozam is elég, ezért a tőke értéke (\(q_j\)) nő, és megéri többet befektetni.</p></div>
+
+    <h4 class="sub">2b · Miből áll a felár?</h4>
+    <div class="eq">\[ efp_{j,t} = \underbrace{\chi_j\,\big(q_{j,t} + k_{j,t} - nw_{j,t}\big)}_{\text{mérleg: tőkeáttétel}} + \underbrace{\tau^{sov}_j\,sov_t}_{\text{szuverén felár}} + \underbrace{\tau^{bank}_j\,bank_t}_{\text{banki felár}} \]</div>
+    <div class="words"><p><b>Szavakban:</b> a felár három részből áll. Az első a <b>mérlegből</b> jön: az eszközök értéke (\(q + k\)) és a saját tőke (\(nw\)) különbsége, vagyis a tőkeáttétel eltérése a megszokottól. A \(\chi_j\) azt méri, mennyire érzékeny erre a bank. A másik kettő az euróval csökkenő <b>szuverén</b> és <b>banki</b> felár, típusonként \(\tau_j\) arányban továbbítva. Itt lép be közvetlenül az euró a vállalati finanszírozásba.</p></div>
+    <div class="tbl"><table>
+      <thead><tr><th>Típus</th><th>\(\chi_j\) (alapág)</th><th>1% tőkeáttétel-növekedés hatása a felárra</th><th>\(\tau^{sov}_j\)</th><th>\(\tau^{bank}_j\)</th></tr></thead>
+      <tbody>
+        <tr><td><span class="chip E"><i></i>E</span></td><td class="n">0,06</td><td class="n">+6 bp negyedévente (~+24 bp évesítve)</td><td class="n">0,175</td><td class="n">0,45</td></tr>
+        <tr><td><span class="chip D"><i></i>D</span></td><td class="n">0,06</td><td class="n">+6 bp (~+24 bp)</td><td class="n">0,175</td><td class="n">0,45</td></tr>
+        <tr><td><span class="chip L"><i></i>L</span></td><td class="n">0,02</td><td class="n">+2 bp (~+8 bp)</td><td class="n">0,175</td><td class="n">0,45</td></tr>
+      </tbody>
+    </table></div>
+    <p class="small muted">A \(\tau\)-értékek a semleges <code>TSCEN=3</code> alapág értékei. A <code>TSCEN=1</code> a KKV-kat sújtja jobban (\(\tau^{sov}\): 0,25 / 0,25 / 0,10; \(\tau^{bank}\): 0,60 / 0,60 / 0,30), a <code>TSCEN=2</code> fordítva. A „KKV-k felára jobban reagál” feltevés (\(t_S > t_L\)) nem azonosítható az adatból, ezért semleges az alapág.</p>
+    <div class="callout info small"><h4>Mechanikus számolás, nem modelleredmény</h4><p>Az alap-forgatókönyvben a szuverén felár tartósan −200 bp, a banki −45 bp (évesítve). A semleges alapágban ebből a felár közvetlenül <b>0,175 × (−200) + 0,45 × (−45) ≈ −55 bp</b>-tel csökken, mindhárom típusnál ugyanannyival. Ez csak a közvetlen, első kör. A típusok közti különbség a mérleg-tagból és a gyorsítóból jön, amit a modell számol ki.</p></div>
+
+    <h4 class="sub">2c · A saját tőke mozgása: itt erősödik fel a sokk</h4>
+    <div class="eq">\[ nw_{j,t} = \omega^{nw}\Big(nw_{j,t-1} + lev_j\,\big(ret_{j,t} - (r_{t-1} - \pi_t)\big)\Big) \]</div>
+    <div class="words"><p><b>Szavakban:</b> a saját tőke két okból változik. Egyrészt a vállalat a <b>többlethozamot</b> (a tőkehozam a hitel reálkamata fölött) hozzáadja, a tőkeáttétellel (\(lev_j\)) felnagyítva. Másrészt az \(\omega^{nw} = 0{,}95\) miatt negyedévente kb. 5% „kiáramlik”, például osztalékként vagy cégkilépéssel. Ez akadályozza meg, hogy a vállalatok végtelen saját tőkét halmozzanak fel, és kinőjék a felárat.</p></div>
+    <div class="words"><p><b>Miért erősít a tőkeáttétel?</b> Ha egy cég eszközei a saját tőkéje 1,6-szorosát teszik ki, akkor 1% többlethozam a saját tőkét kb. 1,6%-kal növeli. Minél nagyobb az \(lev_j\), annál erősebben reagál a saját tőke, és vele a felár. Ezért ugyanaz a felárcsökkenés a tőkeáttételesebb típusnál nagyobb mérlegjavulást okoz.</p></div>
+
+    <h4 class="sub">Összerakva: a gyorsító köre</h4>
+    <ol class="chain">
+      <li><span class="tag">euró</span><span>Csökken a szuverén és a banki felár (\(sov\), \(bank\)).</span></li>
+      <li><span class="tag">2b</span><span>Csökken a vállalati felár (\(efp_j\)), \(\tau_j\) arányban.</span></li>
+      <li><span class="tag">2a</span><span>Kisebb hozam is elég, nő a tőke értéke (\(q_j\)).</span></li>
+      <li><span class="tag">2c</span><span>A magasabb \(q_j\) többlethozamot ad, nő a saját tőke (\(nw_j\)), \(lev_j\)-vel felnagyítva.</span></li>
+      <li><span class="tag">2b</span><span>Javul a mérleg, csökken a tőkeáttétel, ezért a felár <b>tovább</b> csökken, \(\chi_j\) erővel. Innen újra a 3. lépés.</span></li>
+      <li><span class="tag">3. blokk</span><span>Közben nő a beruházás, a KKV-knál a hitelhozzáférés is javul.</span></li>
+    </ol>
+    <p class="small muted">A kör erejét két típusonkénti paraméter adja: a \(\chi_j\) (mennyire reagál a felár a mérlegre) és az \(lev_j\) (mennyire reagál a mérleg a hozamra). Ezért ül a projekt két alapértelmezés-konfliktusa (K01, K02) pont ezen a két paraméteren.</p>
+
     <dl class="kv">
-      <dt>\(lev_j\)</dt><dd>tőkeáttétel: E 1,94 · D 1,72 · L 2,34 (Opten; a sorrend mérőfüggetlen, a szint sávban közlendő)</dd>
-      <dt>\(\chi_j\)</dt><dd>felár-érzékenység. Az alapág 0,06 / 0,06 / 0,02-t futtat, de ezt a 3×-os aszimmetriát <b>visszavontuk</b> (V04)</dd>
-      <dt>\(\tau^{sov}_j, \tau^{bank}_j\)</dt><dd>a szuverén és banki felár átgyűrűzése típusonként: nincs szintbecslés, az alapág semleges</dd>
+      <dt>\(lev_j\)</dt><dd>tőkeáttétel. Az Opten-panel szerint E 1,94 · D 1,72 · L 2,34, a régi, „bármilyen pozitív export” szegmentációval. A sorrend mérőfüggetlen (A07), a szint mérőfüggő (sáv: E 1,68–1,94, D 1,58–1,72, L 1,81–2,34). Az 50%-os fődefinícióval újraszámolandó.</dd>
+      <dt>\(\chi_j\)</dt><dd>a felár érzékenysége a mérlegre. Az alapág 0,06 / 0,06 / 0,02-t futtat, de ezt a 3×-os aszimmetriát <b>visszavontuk</b> (V04). A saját panelünk alsó korlátja +0,002, az irodalom 0,042–0,067 (F04). Méret szerinti szintbecslés nincs.</dd>
+      <dt>\(\tau^{sov}_j\)</dt><dd>a szuverén felár átgyűrűzése: nincs szintbecslés. Bottero–Lenzu–Mezzanotti (JIE 2018) szerint a szuverén sokk mennyiségi átgyűrűzése méret-semleges, a reálhatása viszont nem. Ez pont a mostani szerkezetet támogatja: semleges \(\tau^{sov}\) és méretfüggő hozzáférés (3. blokk).</dd>
+      <dt>\(\tau^{bank}_j\)</dt><dd>a banki felár átgyűrűzése: az irodalom és a saját mérésünk <b>ellentmond</b> (F06), lásd lent.</dd>
+      <dt>\(\epsilon\), \(\omega^{nw}\)</dt><dd>0,96 és 0,95: JV-értékek</dd>
     </dl>
-    <div class="callout warn small"><h4>Ismert alapértelmezés-konfliktus</h4><p>Az alapág <code>lev_E = lev_D = 1,6</code>-ot futtat, pedig az Opten-adat szerint az export-KKV tőkeáttételesebb (1,94 vs 1,72, A08). A <code>chi</code>-sorrend megfordítása pedig megfordítja a szegmenssorrendet (−1,22 pp → +0,74 pp). A csere csapatdöntés, ezért látható helyen tartjuk.</p></div>
-    <div class="what-if"><b>Ha kivennénk (\(\chi = 0\)):</b> a felár nem függne a mérlegtől, és eltűnne a gyorsító. A vállalattípusok közti pénzügyi különbség nagy része ezzel együtt eltűnne.</div>
+    <div class="callout warn small"><h4>Két ismert alapértelmezés-konfliktus</h4><p><b>K01:</b> az alapág a visszavont 3×-os \(\chi\)-aszimmetriát futtatja. Ez nem formai: a \(\chi\)-sorrend megfordítása megfordítja a szegmenssorrendet (−1,22 pp → +0,74 pp, <code>t35</code>). <b>K02:</b> az alapág <code>lev_E = lev_D = 1,6</code>-ot futtat, pedig az Opten-adat szerint az export-KKV tőkeáttételesebb (A08). Mindkét csere csapatdöntés, ezért látható helyen tartjuk.</p></div>
+    <div class="callout warn small"><h4>A banki átgyűrűzés iránya: az irodalom és a saját mérésünk ellentmond</h4><p>Horváth–Kotlebová–Širaňová (JFS 2018) szerint az euróövezetben a kamattranszmisszió csak a kisvállalati hitelekre teljes. A magyar panelen viszont a pontbecslés mind a négy specifikációban a nagyvállalatnál magasabb (F06, A16), csak a különbség nem szignifikáns (t = 1,17…1,85). Ha a csatlakozás után az euróövezeti mintázat érvényesül, a banki csatorna a KKV-k felé billentené az eredményt. Ha a magyar, akkor a nagyvállalat felé.</p></div>
+    <div class="what-if"><b>Ha kivennénk (\(\chi = 0\)):</b> a felár nem függne a mérlegtől, és a kör az 5. lépésnél megszakadna. A felárcsökkenés ekkor csak egyszer, közvetlenül hatna (2b), gyorsító nélkül. A vállalattípusok közti pénzügyi különbség nagy része ezzel együtt eltűnne.</div>
+    <div class="q"><h4>Kérdés a teremnek</h4><ul class="clean">
+      <li><span class="who">hallgatók</span> Miért lenne egy kisvállalat felára érzékenyebb a tőkeáttételre? Milyen közgazdasági érv szól mellette, és mi ellene?</li>
+      <li><span class="who">hallgatók</span> Mi a különbség aközött, hogy egy sokk „mennyiségben” semleges, és hogy a „reálhatása” semleges? Hol jelenik meg ez a modellben?</li>
+      <li><span class="who">szakértők</span> Ha nincs méret szerinti becslés, a szimmetrikus \(\chi\) a védhetőbb alapértelmezés, vagy elég az irodalmi érv a KKV-k nagyobb érzékenységére?</li>
+      <li><span class="who">szakértők</span> Elég bizonyíték-e egy mérőfüggetlen sorrend az \(lev_j\) alapértelmezés cseréjéhez, ha a szint mérőfüggő? Melyik szintet válasszuk a sávból?</li>
+      <li><span class="who">szakértők</span> A banki átgyűrűzésnél melyik mintázatot higgyük el egy csatlakozás utáni Magyarországra: a jelenlegi magyart vagy az euróövezetit? Mi magyarázhatja az eltérést (programhitelek, bankszerkezet, devizahitelezés)?</li>
+    </ul></div>
   </div>
 </section>
 
 <section id="access" class="stack-lg">
   <div class="card tint-E">
-    <div class="block-head"><span class="num">3. blokk</span><h3>Hitelhozzáférési (extenzív) margó</h3><span class="badge b-horg">λ, ω, ρ horgonyzatlan</span></div>
-    <p>A BGG-blokk azt írja le, <b>mennyibe kerül</b> a hitel. Ez a blokk azt, hogy <b>hány cég jut egyáltalán hitelhez</b>. Ha a felár csökken, korábban kiszorult KKV-k is bekerülnek a hitelezett körbe, és beruháznak. Ez a csatorna csak a két KKV-típusnál van meg, a nagyvállalatnál nincs.</p>
-    <div class="eq">\[ acc_{j,t} = \rho_{acc}\,acc_{j,t-1} - \lambda_j\,efp_{j,t}, \qquad j \in \{E, D\} \]
-    \[ i_{j,t} = \frac{1}{1+\beta}\,i_{j,t-1} + \frac{\beta}{1+\beta}\,i_{j,t+1} + \frac{1}{(1+\beta)\,\psi_j}\,q_{j,t} + \omega_j\,acc_{j,t} + e^{i}_t \]
+    <div class="block-head"><span class="num">3. blokk</span><h3>Hitelhozzáférési (extenzív) margó</h3><span class="badge b-horg">λ, ω, ρ horgonyzatlan</span><span class="badge b-horg">psi horgonyzatlan</span><span class="badge b-sajat">delta: saját adat</span></div>
+    <p>A BGG-blokk azt írja le, <b>mennyibe kerül</b> a hitel annak, aki kap. Ez a blokk azt, hogy <b>hány cég jut egyáltalán hitelhez</b>. A közgazdaságtan ezt intenzív és extenzív margónak hívja: az egyik a meglévő hitelesek finanszírozási költsége, a másik a hitelezett kör szélessége. A modell szerint ha a felár csökken, korábban kiszorult KKV-k is bekerülnek a hitelezett körbe, és beruháznak. Ez a csatorna csak a két KKV-típusnál van meg, a nagyvállalatnál nincs. Ezen a csatornán múlik a KKV-előny léte.</p>
+
+    <h4 class="sub">3a · A hozzáférés mozgása</h4>
+    <div class="eq">\[ acc_{j,t} = \rho_{acc}\,acc_{j,t-1} - \lambda_j\,efp_{j,t}, \qquad j \in \{E, D\} \]</div>
+    <div class="words"><p><b>Szavakban:</b> a hozzáférés (\(acc_j\)) akkor javul, ha a felár csökken, \(\lambda_j\) erővel. A javulás nem tűnik el azonnal: a \(\rho_{acc}\) perzisztencia miatt minden negyedévben megmarad a korábbi javulás \(\rho_{acc}\)-ad része. Egy tartósan alacsonyabb felár ezért egyre több negyedéven át gyűlik fel a hozzáférésben.</p></div>
+    <div class="eq">\[ \text{hosszú távon:}\quad acc_j = -\,\frac{\lambda_j}{1-\rho_{acc}}\;efp_j \]</div>
+    <div class="tbl"><table>
+      <thead><tr><th>\(\rho_{acc}\)</th><th>Hosszú távú szorzó \(1/(1-\rho_{acc})\)</th><th>Mit jelent</th></tr></thead>
+      <tbody>
+        <tr><td class="n">0,85 (alapág)</td><td class="n">6,7</td><td>a tartós felárcsökkenés hatása a hozzáférésre kb. 6,7-szerese a közvetlen hatásnak</td></tr>
+        <tr><td class="n">0,95</td><td class="n">20</td><td>háromszoros</td></tr>
+        <tr><td class="n">0,9673 (érzékenységi pont)</td><td class="n">30,6</td><td>kb. 4,6-szoros a 0,85-höz képest</td></tr>
+        <tr><td class="n">0,98</td><td class="n">50</td><td>ilyen közel 1-hez a szorzó „robban”</td></tr>
+      </tbody>
+    </table></div>
+    <p class="small muted">Ezért kell \(\rho_{acc}\)-ra scan, nem pontbecslés (<code>t49</code>): ha egy paraméter \(1/(1-\rho)\) alakban hat, kis változása is nagy hatású. A 0,9673 a cégszintű „van bankhitele” státusz perzisztenciája. A cégek 92,4%-a négy év alatt egyszer sem váltott, ezért ez főleg állandó heterogenitást mér, nem a modell dinamikus szegmensállapotát. Nem horgony és nem alsó korlát.</p>
+
+    <h4 class="sub">3b · A hozzáférés és a beruházás</h4>
+    <div class="eq">\[ i_{j,t} = \frac{1}{1+\beta}\,i_{j,t-1} + \frac{\beta}{1+\beta}\,i_{j,t+1} + \frac{1}{(1+\beta)\,\psi_j}\,q_{j,t} + \omega_j\,acc_{j,t} + e^{i}_t \]
     \[ k_{j,t} = (1-\delta)\,k_{j,t-1} + \delta\,i_{j,t} \]</div>
-    <div class="words"><p><b>Szavakban:</b> a hozzáférés (\(acc\)) akkor javul, ha a felár csökken. A javulás \(\lambda_j\) erejű és \(\rho_{acc}\) perzisztenciájú. A jobb hozzáférés <b>adott tőkeár mellett is</b> több beruházást enged be (\(\omega_j\)). A beruházás a tőkén át hat a termelésre.</p></div>
+    <div class="words"><p><b>Szavakban:</b> a beruházás a JV-mag szokásos alakja: simított (a múltbeli és a várt jövőbeli beruházás felé húz), és a tőke értékére (\(q_j\)) reagál. A reakció annál gyengébb, minél nagyobb a kiigazítási költség (\(\psi_j\)). Az új elem az \(\omega_j\,acc_j\) tag. A jobb hozzáférés <b>adott tőkeár mellett is</b> több beruházást enged be, mert olyan cégek is beruháznak, amelyek eddig nem kaptak hitelt. A nagyvállalat egyenletéből ez a tag hiányzik.</p></div>
+    <div class="tbl"><table>
+      <thead><tr><th>Típus</th><th>\(\lambda_j\)</th><th>\(\omega_j\)</th><th>\(\lambda_j\omega_j\)</th><th>\(\psi_j\)</th><th>q-reakció \(1/((1+\beta)\psi_j)\)</th></tr></thead>
+      <tbody>
+        <tr><td><span class="chip E"><i></i>E</span></td><td class="n">2,0</td><td class="n">0,35</td><td class="n">0,70</td><td class="n">8</td><td class="n">0,063</td></tr>
+        <tr><td><span class="chip D"><i></i>D</span></td><td class="n">2,5</td><td class="n">0,45</td><td class="n">1,125</td><td class="n">8</td><td class="n">0,063</td></tr>
+        <tr><td><span class="chip L"><i></i>L</span></td><td class="n">—</td><td class="n">0</td><td class="n">0</td><td class="n">13</td><td class="n">0,039</td></tr>
+      </tbody>
+    </table></div>
+    <p class="small muted">Alapág (<code>ACCSCALE=100</code>). A \(\lambda_j\) és \(\omega_j\) Samu v07-es EAGLE-vonalbeli értékei, a <code>-DLAMSCALE</code> / <code>-DOMSCALE</code> skálázókkal százalékosan arányosíthatók. A \(\delta = 0{,}025\) negyedévente, vagyis kb. 10% évente: két független forrás egyezik (Opten 0,0242, Christensen–Dib 2008).</p>
+    <div class="words"><p><b>Miért lassú?</b> A tőkeállomány negyedévente csak a beruházás \(\delta = 2{,}5\%\)-át építi be. Ha a beruházás tartósan magasabb szintre ugrik, a tőkeállomány és az új szint közti rés felezési ideje kb. 27 negyedév, vagyis közel 7 év. A hozzáférési csatorna hatása ezért évek alatt bontakozik ki.</p></div>
+
+    <h4 class="sub">3c · Miért csak a szorzat számít? Egy sor levezetés</h4>
+    <div class="words"><p>Az \(acc_j\) a modellben <b>csak</b> a beruházási egyenletben szerepel. A 3a egyenletet visszafelé kifejtve:</p></div>
+    <div class="eq">\[ \omega_j\,acc_{j,t} = -\,\omega_j\lambda_j \sum_{s \ge 0} \rho_{acc}^{\,s}\; efp_{j,t-s} \]</div>
+    <div class="words"><p>A beruházás tehát csak a \(\lambda_j\omega_j\) <b>szorzatot</b> „látja”, a két tényezőt külön soha. Ha \(\lambda\)-t megduplázzuk és \(\omega\)-t megfelezzük, a pálya számjegyre azonos. Pontosan ezt mérte ki a numerikus scan (A22, ±0,08%): a KKV-előny határa egy izo-szorzat görbe. A levezetésből az is látszik, mi kellene a szétválasztáshoz: magát a hozzáférést (\(acc\)) kellene megfigyelni, a felártól és a beruházástól függetlenül.</p></div>
+
+    <h4 class="sub">3d · Miért nem mérjük meg egyszerűen?</h4>
+    <div class="callout warn small"><h4>Programvezérelt hitelpiac</h4><p>2021–24-ben a KKV-hitelpiac <b>programvezérelt</b> volt: a BUBOR 12,8 pontot mozgott, a bankhitellel rendelkező cégek aránya legfeljebb 2,2 pontot (A04). A hazai KKV-k aránya a kamatcsúcs felé még nőtt is (4,5% → 5,1%, A05), mert épp akkor bővültek a támogatott programok. Ebből az időszakból a csatorna strukturális ereje nem azonosítható (A06).</p></div>
+    <div class="callout warn small"><h4>Amit soha ne csináljunk</h4><p>Egy IV-ből kapott „Δberuházás / Δhozzáférés” hányados a program <b>teljes finanszírozási hatását</b> méri: olcsóbb hitelt, hosszabb futamidőt, támogatást. Nem a hozzáférési csatorna strukturális rugalmasságát. Ezt \(\lambda\omega\)-nak átnevezni egy bíráló azonnal megtámadná, és joggal.</p></div>
+
     <dl class="kv">
-      <dt>\(\lambda_j \cdot \omega_j\)</dt><dd>a csatorna ereje. A modell <b>csak a szorzatot</b> azonosítja, a két tényezőt külön nem (A22)</dd>
-      <dt>\(\rho_{acc}\)</dt><dd>alapérték 0,85. A 0,9673 érzékenységi változat leíró cégstátusz-statisztika, nem horgony</dd>
-      <dt>\(\psi_j\)</dt><dd>beruházási kiigazítási költség: nincs becslés, és az irodalom a mienkkel ellentétes méret-sorrendet sugall</dd>
+      <dt>\(\lambda_j \cdot \omega_j\)</dt><dd>a csatorna ereje. A modell <b>csak a szorzatot</b> azonosítja (A22, levezetés a 3c-ben). A jelenlegi baseline kalibráció mellett a KKV-előny határa a két skálázó szorzatán kb. 500 (\(\rho_{acc} = 0{,}9673\) mellett), vagyis mindkettőből az alapérték kb. 22%-a. Lásd „A küszöb” fejezetet.</dd>
+      <dt>\(\rho_{acc}\)</dt><dd>alapérték 0,85, horgonyzatlan. A 0,9673 érzékenységi változat a küszöböt 36,5-ről 22,3-ra viszi (ACCSCALE-skálán)</dd>
+      <dt>\(\psi_j\)</dt><dd>beruházási kiigazítási költség: 8 / 8 / 13, nincs becslés. A „lumpy investment” irodalom (Khan–Thomas 2008; Bachmann–Caballero–Engel 2013) szerint a kis cégek beruházása rögösebb, ami a mostanival <b>ellentétes</b> sorrendet sugall. A \(\psi\) a projekt hat visszatérő hibamintájának egyike.</dd>
       <dt>\(\delta\)</dt><dd>értékcsökkenés: 0,0242 (Opten) és 0,025 (Christensen–Dib, 2008). Két független forrás egyezik</dd>
     </dl>
-    <div class="callout warn small"><h4>Miért nem mérjük meg egyszerűen?</h4><p>Mert 2021–24-ben a KKV-hitelpiac <b>programvezérelt</b> volt: a BUBOR 12,8 pontot mozgott, a hozzáférési arányok legfeljebb 2,2-t. A hazai KKV hozzáférése a kamatcsúcs felé még nőtt is (4,5% → 5,1%), mert épp akkor bővültek a támogatott programok. Ebből az időszakból a csatorna strukturális ereje nem azonosítható (A04–A06).</p></div>
+    <div class="callout warn small"><h4>A nagyvállalatnak nincs hozzáférési margója, de ez a feltevés gyenge</h4><p>A modellben csak a KKV-knak van \(acc\) változójuk (\(\omega_L = 0\)). A nagyvállalatok kisebb hányadának van bankhitele (43,4%), mint az export-KKV-knak (61,9%, A03). Ez nem bizonyítja, hogy hozzáférési korlátjuk van: lehet, hogy belső vagy anyavállalati forrásból finanszíroznak. De azt sem támasztja alá, hogy nincs. Ha a nagyvállalatnak is van margója, a KKV-előny egy része eltűnhet, mert a csatorna mindenkire hat. A dekompozíciós ágak (<code>DECOMP</code>) ezt nem semlegesítik: csak az E–D különbséget veszik ki.</p></div>
     <div class="what-if"><b>Ha kivennénk:</b> pontosan a korábbi v08-as modellt kapnánk vissza. Ezt ellenőriztük: az eltérés 0,0 (A13). A csatorna tehát egzaktul beágyazott, nem változtat meg semmi mást.</div>
+    <div class="q"><h4>Kérdés a teremnek</h4><ul class="clean">
+      <li><span class="who">hallgatók</span> Miért nem tudja a modell szétválasztani a két rugalmasságot? Mit kellene megfigyelnünk ahhoz, hogy külön-külön is azonosítható legyen? (Tipp: 3c.)</li>
+      <li><span class="who">hallgatók</span> Mi a különbség a „rögös” beruházás és a magas kiigazítási költség között? Lehet-e egy lineáris modellben rögösséget ábrázolni?</li>
+      <li><span class="who">szakértők</span> Van-e olyan időszak, régió vagy cégcsoport, ahol a hozzáférés a piaci kamatra reagált, nem a programokra? Például a programokból kizárt ágazatok, a jogosultsági küszöb körüli cégek, vagy a 2021 előtti időszak.</li>
+      <li><span class="who">szakértők</span> Az EIBIS vagy a SAFE éves körének magyar mikrobontása a szorzatot méri, vagy csak az egyik lépcsőt?</li>
+      <li><span class="who">szakértők</span> Milyen almintából lehetne a szegmens dinamikus perzisztenciáját mérni? Például csak a státuszt váltó cégekből, vagy bank–cég kapcsolatok megszűnéséből.</li>
+      <li><span class="who">szakértők</span> A nagyvállalatok alacsonyabb bankhitel-aránya korlátot jelez, vagy azt, hogy nincs rá szükségük? Melyik esetben kell a nagyvállalatnak is margó?</li>
+    </ul></div>
   </div>
 </section>
 
