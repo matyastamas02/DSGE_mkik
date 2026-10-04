@@ -5,11 +5,11 @@
 
 # DSGE_mkik — állapotlap
 
-*Generálva a füstteszt 2026-10-04 16:53-kor futott eredményéből · commit `1c3928e` · ág `main`*
+*Generálva a füstteszt 2026-10-04 17:16-kor futott eredményéből · commit `f0d510a` · ág `main`*
 
 **Fő modell:** `src/modell/1_fo_vonal_jv/jv_dsge_v09_access.mod` (Jakab–Világi mag). A `kkv_dsge_*` a referencia-vonal.
 
-**Őrök:** 168 rendben, 0 hiba.
+**Őrök:** 169 rendben, 0 hiba.
 
 ✅ **Minden „áll” állításnak van őre, és minden őr fut.**
 
@@ -141,9 +141,9 @@
 > bizonyíték: `t58, t58b` — — őr: ✅ `t58 FO ALLITAS: szimmetrikus chi mellett a KKV-L hozzaferesi csatorna nelkul is pozitiv es nincs kuszob`
 > *2026-10-04 · ⚠ 2026-10-04 W0b (A26): az A25 a teljes nw-egyenlettel és omega_nw = 0,95 / 0,9728 / 0,9826 mellett is fennáll; a mechanizmus-leírás (fékező gyorsító) a hazai KKV-ra ACCSCALE=100 mellett NEM áll. Korábbi W0-levezetés (docs/terv/2026-10-04_v11_W0_nettovagyon_levezetes.md): a mechanizmus VALÓSZÍNŰLEG a redukált nw-egyenlet MŰTERMÉKE — az elhagyott vállalkozói jövedelem tag az omega_nw = 0,95 miatt nem kicsi, és visszatéve a hazai KKV tartós nettó vagyona előjelet vált (behelyettesítés, nem újraoldott modell). Az állítás a jelenlegi modellben áll, a státuszáról a W0b újramérése után dönt a csapat. ⚠ 2026-10-04, 1. v11-review (S1, S3): ez a JELENLEGI REDUKÁLT LOG-LINEÁRIS SPECIFIKÁCIÓ tulajdonsága; hogy a teljes nemlineáris BGG-modellnek is tulajdonsága-e, nem igazolt (v11-terv W0), és a „tartós” érték a log-lineáris rendszer permanens forcing melletti fixpontja. KONTRAINTUITÍV MECHANIZMUS a jelenlegi specifikációban: a tartós fixpontban a saját tőke a felárral arányos (nw = omega_nw·lev·efp/(1−omega_nw)), ezért tartós felárcsökkenésnél a saját tőke CSÖKKEN, a tőkeáttétel nő, és a chi·(q+k−nw) tag a felárcsökkenés egy részét visszaveszi. Hosszú távon tehát a gyorsító FÉKKÉNT hat, és a nagyobb chi a KKV-t bünteti. Kontrollként az aszimmetrikus ág bitre visszaadja a t48b-t. ⚠ A küszöbforma közlése (F01) ezért a K01 csapatdöntésétől függ. ⚠ Egy diagnosztikai dekompozíció szerint szimmetrikus chi és ACCSCALE = 0 mellett a maradék kis KKV-előny főként az aa_j (importintenzitás, átvett JV-érték, horgonyzatlan) heterogenitásából jön; ehhez még nincs őr, ezért nem állítás.*
 
-**A26.** A szimmetrikus-χ eredmény (A25) robusztus a nettóvagyon-egyenlet specifikációjára és a nettóvagyon-perzisztenciára: a v10 redukált és a BGG-azonosságból levezetett teljes egyenlettel (v11 -DNWSPEC=0/1), omega_nw = 0,95 / 0,9728 / 0,9826 mellett, mindkét rho_acc-ágon szimmetrikus χ mellett nincs KKV-küszöb (12/12), aszimmetrikus χ mellett van (12/12, 19–41 az ACCSCALE-skálán).
+**A26.** χ = 0,04 mellett a szimmetrikus-χ eredmény (A25) robusztus a nettóvagyon-egyenlet specifikációjára és a nettóvagyon-perzisztenciára: a v10 redukált és a BGG-azonosságból levezetett teljes egyenlettel (v11 -DNWSPEC=0/1), omega_nw = 0,95 / 0,9728 / 0,9826 mellett, mindkét OPTEN-ágon szimmetrikus χ mellett nincs KKV-küszöb (12/12), aszimmetrikus χ mellett van (12/12, 19,6–41,1 az ACCSCALE-skálán). Nem tesztelt: χ = 0,02 / 0,06, NWSPEC=2 más ω-val, a π a küszöbökön; az általános egyensúlyi lezárás nyitott.
 
-> bizonyíték: `t61, t61g` — — őr: ✅ `t61g A25 ROBUSZTUS: szimmetrikus chi mellett minden nw-specifikacio es omega_nw mellett nincs kuszob`
+> bizonyíték: `t61, t61g` — — őr: ✅ `t61g A25 ROBUSZTUS: chi=0.04 mellett NWSPEC=0/1 es harom omega_nw mellett nincs kuszob`
 > *2026-10-04 · A W0-levezetés gyanúja (a K-1 a redukált egyenlet műterméke) RÉSZBEN igazolódott: a teljes egyenlettel a hazai KKV tartós nettó vagyona ACCSCALE=100 mellett előjelet vált (−0,75% → +1,51%). Az A25 ettől függetlenül fennáll. A teljes egyenlet és rho_acc = 0,9673 (OPTEN=1) mellett nagy ACCSCALE-nél a tartós fixpont pólushoz ér (önerősítő hurok: kibocsátás → vállalkozói jövedelem → nettó vagyon → felár → hozzáférés → kibocsátás); ott a tartós érték nem értelmezhető, a küszöböket ez nem érinti.*
 
 ### 🟡 Ami FELTÉTELES — 8 db
@@ -369,7 +369,7 @@
 
 ---
 
-## Őrök (168 db)
+## Őrök (169 db)
 
 *A füstteszt minden ellenőrzése. Ez a projekt egyetlen olyan nyilvántartása, ami nem tud némán elcsúszni: ha egy állítás megdől, itt megbukik egy sor.*
 
@@ -521,7 +521,8 @@
 - ✅ t58 SZINT: KKV-L hozzaferesi csatorna nelkul (aszimm -0.26 / -0.41, chi=0.04 +0.17 / +0.07)
 - ✅ t61 v11 nwspec letezik
 - ✅ t61 v11: NWSPEC=0 bitre a v10, NWSPEC=1/2 BK-stabil mindket rezsimben
-- ✅ t61g A25 ROBUSZTUS: szimmetrikus chi mellett minden nw-specifikacio es omega_nw mellett nincs kuszob
+- ✅ t61g A25 ROBUSZTUS: chi=0.04 mellett NWSPEC=0/1 es harom omega_nw mellett nincs kuszob
+- ✅ t61g SZINT: aszimm. kuszobok 19.55 .. 41.14
 - ✅ t61g SZINT: az A01 GDP-sav omega_nw-fuggo (0.95: 0.52..1.18; 0.9826: 0.30..0.68; teljes nw 0.9826: 0.34..0.83)
 - ✅ t61g KORLAT: teljes nw-egyenlet es OPTEN=1 mellett a tartos fixpont polushoz er
 - ✅ t53c dekomp BK-stressz letezik

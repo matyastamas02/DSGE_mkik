@@ -67,7 +67,7 @@ szabálynak közgazdasági vagy adatbeli indoklás kell, nem numerikus kényelem
 | K-1 | Tartós felárcsökkenésnél a saját tőke csökken, a tőkeáttétel nő, és a χ-tag visszaveszi a felárcsökkenés egy részét. A nagyobb χ a KKV-t bünteti; szimmetrikus χ mellett nincs KKV-küszöb. | A25, `t58` | Az algebra: a redukált nw-egyenlet tartós fixpontja `nw = omega_nw·lev·efp/(1−omega_nw)`, és a mért számok ezt visszaadják. | Hogy ez a teljes (nemlineáris) BGG-modell tulajdonsága is: a redukált egyenletből hiányzik a vállalkozói munkajövedelem / belépő transzfer és a túlélők–belépők aggregálása (review S1). |
 | K-2 | Euróban az EKB-kamat becsapódáskor csak 0,69–0,73-szorosan gyűrűzik át (+25 bp negyedéves ≈ +100 bp évesített sokk). | F07, `t56` | A 838. sor `nu_uni·bstar` tagja viszi, az aznapi `bstar`-ral. | – |
 | K-3 | Forintban egy +25 bp negyedéves (≈ +100 bp évesített) külföldi kamatemelés becsapódáskor növeli a GDP-t (+0,19%). | `t56` | Leértékelődés → export, a Taylor-szabály nem követi az `r_for`-t. | Hogy ez hiba-e: **önmagában nem az** (review K8). A devizaadósság hiányzó csatorna, de a helyes összhatás előjele nem adott előre. |
-| K-4 | A GDP-pálya évtizedekig alig csillapodó, kb. 28 negyedéves ciklusban leng (|z| = 0,9941, amplitúdó-felezési idő kb. 117 negyedév). Jobb hozzáférés mellett a tartós Tobin-q negatív. | diagnosztika | A q-hatás pontosan következik a beruházási egyenletből (D.2 az adatcsomagban). `ACCSCALE=0` mellett |z| = 0,92, tehát a hozzáférési hurok fontos. | Hogy kizárólag az additív hozzáférési tag okozza a ciklust: lehet benne a `rho_acc`, az `omega_nw`, a beruházás lead–lag szerkezete, a ψ, a BGG-visszacsatolás és a külső zárás is (review K4). |
+| K-4 | A GDP-pálya évtizedekig alig csillapodó, kb. 28 negyedéves ciklusban leng (|z| = 0,9941, amplitúdó-felezési idő kb. 117 negyedév). Jobb hozzáférés mellett a tartós Tobin-q negatív. | diagnosztika | A q-hatás pontosan következik a beruházási egyenletből (D.2 az 1. review-kör adatcsomagjában). `ACCSCALE=0` mellett |z| = 0,92, tehát a hozzáférési hurok fontos. | Hogy kizárólag az additív hozzáférési tag okozza a ciklust: lehet benne a `rho_acc`, az `omega_nw`, a beruházás lead–lag szerkezete, a ψ, a BGG-visszacsatolás és a külső zárás is (review K4). |
 
 ### 1.1 Mi lesz ezekből
 
@@ -165,8 +165,12 @@ előjelet vált. **A 4. pont szabálya szerint W0b indul** (`-DNWSPEC=1`, a leve
 Lefutott (levezetés-dokumentum 10. szakasza). Az A25 a teljes egyenlettel és
 három `omega_nw`-értékkel is fennáll (A26). Új, kontraintuitív eredmény: a közölt
 GDP-sáv az `omega_nw`-tól függ, BGG-konzisztens értéknél kb. +0,3…+0,7/0,8% (F08).
-A teljes egyenlet és `OPTEN=1` mellett nagy ACCSCALE-nél pólus. A v11-ben két új
-kapcsoló van: `-DNWSPEC`, `-DOMEGANW`; alapból mindkettő a v10-et adja.
+A teljes egyenlet és `OPTEN=1` mellett nagy ACCSCALE-nél pólus. A v11-ben három új
+kapcsoló van: `-DNWSPEC`, `-DPINW`, `-DOMEGANW`; alapból a v10-et adják.
+
+*Eltérések a rögzítéstől:* a 3. lépést log-lineáris behelyettesítéssel végeztük, nem
+nemlineáris steady state-tel; a W0b-t a 2. review-kör előtt futtattuk; az
+`omega_nw`-scan utólagos.
 
 ### 3.3 Munka
 

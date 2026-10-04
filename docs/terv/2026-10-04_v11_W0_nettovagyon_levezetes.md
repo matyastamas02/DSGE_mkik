@@ -82,7 +82,7 @@ A (C) súlya, $W^e/N$, nem szabad paraméter: a 2. szakasz azonossága rögzíti
 | BGG / Christensen–Dib | 0,9728 | kb. 0,0096 |
 | **ez a modell** (`omega_nw = 0,95`) | 0,9405 | **kb. 0,0425** |
 
-A tartós fixpontban a tag $1/(1-\omega) = 20$-szoros szorzót kap, tehát a (C)
+A tartós fixpontban, **rögzített felár mellett**, a tag $1/(1-\omega) = 20$-szoros szorzót kap (felső korlát: ha a felár χ-n át visszahat a nettó vagyonra, a szorzó kb. 7), tehát a (C)
 hozzájárulása kb. $0{,}85 \cdot w^e$. Ha a vállalkozói jövedelem a típus kibocsátásával
 arányos ($w^e_j = y_j$, a BGG-féle vállalkozói munkajövedelem), akkor egy 1%-os tartós
 kibocsátás-növekedés kb. 0,85%-kal emeli a tartós nettó vagyont. Ez ugyanakkora
@@ -148,6 +148,8 @@ $w^e_j = y_j$ a megalapozottabb választás, de ezt a 2. review-körnek ellenőr
 
 ## 7. Döntés az előre rögzített szabály szerint
 
+> *W0-állapot (behelyettesítés). A W0b újrafuttatása részben felülírta: lásd 10.3.*
+
 A v11-terv 3.2/4. pontja: *„ha ellentétes irányt ad, vagy a nagyságrend [a ±50%-os
 sávon túl] eltér: a nw-egyenletet a levezetett alakra cseréljük (`-DNWSPEC=1`), és ez
 W0b munkacsomag lesz.”*
@@ -175,6 +177,8 @@ redukált egyenlet egy, ebben a kalibrációban nagy tagot elhagy.
 
 ## 9. Ami ebből most következik a már közölt anyagokra
 
+> *W0-állapot. A W0b után: lásd 10.6.*
+
 - **A25:** az állítás a *jelenlegi* modellben áll (az őre rendben van), de a mögötte
   lévő mechanizmus valószínűleg a redukált egyenlet műterméke. A regiszter
   megjegyzésébe ez bekerül; az állítás státuszáról a W0b után dönt a csapat.
@@ -190,8 +194,8 @@ Modell: `jv_dsge_v11.mod`, `-DNWSPEC=0|1|2`, `-DPINW`, `-DOMEGANW`.
 
 ### 10.1 Technikai
 - `NWSPEC=0` mellett a v11 **bitre a v10**, SC=1..4 (az `OMEGANW` kapcsoló felvétele után is).
-- `NWSPEC=1` és `2`, `PINW = 0,0025 / 0,005 / 0,0075`: BK a kezdeti és a záró
-  rezsimben is 13/13, nulla-sokk pontosan 0.
+- `NWSPEC=1` (`PINW = 0,0025 / 0,005 / 0,0075`) és `NWSPEC=2` (`PINW = 0,005`), OPTEN=0, SC=1: BK a kezdeti és a záró rezsimben is 13/13, nulla-sokk pontosan 0. A rácsok, küszöbök és GDP-sávok BK-ellenőrzése csak a **záró** rezsimre vonatkozik.
+- Az `OMEGANW` felvétele utáni regresszió kézi futtatás volt (eltérés 0), mentett kimenete nincs.
 
 ### 10.2 Mi lett a W0 jóslatából
 
@@ -211,8 +215,8 @@ Az irány stimmelt; a visszahatások a hazai KKV-nál felerősítették a válto
 | NWSPEC=1 (teljes) | 32,19 / 19,55 | 0 / 0 |
 | NWSPEC=2 (csak A+B) | 35,78 / 21,94 | 0 / 0 |
 
-Az `omega_nw = 0,9728` és `0,9826` mellett is ugyanez a minta (12/12 + 12/12).
-**A szimmetrikus-χ eredmény tehát nem a redukált nettóvagyon-egyenlet műterméke.**
+Az `omega_nw = 0,9728` és `0,9826` mellett (NWSPEC=0/1) is ugyanez a minta: 8/8 + 8/8; a 0,95-tel együtt 12/12 + 12/12. **Korlát:** csak χ = 0,04-et teszteltük (az A25 0,02 / 0,04 / 0,06-ra szól), az `NWSPEC=2`-t csak ω = 0,95-ön, a π-t a küszöbökön nem variáltuk, és az általános egyensúlyi lezárás (adatcsomag F.1) nyitott.
+**Ezek mellett a szimmetrikus-χ eredmény nem a redukált nettóvagyon-egyenlet műterméke.**
 A korábbi „fékező gyorsító” mechanizmus-leírás viszont a teljes egyenlettel nem
 igaz minden típusra: a hazai KKV tartós nettó vagyona erős hozzáférési csatornával nő.
 
@@ -221,27 +225,22 @@ igaz minden típusra: a hazai KKV tartós nettó vagyona erős hozzáférési cs
 Utólagos, a W0b-ben nem előre rögzített scan, de a 4. szakaszból következik: a
 vállalkozói jövedelem tag súlya és a tartós szorzó is az `omega_nw`-tól függ.
 
-| `omega_nw` | redukált nw | teljes nw |
+| `omega_nw` | GDP-sáv, redukált nw (NWSPEC=0) | GDP-sáv, teljes nw (NWSPEC=1) |
 |---|---|---|
 | 0,95 (v10 alapág) | +0,52 … +1,18% | +0,62 … +1,81% |
-| 0,9728 | +0,39 … +0,89% | +0,45 … +1,17% |
+| 0,9728 (a BGG γ közvetlenül ω-ként; ebben a jelölésben nem BGG-konzisztens) | +0,39 … +0,89% | +0,45 … +1,17% |
 | 0,9826 (BGG-konzisztens: 0,9728/β) | +0,30 … +0,68% | +0,34 … +0,83% |
 
 A 9 konfiguráció mindenhol pozitív és BK-érvényes. **Kontraintuitív, hogy a
-nagyobb perzisztencia kisebb GDP-hatást ad:** nagyobb `omega_nw` mellett a tartós
+nagyobb perzisztencia kisebb GDP-hatást ad.** Hipotézisünk (nw és efp ω-nként nincs kiírva, tehát nem tesztelt): nagyobb `omega_nw` mellett a tartós
 fixpontban nagyobb az `1/(1−omega_nw)` szorzó, a felárcsökkenés erősebben csökkenti
 a nettó vagyont, és a χ-fék erősebb. A regiszter a 0,95-öt korábban „BGG-konvenció”
 címkével horgonyzottnak jelölte; ez nem a BGG-érték (a paraméter-regiszterben javítva).
 
 ### 10.5 Kontraintuitív: pólus a teljes egyenlettel, magas `rho_acc` mellett
 
-`NWSPEC=1` és `OPTEN=1` (`rho_acc = 0,9673`) mellett a KKV−L tartós értéke 60 és 80
-közötti ACCSCALE-nél előjelet vált és felrobban (pl. −87 pp), mindhárom
-`omega_nw`-vel, miközben a pont formálisan BK-érvényes. Ok: a teljes egyenlet egy
-új, önerősítő hurkot nyit (kibocsátás → vállalkozói jövedelem → nettó vagyon →
-felár → hozzáférés → beruházás → kibocsátás), amelynek hosszú távú erősítése itt
-eléri az 1-et. Ezen a tartományon a tartós érték nem értelmezhető. A küszöbök
-(19–41) ettől távol vannak, ezeket nem érinti. `OPTEN=0` mellett nincs pólus.
+`NWSPEC=1` és `OPTEN=1` mellett a KKV−L tartós értéke felrobban és előjelet vált: ω = 0,95 mellett 60 és 80, ω = 0,9728 mellett 80/100 és 100/120, ω = 0,9826 mellett 120 és 140 közötti ACCSCALE-nél. Formálisan BK-érvényes pont az első előjelváltás után csak ω = 0,95-nél van (−87 pp); a +619 pp (ω = 0,9728) közvetlenül előtte. Az első váltás után a rácson több előjelváltás is van, tehát nem egyetlen egyszerű pólus.
+**Hipotézis (nem tesztelt):** a teljes egyenlet önerősítő hurkot nyit (kibocsátás → vállalkozói jövedelem → nettó vagyon → felár → hozzáférés → kibocsátás). **Az `OPTEN=1` nem csak a `rho_acc`-ot emeli, hanem más típusparamétereket is újrakalibrál**, ezért a jelenséget a `rho_acc`-nak nem tulajdoníthatjuk (izoláló futás: `OPTEN=3` vagy `-DRHOACC`, még hátra). A küszöbök (19–41) az első váltás előtt vannak, de hogy a hurok a küszöböt már befolyásolja-e, nem mértük. `OPTEN=0` mellett a 0–140-es rácson nincs előjelváltás, de `NWSPEC=1` mellett a válasz szuperlineárisan nő (pólus a rácson kívül valószínű), tehát az ACC=100-as `NWSPEC=1` számok már erősítettek.
 
 ### 10.6 Ami ebből következik
 
@@ -252,3 +251,4 @@ eléri az 1-et. Ezen a tartományon a tartós érték nem értelmezhető. A küs
 - **A v11 alapértelmezéséről** (`NWSPEC`, `OMEGANW`) a csapat dönt; a W0b ehhez
   adja a számokat, nem dönt helyette.
 - A 2. review-kör ezt a szakaszt is megkapja.
+- **Eltérés az előzetes rögzítéstől:** a W0b-t a 8. pont 6. alpontja szerint a 2. review-kör után kellett volna implementálni; a 2. kör előtt implementáltuk és futtattuk, és a regiszterbe is bevezettük (A26, F08). A review ezt is megkapja.
