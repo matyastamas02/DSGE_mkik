@@ -5,11 +5,11 @@
 
 # DSGE_mkik — állapotlap
 
-*Generálva a füstteszt 2026-09-30 17:59-kor futott eredményéből · commit `3075529` · ág `main`*
+*Generálva a füstteszt 2026-10-04 15:29-kor futott eredményéből · commit `f73a133` · ág `main`*
 
 **Fő modell:** `src/modell/1_fo_vonal_jv/jv_dsge_v09_access.mod` (Jakab–Világi mag). A `kkv_dsge_*` a referencia-vonal.
 
-**Őrök:** 156 rendben, 0 hiba.
+**Őrök:** 163 rendben, 0 hiba.
 
 ✅ **Minden „áll” állításnak van őre, és minden őr fut.**
 
@@ -17,7 +17,7 @@
 
 ## Mit állítunk ma
 
-### 🟢 Ami ÁLL — 22 db
+### 🟢 Ami ÁLL — 24 db
 
 *Ezekre lehet építeni a tanulmányban.*
 
@@ -131,14 +131,24 @@
 > bizonyíték: `t53b` — — őr: ✅ `t53b FO ALLITAS: a KKV-eredmeny NEM technologiai mutermek (technologia azonos 1.03x, csak penzugyi 1.01x)`
 > *2026-08-24 · BK-KORREKCIÓ 2026-08-24: a t53b mind a 10 közölt dekompozíciós küszöbpontja terminálisan BK-érvényes, ezért a küszöb-összevetés fennmarad. A korábbi ACCSCALE=100 pontállítás viszont visszavonandó: az OPTEN=1 t53c rács 45/45 PF-megoldása mellett 0/45 terminális BK, mindenütt 15/13; ezért az ottani GDP-sáv és KKV-pozitivitás nem interpretálható. Az A és C ág nem tiszta technológiai ellenpróba; a döntő összevetés továbbra is 0↔D és 0↔B. Az omega_acc_L=0 feltevést ez a scan nem semlegesíti.*
 
-### 🟡 Ami FELTÉTELES — 6 db
+**A24.** A v10 külföldi kereslet/kamat csatornája (-DFOREIGN=1) technikailag helyes: FOREIGN=0 mellett bitre a v09; ystar = r_for = 0 mellett gépi pontossággal beágyazott; a kezdeti (uni=0) és a záró (uni=1) rezsimben is 13/13 BK-stabil; a monetáris egyenletek a rezsimváltás körül pontosan teljesülnek; a két új sajátérték pontosan rho_ystar és rho_rfor.
+
+> bizonyíték: `t56` — — őr: ✅ `t56 v10: minden ellenorzes rendben, a FOREIGN ag technikailag helyes (31/31)`
+> *2026-10-04 · TECHNIKAI (nem empirikus) eredmény: a bővítés helyes, de a rho_ystar/rho_rfor/eta_ystar horgonyzatlan, és a meglévő euró-szcenáriókban ystar = r_for = 0, tehát egyetlen közölt számot sem változtat. Futtatva: MATLAB R2026b + Dynare 6.5 (macOS arm64).*
+
+**A25.** A KKV-küszöb (F01) a visszavont 3×-os chi-aszimmetria (V04, alapértelmezés-konfliktus K01) következménye. Szimmetrikus chi (0,02 / 0,04 / 0,06) mellett a KKV−L tartós kibocsátás-különbség hozzáférési csatorna nélkül (ACCSCALE = 0) is pozitív, tehát pozitív küszöb nincs; chi = 0,04 mellett +0,17 pp (OPTEN=0) és +0,07 pp (OPTEN=1). Az aszimmetrikus alapágban ugyanez −0,26 pp és −0,41 pp.
+
+> bizonyíték: `t58, t58b` — — őr: ✅ `t58 FO ALLITAS: szimmetrikus chi mellett a KKV-L hozzaferesi csatorna nelkul is pozitiv es nincs kuszob`
+> *2026-10-04 · KONTRAINTUITÍV MECHANIZMUS: a tartós egyensúlyban a saját tőke a felárral arányos (nw = omega_nw·lev·efp/(1−omega_nw)), ezért tartós felárcsökkenésnél a saját tőke CSÖKKEN, a tőkeáttétel nő, és a chi·(q+k−nw) tag a felárcsökkenés egy részét visszaveszi. Hosszú távon tehát a gyorsító FÉKKÉNT hat, és a nagyobb chi a KKV-t bünteti. Kontrollként az aszimmetrikus ág bitre visszaadja a t48b-t. ⚠ A küszöbforma közlése (F01) ezért a K01 csapatdöntésétől függ. ⚠ Egy diagnosztikai dekompozíció szerint szimmetrikus chi és ACCSCALE = 0 mellett a maradék kis KKV-előny főként az aa_j (importintenzitás, átvett JV-érték, horgonyzatlan) heterogenitásából jön; ehhez még nincs őr, ezért nem állítás.*
+
+### 🟡 Ami FELTÉTELES — 7 db
 
 *Csak a feltétellel együtt közölhető — küszöbformában, vagy az elfogadási feltétel kiírásával.*
 
 **F01.** A KKV-blokk SZEGMENS-KIBOCSÁTÁSA akkor előzi meg a nagyvállalatit, ha a hozzáférési csatorna két lépcsőjének SZORZATA meghalad egy küszöböt: (λ·ω)* = 500 az átvett kalibrációhoz viszonyított skálán, rho_acc = 0,9673 mellett (átvett rho_acc = 0,85 mellett 1337). A korábban közölt „ACCSCALE ≥ 22,3” ennek EGYETLEN pontja — az, ahol a két lépcsőt azonos arányban skáláztuk: √500 = 22,36.
 
 > bizonyíték: `t48, t48b, t49, t51, t52b, t52d` — — őr: ✅ `t51 KONTUR: a kuszob MONOTON csokken a rho_acc-ban (47.8 -> 17.5)`
-> *2026-08-16 · ÁTFOGALMAZVA 2026-08-24, a λ/ω szétbontás után (korlátok-riport 1. teendő). AMI VÁLTOZOTT: a 22,3 nem hibás, de nem is interpretálható volt, mert KÉT rugalmasság szorzatán ült, előre rögzített λ:ω arány mellett. A szétbontás (-DLAMSCALE / -DOMSCALE) azt is megmutatta, hogy a modell a két paramétert KÜLÖN NEM IS AZONOSÍTJA (lásd A22), tehát a szorzat az egyetlen értelmes küszöb-objektum. A nulla-kontúron a szorzat 28-szoros λ-tartományon 0,08%-on belül állandó (t52b). A régi számokhoz a kötést a t52d átló adja: 22,36 / 36,56 vs a t48b/t51 22,3 / 36,5. A rho_acc-függés VÁLTOZATLANUL áll (t51: 47,8 → 17,5). Mindkét tengely horgonyzatlan (A06, A11), ezért a kondicionálás mindig kiírandó. PONTOSÍTÁS: az összevetés SZEGMENS-KIBOCSÁTÁS (y_j = bruttó kibocsátás), NEM GDP-részesedés.*
+> *2026-08-16 · ⚠ 2026-10-04 (A25): a küszöb a visszavont chi-aszimmetriától (K01) függ; szimmetrikus chi mellett nincs pozitív küszöb. ÁTFOGALMAZVA 2026-08-24, a λ/ω szétbontás után (korlátok-riport 1. teendő). AMI VÁLTOZOTT: a 22,3 nem hibás, de nem is interpretálható volt, mert KÉT rugalmasság szorzatán ült, előre rögzített λ:ω arány mellett. A szétbontás (-DLAMSCALE / -DOMSCALE) azt is megmutatta, hogy a modell a két paramétert KÜLÖN NEM IS AZONOSÍTJA (lásd A22), tehát a szorzat az egyetlen értelmes küszöb-objektum. A nulla-kontúron a szorzat 28-szoros λ-tartományon 0,08%-on belül állandó (t52b). A régi számokhoz a kötést a t52d átló adja: 22,36 / 36,56 vs a t48b/t51 22,3 / 36,5. A rho_acc-függés VÁLTOZATLANUL áll (t51: 47,8 → 17,5). Mindkét tengely horgonyzatlan (A06, A11), ezért a kondicionálás mindig kiírandó. PONTOSÍTÁS: az összevetés SZEGMENS-KIBOCSÁTÁS (y_j = bruttó kibocsátás), NEM GDP-részesedés.*
 
 **F02.** Az export-KKV kibocsátásának ELŐJELE az eps_ces-en fordul, ~2,3-nál.
 
@@ -164,6 +174,11 @@
 
 > bizonyíték: `t25, t25b; Horváth–Kotlebová–Širaňová (2018), JFS 36, 12–21` — — őr: ✅ `t25b: mind a 4 CI TARTALMAZZA a nullat - a kulonbseg nem szignifikans`
 > *2026-08-24 · A D-kategória irodalmi keresés (2026-08-24) találata. EZ NEM ÁLLÍTJA VISSZA a V03-at — megerősíti, hogy a TSCEN=3 (semleges) alapértelmezés volt a helyes döntés, és most már KÉT oldalról indokolható, nem csak adathiánnyal. A tanulmányban így írandó: „a méret szerinti transzmissziós különbség iránya az irodalom és a magyar adat között ellentétes, ezért a modell semleges transzmissziót használ, és a -DTSCEN=1|2 ágakon mindkét irányt megmutatja.” KORLÁT: az irodalmi eredmény euróövezeti panel, a mi mérésünk magyar és nem szignifikáns — egyik sem dönti el a kérdést.*
+
+**F07.** Euróban egy EKB-kamatemelés a hazai kamatot becsapódáskor csak 0,69–0,73-szorosan emeli (25 bp negyedéves sokk a 13. és a 14. negyedévben, v10 FOREIGN=1).
+
+> bizonyíték: `t56` — — őr: ✅ `t56 SZINT: az EKB-atgyuruzes euroban becsapodaskor (0.69 / 0.73)`
+> *2026-10-04 · KONTRAINTUITÍV: valutaunióban 1:1-es átgyűrűzés volna várható. A különbséget a −nu_uni·bstar tag viszi: a kamatemelés még abban a negyedévben javítja a külkereskedelmi mérleget, a bstar nő, és ez a hazai kamatot lefelé húzza. A nu_uni = 0,25 a regiszter szerint technikai zárás, nem becsült paraméter, tehát az átgyűrűzés mértéke egy technikai paraméteren múlik. Elfogadási feltétel: a nu_uni horgonyzása vagy érzékenységi scan.*
 
 ### 🔴 Amit VISSZAVONTUNK — 9 db
 
@@ -344,7 +359,7 @@
 
 ---
 
-## Őrök (156 db)
+## Őrök (163 db)
 
 *A füstteszt minden ellenőrzése. Ez a projekt egyetlen olyan nyilvántartása, ami nem tud némán elcsúszni: ha egy állítás megdől, itt megbukik egy sor.*
 
@@ -487,6 +502,13 @@
 - ✅ t53b: minden kozolt dekompozicios kuszob terminalisan BK-stabil
 - ✅ t53b FO ALLITAS: a KKV-eredmeny NEM technologiai mutermek (technologia azonos 1.03x, csak penzugyi 1.01x)
 - ✅ t53b SZINT: a kuszobok a kozolt szamokon (22.36 / 22.62 / 22.95)
+- ✅ t56 v10 ellenorzes letezik
+- ✅ t56 v10: minden ellenorzes rendben, a FOREIGN ag technikailag helyes (31/31)
+- ✅ t56 SZINT: az EKB-atgyuruzes euroban becsapodaskor (0.69 / 0.73)
+- ✅ t58 chi-szimm kuszob letezik
+- ✅ t58 KONTROLL: az aszimmetrikus ag bitre visszaadja a t48b kuszobot
+- ✅ t58 FO ALLITAS: szimmetrikus chi mellett a KKV-L hozzaferesi csatorna nelkul is pozitiv es nincs kuszob
+- ✅ t58 SZINT: KKV-L hozzaferesi csatorna nelkul (aszimm -0.26 / -0.41, chi=0.04 +0.17 / +0.07)
 - ✅ t53c dekomp BK-stressz letezik
 - ✅ t53c: mind a 45 PF/BK diagnosztika technikailag lefutott
 - ✅ t53c KORREKCIO: az OPTEN1 ACC100 racs pontosan 0/45 terminalis BK-stabil (gyok/elo=15/13)
@@ -505,6 +527,6 @@
 - ✅ t00 PHILLIPS: az aszimmetrikus arsokkok (eps_md / eps_mx) egyik szcenarioban sincsenek hajtva
 - ✅ t00 SZERKEZET: mind a 4 modell-vonal megvan, README-vel
 - ✅ t00 SZERKEZET: a FO MODELL a helyen van (1_fo_vonal_jv)
-- ✅ t00 SZERKEZET: minden futtato letezo .mod-ot hiv (32 futtato, 20 modell)
+- ✅ t00 SZERKEZET: minden futtato letezo .mod-ot hiv (34 futtato, 20 modell)
 
 </details>
