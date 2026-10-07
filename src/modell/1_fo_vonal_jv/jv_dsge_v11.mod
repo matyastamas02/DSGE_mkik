@@ -28,6 +28,18 @@
  *   hozzaferes ciklusa, amelybe euroban a bstar -> r hurok belep.
  *   Futtato: futtato/sens_extclose_v11.m (t62-t62d)
  *
+ * SZUVEREN FELAR CSATORNAJA (2026-10-07): -DSOVCSAT=0|1|2 -- hol hat a
+ *   szuveren felar (sov) a hazai kamatra. A vallalati felarban (tsov_j*sov)
+ *   MINDIG benne marad.
+ *   0 = v10: az UIP-ben (lebego) es az euro-agi kamatszabalyban is zsov*sov
+ *       (ALAPERTELMEZES)
+ *   1 = euroban a hazai kamat a kozos kamat (+ zaras); a felar csak a
+ *       lebego UIP-ben (arfolyam-kockazati premium) es a vallalati felarban
+ *   2 = csak a vallalati felarban (sem UIP, sem kamatszabaly)
+ *   Indok (F09): zsov*sov az euro-agi szabalyban rogzitett beta mellett
+ *   tartosan bstar = zsov*sov/nu_uni kulso pozicio-eltolodast ad.
+ *   Futtato: futtato/sens_sovcsat_v11.m (t63-t63c)
+ *
  * ---------------------------------------------------------------------
  * ELOZMENY (v10 fejlece, valtozatlanul):
  * jv_dsge_v10_foreign.mod — 5. LEPCSO: KULFOLDI KERESLET/KAMAT CSATORNA
@@ -155,6 +167,10 @@
 // -DHORIZON (v11, 2026-10-07): a perfect foresight horizont (alap 120 negyedev).
 @#ifndef HORIZON
   @#define HORIZON = 120
+@#endif
+// -DSOVCSAT (v11, 2026-10-07): a szuveren felar csatornaja, lasd fejlec.
+@#ifndef SOVCSAT
+  @#define SOVCSAT = 0
 @#endif
 // -DEXTCLOSE (v11, 2026-10-07): a kulso zaras specifikacioja, lasd fejlec.
 @#ifndef EXTCLOSE
@@ -388,7 +404,7 @@ parameters
     wd_E wd_D wd_L wx_E wx_D wx_L
     shl_E shl_D shl_L shm_E shm_D shm_L
     // aggregalt sulyok, zaras
-    s_kkv mu_vert zsov eps_ces
+    s_kkv mu_vert zsov zsov_eu zsov_uip eps_ces
     rho_acc lambda_acc_E lambda_acc_D omega_acc_E omega_acc_D
     sc si sg sx sm shd_c shd_i shd_g shd_v
     rho_a rho_x rho_c rho_w rho_i rho_pr rho_mx rho_g
@@ -729,6 +745,14 @@ nu_uni = @{NUUNI};
 @#if EXTCLOSE >= 1
 nu_uni = nu_b;   // -DEXTCLOSE>=1: kozos, gyenge adossag-rugalmassag mindket rezsimben
 @#endif
+// -DSOVCSAT: a szuveren felar sulya az euro-agi kamatszabalyban es az UIP-ben
+zsov_eu = zsov; zsov_uip = zsov;
+@#if SOVCSAT >= 1
+zsov_eu = 0;
+@#endif
+@#if SOVCSAT == 2
+zsov_uip = 0;
+@#endif
 // --- -DNWSPEC (v11 / W0b): a teljes nettovagyon-egyenlet parameterei -----
 // Itt all, mert minden lev_j-feluliras (OPTEN/SYM/CALIB26/DECOMP) mar lefutott.
 // gam_nw = a BGG-tuleles (omega_nw = gam_nw*R, R = 1/beta);
@@ -934,22 +958,22 @@ bstar = (1/beta)*bstar(-1) + sx*(px + xx) - sm*(rer + im);
 // -DEXTCLOSE=2: az elozo idoszaki kulso pozicio hat (mindket rezsimben).
 @#if FOREIGN == 1
 (1-uni)*(r - gam_i*r(-1) - (1-gam_i)*phi_pi*infl - eps_r)
-    + uni*(r - r_for - zsov*sov + nu_uni*bstar(-1)) = 0;
-(1-uni)*(r - r_for - dep(+1) + nu_b*bstar(-1) - zsov*sov - e_pr_ar) + uni*dep = 0;
+    + uni*(r - r_for - zsov_eu*sov + nu_uni*bstar(-1)) = 0;
+(1-uni)*(r - r_for - dep(+1) + nu_b*bstar(-1) - zsov_uip*sov - e_pr_ar) + uni*dep = 0;
 @#else
 (1-uni)*(r - gam_i*r(-1) - (1-gam_i)*phi_pi*infl - eps_r)
-    + uni*(r - zsov*sov + nu_uni*bstar(-1)) = 0;
-(1-uni)*(r - dep(+1) + nu_b*bstar(-1) - zsov*sov - e_pr_ar) + uni*dep = 0;
+    + uni*(r - zsov_eu*sov + nu_uni*bstar(-1)) = 0;
+(1-uni)*(r - dep(+1) + nu_b*bstar(-1) - zsov_uip*sov - e_pr_ar) + uni*dep = 0;
 @#endif
 @#else
 @#if FOREIGN == 1
 (1-uni)*(r - gam_i*r(-1) - (1-gam_i)*phi_pi*infl - eps_r)
-    + uni*(r - r_for - zsov*sov + nu_uni*bstar) = 0;
-(1-uni)*(r - r_for - dep(+1) + nu_b*bstar - zsov*sov - e_pr_ar) + uni*dep = 0;
+    + uni*(r - r_for - zsov_eu*sov + nu_uni*bstar) = 0;
+(1-uni)*(r - r_for - dep(+1) + nu_b*bstar - zsov_uip*sov - e_pr_ar) + uni*dep = 0;
 @#else
 (1-uni)*(r - gam_i*r(-1) - (1-gam_i)*phi_pi*infl - eps_r)
-    + uni*(r - zsov*sov + nu_uni*bstar) = 0;
-(1-uni)*(r - dep(+1) + nu_b*bstar - zsov*sov - e_pr_ar) + uni*dep = 0;
+    + uni*(r - zsov_eu*sov + nu_uni*bstar) = 0;
+(1-uni)*(r - dep(+1) + nu_b*bstar - zsov_uip*sov - e_pr_ar) + uni*dep = 0;
 @#endif
 @#endif
 rer = rer(-1) + dep - infl;

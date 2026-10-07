@@ -5,11 +5,11 @@
 
 # DSGE_mkik — állapotlap
 
-*Generálva a füstteszt 2026-10-07 07:29-kor futott eredményéből · commit `0b05990` · ág `main`*
+*Generálva a füstteszt 2026-10-07 08:36-kor futott eredményéből · commit `e55e51b` · ág `main`*
 
 **Fő modell:** `src/modell/1_fo_vonal_jv/jv_dsge_v09_access.mod` (Jakab–Világi mag). A `kkv_dsge_*` a referencia-vonal.
 
-**Őrök:** 175 rendben, 0 hiba.
+**Őrök:** 179 rendben, 0 hiba.
 
 ✅ **Minden „áll” állításnak van őre, és minden őr fut.**
 
@@ -17,7 +17,7 @@
 
 ## Mit állítunk ma
 
-### 🟢 Ami ÁLL — 27 db
+### 🟢 Ami ÁLL — 29 db
 
 *Ezekre lehet építeni a tanulmányban.*
 
@@ -156,7 +156,17 @@
 > bizonyíték: `t62` — — őr: ✅ `t62 SZINT: a bejelentes utan egy evvel a GDP a bazis alatt (-0.71% / -1.86%)`
 > *2026-10-07 · KONTRAINTUITÍV: a dél-európai belépés előtti konvergencia keresletbővüléssel járt. A modellbeli ok: lebegő árfolyamnál a zsov·sov csak az UIP-ben szerepel, ezért a felárcsökkenés az árfolyamot erősíti, a hazai kamatot nem; a Taylor-szabály csak az inflációra reagál.*
 
-### 🟡 Ami FELTÉTELES — 10 db
+**A30.** Ha a szuverén felár euróban nem a hazai kamatot, csak a vállalati forrásköltséget érinti (v11 -DSOVCSAT=1/2), a tartós külső pozíció-eltolódás eltűnik (bstar = 0), és a tartós fixpont nem függ a külső zárás rugalmasságától: EXTCLOSE=0 és 1 mellett azonos, a tartós GDP-hatás 0,82% (régi súlyok) és 1,26% (friss súlyok). A régi alakban (SOVCSAT=0) ugyanez 0,84% és 4,43% között szór a zárástól függően.
+
+> bizonyíték: `t63b` — — őr: ✅ `t63b SOVCSAT: a tartos fixpont zarasfuggetlen, ha a szuveren felar euroban nem eri a hazai kamatot (0.82% / 1.26%)`
+> *2026-10-07 · Az előre rögzített analitikus előrejelzés (bstar = zsov_eu·sov/nu = 0) teljesül. A háztartási kamatcsatorna a régi zárással is csak 0,014 pp-ot adott a tartós GDP-hez: a tartós hatás lényegében a vállalati felárakból jön. SOVCSAT=0 mellett a v11 bitre a v09. Futtató: sens_sovcsat_v11.m (400 negyedéves számítási horizont).*
+
+**A31.** A bejelentés utáni visszaesést a lebegő árfolyamos UIP-ben szereplő szuverén felár okozza: ha a felár ott sem hat (SOVCSAT=2), a 4. negyedéves GDP-hatás −0,05% a SOVCSAT=1 melletti −0,96% helyett (gyenge zárás, régi súlyok, ACCSCALE = 100).
+
+> bizonyíték: `t63b` — — őr: ✅ `t63b SZINT: a bejelentesi visszaeses az UIP-ben szereplo felarbol jon (-0.05% vs -0.96%)`
+> *2026-10-07 · Az A29 mechanizmusa: a konvergencia-időszakban a felárcsökkenés csak az árfolyamot erősíti. Hogy a valóságban az árfolyam-kockázati prémium mennyiben szuverén felár, empirikus kérdés.*
+
+### 🟡 Ami FELTÉTELES — 11 db
 
 *Csak a feltétellel együtt közölhető — küszöbformában, vagy az elfogadási feltétel kiírásával.*
 
@@ -209,6 +219,11 @@
 
 > bizonyíték: `t62e` — — őr: ✅ `t62e SZINT: a tartos GDP-hatas a zaras rugalmassagan mulik (nu 0.25: 0.84%; 0.025: 0.97%; 0.001: 4.43%, adossag 62.5% GDP)`
 > *2026-10-07 · KONTRAINTUITÍV: a rögzített β-jú reprezentatív háztartás miatt az euró tartós felárcsökkenése nem a hosszú távú reálkamatot, hanem a külső pozíciót mozgatja. A 0,25 empirikusan nem védhető (10 pp NIIP-romlás 40 pp kamatemelést jelentene); empirikusan horgonyzott, gyenge zárás mellett a tartós eredményt a külső eladósodás uralja. Megoldás nem paraméterhangolás, hanem zárási döntés (pl. véges horizontú háztartások, endogén diszkonttényező) és a közlés áthelyezése a 20–80 negyedéves távra. Friss súlyokkal a régi, aznapi zárás nu_uni ≤ 0,05 mellett stabil.*
+
+**F10.** A javasolt v11-ágon (SOVCSAT=1, EXTCLOSE=1: euróban közös kamat, gyenge zárás) a modell régi és friss GDP-súlyokkal is a teljes ACCSCALE-rácson stabil mindkét rezsimben, és a GDP-hatás 20 éves távon (16–20. év átlaga) az alap-szcenárióban 0,73% (régi súlyok) és 1,04% (friss súlyok); a 3 szcenárió × 3 átgyűrűzés sávja 0,44–1,04% (régi) és 0,59–1,53% (friss). A KKV-küszöb az ACCSCALE-skálán 37,7 (tartós) / 44,0 (16–20. év) régi, 22,4 / 35,0 friss súlyokkal.
+
+> bizonyíték: `t63b, t63c` — — őr: ✅ `t63b SZINT: a javasolt v11-agon a 20 eves GDP-hatas 0.73% / 1.04%, sav 0.44..1.04 / 0.59..1.53, KKV-kuszob 37.7/44.0, 22.4/35.0`
+> *2026-10-07 · FELTÉTELES, mert (1) az, hogy a szuverén felár euróban nem éri a háztartási kamatot, modellezési döntés; (2) a hozzáférési margó specifikációja (ACCSPEC) nyitott, a tartós q_E így is negatív; (3) az 50%-os Opten-kalibráció még nincs a modellben; (4) a χ-aszimmetria (K01) és a lev-egyenlőség (K02) alapértéke változatlan. Nem alapértelmezés: csapatdöntés. Közlési horizont legfeljebb 20–30 év.*
 
 ### 🔴 Amit VISSZAVONTUNK — 9 db
 
@@ -389,7 +404,7 @@
 
 ---
 
-## Őrök (175 db)
+## Őrök (179 db)
 
 *A füstteszt minden ellenőrzése. Ez a projekt egyetlen olyan nyilvántartása, ami nem tud némán elcsúszni: ha egy állítás megdől, itt megbukik egy sor.*
 
@@ -551,6 +566,10 @@
 - ✅ t62b EXTCLOSE: a gyenge zaras helyreallitja a BK-t (max |z| 0.970), a belepeskori kamatesesbol a zaras resze v09-ben -1.76 pp
 - ✅ t62 SZINT: a bejelentes utan egy evvel a GDP a bazis alatt (-0.71% / -1.86%)
 - ✅ t62e SZINT: a tartos GDP-hatas a zaras rugalmassagan mulik (nu 0.25: 0.84%; 0.025: 0.97%; 0.001: 4.43%, adossag 62.5% GDP)
+- ✅ t63 v11 szuveren felar csatorna tablai leteznek
+- ✅ t63b SOVCSAT: a tartos fixpont zarasfuggetlen, ha a szuveren felar euroban nem eri a hazai kamatot (0.82% / 1.26%)
+- ✅ t63b SZINT: a bejelentesi visszaeses az UIP-ben szereplo felarbol jon (-0.05% vs -0.96%)
+- ✅ t63b SZINT: a javasolt v11-agon a 20 eves GDP-hatas 0.73% / 1.04%, sav 0.44..1.04 / 0.59..1.53, KKV-kuszob 37.7/44.0, 22.4/35.0
 - ✅ t53c dekomp BK-stressz letezik
 - ✅ t53c: mind a 45 PF/BK diagnosztika technikailag lefutott
 - ✅ t53c KORREKCIO: az OPTEN1 ACC100 racs pontosan 0/45 terminalis BK-stabil (gyok/elo=15/13)
@@ -569,6 +588,6 @@
 - ✅ t00 PHILLIPS: az aszimmetrikus arsokkok (eps_md / eps_mx) egyik szcenarioban sincsenek hajtva
 - ✅ t00 SZERKEZET: mind a 4 modell-vonal megvan, README-vel
 - ✅ t00 SZERKEZET: a FO MODELL a helyen van (1_fo_vonal_jv)
-- ✅ t00 SZERKEZET: minden futtato letezo .mod-ot hiv (37 futtato, 21 modell)
+- ✅ t00 SZERKEZET: minden futtato letezo .mod-ot hiv (38 futtato, 21 modell)
 
 </details>
