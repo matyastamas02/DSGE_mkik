@@ -16,6 +16,18 @@
  *   -DPINW=<x>: a steady-state premium (negyedeves, alap 0.005). A gam_nw es
  *   a wen_j NEM szabad parameter: az allandosult azonossagbol szamolodik.
  *
+ * KULSO ZARAS (2026-10-07): -DEXTCLOSE=0|1|2 -- a netto kulfoldi pozicio
+ *   (bstar) visszacsatolasa a hazai kamatra.
+ *   0 = v10: euroban r = r_for + zsov*sov - nu_uni*bstar, nu_uni = 0.25
+ *       (a lebego agi nu_b = 0.001 250-szerese; ALAPERTELMEZES)
+ *   1 = kozos, gyenge adossag-rugalmassag: euroban is nu_b (aznapi bstar)
+ *   2 = mint 1, de mindket rezsimben az ELOZO idoszaki bstar(-1) hat
+ *       (standard Schmitt-Grohe--Uribe-idozites)
+ *   Indok: a friss GDP-sulyokkal (sm ~ 0.80) az euro-rezsim 15/13; a
+ *   modusz-elemzes szerint a lassu ciklus a D-tipus beruhazas-q-toke-
+ *   hozzaferes ciklusa, amelybe euroban a bstar -> r hurok belep.
+ *   Futtato: futtato/sens_extclose_v11.m (t62-t62d)
+ *
  * ---------------------------------------------------------------------
  * ELOZMENY (v10 fejlece, valtozatlanul):
  * jv_dsge_v10_foreign.mod — 5. LEPCSO: KULFOLDI KERESLET/KAMAT CSATORNA
@@ -139,6 +151,14 @@
 @#endif
 @#ifndef NUUNI
   @#define NUUNI = 0.25
+@#endif
+// -DHORIZON (v11, 2026-10-07): a perfect foresight horizont (alap 120 negyedev).
+@#ifndef HORIZON
+  @#define HORIZON = 120
+@#endif
+// -DEXTCLOSE (v11, 2026-10-07): a kulso zaras specifikacioja, lasd fejlec.
+@#ifndef EXTCLOSE
+  @#define EXTCLOSE = 0
 @#endif
 @#ifndef SKKV
   @#define SKKV = 0.05
@@ -706,6 +726,9 @@ lambda_acc_E = lambda_acc_D;
 omega_acc_E  = omega_acc_D;
 @#endif
 nu_uni = @{NUUNI};
+@#if EXTCLOSE >= 1
+nu_uni = nu_b;   // -DEXTCLOSE>=1: kozos, gyenge adossag-rugalmassag mindket rezsimben
+@#endif
 // --- -DNWSPEC (v11 / W0b): a teljes nettovagyon-egyenlet parameterei -----
 // Itt all, mert minden lev_j-feluliras (OPTEN/SYM/CALIB26/DECOMP) mar lefutott.
 // gam_nw = a BGG-tuleles (omega_nw = gam_nw*R, R = 1/beta);
@@ -907,6 +930,18 @@ bstar = (1/beta)*bstar(-1) + sx*(px + xx) - sm*(rer + im);
 // unios agon a hazai kamatot horgonyozza, lebego agon az UIP-ban jelenik
 // meg. A hazai Taylor-szabalyt (gam_i/phi_pi) NEM egeszitjuk ki r_for-ral,
 // mert az EAGLE-ben sem oda kotodik -- lasd terv D-tablazat, 6. pont.
+@#if EXTCLOSE == 2
+// -DEXTCLOSE=2: az elozo idoszaki kulso pozicio hat (mindket rezsimben).
+@#if FOREIGN == 1
+(1-uni)*(r - gam_i*r(-1) - (1-gam_i)*phi_pi*infl - eps_r)
+    + uni*(r - r_for - zsov*sov + nu_uni*bstar(-1)) = 0;
+(1-uni)*(r - r_for - dep(+1) + nu_b*bstar(-1) - zsov*sov - e_pr_ar) + uni*dep = 0;
+@#else
+(1-uni)*(r - gam_i*r(-1) - (1-gam_i)*phi_pi*infl - eps_r)
+    + uni*(r - zsov*sov + nu_uni*bstar(-1)) = 0;
+(1-uni)*(r - dep(+1) + nu_b*bstar(-1) - zsov*sov - e_pr_ar) + uni*dep = 0;
+@#endif
+@#else
 @#if FOREIGN == 1
 (1-uni)*(r - gam_i*r(-1) - (1-gam_i)*phi_pi*infl - eps_r)
     + uni*(r - r_for - zsov*sov + nu_uni*bstar) = 0;
@@ -915,6 +950,7 @@ bstar = (1/beta)*bstar(-1) + sx*(px + xx) - sm*(rer + im);
 (1-uni)*(r - gam_i*r(-1) - (1-gam_i)*phi_pi*infl - eps_r)
     + uni*(r - zsov*sov + nu_uni*bstar) = 0;
 (1-uni)*(r - dep(+1) + nu_b*bstar - zsov*sov - e_pr_ar) + uni*dep = 0;
+@#endif
 @#endif
 rer = rer(-1) + dep - infl;
 
@@ -1019,5 +1055,5 @@ var uni; periods 1:12; values 0;
 end;
 @#endif
 
-perfect_foresight_setup(periods=120);
+perfect_foresight_setup(periods=@{HORIZON});
 perfect_foresight_solver;

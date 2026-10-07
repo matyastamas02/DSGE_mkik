@@ -5,11 +5,11 @@
 
 # DSGE_mkik — állapotlap
 
-*Generálva a füstteszt 2026-10-04 17:16-kor futott eredményéből · commit `751c41c` · ág `main`*
+*Generálva a füstteszt 2026-10-07 07:29-kor futott eredményéből · commit `0b05990` · ág `main`*
 
 **Fő modell:** `src/modell/1_fo_vonal_jv/jv_dsge_v09_access.mod` (Jakab–Világi mag). A `kkv_dsge_*` a referencia-vonal.
 
-**Őrök:** 169 rendben, 0 hiba.
+**Őrök:** 175 rendben, 0 hiba.
 
 ✅ **Minden „áll” állításnak van őre, és minden őr fut.**
 
@@ -17,14 +17,14 @@
 
 ## Mit állítunk ma
 
-### 🟢 Ami ÁLL — 24 db
+### 🟢 Ami ÁLL — 27 db
 
 *Ezekre lehet építeni a tanulmányban.*
 
 **A01.** A −200 bp szuverén és −45 bp banki felár-konvergenciát feltételező euró-szcenárióban a terminálisan determinált OPTEN=0 ágon a modell tartós GDP-hatása +0,52% … +1,18% a három szcenárió × három transzmissziós változat mindegyikében (9/9) pozitív.
 
 > bizonyíték: `t47` — — őr: ✅ `t47 ERVENYES SZINT: a terminalisan determinált GDP-sav 0.52% ... 1.18%`
-> *2026-08-16 · ⚠ 2026-10-04 (F08): a sáv az omega_nw = 0,95-ön áll; BGG-konzisztens 0,9826 mellett +0,30…+0,68% (redukált) / +0,34…+0,83% (teljes nw). BK-KORREKCIÓ 2026-08-24: a korábbi +0,3%…+2,9%-os sáv BK-invalid OPTEN=1/2/3 sorokat is tartalmazott, ezért nem közölhető modell-eredményként. A perfect-foresight solver mind a 36 sort megoldja, de a terminális lokális BK-feltétel csak az OPTEN=0 ág 9 sorában teljesül. A −200 bp szcenárió maga továbbra is hivatkozás nélküli kalibrált kontrafaktuális, nem empirikusan azonosított euróhatás.*
+> *2026-08-16 · ⚠ 2026-10-04 (F08): a sáv az omega_nw = 0,95-ön áll; BGG-konzisztens 0,9826 mellett +0,30…+0,68% (redukált) / +0,34…+0,83% (teljes nw). BK-KORREKCIÓ 2026-08-24: a korábbi +0,3%…+2,9%-os sáv BK-invalid OPTEN=1/2/3 sorokat is tartalmazott, ezért nem közölhető modell-eredményként. A perfect-foresight solver mind a 36 sort megoldja, de a terminális lokális BK-feltétel csak az OPTEN=0 ág 9 sorában teljesül. A −200 bp szcenárió maga továbbra is hivatkozás nélküli kalibrált kontrafaktuális, nem empirikusan azonosított euróhatás. ⚠ 2026-10-07 (F09): a sáv a nu_uni = 0,25-ös külső záráson is áll, amely empirikusan nem védhető (400 bp/pp); gyenge zárással a tartós sáv 3,21–5,67%, de az a fixpont évszázadok múlva áll be.*
 
 **A02.** Az exportáló KKV hitelhozzáférése 13-szorosa a hazai KKV-énak (61,9% vs 4,8%).
 
@@ -141,7 +141,22 @@
 > bizonyíték: `t58, t58b` — — őr: ✅ `t58 FO ALLITAS: szimmetrikus chi mellett a KKV-L hozzaferesi csatorna nelkul is pozitiv es nincs kuszob`
 > *2026-10-04 · ⚠ 2026-10-04 W0b (A26): az A25 a teljes nw-egyenlettel és omega_nw = 0,95 / 0,9728 / 0,9826 mellett is fennáll; a mechanizmus-leírás (fékező gyorsító) a hazai KKV-ra ACCSCALE=100 mellett NEM áll. Korábbi W0-levezetés (docs/terv/2026-10-04_v11_W0_nettovagyon_levezetes.md): a mechanizmus VALÓSZÍNŰLEG a redukált nw-egyenlet MŰTERMÉKE — az elhagyott vállalkozói jövedelem tag az omega_nw = 0,95 miatt nem kicsi, és visszatéve a hazai KKV tartós nettó vagyona előjelet vált (behelyettesítés, nem újraoldott modell). Az állítás a jelenlegi modellben áll, a státuszáról a W0b újramérése után dönt a csapat. ⚠ 2026-10-04, 1. v11-review (S1, S3): ez a JELENLEGI REDUKÁLT LOG-LINEÁRIS SPECIFIKÁCIÓ tulajdonsága; hogy a teljes nemlineáris BGG-modellnek is tulajdonsága-e, nem igazolt (v11-terv W0), és a „tartós” érték a log-lineáris rendszer permanens forcing melletti fixpontja. KONTRAINTUITÍV MECHANIZMUS a jelenlegi specifikációban: a tartós fixpontban a saját tőke a felárral arányos (nw = omega_nw·lev·efp/(1−omega_nw)), ezért tartós felárcsökkenésnél a saját tőke CSÖKKEN, a tőkeáttétel nő, és a chi·(q+k−nw) tag a felárcsökkenés egy részét visszaveszi. Hosszú távon tehát a gyorsító FÉKKÉNT hat, és a nagyobb chi a KKV-t bünteti. Kontrollként az aszimmetrikus ág bitre visszaadja a t48b-t. ⚠ A küszöbforma közlése (F01) ezért a K01 csapatdöntésétől függ. ⚠ Egy diagnosztikai dekompozíció szerint szimmetrikus chi és ACCSCALE = 0 mellett a maradék kis KKV-előny főként az aa_j (importintenzitás, átvett JV-érték, horgonyzatlan) heterogenitásából jön; ehhez még nincs őr, ezért nem állítás.*
 
-### 🟡 Ami FELTÉTELES — 9 db
+**A27.** A friss, 2015–2024-es GDP-súlyokkal (sx = 0,829, sm = 0,796) a v09/v10 euró-rezsimének ACCSCALE = 100 mellett nincs stabil megoldása (15 instabil gyök / 13 előretekintő változó); a lebegő rezsim minden konfigurációban stabil. A két átlépő gyök a lassú, kb. 28 negyedéves ciklus komplex párja, amely a hazai KKV (D) beruházás–q–tőke–hozzáférés ciklusa: lebegő árfolyamnál |z| = 0,945 és a bstar részvétele 0,005, euróban |z| = 0,994 és a bstar részvétele 0,134. Friss súlyokkal a stabil tartomány ACCSCALE ≤ 80.
+
+> bizonyíték: `t62b, t62d` — — őr: ✅ `t62d SZINT: a lassu modusz euroban |z|=0.994, bstar-reszvetel 0.134; lebegoben |z|=0.945, 0.005`
+> *2026-10-07 · Diagnózis (módusz-részvételi tényezők): a v09 alapága is az egységkör közelében fut. Az sx hatástalan, az sm (küszöb 0,63–0,67) és a hazai kereslet összetétele számít; régi súlyokkal az ACCSCALE ≥ 120 is instabil. Futtató: sens_extclose_v11.m.*
+
+**A28.** A gyenge, standard külső zárás (v11 -DEXTCLOSE=1/2: euróban is nu_b = 0,001, aznapi vagy előző időszaki bstar) helyreállítja a stabilitást: régi és friss súlyokkal a teljes ACCSCALE-rácson (0–150) mindkét rezsimben 13/13, a lassú ciklus gyöke legfeljebb 0,970; EXTCLOSE=0 mellett a v11 bitre a v09. A belépéskori kamatesés ekkor teljesen a szuverén felárból jön (−0,70 pp; a zárás része 0,04 pp alatt), szemben a v09 −2,46 pp-jával, amelyből −1,76 pp a zárás.
+
+> bizonyíték: `t62b` — — őr: ✅ `t62b EXTCLOSE: a gyenge zaras helyreallitja a BK-t (max |z| 0.970), a belepeskori kamatesesbol a zaras resze v09-ben -1.76 pp`
+> *2026-10-07 · Az előre rögzített technikai elfogadási feltételek (BK, |z| < 0,98, beágyazás) teljesülnek, a tartós eredmények viszont nem használhatók (F09); nem alapértelmezés. A jobb hozzáférés melletti tartós q_E így is negatív (−7,5%), ez a hozzáférési margó specifikációjának kérdése (ACCSPEC). Horizont: 400 negyedév.*
+
+**A29.** A bejelentés után egy évvel a GDP a bázis alatt van: a 4. negyedévben −0,71% a v09 alapágon (EXTCLOSE=0), gyenge külső zárással −1,86% (régi súlyok, ACCSCALE = 100, 400 negyedéves horizont).
+
+> bizonyíték: `t62` — — őr: ✅ `t62 SZINT: a bejelentes utan egy evvel a GDP a bazis alatt (-0.71% / -1.86%)`
+> *2026-10-07 · KONTRAINTUITÍV: a dél-európai belépés előtti konvergencia keresletbővüléssel járt. A modellbeli ok: lebegő árfolyamnál a zsov·sov csak az UIP-ben szerepel, ezért a felárcsökkenés az árfolyamot erősíti, a hazai kamatot nem; a Taylor-szabály csak az inflációra reagál.*
+
+### 🟡 Ami FELTÉTELES — 10 db
 
 *Csak a feltétellel együtt közölhető — küszöbformában, vagy az elfogadási feltétel kiírásával.*
 
@@ -189,6 +204,11 @@
 
 > bizonyíték: `t61g` — — őr: ✅ `t61g SZINT: az A01 GDP-sav omega_nw-fuggo (0.95: 0.52..1.18; 0.9826: 0.30..0.68; teljes nw 0.9826: 0.34..0.83)`
 > *2026-10-04 · ⚠ 2026-10-04, 2a review: ez a rész a (C) tag kérdésétől FÜGGETLEN (a redukált egyenletben nincs (C) tag). A kibővített BGG-lite egyenlettel (NWSPEC=1) +0,34% … +0,83% — FELTÁRÓ, mert a (C) tag ad hoc (S1–S2), és a mechanizmusban a gyengülő (C) csatorna is szerepelhet (K7). A regiszter az omega_nw = 0,95-öt korábban „BGG (1999) konvenció”-ként horgonyzottnak jelölte; ez nem a BGG-érték (a paraméter-regiszterben javítva). Mechanizmus: nagyobb omega_nw mellett a tartós fixpontban nagyobb az 1/(1−omega_nw) szorzó, a felárcsökkenés erősebben csökkenti a nettó vagyont, és a χ-fék erősebb. ELFOGADÁSI FELTÉTEL: az omega_nw horgonyzása vagy a GDP-sáv omega_nw-sávként való közlése.*
+
+**F09.** A tartós GDP-hatást és a külső pozíciót a valutaunió külső zárásának rugalmassága (nu_uni) határozza meg; tartósan bstar = zsov·sov/nu_uni. Az alapág nu_uni = 0,25-je (évesítve 400 bp kamat 1 pp éves GDP-arányos nettó külföldi adósságra) mellett a tartós GDP-hatás 0,84%; 0,025 (40 bp/pp) mellett 0,97%; 0,001 (1,6 bp/pp) mellett 4,43%, az éves GDP 62,5%-ának megfelelő többlet külföldi adósság, +12,9% reálleértékelődés és −7,7% optimalizáló fogyasztás. Gyenge zárásnál a fixpont évszázadok alatt áll be, és a 20. negyedévben a GDP-hatás −0,14%.
+
+> bizonyíték: `t62e` — — őr: ✅ `t62e SZINT: a tartos GDP-hatas a zaras rugalmassagan mulik (nu 0.25: 0.84%; 0.025: 0.97%; 0.001: 4.43%, adossag 62.5% GDP)`
+> *2026-10-07 · KONTRAINTUITÍV: a rögzített β-jú reprezentatív háztartás miatt az euró tartós felárcsökkenése nem a hosszú távú reálkamatot, hanem a külső pozíciót mozgatja. A 0,25 empirikusan nem védhető (10 pp NIIP-romlás 40 pp kamatemelést jelentene); empirikusan horgonyzott, gyenge zárás mellett a tartós eredményt a külső eladósodás uralja. Megoldás nem paraméterhangolás, hanem zárási döntés (pl. véges horizontú háztartások, endogén diszkonttényező) és a közlés áthelyezése a 20–80 negyedéves távra. Friss súlyokkal a régi, aznapi zárás nu_uni ≤ 0,05 mellett stabil.*
 
 ### 🔴 Amit VISSZAVONTUNK — 9 db
 
@@ -369,7 +389,7 @@
 
 ---
 
-## Őrök (169 db)
+## Őrök (175 db)
 
 *A füstteszt minden ellenőrzése. Ez a projekt egyetlen olyan nyilvántartása, ami nem tud némán elcsúszni: ha egy állítás megdől, itt megbukik egy sor.*
 
@@ -525,6 +545,12 @@
 - ✅ t61g SZINT: aszimm. kuszobok 19.55 .. 41.14
 - ✅ t61g SZINT: az A01 GDP-sav omega_nw-fuggo (0.95: 0.52..1.18; 0.9826: 0.30..0.68; teljes nw 0.9826: 0.34..0.83)
 - ✅ t61g KORLAT: teljes nw-egyenlet es OPTEN=1 mellett a tartos fixpont polushoz er
+- ✅ t62 v11 kulso zaras tablai leteznek
+- ✅ t62b A27: friss sulyokkal az euro-rezsim ACCSCALE=100 mellett nem stabil, a lebego mindig az
+- ✅ t62d SZINT: a lassu modusz euroban |z|=0.994, bstar-reszvetel 0.134; lebegoben |z|=0.945, 0.005
+- ✅ t62b EXTCLOSE: a gyenge zaras helyreallitja a BK-t (max |z| 0.970), a belepeskori kamatesesbol a zaras resze v09-ben -1.76 pp
+- ✅ t62 SZINT: a bejelentes utan egy evvel a GDP a bazis alatt (-0.71% / -1.86%)
+- ✅ t62e SZINT: a tartos GDP-hatas a zaras rugalmassagan mulik (nu 0.25: 0.84%; 0.025: 0.97%; 0.001: 4.43%, adossag 62.5% GDP)
 - ✅ t53c dekomp BK-stressz letezik
 - ✅ t53c: mind a 45 PF/BK diagnosztika technikailag lefutott
 - ✅ t53c KORREKCIO: az OPTEN1 ACC100 racs pontosan 0/45 terminalis BK-stabil (gyok/elo=15/13)
@@ -543,6 +569,6 @@
 - ✅ t00 PHILLIPS: az aszimmetrikus arsokkok (eps_md / eps_mx) egyik szcenarioban sincsenek hajtva
 - ✅ t00 SZERKEZET: mind a 4 modell-vonal megvan, README-vel
 - ✅ t00 SZERKEZET: a FO MODELL a helyen van (1_fo_vonal_jv)
-- ✅ t00 SZERKEZET: minden futtato letezo .mod-ot hiv (36 futtato, 21 modell)
+- ✅ t00 SZERKEZET: minden futtato letezo .mod-ot hiv (37 futtato, 21 modell)
 
 </details>
