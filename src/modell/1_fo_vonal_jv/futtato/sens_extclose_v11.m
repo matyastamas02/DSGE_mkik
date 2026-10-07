@@ -27,6 +27,8 @@
 % A nu_uni ezert 1600*nu bazisponttal (evesitett) emeli a kamatot 1 pp
 % (eves GDP-aranyos) netto kulfoldi adossag-novekedesre.
 % Futtatas: matlab -batch "cd('<repo>/src/modell/1_fo_vonal_jv/futtato'); sens_extclose_v11"
+% MEGJEGYZES (2026-10-07): a v11 alapertelmezese a vegleges kalibracio; ez a
+% futtato a regi beallitasra rogzitett (regi_v11_ a fajl vegen).
 
 cd(fileparts(fileparts(mfilename('fullpath'))));
 repo = pwd;
@@ -48,7 +50,7 @@ HOR = '-DHORIZON=400';
 % --- (3) egymasba agyazas: v11 EXTCLOSE=0 == v09 ---------------------
 dynare('jv_dsge_v09_access', 'console', 'nograph');
 n9 = cellstr(evalin('base', 'M_.endo_names')); S9 = evalin('base', 'oo_.endo_simul');
-dynare('jv_dsge_v11', '-DEXTCLOSE=0', 'console', 'nograph');
+a_ = regi_v11_({'-DEXTCLOSE=0'}); dynare('jv_dsge_v11', a_{:}, 'console', 'nograph');
 n11 = cellstr(evalin('base', 'M_.endo_names')); S11 = evalin('base', 'oo_.endo_simul');
 [~, i9, i11] = intersect(n9, n11, 'stable');
 nesting_maxdiff = max(abs(S9(i9, :) - S11(i11, :)), [], 'all');
@@ -171,7 +173,7 @@ r = struct('solver_ok', 0, 'n_unst_T', NaN, 'n_unst_I', NaN, 'n_fwd', NaN, 'erve
     'bstar', NaN, 'rer', NaN, 'r_belep_pp', NaN, 'r_sov_pp', NaN, 'r_zaras_pp', NaN, ...
     'bstar_max', NaN, 'y_q', nan(1, 4), 'bstar_q120', NaN);
 try
-    dynare('jv_dsge_v11', args{:}, 'console', 'nograph');
+    args = regi_v11_(args); dynare('jv_dsge_v11', args{:}, 'console', 'nograph');
     M = evalin('base', 'M_'); oo = evalin('base', 'oo_'); op = evalin('base', 'options_');
     r.solver_ok = double(oo.deterministic_simulation.status == 1);
     B = bk_check_metrics(M, op, oo);
@@ -207,7 +209,7 @@ function m = modusz_(args, reg)
 % A lassu (szog 0.12..0.40 rad) komplex modusz reszvetele az allapotvaltozokban.
 m = struct('abs_z', NaN, 'periodus', NaN, 'bstar', NaN, 'd_blokk', NaN, 'top', "");
 try
-    dynare('jv_dsge_v11', args{:}, 'console', 'nograph');
+    args = regi_v11_(args); dynare('jv_dsge_v11', args{:}, 'console', 'nograph');
     M = evalin('base', 'M_'); oo = evalin('base', 'oo_'); op = evalin('base', 'options_');
     if reg == "kezdeti"
         oo.steady_state(:) = 0; oo.exo_steady_state(:) = 0;
@@ -245,4 +247,17 @@ end
 
 function y = ternary_(c, a, b)
 if c, y = a; else, y = b; end
+end
+
+function a = regi_v11_(a)
+% 2026-10-07: a v11 alapertelmezese a vegleges kalibracio (KALIB=1, EXTCLOSE=1,
+% SOVCSAT=1, HORIZON=400). Ez a futtato a REGI beallitasra rogzitett: amit a
+% hivas nem ad meg kifejezetten, azt a regi ertekre allitjuk, hogy a tarolt
+% tablak reprodukalhatok maradjanak.
+alap = {'KALIB', '0'; 'EXTCLOSE', '0'; 'SOVCSAT', '0'; 'HORIZON', '120'};
+for i = 1:size(alap, 1)
+    if ~any(startsWith(a, ['-D' alap{i, 1} '=']))
+        a{end+1} = ['-D' alap{i, 1} '=' alap{i, 2}]; %#ok<AGROW>
+    end
+end
 end

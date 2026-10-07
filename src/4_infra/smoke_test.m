@@ -943,6 +943,23 @@ if van63
         b1.KKV_kuszob_fix, b1.KKV_kuszob_1620, b2.KKV_kuszob_fix, b2.KKV_kuszob_1620), ok, hiba);
 end
 
+% --- v11 uj alapertelmezes: vegleges parameterek + javasolt zaras, 2026-10-07 ---
+t64c = fullfile(repo, 'output', 'tables', 't64c_kalib_osszegzes.csv');
+[ok, hiba] = ell(exist(t64c, 'file') == 2, 't64c v11 vegleges kalibracio tablaja letezik', ok, hiba);
+if exist(t64c, 'file') == 2
+    K64 = readtable(t64c);
+    kj = K64(K64.KALIB == 1 & strcmp(K64.zaras, 'javasolt'), :);
+    km = K64(K64.KALIB == 1 & strcmp(K64.zaras, 'mai'), :);
+    [ok, hiba] = ell(kj.BK_ervenyes_9bol == 9 && kj.BK_teljes_racson == 1 && ...
+        abs(kj.GDP_1620_alap_pct - 0.52) < 0.005 && abs(kj.GDP_fix_alap_pct - 0.52) < 0.005 && ...
+        abs(kj.sav_1620_min - 0.26) < 0.005 && abs(kj.sav_1620_max - 0.86) < 0.005 && ...
+        abs(kj.sav_fix_min - 0.25) < 0.005 && abs(kj.sav_fix_max - 0.88) < 0.005 && ...
+        kj.KKV_kuszob_fix == 0 && km.BK_ervenyes_9bol == 0 && km.instabil_zaro_alap == 15 && ...
+        all(K64.nesting_maxdiff == 0), ...
+        sprintf(['t64c SZINT: a vegleges v11-alapagon a 20 eves GDP-hatas %.2f%%, sav %.2f..%.2f, ' ...
+        'regi zarassal %d/13'], kj.GDP_1620_alap_pct, kj.sav_1620_min, kj.sav_1620_max, km.instabil_zaro_alap), ok, hiba);
+end
+
 t53c = fullfile(repo, 'output', 'tables', 't53c_dekomp_bk.csv');
 [ok, hiba] = ell(exist(t53c, 'file') == 2, 't53c dekomp BK-stressz letezik', ok, hiba);
 if exist(t53c, 'file') == 2

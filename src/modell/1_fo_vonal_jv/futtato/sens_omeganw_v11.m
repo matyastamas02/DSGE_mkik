@@ -15,6 +15,8 @@
 % Kimenet: output/tables/t61f_omeganw_kuszob.csv (racs)
 %          output/tables/t61g_omeganw_osszegzes.csv
 % Futtatas: matlab -batch "cd('<repo>/src/modell/1_fo_vonal_jv/futtato'); sens_omeganw_v11"
+% MEGJEGYZES (2026-10-07): a v11 alapertelmezese a vegleges kalibracio; ez a
+% futtato a regi beallitasra rogzitett (regi_v11_ a fajl vegen).
 
 cd(fileparts(fileparts(mfilename('fullpath'))));
 repo = pwd;
@@ -104,7 +106,7 @@ fprintf('\nKESZ\n');
 function r = fut_(args)
 r = struct('ervenyes', 0, 'kkv_l', NaN, 'y', NaN);
 try
-    dynare('jv_dsge_v11', args{:}, 'console', 'nograph');
+    args = regi_v11_(args); dynare('jv_dsge_v11', args{:}, 'console', 'nograph');
     M = evalin('base', 'M_'); oo = evalin('base', 'oo_'); op = evalin('base', 'options_');
     B = bk_check_metrics(M, op, oo);
     r.ervenyes = double(oo.deterministic_simulation.status == 1 && B.check_ok == 1 && B.bk_ok == 1);
@@ -134,4 +136,17 @@ end
 
 function y = ternary_(c, a, b)
 if c, y = a; else, y = b; end
+end
+
+function a = regi_v11_(a)
+% 2026-10-07: a v11 alapertelmezese a vegleges kalibracio (KALIB=1, EXTCLOSE=1,
+% SOVCSAT=1, HORIZON=400). Ez a futtato a REGI beallitasra rogzitett: amit a
+% hivas nem ad meg kifejezetten, azt a regi ertekre allitjuk, hogy a tarolt
+% tablak reprodukalhatok maradjanak.
+alap = {'KALIB', '0'; 'EXTCLOSE', '0'; 'SOVCSAT', '0'; 'HORIZON', '120'};
+for i = 1:size(alap, 1)
+    if ~any(startsWith(a, ['-D' alap{i, 1} '=']))
+        a{end+1} = ['-D' alap{i, 1} '=' alap{i, 2}]; %#ok<AGROW>
+    end
+end
 end

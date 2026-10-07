@@ -26,6 +26,8 @@
 %          output/tables/t63b_sovcsat_osszegzes.csv
 %          output/tables/t63c_sovcsat_gdpsav.csv   (SC x TSCEN, ACC=100)
 % Futtatas: matlab -batch "cd('<repo>/src/modell/1_fo_vonal_jv/futtato'); sens_sovcsat_v11"
+% MEGJEGYZES (2026-10-07): a v11 alapertelmezese a vegleges kalibracio; ez a
+% futtato a regi beallitasra rogzitett (regi_v11_ a fajl vegen).
 
 cd(fileparts(fileparts(mfilename('fullpath'))));
 repo = pwd;
@@ -45,7 +47,7 @@ racs_acc = [0 20 30 40 50 60 80 100 120 150];
 % --- egymasba agyazas: v11 SOVCSAT=0 (alap) == v09 -------------------
 dynare('jv_dsge_v09_access', 'console', 'nograph');
 n9 = cellstr(evalin('base', 'M_.endo_names')); S9 = evalin('base', 'oo_.endo_simul');
-dynare('jv_dsge_v11', '-DSOVCSAT=0', 'console', 'nograph');
+a_ = regi_v11_({'-DSOVCSAT=0'}); dynare('jv_dsge_v11', a_{:}, 'console', 'nograph');
 n11 = cellstr(evalin('base', 'M_.endo_names')); S11 = evalin('base', 'oo_.endo_simul');
 [~, i9, i11] = intersect(n9, n11, 'stable');
 nesting_maxdiff = max(abs(S9(i9, :) - S11(i11, :)), [], 'all');
@@ -133,7 +135,7 @@ r = struct('solver_ok', 0, 'instabil_zaro', NaN, 'instabil_kezdeti', NaN, 'elore
     'GDP_q80_pct', NaN, 'GDP_1620_pct', NaN, 'KKV_L_fix_pp', NaN, 'KKV_L_1620_pp', NaN, ...
     'bstar_fix', NaN, 'rer_fix_pct', NaN, 'c_o_fix_pct', NaN, 'q_D_fix_pct', NaN, 'q_E_fix_pct', NaN);
 try
-    dynare('jv_dsge_v11', args{:}, 'console', 'nograph');
+    args = regi_v11_(args); dynare('jv_dsge_v11', args{:}, 'console', 'nograph');
     M = evalin('base', 'M_'); oo = evalin('base', 'oo_'); op = evalin('base', 'options_');
     r.solver_ok = double(oo.deterministic_simulation.status == 1);
     B = bk_check_metrics(M, op, oo);
@@ -173,4 +175,17 @@ end
 
 function y = ternary_(c, a, b)
 if c, y = a; else, y = b; end
+end
+
+function a = regi_v11_(a)
+% 2026-10-07: a v11 alapertelmezese a vegleges kalibracio (KALIB=1, EXTCLOSE=1,
+% SOVCSAT=1, HORIZON=400). Ez a futtato a REGI beallitasra rogzitett: amit a
+% hivas nem ad meg kifejezetten, azt a regi ertekre allitjuk, hogy a tarolt
+% tablak reprodukalhatok maradjanak.
+alap = {'KALIB', '0'; 'EXTCLOSE', '0'; 'SOVCSAT', '0'; 'HORIZON', '120'};
+for i = 1:size(alap, 1)
+    if ~any(startsWith(a, ['-D' alap{i, 1} '=']))
+        a{end+1} = ['-D' alap{i, 1} '=' alap{i, 2}]; %#ok<AGROW>
+    end
+end
 end

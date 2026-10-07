@@ -5,11 +5,11 @@
 
 # DSGE_mkik — állapotlap
 
-*Generálva a füstteszt 2026-10-07 08:36-kor futott eredményéből · commit `e55e51b` · ág `main`*
+*Generálva a füstteszt 2026-10-07 09:17-kor futott eredményéből · commit `f735c50` · ág `main`*
 
 **Fő modell:** `src/modell/1_fo_vonal_jv/jv_dsge_v09_access.mod` (Jakab–Világi mag). A `kkv_dsge_*` a referencia-vonal.
 
-**Őrök:** 179 rendben, 0 hiba.
+**Őrök:** 181 rendben, 0 hiba.
 
 ✅ **Minden „áll” állításnak van őre, és minden őr fut.**
 
@@ -166,7 +166,7 @@
 > bizonyíték: `t63b` — — őr: ✅ `t63b SZINT: a bejelentesi visszaeses az UIP-ben szereplo felarbol jon (-0.05% vs -0.96%)`
 > *2026-10-07 · Az A29 mechanizmusa: a konvergencia-időszakban a felárcsökkenés csak az árfolyamot erősíti. Hogy a valóságban az árfolyam-kockázati prémium mennyiben szuverén felár, empirikus kérdés.*
 
-### 🟡 Ami FELTÉTELES — 11 db
+### 🟡 Ami FELTÉTELES — 12 db
 
 *Csak a feltétellel együtt közölhető — küszöbformában, vagy az elfogadási feltétel kiírásával.*
 
@@ -224,6 +224,11 @@
 
 > bizonyíték: `t63b, t63c` — — őr: ✅ `t63b SZINT: a javasolt v11-agon a 20 eves GDP-hatas 0.73% / 1.04%, sav 0.44..1.04 / 0.59..1.53, KKV-kuszob 37.7/44.0, 22.4/35.0`
 > *2026-10-07 · FELTÉTELES, mert (1) az, hogy a szuverén felár euróban nem éri a háztartási kamatot, modellezési döntés; (2) a hozzáférési margó specifikációja (ACCSPEC) nyitott, a tartós q_E így is negatív; (3) az 50%-os Opten-kalibráció még nincs a modellben; (4) a χ-aszimmetria (K01) és a lev-egyenlőség (K02) alapértéke változatlan. Nem alapértelmezés: csapatdöntés. Közlési horizont legfeljebb 20–30 év.*
+
+**F11.** A v11 új alapértelmezésén (végleges paraméterek a parameterek_szamolasa.xlsx szerint + javasolt zárás: KALIB=1, EXTCLOSE=1, SOVCSAT=1) a modell mind a 9 szcenárió × átgyűrűzés kombinációban és a teljes ACCSCALE-rácson stabil mindkét rezsimben. A GDP-hatás 20 éves távon (16–20. év átlaga) az alap-szcenárióban 0,52%, a 9 kombináció sávja 0,26–0,86%; a tartós fixpont 0,52% (sáv 0,25–0,88%). A KKV-előny küszöb nélkül jelenik meg (szimmetrikus χ). A végleges paraméterekkel a régi zárás mellett nincs stabil megoldás (15/13).
+
+> bizonyíték: `t64c` — — őr: ✅ `t64c SZINT: a vegleges v11-alapagon a 20 eves GDP-hatas 0.52%, sav 0.26..0.86, regi zarassal 15/13`
+> *2026-10-07 · A v11 alapértelmezése 2026-10-07 óta (Tomi döntése); a v09/v10 és a régi eredmények a régi paraméterekkel változatlanok, a régi v11: -DKALIB=0 -DEXTCLOSE=0 -DSOVCSAT=0 -DHORIZON=120. FELTÉTELES: a zárás modellezési döntés (F10); a foglalkoztatási súlyok összege 1,071 (shl_D Samu, a másik kettő Tomi); az aa_j Opten-mérése fogalmilag nem tiszta importintenzitás. Futtató: check_kalib_v11.m (400 negyedéves számítási horizont).*
 
 ### 🔴 Amit VISSZAVONTUNK — 9 db
 
@@ -404,7 +409,7 @@
 
 ---
 
-## Őrök (179 db)
+## Őrök (181 db)
 
 *A füstteszt minden ellenőrzése. Ez a projekt egyetlen olyan nyilvántartása, ami nem tud némán elcsúszni: ha egy állítás megdől, itt megbukik egy sor.*
 
@@ -570,6 +575,8 @@
 - ✅ t63b SOVCSAT: a tartos fixpont zarasfuggetlen, ha a szuveren felar euroban nem eri a hazai kamatot (0.82% / 1.26%)
 - ✅ t63b SZINT: a bejelentesi visszaeses az UIP-ben szereplo felarbol jon (-0.05% vs -0.96%)
 - ✅ t63b SZINT: a javasolt v11-agon a 20 eves GDP-hatas 0.73% / 1.04%, sav 0.44..1.04 / 0.59..1.53, KKV-kuszob 37.7/44.0, 22.4/35.0
+- ✅ t64c v11 vegleges kalibracio tablaja letezik
+- ✅ t64c SZINT: a vegleges v11-alapagon a 20 eves GDP-hatas 0.52%, sav 0.26..0.86, regi zarassal 15/13
 - ✅ t53c dekomp BK-stressz letezik
 - ✅ t53c: mind a 45 PF/BK diagnosztika technikailag lefutott
 - ✅ t53c KORREKCIO: az OPTEN1 ACC100 racs pontosan 0/45 terminalis BK-stabil (gyok/elo=15/13)
@@ -588,6 +595,6 @@
 - ✅ t00 PHILLIPS: az aszimmetrikus arsokkok (eps_md / eps_mx) egyik szcenarioban sincsenek hajtva
 - ✅ t00 SZERKEZET: mind a 4 modell-vonal megvan, README-vel
 - ✅ t00 SZERKEZET: a FO MODELL a helyen van (1_fo_vonal_jv)
-- ✅ t00 SZERKEZET: minden futtato letezo .mod-ot hiv (38 futtato, 21 modell)
+- ✅ t00 SZERKEZET: minden futtato letezo .mod-ot hiv (39 futtato, 21 modell)
 
 </details>

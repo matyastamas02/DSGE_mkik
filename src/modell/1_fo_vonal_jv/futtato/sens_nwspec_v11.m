@@ -22,6 +22,8 @@
 %          output/tables/t61c_nwspec_kuszob.csv (racs) + t61d (osszegzes)
 %          output/tables/t61e_nwspec_nw_tartos.csv
 % Futtatas: matlab -batch "cd('<repo>/src/modell/1_fo_vonal_jv/futtato'); sens_nwspec_v11"
+% MEGJEGYZES (2026-10-07): a v11 alapertelmezese a vegleges kalibracio; ez a
+% futtato a regi beallitasra rogzitett (regi_v11_ a fajl vegen).
 
 cd(fileparts(fileparts(mfilename('fullpath'))));
 repo = pwd;
@@ -175,6 +177,7 @@ fejlec_('KESZ');
 function r = fut_(modell, args)
 r = struct('ok', false, 'solver_ok', 0, 'ervenyes', 0, 'kkv_l', NaN, 'g', @(v) NaN);
 try
+    if strcmp(modell, 'jv_dsge_v11'), args = regi_v11_(args); end
     dynare(modell, args{:}, 'console', 'nograph');
     M = evalin('base', 'M_'); oo = evalin('base', 'oo_'); op = evalin('base', 'options_');
     r.simul = oo.endo_simul;
@@ -226,4 +229,17 @@ end
 
 function s = ok_(c)
 if c, s = 'RENDBEN'; else, s = '*** BUKOTT ***'; end
+end
+
+function a = regi_v11_(a)
+% 2026-10-07: a v11 alapertelmezese a vegleges kalibracio (KALIB=1, EXTCLOSE=1,
+% SOVCSAT=1, HORIZON=400). Ez a futtato a REGI beallitasra rogzitett: amit a
+% hivas nem ad meg kifejezetten, azt a regi ertekre allitjuk, hogy a tarolt
+% tablak reprodukalhatok maradjanak.
+alap = {'KALIB', '0'; 'EXTCLOSE', '0'; 'SOVCSAT', '0'; 'HORIZON', '120'};
+for i = 1:size(alap, 1)
+    if ~any(startsWith(a, ['-D' alap{i, 1} '=']))
+        a{end+1} = ['-D' alap{i, 1} '=' alap{i, 2}]; %#ok<AGROW>
+    end
+end
 end

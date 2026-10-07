@@ -1,8 +1,16 @@
 /*
  * jv_dsge_v11.mod — 6. LEPCSO (v11): SPECIFIKACIOS JAVITASOK KAPCSOLOKKAL
  * =====================================================================
- * A v10 masolata. MINDEN v11-kapcsolo alapertelmezesben KI, es ekkor a
- * modell BITRE a v10 (lasd docs/terv/2026-10-04_v11_implementacios_terv.md).
+ * A v10 masolata, specifikacios kapcsolokkal.
+ *
+ * ALAPERTELMEZES (2026-10-07, Tomi dontese): a VEGLEGES PARAMETEREK es a
+ * javasolt kulso zaras: KALIB=1, EXTCLOSE=1, SOVCSAT=1, HORIZON=400 (a 400
+ * szamitasi horizont; kozolni legfeljebb 20-30 evet kozlunk). A regi
+ * parameterekkel csak ezzel a zarassal van stabil megoldas (A27, t64).
+ * A REGI, v10-zel bitre azonos valtozat:
+ *     -DKALIB=0 -DEXTCLOSE=0 -DSOVCSAT=0 -DHORIZON=120
+ * (a regi eredmenyeket reprodukalo futtatok erre rogzitettek: regi_v11_).
+ * A v09 es a v10 a regi parameterekkel valtozatlan.
  *
  * W0b (2026-10-04): -DNWSPEC=0|1|2 -- a nettovagyon-egyenlet specifikacioja.
  *   0 = a v10 redukalt "BGG-lite" alakja (ALAPERTELMEZES)
@@ -19,8 +27,9 @@
  * KULSO ZARAS (2026-10-07): -DEXTCLOSE=0|1|2 -- a netto kulfoldi pozicio
  *   (bstar) visszacsatolasa a hazai kamatra.
  *   0 = v10: euroban r = r_for + zsov*sov - nu_uni*bstar, nu_uni = 0.25
- *       (a lebego agi nu_b = 0.001 250-szerese; ALAPERTELMEZES)
+ *       (a lebego agi nu_b = 0.001 250-szerese)
  *   1 = kozos, gyenge adossag-rugalmassag: euroban is nu_b (aznapi bstar)
+ *       (ALAPERTELMEZES 2026-10-07 ota)
  *   2 = mint 1, de mindket rezsimben az ELOZO idoszaki bstar(-1) hat
  *       (standard Schmitt-Grohe--Uribe-idozites)
  *   Indok: a friss GDP-sulyokkal (sm ~ 0.80) az euro-rezsim 15/13; a
@@ -32,8 +41,7 @@
  *   szuveren felar (sov) a hazai kamatra. A vallalati felarban (tsov_j*sov)
  *   MINDIG benne marad.
  *   0 = v10: az UIP-ben (lebego) es az euro-agi kamatszabalyban is zsov*sov
- *       (ALAPERTELMEZES)
- *   1 = euroban a hazai kamat a kozos kamat (+ zaras); a felar csak a
+ *   1 = (ALAPERTELMEZES 2026-10-07 ota) euroban a hazai kamat a kozos kamat (+ zaras); a felar csak a
  *       lebego UIP-ben (arfolyam-kockazati premium) es a vallalati felarban
  *   2 = csak a vallalati felarban (sem UIP, sem kamatszabaly)
  *   Indok (F09): zsov*sov az euro-agi szabalyban rogzitett beta mellett
@@ -166,15 +174,19 @@
 @#endif
 // -DHORIZON (v11, 2026-10-07): a perfect foresight horizont (alap 120 negyedev).
 @#ifndef HORIZON
-  @#define HORIZON = 120
+  @#define HORIZON = 400
+@#endif
+// -DKALIB (v11, 2026-10-07): a vegleges csapatkalibracio, lasd a parameterblokkot.
+@#ifndef KALIB
+  @#define KALIB = 1
 @#endif
 // -DSOVCSAT (v11, 2026-10-07): a szuveren felar csatornaja, lasd fejlec.
 @#ifndef SOVCSAT
-  @#define SOVCSAT = 0
+  @#define SOVCSAT = 1
 @#endif
 // -DEXTCLOSE (v11, 2026-10-07): a kulso zaras specifikacioja, lasd fejlec.
 @#ifndef EXTCLOSE
-  @#define EXTCLOSE = 0
+  @#define EXTCLOSE = 1
 @#endif
 @#ifndef SKKV
   @#define SKKV = 0.05
@@ -563,6 +575,26 @@ psi_E = 11.83; psi_D = 11.18; psi_L = 13.00;
 lev_E = 1.762; lev_D = 2.200; lev_L = 2.882;
 @#endif
 
+// --- -DKALIB=1 (v11, 2026-10-07): VEGLEGES CSAPATKALIBRACIO (A blokk) -----
+// Forras: parameterek_szamolasa.xlsx, "Ki szamolja?" oszlop. A Tomihoz rendelt
+// 37 parameternel Tomi 50%-os exportkuszobu, 2017-2025-os Opten-szamitasai
+// (docs/terv/2026-09-24_tomi_*_JAVITVA.docx); a tobbinel az elso helyen
+// megnevezett felelos (Samu vagy Evi) erteke. Ahol a forras szerint az ertek
+// "marad" vagy nyitott, az alapertek marad: omega_nw, tsov/tbank (TSCEN),
+// zsov, nu_uni, rho_acc (0.85), lambda_acc, omega_acc, s_kkv, mu_vert,
+// eps_ces, om_no, fii, theta_w, rho_kz, rho_z. 2026-10-07 ota ALAPERTELMEZES.
+// A KALIB a CHISYM-et felulirja (chi = 0.04).
+@#if KALIB == 1
+om_E = 0.0825; om_D = 0.3815; om_L = 0.5361;     // Tomi (50%)
+phi_E = 0.803; phi_D = 0.0475; phi_L = 0.4849;  // Evi, Evi, Tomi (50%)
+shl_E = 0.0607; shl_D = 0.561; shl_L = 0.4495;  // Tomi, Samu, Tomi -- OSSZEG 1.0712, NEM 1 (!)
+zeta_E = 0.071; zeta_D = 0.116; zeta_L = 0.087; // Evi, Samu, Evi
+aa_E = 0.1183; aa_D = 0.1447; aa_L = 0.1388;    // Tomi (50%, osszevont "fo" valtozat)
+chi_E = 0.04; chi_D = 0.04; chi_L = 0.04;       // Tomi: szimmetrikus javaslat (K01)
+psi_E = 8.0; psi_D = 8.43; psi_L = 13.0;        // Tomi (marad), Evi, Tomi (JV)
+lev_E = 1.8531; lev_D = 1.7389; lev_L = 2.2486; // Tomi (50%) (K02)
+@#endif
+
 // --- -DDECOMP: A HETEROGENITAS-DIMENZIOK SZETVALASZTASA ------------------
 // Itt all, mert (a) minden tipus-specifikus parameter mar megkapta a
 // vegleges erteket (alap -> OPTEN -> SYM), es (b) a szarmaztatott sulyok
@@ -662,6 +694,16 @@ s_kkv = 0.363; mu_vert = 0.55;
 // A shd_* NEM maradhat a regi 0.55/0.15/0.12/0.82 aranyokon, ha a
 // makrosulyok frissultek -- kulonben a hazai kereslet osszetetele es a
 // GDP-azonossag ketfele forrasbol jonne. A review helyesen jelzi ezt.
+shd_v = s_kkv * 0.60;
+shd_c = sc/(sc+si+sg) * (1-shd_v);
+shd_i = si/(sc+si+sg) * (1-shd_v);
+shd_g = sg/(sc+si+sg) * (1-shd_v);
+@#endif
+// --- -DKALIB=1 (B blokk): GDP-felhasznalasi sulyok (Samu, 2015-2024) -------
+// Az shd_* ugyanabbol a forrasbol, kulonben a hazai kereslet osszetetele es a
+// GDP-azonossag ketfele forrasbol jonne.
+@#if KALIB == 1
+sc = 0.497; si = 0.267; sg = 0.203; sx = 0.829; sm = 0.796;
 shd_v = s_kkv * 0.60;
 shd_c = sc/(sc+si+sg) * (1-shd_v);
 shd_i = si/(sc+si+sg) * (1-shd_v);
