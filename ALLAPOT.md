@@ -5,11 +5,11 @@
 
 # DSGE_mkik — állapotlap
 
-*Generálva a füstteszt 2026-10-25 17:19-kor futott eredményéből · commit `c6bbb74` · ág `main`*
+*Generálva a füstteszt 2026-10-26 11:50-kor futott eredményéből · commit `d06148a` · ág `main`*
 
 **Fő modell:** `src/modell/1_fo_vonal_jv/jv_dsge_v09_access.mod` (Jakab–Világi mag). A `kkv_dsge_*` a referencia-vonal.
 
-**Őrök:** 185 rendben, 0 hiba.
+**Őrök:** 189 rendben, 0 hiba.
 
 ✅ **Minden „áll” állításnak van őre, és minden őr fut.**
 
@@ -17,7 +17,7 @@
 
 ## Mit állítunk ma
 
-### 🟢 Ami ÁLL — 31 db
+### 🟢 Ami ÁLL — 32 db
 
 *Ezekre lehet építeni a tanulmányban.*
 
@@ -176,7 +176,12 @@
 > bizonyíték: `t65b` — — őr: ✅ `t65b SZINT: a lejarati szerkezet lassitja a megtakaritast (5. ev -0.61% vs -1.53%, 1. ev +0.54% vs -0.05%)`
 > *2026-10-25 · A kamatkiadás itt reál (rge(−1) − infl), negyedéves áramként, a GDP %-ában. Következmény: az első évek megtakarítását nem szabad a hosszú távú értékkel számolni (a review 4. pontja). A RHOM = 0,95 szemléltető; a valódi érték az átlagos hátralévő lejáratból (ÁKK).*
 
-### 🟡 Ami FELTÉTELES — 13 db
+**A34.** A nyugdíjasblokk (v11 -DPENS=1: harmadik háztartástípus a JV (76) szerint, fogyasztási kiadási súlyokkal 0,75 / 0,10 / 0,15; a bérképzésben a munkapiacon aktívak fogyasztása; a nyugdíjkiadás s_tr = om_p·sc = 0,0746) om_p = 0 mellett gépi pontossággal a mostani modellt adja vissza. A súlyok JV-szerinti javítása önmagában alig változtat: a GDP-hatás a 16–20. évben +0,01 pp, tartósan +0,02 pp, a tartós fogyasztás −0,01 pp (a nyugdíjasok teljes súlyát 0,22-re véve +0,02 pp). A nyugdíjasok kihagyása tehát a mostani eredményeket érdemben nem torzította. Az aktív alapágon a teljes ACCSCALE-rácson stabil (40/40, T és P szabállyal, mindkét súlyváltozattal).
+
+> bizonyíték: `t66b, t66` — — őr: ✅ `t66b SZINT: a nyugdijasblokk sulyjavitasa onmagaban kicsi (GDP +0.01 pp, fogyasztas -0.01 pp), beagyazas 3e-14, BK 40/40`
+> *2026-10-26 · Futtató: check_pens_v11.m (400 negyedéves horizont). Az alapértelmezés PENS=0 marad (csapatdöntés, döntési lista 5. pont). A beágyazás nem bitre azonos (3e-14), mert a cl új változóként lép be a bérképzésbe.*
+
+### 🟡 Ami FELTÉTELES — 15 db
 
 *Csak a feltétellel együtt közölhető — küszöbformában, vagy az elfogadási feltétel kiírásával.*
 
@@ -244,6 +249,16 @@
 
 > bizonyíték: `t65b, t65` — — őr: ✅ `t65b SZINT: a kulfoldi tulajdonu resz nyeresege 0.67% GDP/ev, fogyasztas +2.23 pp, GDP +0.15 pp (regi beallitason -1.03 pp)`
 > *2026-10-25 · FELTÉTELES: a ϑ = 0,4 nem adat; a valódi arány az ÁKK/MNB-adatból jön, a nyereség ezzel arányos. A devizaadósság átértékelése nincs benne. Tartósan bstar = 0 (SOVCSAT=1), ezért a nyereség tartósan negatívabb kereskedelmi mérlegként (több import, kevesebb export) jelenik meg. A GDP nem jó mérőszáma ennek a csatornának: a transzfer a felhasználást növeli, nem feltétlenül a kibocsátást. A régi beállításon a reálárfolyam −2,8%, az export −1,4% (aktív ágon −0,7 pp, −0,3 pp). ⚠ 2026-10-26, első adatkeresés (brief 7a): a külföldi kézben lévő FORINTadósság a teljes adósság kb. 9%-a, a devizaadósság kb. 28%; a devizarésznél az euró csak a hitelkockázati felárat tünteti el. Hátraboríték-szám szerint a nemzetgazdasági nyereség nagyságrendileg 0,2–0,3% GDP/év, nem 0,67%. A pontos kezeléshez az adósságot forint- és devizarészre kell bontani (csapatdöntés).*
+
+**F13.** Egy tartós, egyösszegű adóból finanszírozott +20%-os reálnyugdíj-emelés (kb. 1,5% GDP, euró nélkül) az aggregált fogyasztást nem növeli: tartósan −0,20%, a 16–20. évben 0,00%. A nyugdíjasok többet, az optimalizálók tartósan 4,07%-kal kevesebbet fogyasztanak. A GDP tartósan +0,31% (16–20. év +0,33%), mert a szegényebb optimalizálók többet dolgoznak: foglalkoztatás +1,78%, reálbér −3,27%. A mostani adósságszabállyal az adósság tartósan az éves GDP 10,65%-ával nő.
+
+> bizonyíték: `t66b` — — őr: ✅ `t66b SZINT: a nyugdijemeles adobol nem noveli az aggregalt fogyasztast (-0.20%), GDP +0.31%, foglalkoztatas +1.78%, realber -3.27%`
+> *2026-10-26 · FELTÉTELES: a GDP- és foglalkoztatási hatás az egyösszegű (nem torzító) finanszírozás és a modell erős vagyonhatásának következménye (sigma/(1−habit) ≈ 5,1 a bérigényben). Szja- vagy járulékfinanszírozással (6. blokk) a munkakínálati hatás ellentétes lehet, ezért a GDP-előjelet nem szabad közölni. Ami robusztus: a tisztán hazai átcsoportosítás az aggregált fogyasztást nem növeli.*
+
+**F14.** Ha az euró kamatmegtakarítását nyugdíjra fordítjuk (P szabály: az adó nem változik, a nyugdíj alkalmazkodik az adóssághoz), a reálnyugdíj tartósan +28,8%: az első évben −0,58% (a bejelentés utáni dezinfláció miatt), az 5. évben +7,64%, a 16–20. évben +26,02%. Az egyösszegű adócsökkentéshez (T szabály) képest a GDP a 16–20. évben +0,48 pp, a tartós aggregált fogyasztás −0,29 pp: a megtakarítás a hazai kötvénytulajdonosoktól (optimalizálók, −5,86 pp) a nyugdíjasokhoz kerül, az optimalizálók többet dolgoznak (+2,57 pp), a reálbér −4,70 pp. A régi külső zárással (EXTCLOSE=0) a P szabály az euró-rezsimben instabil (15/13).
+
+> bizonyíték: `t66b, t66` — — őr: ✅ `t66b SZINT: a megtakaritas nyugdijra (P szabaly) 28.8% realnyugdij, GDP +0.48 pp, realber -4.70 pp; regi zarassal 15/13`
+> *2026-10-26 · FELTÉTELES: (1) a +28,8% a mostani adósságszabályon és a teljes −200 bp-n áll; adósságstabil szabállyal kb. +20%, forint- és devizaadósság szétbontásával inkább +16–17% (döntési lista 1–2. pont). (2) A GDP- és bérhatás az egyösszegű finanszírozás és az erős vagyonhatás következménye, mint az F13-ban. (3) ϑ = 0: a nemzetgazdasági nyereség nincs benne. Az instabilitás diagnózisa (2026-10-26): EXTCLOSE=1 mellett a régi súlyokkal is stabil, ACCSCALE=0 mellett is stabil, a phi_b-n nem múlik; ugyanaz a hozzáférési ciklus–bstar-hurok, mint az A27-ben. Az aktív alapág (EXTCLOSE=1) stabil.*
 
 ### 🔴 Amit VISSZAVONTUNK — 9 db
 
@@ -424,7 +439,7 @@
 
 ---
 
-## Őrök (185 db)
+## Őrök (189 db)
 
 *A füstteszt minden ellenőrzése. Ez a projekt egyetlen olyan nyilvántartása, ami nem tud némán elcsúszni: ha egy állítás megdől, itt megbukik egy sor.*
 
@@ -596,6 +611,10 @@
 - ✅ t65b SZINT: a fiskalis blokk a hazai reszen nyilvantartas (adossag -10.73% eves GDP, ado -2.15%, kozvetlen megtakaritas -1.50%, BK 26/26)
 - ✅ t65b SZINT: a kulfoldi tulajdonu resz nyeresege 0.67% GDP/ev, fogyasztas +2.23 pp, GDP +0.15 pp (regi beallitason -1.03 pp)
 - ✅ t65b SZINT: a lejarati szerkezet lassitja a megtakaritast (5. ev -0.61% vs -1.53%, 1. ev +0.54% vs -0.05%)
+- ✅ t66 v11 nyugdijasblokk tablai leteznek
+- ✅ t66b SZINT: a nyugdijasblokk sulyjavitasa onmagaban kicsi (GDP +0.01 pp, fogyasztas -0.01 pp), beagyazas 3e-14, BK 40/40
+- ✅ t66b SZINT: a nyugdijemeles adobol nem noveli az aggregalt fogyasztast (-0.20%), GDP +0.31%, foglalkoztatas +1.78%, realber -3.27%
+- ✅ t66b SZINT: a megtakaritas nyugdijra (P szabaly) 28.8% realnyugdij, GDP +0.48 pp, realber -4.70 pp; regi zarassal 15/13
 - ✅ t53c dekomp BK-stressz letezik
 - ✅ t53c: mind a 45 PF/BK diagnosztika technikailag lefutott
 - ✅ t53c KORREKCIO: az OPTEN1 ACC100 racs pontosan 0/45 terminalis BK-stabil (gyok/elo=15/13)
@@ -614,6 +633,6 @@
 - ✅ t00 PHILLIPS: az aszimmetrikus arsokkok (eps_md / eps_mx) egyik szcenarioban sincsenek hajtva
 - ✅ t00 SZERKEZET: mind a 4 modell-vonal megvan, README-vel
 - ✅ t00 SZERKEZET: a FO MODELL a helyen van (1_fo_vonal_jv)
-- ✅ t00 SZERKEZET: minden futtato letezo .mod-ot hiv (40 futtato, 21 modell)
+- ✅ t00 SZERKEZET: minden futtato letezo .mod-ot hiv (41 futtato, 21 modell)
 
 </details>

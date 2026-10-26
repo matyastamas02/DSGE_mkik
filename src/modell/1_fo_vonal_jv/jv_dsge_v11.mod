@@ -66,6 +66,25 @@
  *   brief: docs/terv/2026-10-25_fiskalis_blokk1_implementacios_brief.md
  *   Futtato: futtato/check_fiscal1_v11.m (t65-t65c)
  *
+ * FISKALIS BLOKK, 2. LEPES (2026-10-26): -DPENS=0|1 -- nyugdijasok es
+ *   transzfer (csak FISCAL=1 mellett). Harmadik haztartastipus a JV (76)
+ *   szerint, FOGYASZTASI KIADASI sulyokkal: optimalizalok 1-om_no = 0.75,
+ *   aktiv likviditaskorlatos om_no-om_p = 0.10, nyugdijas om_p = 0.15
+ *   (nyugdijkiadas / haztartasi fogyasztas). A ber-Phillips-gorbe MRS-tagja
+ *   a munkapiacon aktivak fogyasztasa (cl), nem az aggregalt c. A nyugdij
+ *   a koltsegvetesben: s_tr = om_p*sc (nem onallo parameter).
+ *   0 = KI (ALAPERTELMEZES; bitre azonos a FISCAL=1 modellel)
+ *   1 = BE. -DOMP (0.15), -DOMPTOT (a nyugdijasok teljes sulya, alap = OMP;
+ *       a nem nyugdijbol fedezett resz realerteken allando), -DKAPPAW (0 =
+ *       arindexalas), -DPENSRULE=0|1 (0 = T: a nyugdijpalya kivulrol adott,
+ *       az egyosszegu ado fizeti; 1 = P: az ado nem valtozik, a nyugdij
+ *       alkalmazkodik az adossaghoz), -DSCENARIO=5 (nincs euro, csak egy
+ *       tartos nyugdijemeles, -DETRP nagysagu, 16 negyedev alatt).
+ *   FIGYELEM: a sulyok atrendezese nyugdijemeles nelkul is megvaltoztatja
+ *   az eredmenyeket -- az alapertelmezes csapatdontes.
+ *   Brief: docs/terv/2026-10-26_fiskalis_blokk2_implementacios_brief.md
+ *   Futtato: futtato/check_pens_v11.m (t66-t66c)
+ *
  * ---------------------------------------------------------------------
  * ELOZMENY (v10 fejlece, valtozatlanul):
  * jv_dsge_v10_foreign.mod — 5. LEPCSO: KULFOLDI KERESLET/KAMAT CSATORNA
@@ -401,6 +420,31 @@
 @#ifndef RHOM
   @#define RHOM = 0
 @#endif
+// -DPENS (v11, 2026-10-26): fiskalis blokk, 2. lepes -- lasd fejlec.
+@#ifndef PENS
+  @#define PENS = 0
+@#endif
+@#if PENS >= 1 && FISCAL == 0
+  @#error "A -DPENS=1 csak -DFISCAL=1 mellett hasznalhato (a nyugdij a koltsegvetesben van)."
+@#endif
+@#if SCENARIO == 5 && PENS == 0
+  @#error "A -DSCENARIO=5 (nyugdijemeles) csak -DPENS=1 mellett hasznalhato."
+@#endif
+@#ifndef OMP
+  @#define OMP = 0.15
+@#endif
+@#ifndef OMPTOT
+  @#define OMPTOT = OMP
+@#endif
+@#ifndef KAPPAW
+  @#define KAPPAW = 0
+@#endif
+@#ifndef PENSRULE
+  @#define PENSRULE = 0
+@#endif
+@#ifndef ETRP
+  @#define ETRP = 0.20
+@#endif
 
 var
     // haztartas es aggregatumok
@@ -432,6 +476,10 @@ var
     // --- fiskalis blokk, 1. lepes (v11, 2026-10-25) ---
     rg rge bg tls pb intexp
 @#endif
+@#if PENS >= 1
+    // --- fiskalis blokk, 2. lepes: nyugdijasok (v11, 2026-10-26) ---
+    c_p cl trp
+@#endif
 ;
 
 varexo
@@ -439,6 +487,9 @@ varexo
     eps_a eps_x eps_c eps_md eps_mx eps_w eps_i eps_q eps_r eps_pr eps_g
 @#if FOREIGN == 1
     eps_ystar eps_rfor
+@#endif
+@#if PENS >= 1
+    e_trp
 @#endif
 ;
 
@@ -470,6 +521,9 @@ parameters
 @#endif
 @#if FISCAL >= 1
     theta_f phi_b bbar_g rgbar rho_m
+@#endif
+@#if PENS >= 1
+    om_p om_pt kappa_w s_tr
 @#endif
 ;
 
@@ -886,6 +940,19 @@ bbar_g  = @{BBARG};
 rgbar   = @{RGBAR};
 rho_m   = @{RHOM};
 @#endif
+// --- -DPENS: nyugdijasok (v11, 2026-10-26) -----------------------------
+// om_p: a nyugdijbol finanszirozott fogyasztas sulya = nyugdijkiadas (kb. 7.5%
+//   GDP) / haztartasi fogyasztas (sc). om_pt >= om_p: a nyugdijasok teljes
+//   fogyasztasi sulya (robusztussag); a kulonbseg realerteken allando.
+// s_tr: a nyugdijkiadas a GDP-ben -- om_p-bol szamolodik, hogy a haztartasi
+//   suly es a koltsegvetes ne johessen ket kulon szambol. Itt all, mert a
+//   KALIB/CALIB26 mar beallitotta a vegleges sc-t.
+@#if PENS >= 1
+om_p    = @{OMP};
+om_pt   = @{OMPTOT};
+kappa_w = @{KAPPAW};
+s_tr    = om_p*sc;
+@#endif
 
 model;
 
@@ -893,7 +960,16 @@ model;
 c_o = habit/(1+habit)*c_o(-1) + 1/(1+habit)*c_o(+1)
       - (1-habit)/((1+habit)*sigma)*(r - infl(+1)) + e_c_ar;
 c_no = w + ll;
+@#if PENS >= 1
+// -DPENS=1 (N1-N3): nyugdijas tipus a JV (76) szerint, fogyasztasi kiadasi
+// sulyokkal. A nyugdijasok nem nyugdijbol fedezett resze (om_pt - om_p)
+// realerteken allando (0 elteres). cl = a munkapiacon aktivak fogyasztasa.
+c_p = kappa_w*w + trp;
+c   = (1 - om_no - (om_pt - om_p))*c_o + (om_no - om_p)*c_no + om_p*c_p;
+cl  = ((1 - om_no - (om_pt - om_p))*c_o + (om_no - om_p)*c_no)/(1 - om_pt);
+@#else
 c = (1-om_no)*c_o + om_no*c_no;
+@#endif
 
 // === 2. BGG-blokk TIPUSONKENT ===========================================
 // Sajat tokehozam (rk_j) tipusonkent -- ez a v06 bizonyitott ujitasa.
@@ -1020,9 +1096,16 @@ p_L = p_L(-1) + pi_L - infl;
 // Ez az egyenlet hatarozza meg az infl-t (hazai kompozit inflacio), tehat
 // NINCS kulon infl-identitas -> nincs tulhatarozas.
 0 = wd_E*p_E + wd_D*p_D + wd_L*p_L;
+@#if PENS >= 1
+// -DPENS=1: a szakszervezet a munkapiacon aktivak joletet sulyozza (JV) -> cl
+piw  = beta/(1+beta*vth_w)*piw(+1) + vth_w/(1+beta*vth_w)*piw(-1)
+       + lam_w/(1+beta*vth_w)*(sigma/(1-habit)*(cl - habit*cl(-1))
+                                + fii*ll - w) + e_w_ar;
+@#else
 piw  = beta/(1+beta*vth_w)*piw(+1) + vth_w/(1+beta*vth_w)*piw(-1)
        + lam_w/(1+beta*vth_w)*(sigma/(1-habit)*(c - habit*c(-1))
                                 + fii*ll - w) + e_w_ar;
+@#endif
 w  = w(-1) + piw - infl;
 
 // === 6. Kereslet, kulkereskedelem (JV, valtozatlan) =====================
@@ -1072,12 +1155,28 @@ bstar = (1/beta)*bstar(-1) + sx*(px + xx) - sm*(rer + im);
 rg  = r + sov;
 // F1': lejarati szerkezet -- effektiv atlagkamat az allomanyon (rho_m = 0 -> rge = rg)
 rge = rho_m*rge(-1) + (1-rho_m)*rg;
+@#if PENS >= 1
+// N4: adossag a nyugdijkiadassal (s_tr*c_p)
+bg  = rgbar*bg(-1) + bbar_g*rgbar*(rge(-1) - infl) + sg*g + s_tr*c_p - tls;
+// N5: finanszirozas
+@#if PENSRULE == 0
+// T szabaly: a nyugdijpalya kivulrol adott, az egyosszegu ado fizeti (ricardoi)
+tls = phi_b*bg(-1);
+trp = e_trp;
+@#else
+// P szabaly: az ado nem valtozik, a nyugdij alkalmazkodik az adossaghoz
+tls = 0;
+trp = -(phi_b/s_tr)*bg(-1) + e_trp;
+@#endif
+pb     = tls - sg*g - s_tr*c_p;
+@#else
 // F2: adossag (a negyedeves GDP egysegeben; ado- es transzfertag ebben a lepesben 0)
 bg  = rgbar*bg(-1) + bbar_g*rgbar*(rge(-1) - infl) + sg*g - tls;
 // F3: adossagszabaly -- egyosszegu ado, csak az optimalizalokon (ricardoi)
 tls = phi_b*bg(-1);
 // riport: elsodleges egyenleg es kamatkiadas eltérése
 pb     = tls - sg*g;
+@#endif
 intexp = bbar_g*rgbar*(rge(-1) - infl) + (rgbar-1)*bg(-1);
 @#endif
 
@@ -1134,6 +1233,9 @@ sov = 0; bank = 0; uni = 0;
 @#if FOREIGN == 1
 ystar = 0; r_for = 0;
 @#endif
+@#if PENS >= 1
+e_trp = 0;
+@#endif
 end;
 
 @#if SCENARIO == 1
@@ -1142,12 +1244,18 @@ sov = -0.005; bank = -0.001125; uni = 1;
 @#if FOREIGN == 1
 ystar = 0; r_for = 0;
 @#endif
+@#if PENS >= 1
+e_trp = 0;
+@#endif
 end;
 @#elseif SCENARIO == 2
 endval;
 sov = -0.00625; bank = -0.00175; uni = 1;
 @#if FOREIGN == 1
 ystar = 0; r_for = 0;
+@#endif
+@#if PENS >= 1
+e_trp = 0;
 @#endif
 end;
 @#elseif SCENARIO == 3
@@ -1156,6 +1264,20 @@ sov = -0.00375; bank = -0.0005; uni = 1;
 @#if FOREIGN == 1
 ystar = 0; r_for = 0;
 @#endif
+@#if PENS >= 1
+e_trp = 0;
+@#endif
+end;
+@#elseif SCENARIO == 5
+// SCENARIO=5 (-DPENS=1): NINCS EURO, csak egy tartos nyugdijemeles (E2a),
+// -DETRP nagysagu (alap 0.20 = az euro kozvetlen kamatmegtakaritasa / s_tr),
+// 16 negyedev alatt linearisan felfutva.
+endval;
+sov = 0; bank = 0; uni = 0;
+@#if FOREIGN == 1
+ystar = 0; r_for = 0;
+@#endif
+e_trp = @{ETRP};
 end;
 @#else
 // SCENARIO=4: NULLA SOKK (ellenorzo eset). Minden valtozonak vegig 0-nak
@@ -1164,6 +1286,9 @@ endval;
 sov = 0; bank = 0; uni = 0;
 @#if FOREIGN == 1
 ystar = 0; r_for = 0;
+@#endif
+@#if PENS >= 1
+e_trp = 0;
 @#endif
 end;
 @#endif
@@ -1204,6 +1329,20 @@ values -0.0001875 -0.000375 -0.0005625 -0.00075 -0.0009375 -0.001125
 var bank;
 periods 1:12 13 14 15 16;
 values 0 -0.000125 -0.00025 -0.000375 -0.0005;
+end;
+@#elseif SCENARIO == 5
+shocks;
+var e_trp;
+periods
+@#for k in 1:15
+  @{k}
+@#endfor
+;
+values
+@#for k in 1:15
+  (@{ETRP}*@{k}/16)
+@#endfor
+;
 end;
 @#else
 shocks;
