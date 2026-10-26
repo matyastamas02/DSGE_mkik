@@ -48,6 +48,24 @@
  *   tartosan bstar = zsov*sov/nu_uni kulso pozicio-eltolodast ad.
  *   Futtato: futtato/sens_sovcsat_v11.m (t63-t63c)
  *
+ * FISKALIS BLOKK, 1. LEPES (2026-10-25): -DFISCAL=0|1 -- allamadossag,
+ *   kamatkiadas, egyosszegu ado adossagszaballyal, lejarati szerkezet, es a
+ *   kulfoldiek altal tartott adossag kamatanak bekotese a kulso pozicioba
+ *   (tulajdonosi zaras).
+ *   0 = KI (ALAPERTELMEZES; a mostani modellel BITRE AZONOS -- az uj
+ *       valtozok, parameterek es egyenletek forditasi idoben ki sem kerulnek)
+ *   1 = BE. Uj valtozok: rg rge bg tls pb intexp. Kapcsolok (csak FISCAL=1
+ *       mellett hatnak): -DTHETAF (kulfoldi tulajdonosi arany, alap 0),
+ *       -DPHIB (szabaly, 0.05), -DBBARG (adossag a negyedeves GDP
+ *       egysegeben, 2.96), -DRGBAR (bruttó negyedeves kamat, 1.015),
+ *       -DRHOM (lejarati szerkezet, 0 = egynegyedeves adossag).
+ *   A hazai tulajdonu resz NYILVANTARTAS: az egyosszegu ado csak az
+ *   optimalizalokat terheli (ricardoi), tehat THETAF=0 mellett minden regi
+ *   valtozo palyaja valtozatlan. A gazdasagra csak a kulfoldi resz hat.
+ *   Levezetes: fiskalis_blokk_levezetes_2026-10-25.docx (2. valtozat);
+ *   brief: docs/terv/2026-10-25_fiskalis_blokk1_implementacios_brief.md
+ *   Futtato: futtato/check_fiscal1_v11.m (t65-t65c)
+ *
  * ---------------------------------------------------------------------
  * ELOZMENY (v10 fejlece, valtozatlanul):
  * jv_dsge_v10_foreign.mod — 5. LEPCSO: KULFOLDI KERESLET/KAMAT CSATORNA
@@ -363,6 +381,26 @@
 @#ifndef ETAYSTAR
   @#define ETAYSTAR = 1.0
 @#endif
+// -DFISCAL (v11, 2026-10-25): fiskalis blokk, 1. lepes -- lasd fejlec.
+@#ifndef FISCAL
+  @#define FISCAL = 0
+@#endif
+// -DTHETAF / -DPHIB / -DBBARG / -DRGBAR / -DRHOM: csak FISCAL=1 mellett hatnak.
+@#ifndef THETAF
+  @#define THETAF = 0
+@#endif
+@#ifndef PHIB
+  @#define PHIB = 0.05
+@#endif
+@#ifndef BBARG
+  @#define BBARG = 2.96
+@#endif
+@#ifndef RGBAR
+  @#define RGBAR = 1.015
+@#endif
+@#ifndef RHOM
+  @#define RHOM = 0
+@#endif
 
 var
     // haztartas es aggregatumok
@@ -389,6 +427,10 @@ var
 @#if FOREIGN == 1
     // --- kulfoldi kereslet/kamat (5. lepcso, UJ) ---
     ystar r_for
+@#endif
+@#if FISCAL >= 1
+    // --- fiskalis blokk, 1. lepes (v11, 2026-10-25) ---
+    rg rge bg tls pb intexp
 @#endif
 ;
 
@@ -425,6 +467,9 @@ parameters
 @#endif
 @#if NWSPEC >= 1
     pi_nw gam_nw wen_E wen_D wen_L
+@#endif
+@#if FISCAL >= 1
+    theta_f phi_b bbar_g rgbar rho_m
 @#endif
 ;
 
@@ -826,6 +871,21 @@ rho_ystar = @{RHOYSTAR};
 rho_rfor  = @{RHORFOR};
 eta_ystar = @{ETAYSTAR};
 @#endif
+// --- -DFISCAL: fiskalis blokk, 1. lepes (v11, 2026-10-25) -------------
+// theta_f: a nem rezidensek altal tartott allamadossag aranya. Az alap 0,
+//   amig nincs AKK/MNB-adat; a 0.4 csak szemleltetes.
+// phi_b: az adossagszabaly; passziv (Leeper) feltetel: phi_b > rgbar - 1.
+// bbar_g: 74% eves GDP-aranyos adossag a negyedeves GDP egysegeben (x4),
+//   ellenorizendo. rgbar: egyensulyi brutto negyedeves kamat az adossagon.
+// rho_m: lejarati szerkezet; 0 = egynegyedeves adossag, kb. 0.95 = kb. 5 ev.
+// A sg a meglevo GDP-suly (KALIB-ban 0.203), nem uj parameter.
+@#if FISCAL >= 1
+theta_f = @{THETAF};
+phi_b   = @{PHIB};
+bbar_g  = @{BBARG};
+rgbar   = @{RGBAR};
+rho_m   = @{RHOM};
+@#endif
 
 model;
 
@@ -989,7 +1049,37 @@ xx = wx_E*x_E + wx_D*x_D + wx_L*x_L;
 px = wx_E*p_E + wx_D*p_D + wx_L*p_L;
 y_x = xx;
 y  = sc*c + si*ii + sg*g + sx*xx - sm*im;
+@#if FISCAL >= 1
+// -DFISCAL=1, tulajdonosi zaras (O2): a kulfoldiek altal tartott theta_f
+// resz utan fizetett tobblethozam a kulso poziciot terheli. Az elso tag a
+// meglevo allomanyon (forintban az arfolyam is: leertekelodeskor a kulfoldi
+// veszit), a masodik a valtozo adossag kulfoldi resze utani egyensulyi felar.
+// A hazai resznek nincs egyenlete: a kisebb kamatbevetelt az egyosszegu ado
+// pontosan ellensulyozza (ricardoi).
+bstar = (1/beta)*bstar(-1) + sx*(px + xx) - sm*(rer + im)
+@#if FOREIGN == 1
+        - theta_f*( bbar_g*(rge(-1) - r_for(-1) - dep) + (rgbar - 1/beta)*bg(-1) );
+@#else
+        - theta_f*( bbar_g*(rge(-1) - dep) + (rgbar - 1/beta)*bg(-1) );
+@#endif
+@#else
 bstar = (1/beta)*bstar(-1) + sx*(px + xx) - sm*(rer + im);
+@#endif
+
+@#if FISCAL >= 1
+// === 6b. Fiskalis blokk, 1. lepes (v11, 2026-10-25) =====================
+// F1: allampapir-hozam = hazai kamat + szuveren felar
+rg  = r + sov;
+// F1': lejarati szerkezet -- effektiv atlagkamat az allomanyon (rho_m = 0 -> rge = rg)
+rge = rho_m*rge(-1) + (1-rho_m)*rg;
+// F2: adossag (a negyedeves GDP egysegeben; ado- es transzfertag ebben a lepesben 0)
+bg  = rgbar*bg(-1) + bbar_g*rgbar*(rge(-1) - infl) + sg*g - tls;
+// F3: adossagszabaly -- egyosszegu ado, csak az optimalizalokon (ricardoi)
+tls = phi_b*bg(-1);
+// riport: elsodleges egyenleg es kamatkiadas eltérése
+pb     = tls - sg*g;
+intexp = bbar_g*rgbar*(rge(-1) - infl) + (rgbar-1)*bg(-1);
+@#endif
 
 // === 7. Rezsimfuggo monetaris blokk (JV v03/v05/v06) ====================
 // -DFOREIGN=1: mindket rezsimagon visszakerul a kulfoldi kamat (r_for) --

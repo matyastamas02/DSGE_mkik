@@ -5,11 +5,11 @@
 
 # DSGE_mkik — állapotlap
 
-*Generálva a füstteszt 2026-10-07 09:17-kor futott eredményéből · commit `f735c50` · ág `main`*
+*Generálva a füstteszt 2026-10-25 17:19-kor futott eredményéből · commit `dca4893` · ág `main`*
 
 **Fő modell:** `src/modell/1_fo_vonal_jv/jv_dsge_v09_access.mod` (Jakab–Világi mag). A `kkv_dsge_*` a referencia-vonal.
 
-**Őrök:** 181 rendben, 0 hiba.
+**Őrök:** 185 rendben, 0 hiba.
 
 ✅ **Minden „áll” állításnak van őre, és minden őr fut.**
 
@@ -17,7 +17,7 @@
 
 ## Mit állítunk ma
 
-### 🟢 Ami ÁLL — 29 db
+### 🟢 Ami ÁLL — 31 db
 
 *Ezekre lehet építeni a tanulmányban.*
 
@@ -166,7 +166,17 @@
 > bizonyíték: `t63b` — — őr: ✅ `t63b SZINT: a bejelentesi visszaeses az UIP-ben szereplo felarbol jon (-0.05% vs -0.96%)`
 > *2026-10-07 · Az A29 mechanizmusa: a konvergencia-időszakban a felárcsökkenés csak az árfolyamot erősíti. Hogy a valóságban az árfolyam-kockázati prémium mennyiben szuverén felár, empirikus kérdés.*
 
-### 🟡 Ami FELTÉTELES — 12 db
+**A32.** A fiskális blokk 1. lépése (v11 -DFISCAL=1: államadósság, kamatkiadás, egyösszegű adó adósságszabállyal) a hazai tulajdonú részen tiszta nyilvántartás: külföldi tulajdon nélkül (ϑ = 0) minden korábbi változó pályája bitre azonos, az aktív és a régi beállításon is. A tartós −2 százalékpontos állampapírhozam-csökkenés mellett az adósság tartósan az éves GDP 10,73%-ával csökken, az egyösszegű adó a GDP 2,15%-ával (ebből 1,50% a közvetlen kamatmegtakarítás, a többi a kisebb adósság kamata) — pontosan az analitikus érték. 20 év alatt az adósságcsökkenés 91%-a valósul meg. A blokk a stabilitást nem változtatja (13/13 mindkét rezsimben, 26/26 futás, a teljes ACCSCALE-rácson is).
+
+> bizonyíték: `t65b, t65` — — őr: ✅ `t65b SZINT: a fiskalis blokk a hazai reszen nyilvantartas (adossag -10.73% eves GDP, ado -2.15%, kozvetlen megtakaritas -1.50%, BK 26/26)`
+> *2026-10-25 · Futtató: check_fiscal1_v11.m (400 negyedéves horizont). Az alapértelmezés FISCAL=0 marad. A tartós adósságcsökkenés a szabály következménye (tls = phi_b·bg(−1), phi_b = 0,05): az adó csak az adósságra reagál, ezért a megtakarítás egy része adósságcsökkentésre megy; a nagysága phi_b-től függ: b̄·R·Δr/(phi_b − (R − 1)). A bbar_g = 2,96 (74% GDP) és az rgbar = 1,015 ellenőrizendő (ÁKK/Eurostat).*
+
+**A33.** Hosszú átlagos lejárat mellett (RHOM = 0,95, kb. 5 év) a tartós érték változatlan, de a kamatmegtakarítás lassabban épül fel: az 5. évben a kamatkiadás a GDP −0,61%-ával változik (egynegyedéves adósságnál −1,53%). Az első évben a reál-kamatteher a GDP +0,54%-ával nő (egynegyedéves adósságnál −0,05%), mert a bejelentés utáni dezinfláció a régi, magasabb névleges kamatú állomány reálterhét emeli.
+
+> bizonyíték: `t65b` — — őr: ✅ `t65b SZINT: a lejarati szerkezet lassitja a megtakaritast (5. ev -0.61% vs -1.53%, 1. ev +0.54% vs -0.05%)`
+> *2026-10-25 · A kamatkiadás itt reál (rge(−1) − infl), negyedéves áramként, a GDP %-ában. Következmény: az első évek megtakarítását nem szabad a hosszú távú értékkel számolni (a review 4. pontja). A RHOM = 0,95 szemléltető; a valódi érték az átlagos hátralévő lejáratból (ÁKK).*
+
+### 🟡 Ami FELTÉTELES — 13 db
 
 *Csak a feltétellel együtt közölhető — küszöbformában, vagy az elfogadási feltétel kiírásával.*
 
@@ -229,6 +239,11 @@
 
 > bizonyíték: `t64c` — — őr: ✅ `t64c SZINT: a vegleges v11-alapagon a 20 eves GDP-hatas 0.52%, sav 0.26..0.86, regi zarassal 15/13`
 > *2026-10-07 · A v11 alapértelmezése 2026-10-07 óta (Tomi döntése); a v09/v10 és a régi eredmények a régi paraméterekkel változatlanok, a régi v11: -DKALIB=0 -DEXTCLOSE=0 -DSOVCSAT=0 -DHORIZON=120. FELTÉTELES: a zárás modellezési döntés (F10); a foglalkoztatási súlyok összege 1,071 (shl_D Samu, a másik kettő Tomi); az aa_j Opten-mérése fogalmilag nem tiszta importintenzitás. Futtató: check_kalib_v11.m (400 negyedéves számítási horizont).*
+
+**F12.** Ha az államadósság egy része külföldi kézben van (ϑ = 0,4, csak szemléltetés), az euró tartós nemzetgazdasági fiskális nyeresége a GDP 0,67%-a évente (16–20. év átlaga 0,66%), nem a teljes 1,5–2,15%. A nyereség főként fogyasztásban jelenik meg (+2,23 százalékpont a 16–20. évben, aktív ág); a GDP-hatás kicsi (+0,15 pp), és az előjele a nyitottságtól és a zárástól függ: a régi súlyokkal és zárással a reálfelértékelődés miatt (transzferprobléma) −1,03 pp. A forintos szakaszban a bejelentési felértékelődés egyszeri veszteséget okoz (az első negyedévben a negyedéves GDP 2,40%-a).
+
+> bizonyíték: `t65b, t65` — — őr: ✅ `t65b SZINT: a kulfoldi tulajdonu resz nyeresege 0.67% GDP/ev, fogyasztas +2.23 pp, GDP +0.15 pp (regi beallitason -1.03 pp)`
+> *2026-10-25 · FELTÉTELES: a ϑ = 0,4 nem adat; a valódi arány az ÁKK/MNB-adatból jön, a nyereség ezzel arányos. A devizaadósság átértékelése nincs benne. Tartósan bstar = 0 (SOVCSAT=1), ezért a nyereség tartósan negatívabb kereskedelmi mérlegként (több import, kevesebb export) jelenik meg. A GDP nem jó mérőszáma ennek a csatornának: a transzfer a felhasználást növeli, nem feltétlenül a kibocsátást. A régi beállításon a reálárfolyam −2,8%, az export −1,4% (aktív ágon −0,7 pp, −0,3 pp).*
 
 ### 🔴 Amit VISSZAVONTUNK — 9 db
 
@@ -409,7 +424,7 @@
 
 ---
 
-## Őrök (181 db)
+## Őrök (185 db)
 
 *A füstteszt minden ellenőrzése. Ez a projekt egyetlen olyan nyilvántartása, ami nem tud némán elcsúszni: ha egy állítás megdől, itt megbukik egy sor.*
 
@@ -577,6 +592,10 @@
 - ✅ t63b SZINT: a javasolt v11-agon a 20 eves GDP-hatas 0.73% / 1.04%, sav 0.44..1.04 / 0.59..1.53, KKV-kuszob 37.7/44.0, 22.4/35.0
 - ✅ t64c v11 vegleges kalibracio tablaja letezik
 - ✅ t64c SZINT: a vegleges v11-alapagon a 20 eves GDP-hatas 0.52%, sav 0.26..0.86, regi zarassal 15/13
+- ✅ t65 v11 fiskalis blokk tablai leteznek
+- ✅ t65b SZINT: a fiskalis blokk a hazai reszen nyilvantartas (adossag -10.73% eves GDP, ado -2.15%, kozvetlen megtakaritas -1.50%, BK 26/26)
+- ✅ t65b SZINT: a kulfoldi tulajdonu resz nyeresege 0.67% GDP/ev, fogyasztas +2.23 pp, GDP +0.15 pp (regi beallitason -1.03 pp)
+- ✅ t65b SZINT: a lejarati szerkezet lassitja a megtakaritast (5. ev -0.61% vs -1.53%, 1. ev +0.54% vs -0.05%)
 - ✅ t53c dekomp BK-stressz letezik
 - ✅ t53c: mind a 45 PF/BK diagnosztika technikailag lefutott
 - ✅ t53c KORREKCIO: az OPTEN1 ACC100 racs pontosan 0/45 terminalis BK-stabil (gyok/elo=15/13)
@@ -595,6 +614,6 @@
 - ✅ t00 PHILLIPS: az aszimmetrikus arsokkok (eps_md / eps_mx) egyik szcenarioban sincsenek hajtva
 - ✅ t00 SZERKEZET: mind a 4 modell-vonal megvan, README-vel
 - ✅ t00 SZERKEZET: a FO MODELL a helyen van (1_fo_vonal_jv)
-- ✅ t00 SZERKEZET: minden futtato letezo .mod-ot hiv (39 futtato, 21 modell)
+- ✅ t00 SZERKEZET: minden futtato letezo .mod-ot hiv (40 futtato, 21 modell)
 
 </details>
