@@ -116,3 +116,29 @@ A **külső zárás érzékeny pont**: az A27 óta tudjuk, hogy a `bstar` körü
 | Implicit átlagkamat, vagy döntés a modellkonzisztens értékről | `rgbar` | ÁKK, Eurostat |
 | Átlagos hátralévő lejárat | `rho_m` | ÁKK |
 | A devizaadósság aránya (a később bevezetendő átértékeléshez) | — | ÁKK |
+
+### 7a. Első adatkeresés (2026-10-26, nyilvános forrásokból; a modell alapértelmezésén nem változtat)
+
+| Adat | Talált érték | Forrás | Mit jelent a modellnek |
+|---|---|---|---|
+| Adósság/GDP | 73,5% (2024 vége), 74,6% (2025 vége) | KSH EDP-jelentés, KSH 2026-04-01 | `bbar_g` = 2,94–2,98; a 2,96 rendben |
+| Devizaadósság aránya | 28,3% (ÁKK, a legutóbbi féléves értékelés), kb. 30% (2024 vége) | Portfolio 2026-07-01 (ÁKK); OeNB CESEE 2026 | a teljes adósság kb. 28%-a nem forint |
+| Devizakülföldiek aránya az intézményi forint-állampapírokban | 19,6% (2025. jún. vége), 17,6% (2024 vége), nem repószűrt | ÁKK, economx 2025-07-02 | a forint-állampapírok intézményi része (28 365 Mrd Ft) a teljes adósság kb. 46%-a, tehát a **külföldi kézben lévő forintadósság a teljes adósság kb. 9%-a** |
+| Lakossági állampapírok aránya | 20,2% (2025. jún.) | ÁKK, economx 2025-07-02 | hazai tulajdon |
+| Átlagos hátralévő futamidő | 5,6 év összesen, **forint 4,1 év**, deviza 9 év (2025 I. félév); 5,5 év (legutóbbi) | ÁKK, economx 2025-07-02; Portfolio 2026-07-01 | a forintrészre `rho_m ≈ 1 − 1/16,4 ≈ 0,94`; a változó kamatozású lakossági papírok miatt a tényleges átárazódás ennél gyorsabb |
+| Kamatkiadás | 2025-ben 16,6%-kal csökkent | KSH 2026-04-01 | az implicit névleges kamat kb. 5–6,5% (saját közelítés), de a modellben nincs infláció és növekedés: a `rgbar`-hoz a reálkamat mínusz növekedés a releváns, ez csapatdöntés |
+
+**A legfontosabb következmény.** Az 1. lépés az egész adósságra ugyanazt az `rg = r + sov` hozamot
+alkalmazza, de a teljes adósság kb. 28%-a devizában van. Annál az euró nem a teljes −200 bp-s felárat
+tünteti el, csak a hitelkockázati részt. Ezért:
+
+- a **közvetlen állami kamatmegtakarítás** a modellbeli 1,50% GDP helyett inkább kb. 1,1% + a devizarész
+  hitelfelár-szűkülése (ha az 0,5–1 százalékpont: összesen kb. 1,2–1,3% GDP);
+- a **nemzetgazdasági nyereség** a teljes −200 bp-vel csak a külföldi kézben lévő forintrészen keletkezik
+  (kb. 9% → kb. 0,13% GDP/év). Ehhez jön a külföldiek kezében lévő devizaadósság hitelfelár-szűkülése:
+  ha a devizaadósság nagy része külföldi kézben van, és a szűkülés 0,5–1 százalékpont, kb. 0,1–0,2% GDP.
+  Összesen nagyságrendileg **0,2–0,3% GDP/év**, nem az F12 szemléltető 0,67%-a (ϑ = 0,4, teljes −200 bp).
+
+Ezek hátraboríték-számok. A devizaadósság tulajdonosi megoszlását és a hitelfelár-szűkülést külön
+kell igazolni. A modellben a pontos kezeléshez az adósságot **forint- és devizarészre** kellene bontani,
+külön hozammal. Ez az 1. lépés kis bővítése lenne, de modellváltoztatás, ezért csapatdöntés.

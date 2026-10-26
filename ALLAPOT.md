@@ -5,7 +5,7 @@
 
 # DSGE_mkik — állapotlap
 
-*Generálva a füstteszt 2026-10-25 17:19-kor futott eredményéből · commit `dca4893` · ág `main`*
+*Generálva a füstteszt 2026-10-25 17:19-kor futott eredményéből · commit `c6bbb74` · ág `main`*
 
 **Fő modell:** `src/modell/1_fo_vonal_jv/jv_dsge_v09_access.mod` (Jakab–Világi mag). A `kkv_dsge_*` a referencia-vonal.
 
@@ -243,7 +243,7 @@
 **F12.** Ha az államadósság egy része külföldi kézben van (ϑ = 0,4, csak szemléltetés), az euró tartós nemzetgazdasági fiskális nyeresége a GDP 0,67%-a évente (16–20. év átlaga 0,66%), nem a teljes 1,5–2,15%. A nyereség főként fogyasztásban jelenik meg (+2,23 százalékpont a 16–20. évben, aktív ág); a GDP-hatás kicsi (+0,15 pp), és az előjele a nyitottságtól és a zárástól függ: a régi súlyokkal és zárással a reálfelértékelődés miatt (transzferprobléma) −1,03 pp. A forintos szakaszban a bejelentési felértékelődés egyszeri veszteséget okoz (az első negyedévben a negyedéves GDP 2,40%-a).
 
 > bizonyíték: `t65b, t65` — — őr: ✅ `t65b SZINT: a kulfoldi tulajdonu resz nyeresege 0.67% GDP/ev, fogyasztas +2.23 pp, GDP +0.15 pp (regi beallitason -1.03 pp)`
-> *2026-10-25 · FELTÉTELES: a ϑ = 0,4 nem adat; a valódi arány az ÁKK/MNB-adatból jön, a nyereség ezzel arányos. A devizaadósság átértékelése nincs benne. Tartósan bstar = 0 (SOVCSAT=1), ezért a nyereség tartósan negatívabb kereskedelmi mérlegként (több import, kevesebb export) jelenik meg. A GDP nem jó mérőszáma ennek a csatornának: a transzfer a felhasználást növeli, nem feltétlenül a kibocsátást. A régi beállításon a reálárfolyam −2,8%, az export −1,4% (aktív ágon −0,7 pp, −0,3 pp).*
+> *2026-10-25 · FELTÉTELES: a ϑ = 0,4 nem adat; a valódi arány az ÁKK/MNB-adatból jön, a nyereség ezzel arányos. A devizaadósság átértékelése nincs benne. Tartósan bstar = 0 (SOVCSAT=1), ezért a nyereség tartósan negatívabb kereskedelmi mérlegként (több import, kevesebb export) jelenik meg. A GDP nem jó mérőszáma ennek a csatornának: a transzfer a felhasználást növeli, nem feltétlenül a kibocsátást. A régi beállításon a reálárfolyam −2,8%, az export −1,4% (aktív ágon −0,7 pp, −0,3 pp). ⚠ 2026-10-26, első adatkeresés (brief 7a): a külföldi kézben lévő FORINTadósság a teljes adósság kb. 9%-a, a devizaadósság kb. 28%; a devizarésznél az euró csak a hitelkockázati felárat tünteti el. Hátraboríték-szám szerint a nemzetgazdasági nyereség nagyságrendileg 0,2–0,3% GDP/év, nem 0,67%. A pontos kezeléshez az adósságot forint- és devizarészre kell bontani (csapatdöntés).*
 
 ### 🔴 Amit VISSZAVONTUNK — 9 db
 
