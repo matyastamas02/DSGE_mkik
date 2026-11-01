@@ -2,7 +2,8 @@
 
 *2026-10-26. A fiskális blokk 1. lépéséből (A32, A33, F12), az adatkeresésből (brief 7a) és a 2. blokk
 levezetésének első lépéséből kijött kérdések. Ezeket a modell nem tudja eldönteni: mindegyik vagy
-közlési, vagy kalibrációs csapatdöntés. Mindegyiknél ott a javaslat, de az csak javaslat.*
+közlési, vagy kalibrációs csapatdöntés. Mindegyiknél ott a javaslat, de az csak javaslat. A 6. pont
+2026-11-01-én, a fiskális blokk külső review-ja után került be.*
 
 ---
 
@@ -83,7 +84,27 @@ nyugdíjkiadás kb. 7–8% GDP).
 Mivel a súlyok átrendeződnek, a blokk nyugdíjemelés nélkül is megváltoztatja a mostani eredményeket, ezért
 kapcsoló mögé kerül, és az alapértelmezésről a csapat dönt.
 
-## 6. Ami nem a meetingen dől el, de jó tudni
+## 6. A fiskális blokk terjedelme: továbbépítés vagy szűkítés? *(2026-11-01)*
+
+**Mi a helyzet:** a fiskális blokk 1–2. lépése és a konszolidáció (A32–A35, F12–F16) kész. Egy külső
+(ChatGPT) review ([`2026-11-01_fiskalis_blokk_review.md`](2026-11-01_fiskalis_blokk_review.md)) szerint a
+technikai bekötés rendben van, de a fiskális GDP-, foglalkoztatási, inflációs és nyugdíjszámok egyösszegű
+adóval nem védhetők, és a tervezett hat adóblokk két hónap alatt nagyobb kockázat, mint amennyit hoz.
+
+| Opció | Mit jelent |
+|---|---|
+| (a) a teljes adómenü (6. blokk) végigvitele | minden fiskális kérdésre modellen belüli válasz, de kb. két hónap és új horgonyzatlan paraméterek |
+| (b) a mag befagyasztása, minimális fiskális modul (a review javaslata) | egy munkát terhelő torzító ék (szocho-kérdés esetén munkáltatói járulék), egyösszegű adó csak a költségvetés zárására, egyetlen adósság-állapotváltozó; lejárat, devizarész és tulajdonosi szerkezet modellen kívüli cash-flow számításként; a nagyobb fiskális állítások semi-strukturális (Excel) számításból, a DSGE robusztussági eszközként |
+| (c) váltás egy kis (Galí–Monacelli-típusú) modellre | elvész a KKV–nagyvállalat-bontás és a hitelcsatorna; a review szerint most túl kockázatos |
+
+**A review szerint mi éli túl a (b)-t:** az F11 aggregált euróhatás és a KKV-küszöb, feltételes
+modellkimenetként. A fiskális GDP-, foglalkoztatási, inflációs és nyugdíjszámok nem. A kamatmegtakarítás, a
+lejárat és a külföldi tulajdon modellen kívüli adósság-aritmetikaként jobb.
+
+**Javaslat:** (b). Ha bármilyen fiskális GDP-számot közölni akarunk, a torzító munkapiaci ék a minimális
+következő lépés, mert az F13 és az F15 GDP-előjele ezen múlik.
+
+## 7. Ami nem a meetingen dől el, de jó tudni
 
 - **α_j:** Tomi méri (`docs/terv/2026-10-26_aa_j_meresi_specifikacio.md`). Hogy az új érték legyen-e az
   alapértelmezés (`KALIB`), az a mérés és a modellfutás után csapatdöntés.
