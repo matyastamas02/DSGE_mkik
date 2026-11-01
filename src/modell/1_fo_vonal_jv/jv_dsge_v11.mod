@@ -85,6 +85,19 @@
  *   Brief: docs/terv/2026-10-26_fiskalis_blokk2_implementacios_brief.md
  *   Futtato: futtato/check_pens_v11.m (t66-t66c)
  *
+ * FISKALIS BLOKK, KONSZOLIDACIO (2026-10-29, Samu kerese): -DKONSZ=0|1 --
+ *   kiadasoldali megszoritas a hianykriteriumhoz (csak FISCAL=1 mellett).
+ *   0 = KI (ALAPERTELMEZES; bitre azonos a FISCAL=1 modellel)
+ *   1 = BE. A kormanyzati fogyasztas tartosan a GDP -DKONSZD szazalekaval
+ *       (alap 3.0) csokken, a bejelentestol -DKONSZN negyedev (alap 8) alatt
+ *       linearisan felfutva: sg*g = -kons pontosan (eps_g = 0 mellett). A
+ *       megtakaritast nem koltik el (g nem no vissza). -DSCENARIO=6: nincs
+ *       euro, csak a konszolidacio (a ket hatas szetvalasztasahoz).
+ *   Az adooldal itt ricardoi (egyosszegu ado), ezert a megszoritas reale
+ *   koltsege CSAK a kiadascsokkentesen at jelenik meg; az adoszabaly
+ *   (PHIB) es a lejarat (RHOM) csak a hiany- es adossagpalyat erinti.
+ *   Futtato: futtato/check_konsz_v11.m (t67-t67c)
+ *
  * ---------------------------------------------------------------------
  * ELOZMENY (v10 fejlece, valtozatlanul):
  * jv_dsge_v10_foreign.mod — 5. LEPCSO: KULFOLDI KERESLET/KAMAT CSATORNA
@@ -445,6 +458,26 @@
 @#ifndef ETRP
   @#define ETRP = 0.20
 @#endif
+// -DKONSZ (v11, 2026-10-29): kiadasoldali konszolidacio -- lasd fejlec.
+@#ifndef KONSZ
+  @#define KONSZ = 0
+@#endif
+@#if KONSZ >= 1 && FISCAL == 0
+  @#error "A -DKONSZ=1 csak -DFISCAL=1 mellett hasznalhato (a hiany a koltsegvetesbol jon)."
+@#endif
+@#if SCENARIO == 6 && KONSZ == 0
+  @#error "A -DSCENARIO=6 (csak konszolidacio) csak -DKONSZ=1 mellett hasznalhato."
+@#endif
+@#if SCENARIO == 5 && KONSZ >= 1
+  @#error "A -DKONSZ=1 a -DSCENARIO=5-tel (nyugdijemeles) nincs kombinalva."
+@#endif
+// -DKONSZD: a tartos kiadascsokkentes a GDP szazalekaban; -DKONSZN: felfutas negyedevben.
+@#ifndef KONSZD
+  @#define KONSZD = 3.0
+@#endif
+@#ifndef KONSZN
+  @#define KONSZN = 8
+@#endif
 
 var
     // haztartas es aggregatumok
@@ -490,6 +523,9 @@ varexo
 @#endif
 @#if PENS >= 1
     e_trp
+@#endif
+@#if KONSZ >= 1
+    kons
 @#endif
 ;
 
@@ -1217,7 +1253,13 @@ e_w_ar  = rho_w*e_w_ar(-1) + eps_w;
 e_i_ar  = rho_i*e_i_ar(-1) + eps_i;
 e_pr_ar = rho_pr*e_pr_ar(-1) + eps_pr;
 e_mx_ar = rho_mx*e_mx_ar(-1) + eps_mx;
+@#if KONSZ >= 1
+// -DKONSZ=1: a konszolidacio a g szintjet tolja el; a ciklikus resz (g + kons/sg)
+// a regi AR(1), igy eps_g = 0 mellett sg*g = -kons minden idoszakban pontosan.
+g       = rho_g*g(-1) + eps_g - (kons - rho_g*kons(-1))/sg;
+@#else
 g       = rho_g*g(-1) + eps_g;
+@#endif
 @#if FOREIGN == 1
 // Kulfoldi kereslet/kamat, tisztan hatranezo AR(1), lead nelkul -- lasd
 // terv D8/7. szakasz: BK-szempontbol ket uj stabil gyokot varunk, a
@@ -1236,6 +1278,9 @@ ystar = 0; r_for = 0;
 @#if PENS >= 1
 e_trp = 0;
 @#endif
+@#if KONSZ >= 1
+kons = 0;
+@#endif
 end;
 
 @#if SCENARIO == 1
@@ -1247,6 +1292,9 @@ ystar = 0; r_for = 0;
 @#if PENS >= 1
 e_trp = 0;
 @#endif
+@#if KONSZ >= 1
+kons = @{KONSZD}/100;
+@#endif
 end;
 @#elseif SCENARIO == 2
 endval;
@@ -1257,6 +1305,9 @@ ystar = 0; r_for = 0;
 @#if PENS >= 1
 e_trp = 0;
 @#endif
+@#if KONSZ >= 1
+kons = @{KONSZD}/100;
+@#endif
 end;
 @#elseif SCENARIO == 3
 endval;
@@ -1266,6 +1317,9 @@ ystar = 0; r_for = 0;
 @#endif
 @#if PENS >= 1
 e_trp = 0;
+@#endif
+@#if KONSZ >= 1
+kons = @{KONSZD}/100;
 @#endif
 end;
 @#elseif SCENARIO == 5
@@ -1279,6 +1333,19 @@ ystar = 0; r_for = 0;
 @#endif
 e_trp = @{ETRP};
 end;
+@#elseif SCENARIO == 6
+// SCENARIO=6 (-DKONSZ=1): NINCS EURO, csak a kiadasoldali konszolidacio
+// (-DKONSZD szazalek GDP, -DKONSZN negyedev alatt felfutva).
+endval;
+sov = 0; bank = 0; uni = 0;
+@#if FOREIGN == 1
+ystar = 0; r_for = 0;
+@#endif
+@#if PENS >= 1
+e_trp = 0;
+@#endif
+kons = @{KONSZD}/100;
+end;
 @#else
 // SCENARIO=4: NULLA SOKK (ellenorzo eset). Minden valtozonak vegig 0-nak
 // kell lennie -- ha nem, valahol konstans szivarog be a modellbe.
@@ -1289,6 +1356,9 @@ ystar = 0; r_for = 0;
 @#endif
 @#if PENS >= 1
 e_trp = 0;
+@#endif
+@#if KONSZ >= 1
+kons = 0;
 @#endif
 end;
 @#endif
@@ -1347,6 +1417,23 @@ end;
 @#else
 shocks;
 var uni; periods 1:12; values 0;
+end;
+@#endif
+@#if KONSZ >= 1 && KONSZN > 1 && SCENARIO != 4
+// -DKONSZ=1: a konszolidacio linearis felfutasa (1..KONSZN-1); a KONSZN.
+// negyedevtol a teljes -DKONSZD (endval). A sov/bank/uni blokkjaihoz hozzaadodik.
+shocks;
+var kons;
+periods
+@#for k in 1:(KONSZN-1)
+  @{k}
+@#endfor
+;
+values
+@#for k in 1:(KONSZN-1)
+  (@{KONSZD}/100*@{k}/@{KONSZN})
+@#endfor
+;
 end;
 @#endif
 
