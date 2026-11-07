@@ -11,6 +11,34 @@ ez még ötletelés fázisú vitaanyag, a végleges forrás később kerül be i
 
 ---
 
+## 🎯 A FŐ CSAPÁS (2026-11-07 óta): `jv_dsge_v12.mod`
+
+**Minden új munka erre a modellre épül** (`src/modell/1_fo_vonal_jv/jv_dsge_v12.mod`).
+A v12 a v11 másolata három új alapértelmezéssel. A döntést MPT hozta egy külső
+reviewer ajánlása nyomán (2026-11):
+
+| Kapcsoló | Alap | Mit jelent |
+|---|---|---|
+| `-DACCFORM=1` | B-forma | a hitelhozzáférés **tőkeköltség-ékként** hat (`efp = efpA − μ·acc`), nem additív beruházási tagként; `μ` a reviewer Opten-mérése (E 0,0051, D 0,0116) |
+| `-DEXPJV=1` | JV-exportegyenlet | `x_j = hx·x_j(−1) − μx·(p_j − rer)`, az `(1−hx)` súly nélkül |
+| `-DNWFIX=1` | javított nettóvagyon-egyenlet | az adósság után a szuverén és a banki felár is levonódik (`γ_nw = ω_nw·β`) |
+
+- **Kikapcsolva** (`-DACCFORM=0 -DEXPJV=0 -DNWFIX=0`) **bitre a v11**. A v11
+  változatlanul megmarad, összevetésre.
+- **Futtató:** `futtato/check_v12.m` → `t68`–`t68c`. **Állítások:** `A36`
+  (tiszta bővítés, a reviewer 184 számából 182 visszajön, a két eltérés az ő
+  kerekítése), `F17` (eredmények).
+- **Amit ez megváltoztat:**
+  - az euró GDP-hatása a 16–20. évben **0,52% (v11) → 0,39% (v12)**, sáv 0,23–0,56%;
+  - a hitelhozzáférési csatorna hozzájárulása **+0,6 pp (A-forma) → +0,006 pp (B-forma)**;
+  - a KKV-küszöb (`F01`, `A22`, `(λ·ω)* = 500`) az A-formáról szól, **a v12-ben
+    nem értelmezett**;
+  - a fiskális eredmények (`A32`–`A35`, `F12`–`F16`) még a v11-en készültek.
+- **Új blokkot vagy kapcsolót a v12-be teszünk**, nem a v11-be. A v11 régi
+  ágait csak összevetésre futtatjuk.
+
+---
+
 ## 👉 ELŐSZÖR: `ALLAPOT.md` (generált)
 
 **Az „mit állítunk ma / mi a státusza / mit vontunk vissza" kérdésre az
@@ -66,6 +94,9 @@ elfogta volna, csak nem futtattam át rajta.
 ## ⚠ ÁLLAPOT — 2026-08-12. EZT OLVASD EL ELŐSZÖR
 
 ### A fő modell: `src/modell/1_fo_vonal_jv/jv_dsge_v09_access.mod` (Jakab–Világi mag). NEM az EAGLE.
+
+> ⚠ **2026-11-07 óta a fő modell a `jv_dsge_v12.mod`** (lásd a fájl tetején:
+> „A FŐ CSAPÁS”). Ez a szakasz a 2026-08-12-i állapot, történetként marad.
 
 A repóban **két modellvonal** él. A `kkv_dsge_*` az EAGLE-vonal
 (referencia/robusztusság), a `jv_dsge_*` a Jakab–Világi vonal (**fő**).

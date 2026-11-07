@@ -4,7 +4,7 @@
 >
 > | Mappa | Mi ez | Státusz |
 > |---|---|---|
-> | **[`1_fo_vonal_jv/`](1_fo_vonal_jv/)** | Jakab–Világi mag, háromtípusos. **A leadandó: `jv_dsge_v09_access.mod`** | 🟢 élő |
+> | **[`1_fo_vonal_jv/`](1_fo_vonal_jv/)** | Jakab–Világi mag, háromtípusos. **A fő csapás (2026-11-07 óta): `jv_dsge_v12.mod`** | 🟢 élő |
 > | [`2_referencia_eagle/`](2_referencia_eagle/) | EAGLE-HU mag — robusztussági összevetés | 🟡 referencia |
 > | [`3_archiv_korai_jv/`](3_archiv_korai_jv/) | meghaladott JV-lépcsők (v01–v05) + a `_stoch` nyitott tétel | ⚪ archív |
 > | [`4_app/`](4_app/) | a Streamlit-app futtató-modellje | 🟡 külön termék |
@@ -103,7 +103,31 @@ tanulmány KERETEZÉSÉT módosította, nem a DSGE szerepét.
 
 ### JV-vonal (fő):
 
-- **`jv_dsge_v09_access.mod`** — 🟢 **A FŐ MODELL.** Háromtípusos JV-mag +
+- **`jv_dsge_v12.mod`** (2026-11-07) — 🎯 **A FŐ CSAPÁS, minden új munka erre
+  épül.** A v11 + három új alapértelmezés, egy külső reviewer ajánlása szerint
+  (MPT döntése): **B-forma hitelhozzáférés** (`-DACCFORM=1`: a hozzáférés
+  tőkeköltség-ékként hat, `efp = efpA − μ·acc`, és az `acc` a BGG-felárra,
+  `efpA`-ra reagál, ezért nincs önerősítő hurok; az `omega_acc`-tag kikerül a
+  beruházási Eulerből), **JV-exportegyenlet** (`-DEXPJV=1`: az `(1−hx)` súly
+  nélkül), **javított nettóvagyon-egyenlet** (`-DNWFIX=1`: az adósság után a
+  szuverén és a banki felár is levonódik, mert az a bank forrásköltsége, nem a
+  vállalkozó jövedelme). **Miért:** az A-forma additív tagja a hozzáférési
+  csatornát nagyságrendekkel felnagyította (tartósan +0,63 pp a B-forma
+  +0,007 pp-jével szemben), és a reviewer korábbi tesztje szerint
+  perzisztenciára nem monoton módon reagált; a régi nettóvagyon-egyenlet pedig
+  az euró felárcsökkentését a vállalkozó jövedelemkieséseként könyvelte (ez a
+  v11 „fék”-je). Futtatás: `check_v12` → `t68`, `t68b`, `t68c`. **Eredmény:**
+  kikapcsolva **bitre a v11** (0) · a reviewer 184 számából **182** a közölt
+  kerekítéssel (a két eltérés az ő kerekített hozzáférés-értékéből jön) · BK
+  **24/24** (13/13 mindkét rezsimben) · az euró GDP-hatása a 16–20. évben
+  **+0,39%** (v11: +0,52%), sáv +0,23 … +0,56% · a hozzáférési csatorna
+  **+0,006 pp**, a KKV–nagyvállalat különbség +0,036 pp · a javított
+  nettóvagyon-egyenlet önmagában +0,17 pp tartós GDP · a JV-export a
+  konvergencia-visszaesést 0,28 pp-tel mélyíti. Állítások: `A36`, `F17`.
+  A C- és a B+C-forma nincs benne (a C tartósan pontosan nulla). ⚠ A Notion
+  döntésnapló-bejegyzés még hiányzik (ebben a munkamenetben nincs Notion-hozzáférés).
+
+- **`jv_dsge_v09_access.mod`** — 🟢 **A FŐ MODELL 2026-08-12 és 2026-11-07 között.** Háromtípusos JV-mag +
   **hitelhozzáférési (extenzív) margó**. Ezzel a JV-vonal mindent tud, amit
   a `kkv_dsge_v07_access`, de becsült paramétereken és gazdagabb termelési
   oldalon. **A fordítás nem másolás volt:** az EAGLE-ben az `acc` a

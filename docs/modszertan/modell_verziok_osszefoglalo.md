@@ -1,5 +1,35 @@
 # Modellverziók összefoglalója
 
+> ## 🎯 2026-11-07: a fő csapás a `jv_dsge_v12.mod`
+>
+> **Fővonal-váltás.** A v12 a v11 három új alapértelmezéssel; minden további
+> blokk (fiskális, külföldi, adózási) erre épül. A döntést MPT hozta egy külső
+> reviewer 2026-11-es ajánlása nyomán („A hitelhozzáférési csatorna: a B, C és
+> B+C eredményei”).
+>
+> - **Hitelhozzáférés: B-forma.** A KKV-típus tőkéjének egy része hitelhez jutó
+>   cégeknél van, a többi drágább belső forrásból. A típus átlagos forrásköltsége
+>   ezért a hozzáférés javulásával μ-vel csökken (`efp = efpA − μ·acc`). A
+>   hozzáférés így a tőkeköltségen keresztül hat, nem additív beruházási
+>   lökésként. Ez közgazdaságilag tisztább: a μ mérhető (a korlátosság ára), és
+>   a forma nem ad instabil, perzisztenciára nem monoton pályát.
+> - **Exportegyenlet: JV-forma**, az `(1−hx)` súly nélkül.
+> - **Nettóvagyon-egyenlet: javítva.** A szuverén és a banki felár a bank
+>   forrásköltsége. A régi egyenlet a vállalkozó jövedelmeként könyvelte, ezért az
+>   euró felárcsökkentése csökkentette a nettó vagyont, és a felárcsökkenés nagy
+>   részét visszavette.
+>
+> **Amit a váltás megváltoztat** (`F17`, `A36`; futtató `check_v12.m`, `t68`–`t68c`):
+>
+> - az euró GDP-hatása a 16–20. évben **0,52% → 0,39%** (sáv 0,23–0,56%);
+> - a hitelhozzáférési csatorna csak **+0,006 pp**-et ad: a hazai KKV-k nyernek
+>   kicsit, a nagyvállalatok veszítenek kicsit;
+> - a „kinek jut” kérdésre a válasz ezért nem a korábbi KKV-küszöb (`F01`), hanem
+>   egy kicsi, egyirányú hatás.
+>
+> A v11 változatlanul megmarad, kikapcsolt kapcsolókkal a v12 bitre azonos vele.
+> ⚠ A Notion döntésnapló-bejegyzés még hiányzik.
+
 > ## ⚠ 2026-08-12: az IO-alapú számok (s_kkv, 6% hazai input, 42%→4,4%) NEM állnak
 >
 > Ez a dokumentum több helyen hivatkozik az input-output táblából számolt `t24`

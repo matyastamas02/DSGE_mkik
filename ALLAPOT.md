@@ -5,11 +5,11 @@
 
 # DSGE_mkik — állapotlap
 
-*Generálva a füstteszt 2026-11-01 10:32-kor futott eredményéből · commit `f55b223` · ág `main`*
+*Generálva a füstteszt 2026-11-07 23:46-kor futott eredményéből · commit `781b3ee` · ág `main`*
 
 **Fő modell:** `src/modell/1_fo_vonal_jv/jv_dsge_v09_access.mod` (Jakab–Világi mag). A `kkv_dsge_*` a referencia-vonal.
 
-**Őrök:** 194 rendben, 0 hiba.
+**Őrök:** 197 rendben, 0 hiba.
 
 ✅ **Minden „áll” állításnak van őre, és minden őr fut.**
 
@@ -17,7 +17,7 @@
 
 ## Mit állítunk ma
 
-### 🟢 Ami ÁLL — 33 db
+### 🟢 Ami ÁLL — 34 db
 
 *Ezekre lehet építeni a tanulmányban.*
 
@@ -186,7 +186,12 @@
 > bizonyíték: `t67b, t67` — — őr: ✅ `t67b SZINT: a konszolidacios kapcsolo tiszta bovites (beagyazas 0, palya 2e-17, adossag -21.43% eves GDP, ricardoi 0, BK 13/13)`
 > *2026-10-29 · Futtató: check_konsz_v11.m (400 negyedéves horizont). Samu kérése (2026-10-29): a hiányt az euró előtt 3% alá kell vinni, és az árstabilitás miatt óvatosan kell költeni. Az alapértelmezés KONSZ=0 marad. Az eszköz csak a kormányzati fogyasztás: az adó itt egyösszegű és csak a ricardói optimalizálókat terheli, ezért egy adóemelésnek a 6. blokk (szja, járulékok) nélkül nem volna reálhatása. A futtató előre rögzített előjel-várakozása (K6) részben nem teljesült: euró nélkül az 1. évben a GDP nő (+0,10%), a 2. évben az infláció nem csökken (+0,0003 pp). A futtató ezt eredetileg nem értékelte ki; 2026-11-01 óta külön őr rögzíti (t67b K6), hogy a nem várt eredmény ne tűnhessen el némán.*
 
-### 🟡 Ami FELTÉTELES — 17 db
+**A36.** A v12 (jv_dsge_v12.mod, 2026-11-07 óta a fő modell) a v11 tiszta bővítése három kapcsolóval: B-forma hitelhozzáférés (-DACCFORM=1: a hozzáférés tőkeköltség-ékként hat, efp = efpA − μ·acc, az omega_acc-tag kikerül a beruházási egyenletből), JV-exportegyenlet (-DEXPJV=1: az (1−hx) súly nélkül) és javított nettóvagyon-egyenlet (-DNWFIX=1: az adósság után a szuverén és a banki felár is levonódik, γ_nw = ω_nw·β). Mindhárom kikapcsolva minden pálya bitre azonos a v11-gyel; a B-forma μ = 0 mellett a valós változókban azonos a hozzáférés nélküli modellel (3e−16). A kód a külső reviewer v11-es tábláinak 184 számából 182-t a közölt kerekítéssel visszaad; a két eltérés (a hazai KKV-felár bontása a javított egyenlettel) a reviewer kerekített hozzáférés-értékéből jön (0,96 a 0,955 helyett). Mind a 24 futás BK-stabil (13/13 mindkét rezsimben).
+
+> bizonyíték: `t68b, t68c, t68` — — őr: ✅ `t68b SZINT: a v12 tiszta bovites es visszaadja a reviewer szamait (nesting 0, reviewer 182/184, BK 24/24)`
+> *2026-11-07 · Futtató: check_v12.m (400 negyedéves horizont). Forrás: külső reviewer, „A hitelhozzáférési csatorna: a B, C és B+C eredményei” (2026-11) és „Összetétel-alapú hozzáférés” (2026-10-28). A C- és a B+C-forma nincs a v12-ben (a reviewer szerint a C tartósan pontosan nulla). A v12 alapértelmezése MPT döntése (2026-11-07); a v11 változatlanul megmarad összevetésre.*
+
+### 🟡 Ami FELTÉTELES — 18 db
 
 *Csak a feltétellel együtt közölhető — küszöbformában, vagy az elfogadási feltétel kiírásával.*
 
@@ -198,7 +203,7 @@
 **F01.** A KKV-blokk SZEGMENS-KIBOCSÁTÁSA akkor előzi meg a nagyvállalatit, ha a hozzáférési csatorna két lépcsőjének SZORZATA meghalad egy küszöböt: (λ·ω)* = 500 az átvett kalibrációhoz viszonyított skálán, rho_acc = 0,9673 mellett (átvett rho_acc = 0,85 mellett 1337). A korábban közölt „ACCSCALE ≥ 22,3” ennek EGYETLEN pontja — az, ahol a két lépcsőt azonos arányban skáláztuk: √500 = 22,36.
 
 > bizonyíték: `t48, t48b, t49, t51, t52b, t52d` — — őr: ✅ `t51 KONTUR: a kuszob MONOTON csokken a rho_acc-ban (47.8 -> 17.5)`
-> *2026-08-16 · ⚠ 2026-10-04 (A25): a küszöb a visszavont chi-aszimmetriától (K01) függ; szimmetrikus chi mellett nincs pozitív küszöb. ÁTFOGALMAZVA 2026-08-24, a λ/ω szétbontás után (korlátok-riport 1. teendő). AMI VÁLTOZOTT: a 22,3 nem hibás, de nem is interpretálható volt, mert KÉT rugalmasság szorzatán ült, előre rögzített λ:ω arány mellett. A szétbontás (-DLAMSCALE / -DOMSCALE) azt is megmutatta, hogy a modell a két paramétert KÜLÖN NEM IS AZONOSÍTJA (lásd A22), tehát a szorzat az egyetlen értelmes küszöb-objektum. A nulla-kontúron a szorzat 28-szoros λ-tartományon 0,08%-on belül állandó (t52b). A régi számokhoz a kötést a t52d átló adja: 22,36 / 36,56 vs a t48b/t51 22,3 / 36,5. A rho_acc-függés VÁLTOZATLANUL áll (t51: 47,8 → 17,5). Mindkét tengely horgonyzatlan (A06, A11), ezért a kondicionálás mindig kiírandó. PONTOSÍTÁS: az összevetés SZEGMENS-KIBOCSÁTÁS (y_j = bruttó kibocsátás), NEM GDP-részesedés.*
+> *2026-08-16 · ⚠ 2026-10-04 (A25): a küszöb a visszavont chi-aszimmetriától (K01) függ; szimmetrikus chi mellett nincs pozitív küszöb. ÁTFOGALMAZVA 2026-08-24, a λ/ω szétbontás után (korlátok-riport 1. teendő). AMI VÁLTOZOTT: a 22,3 nem hibás, de nem is interpretálható volt, mert KÉT rugalmasság szorzatán ült, előre rögzített λ:ω arány mellett. A szétbontás (-DLAMSCALE / -DOMSCALE) azt is megmutatta, hogy a modell a két paramétert KÜLÖN NEM IS AZONOSÍTJA (lásd A22), tehát a szorzat az egyetlen értelmes küszöb-objektum. A nulla-kontúron a szorzat 28-szoros λ-tartományon 0,08%-on belül állandó (t52b). A régi számokhoz a kötést a t52d átló adja: 22,36 / 36,56 vs a t48b/t51 22,3 / 36,5. A rho_acc-függés VÁLTOZATLANUL áll (t51: 47,8 → 17,5). Mindkét tengely horgonyzatlan (A06, A11), ezért a kondicionálás mindig kiírandó. PONTOSÍTÁS: az összevetés SZEGMENS-KIBOCSÁTÁS (y_j = bruttó kibocsátás), NEM GDP-részesedés. ⚠ 2026-11-07: a v12 B-formájában a hozzáférés tőkeköltség-ékként hat, nem additív beruházási tagként; a (λ·ω)* küszöb ott nem értelmezett (F17).*
 
 **F02.** Az export-KKV kibocsátásának ELŐJELE az eps_ces-en fordul, ~2,3-nál.
 
@@ -248,7 +253,7 @@
 **F11.** A v11 új alapértelmezésén (végleges paraméterek a parameterek_szamolasa.xlsx szerint + javasolt zárás: KALIB=1, EXTCLOSE=1, SOVCSAT=1) a modell mind a 9 szcenárió × átgyűrűzés kombinációban és a teljes ACCSCALE-rácson stabil mindkét rezsimben. A GDP-hatás 20 éves távon (16–20. év átlaga) az alap-szcenárióban 0,52%, a 9 kombináció sávja 0,26–0,86%; a tartós fixpont 0,52% (sáv 0,25–0,88%). A KKV-előny küszöb nélkül jelenik meg (szimmetrikus χ). A végleges paraméterekkel a régi zárás mellett nincs stabil megoldás (15/13).
 
 > bizonyíték: `t64c` — — őr: ✅ `t64c SZINT: a vegleges v11-alapagon a 20 eves GDP-hatas 0.52%, sav 0.26..0.86, regi zarassal 15/13`
-> *2026-10-07 · A v11 alapértelmezése 2026-10-07 óta (Tomi döntése); a v09/v10 és a régi eredmények a régi paraméterekkel változatlanok, a régi v11: -DKALIB=0 -DEXTCLOSE=0 -DSOVCSAT=0 -DHORIZON=120. FELTÉTELES: a zárás modellezési döntés (F10); a foglalkoztatási súlyok összege 1,071 (shl_D Samu, a másik kettő Tomi); az aa_j Opten-mérése fogalmilag nem tiszta importintenzitás. Futtató: check_kalib_v11.m (400 negyedéves számítási horizont).*
+> *2026-10-07 · A v11 alapértelmezése 2026-10-07 óta (Tomi döntése); a v09/v10 és a régi eredmények a régi paraméterekkel változatlanok, a régi v11: -DKALIB=0 -DEXTCLOSE=0 -DSOVCSAT=0 -DHORIZON=120. FELTÉTELES: a zárás modellezési döntés (F10); a foglalkoztatási súlyok összege 1,071 (shl_D Samu, a másik kettő Tomi); az aa_j Opten-mérése fogalmilag nem tiszta importintenzitás. Futtató: check_kalib_v11.m (400 negyedéves számítási horizont). ⚠ 2026-11-07: a fő modell a v12 (F17); ez az állítás a v11 alapértelmezésére vonatkozik (A-forma, régi exportegyenlet, régi nettóvagyon-egyenlet).*
 
 **F12.** Ha az államadósság egy része külföldi kézben van (ϑ = 0,4, csak szemléltetés), az euró tartós nemzetgazdasági fiskális nyeresége a GDP 0,67%-a évente (16–20. év átlaga 0,66%), nem a teljes 1,5–2,15%. A nyereség főként fogyasztásban jelenik meg (+2,23 százalékpont a 16–20. évben, aktív ág); a GDP-hatás kicsi (+0,15 pp), és az előjele a nyitottságtól és a zárástól függ: a régi súlyokkal és zárással a reálfelértékelődés miatt (transzferprobléma) −1,03 pp. A forintos szakaszban a bejelentési felértékelődés egyszeri veszteséget okoz (az első negyedévben a negyedéves GDP 2,40%-a).
 
@@ -274,6 +279,11 @@
 
 > bizonyíték: `t67b` — — őr: ✅ `t67b SZINT: a hianykriterium es az inflacio (hiany a 2./3. evben -2.58 / -3.28 pp, regi szaballyal -2.45 / -2.88 pp; inflacio -0.004 pp, az euroe -0.60 pp; hatarkoltseg -0.24 / -0.04 / -0.12%)`
 > *2026-10-29 · NEM KÖZÖLHETŐ (2026-11-01, a fiskális review után): a „3. évre 3% alá” állítás visszavonva; az inflációs következtetés („a megszorítás nem segít az árstabilitásnak”) csak belső diagnosztika. FELTÉTELES: (1) A hiány itt a nominális hiány változása (−pb + intexp + b̄·infl). A modellben nincs növekedés, ezért a tartósan kisebb adósság a hiányt hosszú távon nem csökkenti; a valóságban a nominális GDP-növekedés miatt igen, tehát a 10. év utáni számok alulbecsülik a csökkenést. Az 1–5. évre a két fogalom közel azonos. Nincs benne kiinduló ESA-hiányszint, nominális növekedési pálya, stock-flow korrekció és intézményi költségvetési bázis. A 3. évi csökkenés ráadásul közel mechanikus: a megszorítás mérete, plusz az euró kamatmegtakarítása (0,45 pp), mínusz az adóvisszaadás. Mivel a megszorítás méretét a kiinduló hiányból választottuk (kiinduló hiány − 3%), a „3% alá megy” a választásból következik, nem a modellből. Javítva 2026-11-01: a korábbi szöveg egy 6%-os kiinduló hiányból 2,72%-ot számolt a 3. évre. (2) Az adószabály és a lejárat csak a hiány- és adósságpályát érinti, a reálváltozókat nem (A35). A PHIB = 0,02 NEM azt jelenti, hogy nincs adócsökkentés: a szabály (tls = phi_b·bg(−1)) a csökkenő adósság után ugyanúgy adót csökkent, csak lassabban. Az adósságdinamika gyöke rgbar − PHIB = 0,995: technikailag stabil, de a végállapot gazdaságilag értelmetlen (adósság −225% GDP, tartósan kb. 18% GDP-nyi egyösszegű adócsökkentés). Ezért nem nevezhető óvatos fiskális pályának; ahhoz véges ideig tartó, hiány- vagy adósságcélos szabály kellene, explicit terminális adósságcéllal (nincs a modellben). Javítva 2026-11-01. (3) Az infláció azért nem csökken, mert a határköltség is alig mozdul (1–3. év átlaga, E/D/L: −0,24 / −0,04 / −0,12%). Keresleti oldalon a ricardói háztartások a kisebb állami fogyasztást előre, már a felfutás alatt magánfogyasztással pótolják: a hazai termékekre jutó kereslet az 1. évben +1,08%, a GDP +0,10%. Kínálati oldalon a reálbér emelkedését a felértékelődés miatt olcsóbb import input ellensúlyozza, mert a munka súlya a nem-tőke inputban kicsi (aa_j ≈ 0,12–0,14). Az eredmény ezért az aa_j-n és a teljes előrelátáson is múlik: a háztartások már az első negyedévben elhiszik a tartós jövőbeli adóteher-csökkenést, ez hajtja az 1. évi +0,10%-ot is. Nem bizonyítja, hogy egy valós kiadáscsökkentés nem volna dezinflációs; likviditáskorlátos háztartásokra eső adóval vagy transzfercsökkentéssel más lehet. Javítva 2026-10-31: a korábbi szöveg csak a keresleti oldalt írta le (t67b, utólagos felbontás). (4) A 2. évben a hiány még 3% fölött van (6% − 2,58 = 3,42%), mert a megszorítás 8 negyedév alatt fut fel; a konvergenciajelentés időzítésétől függ, hogy ez elég-e.*
+
+**F17.** A v12 alapértelmezésén (B-forma a mért μ-vel, JV-exportegyenlet, javított nettóvagyon-egyenlet; KALIB=1, EXTCLOSE=1, SOVCSAT=1) az euró GDP-hatása a 16–20. évben +0,39% (a 3 szcenárió × 3 átgyűrűzés sávja +0,23 … +0,56%), a konvergencia alatt (1–12. negyedév) −0,51%. A v11 alapértelmezése ugyanitt +0,52% volt. A hitelhozzáférési csatorna ebből csak +0,006 pp-et ad (tartósan +0,007): tartósan a hazai KKV-k kibocsátása +0,029 pp-tel nő, a nagyvállalatoké −0,013 pp-tel csökken, az exportáló KKV-ké gyakorlatilag nem változik, a KKV–nagyvállalat különbség a 16–20. évben +0,036 pp. A váltások külön: a javított nettóvagyon-egyenlet a tartós GDP-hatást +0,17 pp-tel emeli, és a hazai KKV-k felárcsökkenését 9,5 bp-vel mélyíti; a JV-exportegyenlet a konvergencia-visszaesést 0,28 pp-tel mélyíti; a v11 A-formája ugyanezen a v12-alapon a hozzáférési csatornát tartósan +0,63 pp-re nagyítaná.
+
+> bizonyíték: `t68b, t68` — — őr: ✅ `t68b SZINT: a v12 euro-hatasa es a hozzaferesi csatorna (GDP 16-20. ev +0.39%, sav +0.23...+0.56%; a csatorna +0.006 pp, KKV-L +0.036 pp)`
+> *2026-11-07 · FELTÉTELES: (1) A μ_j (E 0,0051, D 0,0116) a reviewer Opten-mérése (t163k: mediánok különbsége, ágazati szűrés nélkül); nálunk nincs reprodukálva, a hitel nélküli cégek egy része nem korlátos, csak nincs szüksége hitelre. A λ (2,0 / 2,5) és a ρ_acc (0,85) továbbra is horgonyzatlan; a B-forma hosszú távú hatása 1/(1−ρ_acc)-vel arányos. (2) A javított nettóvagyon-egyenlet fogalmi javítás: a szuverén és a banki felár a bank forrásköltsége, nem a vállalkozó jövedelme. A nettóvagyon-fék a hozzáférési ék nagy részét (a reviewer szerint kb. 70%-át) visszaveszi; ez BGG-logika, de vitatható, hogy a hitelkorlátos cégek belső forrásköltségére is áll-e. (3) A KKV-küszöb (F01, A22) az A-forma skálájára vonatkozik; a v12-ben nem értelmezett. (4) A fiskális blokk (FISCAL, PENS, KONSZ) a v12-ben is kapcsolóként megvan, a fiskális eredmények (A32–A35, F12–F16) viszont a v11-en készültek.*
 
 ### 🔴 Amit VISSZAVONTUNK — 9 db
 
@@ -454,7 +464,7 @@
 
 ---
 
-## Őrök (194 db)
+## Őrök (197 db)
 
 *A füstteszt minden ellenőrzése. Ez a projekt egyetlen olyan nyilvántartása, ami nem tud némán elcsúszni: ha egy állítás megdől, itt megbukik egy sor.*
 
@@ -635,6 +645,9 @@
 - ✅ t67b SZINT: a megszoritassal az euro GDP-hatasa +0.21 / -0.02 / -0.29%, a megszoritas onmagaban -0.30 / -0.54 / -0.80%, az euro felteteles hatasa 0.517-0.519 pp (tartosan C+G +0.17, X -0.38, M -0.30 pp)
 - ✅ t67b SZINT: a hianykriterium es az inflacio (hiany a 2./3. evben -2.58 / -3.28 pp, regi szaballyal -2.45 / -2.88 pp; inflacio -0.004 pp, az euroe -0.60 pp; hatarkoltseg -0.24 / -0.04 / -0.12%)
 - ✅ t67b K6: az elore rogzitett elojel-varakozas reszben nem teljesult (1. ev GDP +0.10%, inflacio az 1./2. evben -0.0174 / +0.0003 pp)
+- ✅ t68 v12 tablak leteznek
+- ✅ t68b SZINT: a v12 tiszta bovites es visszaadja a reviewer szamait (nesting 0, reviewer 182/184, BK 24/24)
+- ✅ t68b SZINT: a v12 euro-hatasa es a hozzaferesi csatorna (GDP 16-20. ev +0.39%, sav +0.23...+0.56%; a csatorna +0.006 pp, KKV-L +0.036 pp)
 - ✅ t53c dekomp BK-stressz letezik
 - ✅ t53c: mind a 45 PF/BK diagnosztika technikailag lefutott
 - ✅ t53c KORREKCIO: az OPTEN1 ACC100 racs pontosan 0/45 terminalis BK-stabil (gyok/elo=15/13)
@@ -653,6 +666,6 @@
 - ✅ t00 PHILLIPS: az aszimmetrikus arsokkok (eps_md / eps_mx) egyik szcenarioban sincsenek hajtva
 - ✅ t00 SZERKEZET: mind a 4 modell-vonal megvan, README-vel
 - ✅ t00 SZERKEZET: a FO MODELL a helyen van (1_fo_vonal_jv)
-- ✅ t00 SZERKEZET: minden futtato letezo .mod-ot hiv (42 futtato, 21 modell)
+- ✅ t00 SZERKEZET: minden futtato letezo .mod-ot hiv (43 futtato, 22 modell)
 
 </details>
