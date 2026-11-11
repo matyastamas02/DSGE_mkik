@@ -57,6 +57,8 @@ matlab -batch "cd('src/modell/1_fo_vonal_jv/futtato'); stress_jv_access_v09"
 | Script | Mit csinál | Kimenet |
 |---|---|---|
 | **`check_v12.m`** | **a fő csapás: nesting a v11-re, a reviewer számainak reprodukciója, BK-rács, a v12 eredményei** | `t68`–`t68c` |
+| `check_fiscal1_v12.m` · `check_pens_v12.m` · `check_konsz_v12.m` | a fiskális blokk (adósság, nyugdíjasok, konszolidáció) a v12-n | `t69`–`t71` |
+| `check_hhsp_v12.m` | kísérleti háztartási kamatfelár (`-DHHSP=1`, alapból ki) a `nu_b`-rácson és két átgyűrűzéssel | `t72`–`t72b` |
 | `stress_opten_v09.m` | az Opten-kalibráció hatása + `rho_acc` scan | `t47`–`t49b` |
 | `sens_lam_om_v09.m` | **az `ACCSCALE` szétbontása**: a küszöb a `(λ, ω)` síkon | `t52`–`t52e` |
 | `dekomp_edl_v09.m` | **E/D/L dekompozíció**: technológia vagy finanszírozás? | `t53`–`t53d` |

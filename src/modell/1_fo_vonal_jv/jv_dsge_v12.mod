@@ -46,6 +46,23 @@
  *        felarcsokkenes nagy reszet visszavette (a v11 K-1 "fek"-je).
  *    0 = v09-v11: az adossag utan csak a kockazatmentes kamat vonodik le.
  *
+ * 4. HAZTARTASI KAMATFELAR: -DHHSP=0|1 (2026-11-11, ALAPBOL KI)
+ *    1 = az optimalizalo haztartas Euler-egyenleteben a kamat
+ *            r_h = r + tsov_h*sov + tbank_h*bank,
+ *        vagyis a szuveren es a banki felar egy resze a haztartasokat is
+ *        eleri (lakas- es szemelyi hitel), mikozben a kozos hazai kamat (r),
+ *        a cegek es az allam kamata valtozatlan (SOVCSAT=1 mellett).
+ *        -DTSOVH / -DTBANKH: az atgyuruzes, alap a vallalati semleges ertek
+ *        (0.175 / 0.45) -- KOZELITES, MNB-kamatstatisztikabol horgonyozando.
+ *        Tartosan r_h = 0, ezert euroban bstar = (tsov_h*sov + tbank_h*bank)/nu_b:
+ *        a haztartas a kulfoldi adossagon at addig adosodik el, amig a kulso
+ *        zaras felara (nu_b*bstar) ki nem egyenliti a kamatcsokkenest.
+ *    0 = v12 (a haztartas a biztonsagos kamatot latja).
+ *    -DNUB=<x>: a kulso zaras rugalmassaga (nu_b, alap 0.001); EXTCLOSE>=1
+ *        mellett mindket rezsimben ez hat. 1 pp eves GDP-aranyos kulso adossag
+ *        a kamatot nu_b*1600 bp-vel emeli (0.001 -> 1.6 bp, 0.0025 -> 4 bp).
+ *    Futtato: futtato/check_hhsp_v12.m (t72-t72b)
+ *
  * NESTING: -DACCFORM=0 -DEXPJV=0 -DNWFIX=0 mellett BITRE a v11.
  * Futtato: futtato/check_v12.m (t68-t68c)
  *
@@ -546,6 +563,19 @@
 @#ifndef NWFIX
   @#define NWFIX = 1
 @#endif
+// -DHHSP / -DTSOVH / -DTBANKH / -DNUB (2026-11-11): haztartasi kamatfelar es kulso zaras -- lasd fejlec
+@#ifndef HHSP
+  @#define HHSP = 0
+@#endif
+@#ifndef TSOVH
+  @#define TSOVH = 0.175
+@#endif
+@#ifndef TBANKH
+  @#define TBANKH = 0.45
+@#endif
+@#ifndef NUB
+  @#define NUB = 0.001
+@#endif
 
 var
     // haztartas es aggregatumok
@@ -639,6 +669,9 @@ parameters
 @#if NWFIX == 1
     gam_nwx
 @#endif
+@#if HHSP == 1
+    tsov_h tbank_h
+@#endif
 @#if PENS >= 1
     om_p om_pt kappa_w s_tr
 @#endif
@@ -647,7 +680,7 @@ parameters
 // --- JV-mag: VALTOZATLAN becsult ertekek (jv_dsge_v05/v06) --------------
 beta = 0.99; delta = 0.025;
 rho_kz = 0.80; rho_z = 0.50;
-theta_w = 3.0; nu_b = 0.001; om_no = 0.25; fii = 2.0;
+theta_w = 3.0; nu_b = @{NUB}; om_no = 0.25; fii = 2.0;
 sigma = 1.814; habit = 0.646;
 xi_p = 0.921; vth_p = 0.431;
 xi_x = 0.810; vth_x = 0.494;
@@ -1032,6 +1065,10 @@ mu_acc_D = @{ACCMUD};
 @#if NWFIX == 1
 gam_nwx = omega_nw*beta;
 @#endif
+@#if HHSP == 1
+tsov_h = @{TSOVH};   // KOZELITES: a vallalati semleges atgyuruzes
+tbank_h = @{TBANKH};
+@#endif
 @#if NWSPEC >= 1
 pi_nw  = @{PINW};
 gam_nw = omega_nw*beta;
@@ -1090,8 +1127,14 @@ s_tr    = om_p*sc;
 model;
 
 // === 1. Haztartasok (JV, valtozatlan) ===================================
+@#if HHSP == 1
+// v12 -DHHSP=1: a haztartas kamata r + a szuveren es a banki felar egy resze (lasd fejlec)
+c_o = habit/(1+habit)*c_o(-1) + 1/(1+habit)*c_o(+1)
+      - (1-habit)/((1+habit)*sigma)*(r + tsov_h*sov + tbank_h*bank - infl(+1)) + e_c_ar;
+@#else
 c_o = habit/(1+habit)*c_o(-1) + 1/(1+habit)*c_o(+1)
       - (1-habit)/((1+habit)*sigma)*(r - infl(+1)) + e_c_ar;
+@#endif
 c_no = w + ll;
 @#if PENS >= 1
 // -DPENS=1 (N1-N3): nyugdijas tipus a JV (76) szerint, fogyasztasi kiadasi
