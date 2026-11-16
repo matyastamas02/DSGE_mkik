@@ -5,11 +5,11 @@
 
 # DSGE_mkik — állapotlap
 
-*Generálva a füstteszt 2026-11-11 19:17-kor futott eredményéből · commit `da98d3d` · ág `main`*
+*Generálva a füstteszt 2026-11-16 17:02-kor futott eredményéből · commit `5c68182` · ág `main`*
 
 **Fő modell:** `src/modell/1_fo_vonal_jv/jv_dsge_v09_access.mod` (Jakab–Világi mag). A `kkv_dsge_*` a referencia-vonal.
 
-**Őrök:** 213 rendben, 0 hiba.
+**Őrök:** 216 rendben, 0 hiba.
 
 ✅ **Minden „áll” állításnak van őre, és minden őr fut.**
 
@@ -17,7 +17,7 @@
 
 ## Mit állítunk ma
 
-### 🟢 Ami ÁLL — 35 db
+### 🟢 Ami ÁLL — 36 db
 
 *Ezekre lehet építeni a tanulmányban.*
 
@@ -168,12 +168,12 @@
 
 **A32.** A fiskális blokk 1. lépése (-DFISCAL=1: államadósság, kamatkiadás, egyösszegű adó adósságszabállyal) a fő modellen (v12) is a hazai tulajdonú részen tiszta nyilvántartás: külföldi tulajdon nélkül (ϑ = 0) minden korábbi változó pályája bitre azonos, az aktív és a régi beállításon is. A tartós −2 százalékpontos állampapírhozam-csökkenés mellett az adósság tartósan az éves GDP 10,73%-ával csökken, az egyösszegű adó a GDP 2,15%-ával (ebből 1,50% a közvetlen kamatmegtakarítás, a többi a kisebb adósság kamata) — pontosan az analitikus érték. 20 év alatt az adósságcsökkenés 91%-a valósul meg. A blokk a stabilitást nem változtatja (13/13 mindkét rezsimben, 26/26 futás, a teljes ACCSCALE-rácson is).
 
-> bizonyíték: `t69b, t69 (v12); t65b, t65 (v11)` — — őr: ✅ `t69b SZINT: a fiskalis blokk a v12-n is nyilvantartas a hazai reszen (adossag -10.73% eves GDP, ado -2.15%, BK 26/26)`
+> bizonyíték: `t73b, t73 (v12); t65b, t65 (v11)` — — őr: ✅ `t73b SZINT: a fiskalis blokk a v12-n is nyilvantartas a hazai reszen (adossag -10.73% eves GDP, ado -2.15%, BK 26/26)`
 > *2026-11-08 · Újrafuttatva a fő modellen (v12, 2026-11-08); a v11-en ugyanezek a számok jöttek ki (t65b, őr alatt). Futtatók: check_fiscal1_v12.m és check_fiscal1_v11.m (400 negyedéves horizont). Az alapértelmezés FISCAL=0 marad. A tartós adósságcsökkenés a szabály következménye (tls = phi_b·bg(−1), phi_b = 0,05): az adó csak az adósságra reagál, ezért a megtakarítás egy része adósságcsökkentésre megy; a nagysága phi_b-től függ: b̄·R·Δr/(phi_b − (R − 1)). A bbar_g = 2,96 (74% GDP) és az rgbar = 1,015 ellenőrizendő (ÁKK/Eurostat). Választott modellabsztrakció, nem empirikus tény: minden hazai állampapír-tulajdonos ricardói optimalizáló, és a felár mint kockázati kompenzáció elsőrendben nem hat a fogyasztásra (2026-10-26, a v3 review-ja). Kommunikáció (2026-11-01, a fiskális review után): modellzárási állítás (hazai tulajdon és ricardói egyösszegű adó mellett a kamatmegtakarítás transzfer), nem empirikus állítás arról, hogy a hazai kamatmegtakarításnak nincs hatása. A review a bstar-egyenletben nem talált jel- vagy időzítési hibát.*
 
 **A33.** Hosszú átlagos lejárat mellett (RHOM = 0,95, kb. 5 év) a tartós érték változatlan, de a kamatmegtakarítás lassabban épül fel: a fő modellen (v12) az 5. évben a kamatkiadás a GDP −0,65%-ával változik (egynegyedéves adósságnál −1,57%). Az első évben a reál-kamatteher a GDP +0,49%-ával nő (egynegyedéves adósságnál −0,06%), mert a bejelentés utáni dezinfláció a régi, magasabb névleges kamatú állomány reálterhét emeli.
 
-> bizonyíték: `t69b (v12); t65b (v11)` — — őr: ✅ `t69b SZINT: a v12-n a lejarati szerkezet lassitja a megtakaritast (5. ev -0.65% vs -1.57%, 1. ev +0.49% vs -0.06%)`
+> bizonyíték: `t73b (v12); t65b (v11)` — — őr: ✅ `t73b SZINT: a v12-n a lejarati szerkezet lassitja a megtakaritast (5. ev -0.65% vs -1.57%, 1. ev +0.49% vs -0.06%)`
 > *2026-11-08 · Újrafuttatva a fő modellen (v12, 2026-11-08); a v11-en: 5. év −0,61% (egynegyedéves adósságnál −1,53%), 1. év +0,54% (−0,05%) (t65b, őr alatt). A kamatkiadás itt reál (rge(−1) − infl), negyedéves áramként, a GDP %-ában. Következmény: az első évek megtakarítását nem szabad a hosszú távú értékkel számolni (a review 4. pontja). A RHOM = 0,95 szemléltető; a valódi érték az átlagos hátralévő lejáratból (ÁKK).*
 
 **A34.** A nyugdíjasblokk (-DPENS=1: harmadik háztartástípus a JV (76) szerint, fogyasztási kiadási súlyokkal 0,75 / 0,10 / 0,15; a bérképzésben a munkapiacon aktívak fogyasztása; a nyugdíjkiadás s_tr = om_p·sc = 0,0746) om_p = 0 mellett gépi pontossággal a modellt adja vissza, a fő modellen (v12) is. A súlyok JV-szerinti javítása önmagában alig változtat: a v12-n a GDP-hatás a 16–20. évben és tartósan is +0,01 pp, a tartós fogyasztás 0,00 pp (a nyugdíjasok teljes súlyát 0,22-re véve +0,02 pp). A nyugdíjasok kihagyása tehát az eredményeket érdemben nem torzította. Az aktív alapágon a teljes ACCSCALE-rácson stabil (40/40, T és P szabállyal, mindkét súlyváltozattal).
@@ -191,12 +191,17 @@
 > bizonyíték: `t68b, t68c, t68` — — őr: ✅ `t68b SZINT: a v12 tiszta bovites es visszaadja a reviewer szamait (nesting 0, reviewer 182/184, BK 24/24)`
 > *2026-11-07 · Futtató: check_v12.m (400 negyedéves horizont). Forrás: külső reviewer, „A hitelhozzáférési csatorna: a B, C és B+C eredményei” (2026-11) és „Összetétel-alapú hozzáférés” (2026-10-28). A C- és a B+C-forma nincs a v12-ben (a reviewer szerint a C tartósan pontosan nulla). A v12 alapértelmezése MPT döntése (2026-11-07); a v11 változatlanul megmarad összevetésre.*
 
-**A37.** A háztartási kamatfelár kapcsolója (v12 -DHHSP=1: az optimalizáló háztartás Euler-egyenletében a kamat r + tsov_h·sov + tbank_h·bank, miközben a közös hazai kamat, a cégek és az állam kamata változatlan; -DNUB: a külső zárás rugalmassága) tiszta bővítés: kikapcsolva a t68b-ben rögzített v12-es értéket adja (2e−16), nulla átgyűrűzéssel bitre azonos, tartósan a háztartás reálkamata pontosan visszaáll, és a külföldi adósság pontosan az analitikus (tsov_h·sov + tbank_h·bank)/nu_b. Mind a 11 futás BK-stabil (13/13 mindkét rezsimben).
+**A37.** A v13 (jv_dsge_v13.mod, 2026-11-12 óta a fő modell) a v12 tiszta bővítése: 13 új kapcsoló (SSKONZ, FISCK, NWKAM, SHLNORM, HHB=1|2, SZOCHO, SBAR, SIGW / NUB / EXPEL, DRULE, LEVKAM, SWAPED) és két előbeállítás (PRESET=1|2). Az új kapcsolók nélkül minden pálya bitre azonos a v12-vel; a közös fiskális blokk külföldi tulajdon és likviditáskorlátos teher nélkül tiszta nyilvántartás (max |eltérés| 3e−17); a helyi Python-megoldó 27 referenciaszáma a tűréshatáron belül visszajön; a blokkok azonosságai (adósságegyenlet, konzisztens kalibráció, munkasúlyok, a hitelfelvevő háztartás korlátja, szocho-ék, célpályás szabály) gépi pontossággal teljesülnek; a két előbeállítás bitre azonos a kiírt kapcsolólistával. Mind a 63 futás BK-stabil mindkét rezsimben.
+
+> bizonyíték: `t69b, t69c, t69` — — őr: ✅ `t69b SZINT: a v13 tiszta bovites (nesting 0, referencia 27/27, BK 63/63, PRESET 0)`
+> *2026-11-12 · Futtató: check_v13.m (63 futás, K1–K15, 400 negyedéves horizont; Dynare 7.2, MATLAB R2026a; a Dynare 6.5-tel való futás kódszinten átnézve, futtatva nem). Munkanév: jv_dsge_v12k. A K13 a v12-n a 03_FABLE_JELENTES tőkeáttétel-számát (16–20. évi GDP 0,306) is visszaadja. Az alapértelmezés minden új kapcsolónál 0: a v13 alapból bitre a v12, a váltás csapatdöntés.*
+
+**A38.** A háztartási kamatfelár kapcsolója (v12 -DHHSP=1: az optimalizáló háztartás Euler-egyenletében a kamat r + tsov_h·sov + tbank_h·bank, miközben a közös hazai kamat, a cégek és az állam kamata változatlan; -DNUB: a külső zárás rugalmassága) tiszta bővítés: kikapcsolva a t68b-ben rögzített v12-es értéket adja (2e−16), nulla átgyűrűzéssel bitre azonos, tartósan a háztartás reálkamata pontosan visszaáll, és a külföldi adósság pontosan az analitikus (tsov_h·sov + tbank_h·bank)/nu_b. Mind a 11 futás BK-stabil (13/13 mindkét rezsimben).
 
 > bizonyíték: `t72b, t72` — — őr: ✅ `t72b SZINT: a haztartasi felar kapcsoloja tiszta bovites (alapag 2e-16, nulla atgyuruzes 0, analitikus adossag 0, BK 11/11)`
 > *2026-11-11 · Futtató: check_hhsp_v12.m (400 negyedéves horizont). Az alapértelmezés HHSP=0 és NUB=0,001 marad (csapatdöntés). A -DNUB EXTCLOSE≥1 mellett mindkét rezsimben hat; 1 pp éves GDP-arányos külső adósság a kamatot nu_b·1600 bp-vel emeli.*
 
-### 🟡 Ami FELTÉTELES — 19 db
+### 🟡 Ami FELTÉTELES — 20 db
 
 *Csak a feltétellel együtt közölhető — küszöbformában, vagy az elfogadási feltétel kiírásával.*
 
@@ -262,7 +267,7 @@
 
 **F12.** Ha az államadósság egy része külföldi kézben van (ϑ = 0,4, csak szemléltetés), az euró tartós nemzetgazdasági fiskális nyeresége a GDP 0,68%-a évente (16–20. év átlaga 0,66%), nem a teljes 1,5–2,15%. A fő modellen (v12) a nyereség főként fogyasztásban jelenik meg (+1,74 százalékpont a 16–20. évben); a GDP-hatás kicsi (+0,09 pp), és az előjele a nyitottságtól és a zárástól függ: a régi súlyokkal és zárással a reálfelértékelődés miatt (transzferprobléma) −0,73 pp. A forintos szakaszban a bejelentési felértékelődés egyszeri veszteséget okoz (a legrosszabb negyedévben a negyedéves GDP 2,11%-a).
 
-> bizonyíték: `t69b, t69 (v12); t65b, t65 (v11)` — — őr: ✅ `t69b SZINT: a v12-n a kulfoldi tulajdonu resz nyeresege 0.68% GDP/ev, fogyasztas +1.74 pp, GDP +0.09 pp (regi beallitason -0.73 pp)`
+> bizonyíték: `t73b, t73 (v12); t65b, t65 (v11)` — — őr: ✅ `t73b SZINT: a v12-n a kulfoldi tulajdonu resz nyeresege 0.68% GDP/ev, fogyasztas +1.74 pp, GDP +0.09 pp (regi beallitason -0.73 pp)`
 > *2026-11-08 · Újrafuttatva a fő modellen (v12, 2026-11-08); a v11-en: nyereség 0,67%, fogyasztás +2,23 pp, GDP +0,15 pp, a régi beállításon −1,03 pp, forintos veszteség 2,40% (t65b, őr alatt). FELTÉTELES: a ϑ = 0,4 nem adat; a valódi arány az ÁKK/MNB-adatból jön, a nyereség ezzel arányos. A devizaadósság átértékelése nincs benne. Tartósan bstar = 0 (SOVCSAT=1), ezért a nyereség tartósan negatívabb kereskedelmi mérlegként (több import, kevesebb export) jelenik meg. A GDP nem jó mérőszáma ennek a csatornának: a transzfer a felhasználást növeli, nem feltétlenül a kibocsátást. A v11 régi beállításán a reálárfolyam −2,8%, az export −1,4% (aktív ágon −0,7 pp, −0,3 pp; v11-es diagnosztika). ⚠ 2026-10-26, első adatkeresés (brief 7a): a külföldi kézben lévő FORINTadósság a teljes adósság kb. 9%-a, a devizaadósság kb. 28%; a devizarésznél az euró csak a hitelkockázati felárat tünteti el. Hátraboríték-szám szerint a nemzetgazdasági nyereség nagyságrendileg 0,2–0,3% GDP/év, nem 0,67–0,68%. A pontos kezeléshez az adósságot forint- és devizarészre kell bontani (csapatdöntés). ⚠ 2026-10-26 (a v3 review-ja): az F12 számai egynegyedéves adóssággal (RHOM=0) készültek. A kódban a tulajdonosi zárás is az effektív kamatot használja; ρ_m = 0,94-gyel (a forintadósság 4,1 éves futamideje) a v11-en az első 3 évben nettó veszteség (−0,19% GDP), az 5. évben 0,31% a 0,61% helyett, a 16–20. évben 0,63% a 0,66% helyett; a tartós érték azonos (v11-es diagnosztikai futás, nincs őre). (2026-11-01, a fiskális review után): a 0,67% (v11) a review szerint belsőleg konzisztens, de csak érzékenységi példaként közölhető, központi becslésként nem. A 0,2–0,3%-os hátraboríték-tartomány a csomagból nem auditálható; ehhez a részletes ÁKK/MNB-adat és külön számítás kell.*
 
 **F13.** Egy tartós, adóssággal és később egyösszegű adóval finanszírozott +20%-os reálnyugdíj-emelés (kb. 1,5% GDP, euró nélkül) a fő modellen (v12) az aggregált fogyasztást kissé növeli: tartósan +0,19%, a 16–20. évben +0,31% (a v11-en −0,20% és 0,00% volt). A nyugdíjasok többet, az optimalizálók tartósan 3,61%-kal kevesebbet fogyasztanak. A GDP tartósan +0,47% (16–20. év +0,48%), mert a szegényebb optimalizálók többet dolgoznak: foglalkoztatás +1,68%, reálbér −2,63%. A mostani adósságszabállyal az adósság tartósan az éves GDP 10,65%-ával nő.
@@ -288,9 +293,14 @@
 **F17.** A v12 alapértelmezésén (B-forma a mért μ-vel, JV-exportegyenlet, javított nettóvagyon-egyenlet; KALIB=1, EXTCLOSE=1, SOVCSAT=1) az euró GDP-hatása a 16–20. évben +0,39% (a 3 szcenárió × 3 átgyűrűzés sávja +0,23 … +0,56%), a konvergencia alatt (1–12. negyedév) −0,51%. A v11 alapértelmezése ugyanitt +0,52% volt. A hitelhozzáférési csatorna ebből csak +0,006 pp-et ad (tartósan +0,007): tartósan a hazai KKV-k kibocsátása +0,029 pp-tel nő, a nagyvállalatoké −0,013 pp-tel csökken, az exportáló KKV-ké gyakorlatilag nem változik, a KKV–nagyvállalat különbség a 16–20. évben +0,036 pp. A váltások külön: a javított nettóvagyon-egyenlet a tartós GDP-hatást +0,17 pp-tel emeli, és a hazai KKV-k felárcsökkenését 9,5 bp-vel mélyíti; a JV-exportegyenlet a konvergencia-visszaesést 0,28 pp-tel mélyíti; a v11 A-formája ugyanezen a v12-alapon a hozzáférési csatornát tartósan +0,63 pp-re nagyítaná.
 
 > bizonyíték: `t68b, t68` — — őr: ✅ `t68b SZINT: a v12 euro-hatasa es a hozzaferesi csatorna (GDP 16-20. ev +0.39%, sav +0.23...+0.56%; a csatorna +0.006 pp, KKV-L +0.036 pp)`
-> *2026-11-07 · FELTÉTELES: (1) A μ_j (E 0,0051, D 0,0116) a reviewer Opten-mérése (t163k: mediánok különbsége, ágazati szűrés nélkül); nálunk nincs reprodukálva, a hitel nélküli cégek egy része nem korlátos, csak nincs szüksége hitelre. A λ (2,0 / 2,5) és a ρ_acc (0,85) továbbra is horgonyzatlan; a B-forma hosszú távú hatása 1/(1−ρ_acc)-vel arányos. (2) A javított nettóvagyon-egyenlet fogalmi javítás: a szuverén és a banki felár a bank forrásköltsége, nem a vállalkozó jövedelme. A nettóvagyon-fék a hozzáférési ék nagy részét (a reviewer szerint kb. 70%-át) visszaveszi; ez BGG-logika, de vitatható, hogy a hitelkorlátos cégek belső forrásköltségére is áll-e. (3) A KKV-küszöb (F01, A22) az A-forma skálájára vonatkozik; a v12-ben nem értelmezett. (4) A fiskális blokk (FISCAL, PENS, KONSZ) a v12-ben is kapcsolóként megvan; a fiskális eredmények (A32–A35, F12–F16) 2026-11-08 óta a v12-n vannak (t69–t71).*
+> *2026-11-07 · FELTÉTELES: (1) A μ_j (E 0,0051, D 0,0116) a reviewer Opten-mérése (t163k: mediánok különbsége, ágazati szűrés nélkül); nálunk nincs reprodukálva, a hitel nélküli cégek egy része nem korlátos, csak nincs szüksége hitelre. A λ (2,0 / 2,5) és a ρ_acc (0,85) továbbra is horgonyzatlan; a B-forma hosszú távú hatása 1/(1−ρ_acc)-vel arányos. (2) A javított nettóvagyon-egyenlet fogalmi javítás: a szuverén és a banki felár a bank forrásköltsége, nem a vállalkozó jövedelme. A nettóvagyon-fék a hozzáférési ék nagy részét (a reviewer szerint kb. 70%-át) visszaveszi; ez BGG-logika, de vitatható, hogy a hitelkorlátos cégek belső forrásköltségére is áll-e. (3) A KKV-küszöb (F01, A22) az A-forma skálájára vonatkozik; a v12-ben nem értelmezett. (4) A fiskális blokk (FISCAL, PENS, KONSZ) a v12-ben is kapcsolóként megvan; a fiskális eredmények (A32–A35, F12–F16) 2026-11-08 óta a v12-n vannak (t73, t70–t71). ⚠ 2026-11-12: a fő modell a v13 (A37, F18); ez az állítás a v12 alapértelmezésére vonatkozik (a v13 alapból bitre ugyanez).*
 
-**F18.** Ha az euró felárcsökkenése a háztartásokat is eléri (v12 -DHHSP=1, a vállalati semleges átgyűrűzéssel: a szuverén felár 0,175, a banki 0,45 része, tartósan összesen 55 bp), a háztartások külföldi hitelből előre hozzák a fogyasztásukat: az első 10 évben a fogyasztás +0,86 … +2,19% (a csatorna nélkül −0,62 … −0,70%), és a külföldi adósság a 20. évre az éves GDP 3,1–17,3%-ával nő, a külső zárás rugalmasságától függően (1 pp adósságra 16 … 1,6 bp kamatfelár). A 16–20. évben a fogyasztás +0,04 … +0,29%, a GDP-hatás viszont gyakorlatilag eltűnik (−0,12 … +0,08% a csatorna nélküli +0,39% helyett), tartósan pedig negatív (−0,18 … −0,41%). Az ok: tartósan a háztartás reálkamatának vissza kell állnia, ezért a közös hazai kamat pontosan a háztartási felárcsökkenéssel, 55 bp-vel nő, és a hazai KKV-k teljes forrásköltsége tartósan −27,4 bp helyett +0,2 … +9,6 bp-vel változik. A középső, 4 bp/pp-es zárással (nu_b = 0,0025) a fogyasztás az első 10 évben +1,50%, a GDP a 16–20. évben −0,04%, az adósság a 20. évre −9,8%; fél átgyűrűzéssel a GDP +0,18%, teljessel −1,49%.
+**F18.** A v13 két jelöltjén az euró hatása a 16–20. évben (eltérés az euró nélküli pályától): központi jelölt (-DPRESET=1: konzisztens kalibráció, közös fiskális blokk mért felárbontással, NWKAM) GDP 0,38%, GNI 0,69%, fogyasztás 0,69%, belpiaci KKV 0,89%, nagyvállalat 0,24%, exportáló KKV 0,03%; javított jelölt (-DPRESET=2: + LEVKAM, célpályás adósságszabály, SBAR, nu 0,0025) GDP 0,09%, GNI 0,38%, fogyasztás 0,69%, belpiaci KKV 0,51%, nagyvállalat 0,18%, exportáló KKV −0,00%. A v12 alapján ugyanez GDP 0,39%, fogyasztás −0,48%. Mindkét jelöltnél a belpiaci KKV kibocsátása nő a legjobban, utána a nagyvállalaté, az exportáló KKV-é nulla körül marad; a GNI nagyobb a GDP-nél; a tartós fogyasztás pozitív (0,82% és 0,72%, a v12-ben −0,51%). A javított jelöltön az európai vagyonhatással (SIGW 0,6) a GDP 0,28%, szochós visszaadással 0,45%.
+
+> bizonyíték: `t69f, t69b` — — őr: ✅ `t69f SZINT: a v13 jeloltjei (16-20. ev GDP: kozponti +0.38%, javitott +0.09%; belpiaci KKV +0.89% / +0.51%)`
+> *2026-11-12 · FELTÉTELES: a szintek feltevésfüggők, pontszámként nem közölhetők, csak sávként (a GDP 16–20. évi hatása a vizsgált változatokban 0,01–0,45%, a belpiaci KKV-é 0,43–1,02%). Nagyság szerint: (1) SBAR: a hitel nélküli cégek forrásköltsége a feltevés szerint nem követi a felárat; nélküle a belpiaci KKV 0,86%. (2) A vagyonhatás (SIGW) magyar becslés nélkül, lottós becslésekből leképezve (Golosov és tsai 2024; Cesarini és tsai 2017); a modell a σ-t csak a bérgörbében téríti el. (3) Az exportrugalmasság nem mért (irodalmi sáv 0,53–3). (4) A felárbontás egynapi pillanatkép (2026-11-11; ÁKK, Cbonds, Eurostat): hitelkockázati rész 0,38 (januárban 0,56), forint–euró rés évi 124 bp, ebből 50 bp inflációs (a két jegybanki cél különbsége). (5) A NWKAM 0,52-es aránya feltevésen áll (a szállítói tartozás az árban hordozza a felárat); LEVKAM mellett a chi nincs újrakalibrálva. (6) A háztartási hitel paraméterei becslés nélküliek; a HHB=2 többlete évtizedes átmenet, a végállapotot nem változtatja. (7) Nyitott, hogy az Opten-alapú tőke- és munkahányad melyik költségtételekből áll (ez dönti el az SSKONZ jogosságát). (8) A modell az egész GDP-t vállalati termelésként kezeli, és minden beruházás a vállalati felárra reagál: a GDP-százalék felfelé torzít, a típusonkénti kibocsátás értelmezhetőbb. (9) A GNI közelítés: GDP + (1/β − 1)·bstar(−1) − a külföldieknek fizetett államadósság-kamat. A KKV-sorrend 213 futás × időablakból 211-ben teljesült; a két kivétel a v12 eredeti kalibrációján van. Kísérlet (SWAPED: a két KKV-típus pénzügyi paramétereinek cseréje): a központi jelöltön a típusok eredménye legfeljebb 0,03 pp-tel mozdul; a javítotton, ahol a csere a hiteles tőkearányt is felcseréli, a 16–20. évben a belpiaci KKV 0,51 helyett 0,68%, az exportáló KKV −0,00 helyett −0,12%. A sorrend a cserével sem változik: a különbséget főként a keresleti oldal (exportarány, reálárfolyam) adja.*
+
+**F19.** Ha az euró felárcsökkenése a háztartásokat is eléri (v12 -DHHSP=1, a vállalati semleges átgyűrűzéssel: a szuverén felár 0,175, a banki 0,45 része, tartósan összesen 55 bp), a háztartások külföldi hitelből előre hozzák a fogyasztásukat: az első 10 évben a fogyasztás +0,86 … +2,19% (a csatorna nélkül −0,62 … −0,70%), és a külföldi adósság a 20. évre az éves GDP 3,1–17,3%-ával nő, a külső zárás rugalmasságától függően (1 pp adósságra 16 … 1,6 bp kamatfelár). A 16–20. évben a fogyasztás +0,04 … +0,29%, a GDP-hatás viszont gyakorlatilag eltűnik (−0,12 … +0,08% a csatorna nélküli +0,39% helyett), tartósan pedig negatív (−0,18 … −0,41%). Az ok: tartósan a háztartás reálkamatának vissza kell állnia, ezért a közös hazai kamat pontosan a háztartási felárcsökkenéssel, 55 bp-vel nő, és a hazai KKV-k teljes forrásköltsége tartósan −27,4 bp helyett +0,2 … +9,6 bp-vel változik. A középső, 4 bp/pp-es zárással (nu_b = 0,0025) a fogyasztás az első 10 évben +1,50%, a GDP a 16–20. évben −0,04%, az adósság a 20. évre −9,8%; fél átgyűrűzéssel a GDP +0,18%, teljessel −1,49%.
 
 > bizonyíték: `t72b, t72` — — őr: ✅ `t72b SZINT: a haztartasi felar es a kulso zaras (fogyasztas az 1-10. evben +0.86 ... +2.19%, GDP a 16-20. evben -0.12 ... +0.08%, a hazai kamat tartosan +55.25 bp)`
 > *2026-11-11 · FELTÉTELES: (1) Az átgyűrűzés (tsov_h, tbank_h) közelítés, a vállalati semleges értékkel azonos; MNB-kamatstatisztikából (lakás- és személyi hitelek kamata az állampapírhozamhoz képest) horgonyozandó. Az eredmény erősen függ tőle: fél átgyűrűzéssel a GDP +0,18%, teljessel −1,49% a 16–20. évben. (2) A külső zárás rugalmassága (nu_b) nincs horgonyozva; az adósság kamathatására vonatkozó empirikus becslések nagyságrendileg néhány bp-t adnak 1 pp adósságra, ez 0,002–0,005-nek felel meg. (3) A tartós GDP-veszteség a reprezentatív háztartású kis nyitott gazdaság zárásának következménye: tartósan a háztartás reálkamata a diszkontrátához kötött, ezért egy tartósan kisebb háztartási felárat a külső adósság felára pontosan ellensúlyoz, és ez a közös kamaton át a cégeket is terheli. Hogy a valóságban a háztartási eladósodás mennyire emeli a vállalati forrásköltséget, a modell nem mondja meg; háztartás-specifikus adósságfelárral (a felár csak a háztartási kamatot emeli) a cégek kamata változatlan maradna. (4) Az alapértelmezés HHSP=0 marad (csapatdöntés). (5) Előzmény: a SOVCSAT=0-s rács (2026-11-11, próbafutás, nincs a regiszterben) a felárat a közös kamatba tette, így a cégeket és az államot is érintette; ott a 16–20. évi fogyasztás minden zárással negatív volt.*
@@ -474,7 +484,7 @@
 
 ---
 
-## Őrök (213 db)
+## Őrök (216 db)
 
 *A füstteszt minden ellenőrzése. Ez a projekt egyetlen olyan nyilvántartása, ami nem tud némán elcsúszni: ha egy állítás megdől, itt megbukik egy sor.*
 
@@ -658,10 +668,10 @@
 - ✅ t68 v12 tablak leteznek
 - ✅ t68b SZINT: a v12 tiszta bovites es visszaadja a reviewer szamait (nesting 0, reviewer 182/184, BK 24/24)
 - ✅ t68b SZINT: a v12 euro-hatasa es a hozzaferesi csatorna (GDP 16-20. ev +0.39%, sav +0.23...+0.56%; a csatorna +0.006 pp, KKV-L +0.036 pp)
-- ✅ t69 v12 fiskalis blokk tablai leteznek
-- ✅ t69b SZINT: a fiskalis blokk a v12-n is nyilvantartas a hazai reszen (adossag -10.73% eves GDP, ado -2.15%, BK 26/26)
-- ✅ t69b SZINT: a v12-n a kulfoldi tulajdonu resz nyeresege 0.68% GDP/ev, fogyasztas +1.74 pp, GDP +0.09 pp (regi beallitason -0.73 pp)
-- ✅ t69b SZINT: a v12-n a lejarati szerkezet lassitja a megtakaritast (5. ev -0.65% vs -1.57%, 1. ev +0.49% vs -0.06%)
+- ✅ t73 v12 fiskalis blokk tablai leteznek
+- ✅ t73b SZINT: a fiskalis blokk a v12-n is nyilvantartas a hazai reszen (adossag -10.73% eves GDP, ado -2.15%, BK 26/26)
+- ✅ t73b SZINT: a v12-n a kulfoldi tulajdonu resz nyeresege 0.68% GDP/ev, fogyasztas +1.74 pp, GDP +0.09 pp (regi beallitason -0.73 pp)
+- ✅ t73b SZINT: a v12-n a lejarati szerkezet lassitja a megtakaritast (5. ev -0.65% vs -1.57%, 1. ev +0.49% vs -0.06%)
 - ✅ t70 v12 nyugdijasblokk tablai leteznek
 - ✅ t70b SZINT: a v12-n a nyugdijasblokk sulyjavitasa onmagaban kicsi (GDP +0.01 pp, fogyasztas +0.00 pp), BK 40/40
 - ✅ t70b SZINT: a v12-n a nyugdijemeles az aggregalt fogyasztast kisse noveli (+0.19%), GDP +0.47%, foglalkoztatas +1.68%, realber -2.63%
@@ -674,6 +684,9 @@
 - ✅ t72 v12 haztartasi felar tablai leteznek
 - ✅ t72b SZINT: a haztartasi felar kapcsoloja tiszta bovites (alapag 2e-16, nulla atgyuruzes 0, analitikus adossag 0, BK 11/11)
 - ✅ t72b SZINT: a haztartasi felar es a kulso zaras (fogyasztas az 1-10. evben +0.86 ... +2.19%, GDP a 16-20. evben -0.12 ... +0.08%, a hazai kamat tartosan +55.25 bp)
+- ✅ t69 v13 tablak leteznek
+- ✅ t69b SZINT: a v13 tiszta bovites (nesting 0, referencia 27/27, BK 63/63, PRESET 0)
+- ✅ t69f SZINT: a v13 jeloltjei (16-20. ev GDP: kozponti +0.38%, javitott +0.09%; belpiaci KKV +0.89% / +0.51%)
 - ✅ t53c dekomp BK-stressz letezik
 - ✅ t53c: mind a 45 PF/BK diagnosztika technikailag lefutott
 - ✅ t53c KORREKCIO: az OPTEN1 ACC100 racs pontosan 0/45 terminalis BK-stabil (gyok/elo=15/13)
@@ -692,6 +705,6 @@
 - ✅ t00 PHILLIPS: az aszimmetrikus arsokkok (eps_md / eps_mx) egyik szcenarioban sincsenek hajtva
 - ✅ t00 SZERKEZET: mind a 4 modell-vonal megvan, README-vel
 - ✅ t00 SZERKEZET: a FO MODELL a helyen van (1_fo_vonal_jv)
-- ✅ t00 SZERKEZET: minden futtato letezo .mod-ot hiv (47 futtato, 22 modell)
+- ✅ t00 SZERKEZET: minden futtato letezo .mod-ot hiv (48 futtato, 23 modell)
 
 </details>

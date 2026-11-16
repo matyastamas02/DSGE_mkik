@@ -11,7 +11,57 @@ ez még ötletelés fázisú vitaanyag, a végleges forrás később kerül be i
 
 ---
 
-## 🎯 A FŐ CSAPÁS (2026-11-07 óta): `jv_dsge_v12.mod`
+## 🎯 A FŐ CSAPÁS (2026-11-12 óta): `jv_dsge_v13.mod`
+
+**Minden új munka erre a modellre épül** (`src/modell/1_fo_vonal_jv/jv_dsge_v13.mod`).
+A v13 a v12 másolata új kapcsolókkal: a háztartás–euró–fogyasztás rész és a
+fiskális blokk javításai, a csapat két bírálata nyomán (2026-11).
+**Minden új kapcsoló alapból ki van kapcsolva: kikapcsolva a v13 bitre a v12.**
+Hogy melyik kerül az alapba, csapatdöntés; addig a két jelölt előbeállításként fut.
+
+| Kapcsoló | Mit jelent |
+|---|---|
+| `-DSSKONZ=1` | konzisztens kalibráció: a tőke- és az importhányad szintje a nemzeti számlákból (Eurostat S11, OECD ICIO), a típusok közti különbség az Optenből |
+| `-DFISCK=1` | közös fiskális blokk: forint- és devizaadósság, mért külföldi tulajdon (ÁKK), többéves állampapír, adósságszabály |
+| `-DNWKAM=1` / `-DLEVKAM=1` | a nettóvagyon-javítás csak a felárat hordozó kötelezettségrészre (Opten 0,52 / 0,52 / 0,51), illetve a tőkeáttétel a kamatozó adósságra |
+| `-DSBAR=1` | a felárcsökkenés csak a hitellel rendelkező cégek tőkéjén hat (Opten 0,60 / 0,40 / 0,47) |
+| `-DDRULE=1` | célpályás adósságszabály (a végállapot nem függ a szabály sebességétől) |
+| `-DHHB=1\|2` | hitelfelvevő háztartás: puha korlát, illetve törlesztési korlát |
+| `-DSZOCHO=1` | a kamatmegtakarítás visszaadása szochón keresztül (forgatókönyv) |
+| `-DSHLNORM=1\|2` | a munkasúlyok összege 1 |
+| `-DSIGW` · `-DNUB` · `-DEXPEL` | érzékenység: vagyonhatás, a külső zárás rugalmassága, exportrugalmasság |
+| `-DSWAPED=1` | kísérlet: a két KKV-típus pénzügyi paramétereinek cseréje |
+| `-DPRESET=1\|2` | előbeállítás: 1 = központi jelölt (`SSKONZ FISCK NWKAM` + mért felárbontás), 2 = javított jelölt (`SSKONZ FISCK LEVKAM DRULE SBAR`, `nu` 0,0025) |
+
+- **Futtató:** `futtato/check_v13.m` → `t69`–`t69f` (63 futás, K1–K15).
+  **Állítások:** `A37` (tiszta bővítés), `F18` (a jelöltek eredményei).
+- **Amit ez megváltoztat** (16–20. év, eltérés az euró nélküli pályától, %):
+
+  | | GDP | GNI | fogyasztás | belpiaci KKV | nagyvállalat | exportáló KKV |
+  |---|---:|---:|---:|---:|---:|---:|
+  | v12 alap | 0,39 | 0,39 | −0,48 | 0,35 | 0,17 | 0,12 |
+  | központi (`PRESET=1`) | 0,38 | 0,69 | 0,69 | 0,89 | 0,24 | 0,03 |
+  | javított (`PRESET=2`) | 0,09 | 0,38 | 0,69 | 0,51 | 0,18 | −0,00 |
+
+  - a fogyasztás a konzisztens kalibrációval pozitív lesz (a v12 negatív
+    fogyasztása a tőke- és importhányad ellentmondásából jött);
+  - a sorrend mindkét jelöltnél: belpiaci KKV > nagyvállalat > exportáló KKV;
+  - a **szintek feltevésfüggők** (a GDP 16–20. évi hatása a vizsgált
+    változatokban 0,01–0,45%), pontszámként nem közölhetők, csak sávként.
+- **Ami bizonytalan**, nagyság szerint: a hiteles cégek tőkearánya (`SBAR`), a
+  vagyonhatás erőssége (`SIGW`), az exportrugalmasság (`EXPEL`), a felár
+  felbontása (egynapi piaci pillanatkép), a nettóvagyon-javítás formája, a
+  háztartási hitel paraméterei. Részletesen: `F18` és a
+  `docs/modszertan/modell_verziok_osszefoglalo.md` v13-szakasza.
+- **Új blokkot vagy kapcsolót a v13-ba teszünk.** A v12 változatlanul megmarad,
+  összevetésre.
+
+---
+
+## A v12 (2026-11-07 – 2026-11-12 a fő csapás): `jv_dsge_v12.mod`
+
+> ⚠ **2026-11-12 óta a fő modell a `jv_dsge_v13.mod`** (lásd fent). A v13 alapból
+> bitre a v12; ez a szakasz a v12 saját alapértelmezéseiről szól.
 
 **Minden új munka erre a modellre épül** (`src/modell/1_fo_vonal_jv/jv_dsge_v12.mod`).
 A v12 a v11 másolata három új alapértelmezéssel. A döntést MPT hozta egy külső

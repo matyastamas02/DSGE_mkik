@@ -1305,6 +1305,59 @@ if van72
         H.C_1_10ev_hhsp_nu0001, H.GDP_1620_hhsp_nu001, H.GDP_1620_hhsp_nu0001, H.r_tartos_hhsp_nu00025), ok, hiba);
 end
 
+% --- v13, a fo csapas (2026-11-12): a v12 kiegeszitese, ket jelolt (PRESET) ---
+t69b = fullfile(repo, 'output', 'tables', 't69b_v13_osszegzes.csv');
+t69f = fullfile(repo, 'output', 'tables', 't69f_v13_jeloltek.csv');
+van69 = exist(t69b, 'file') == 2 && exist(t69f, 'file') == 2;
+[ok, hiba] = ell(van69, 't69 v13 tablak leteznek', ok, hiba);
+if van69
+    V = readtable(t69b); J = readtable(t69f);
+    % A37: tiszta bovites (K1), nyilvantartas (K2), a helyi referencia (K3), BK (K4),
+    % a blokkok azonossagai (K5-K14), az elobeallitasok (K15)
+    [ok, hiba] = ell(V.K1_nest_maxdiff == 0 && V.K2_tiszta_maxdiff < 1e-9 && ...
+        V.K3_egyezik == V.K3_ossz && V.K3_ossz == 27 && V.K4_BK_db == V.K4_BK_ossz && V.K4_BK_ossz == 63 && ...
+        V.K5_azonossag_maxhiba < 1e-10 && V.K6_ss_maxhiba < 1e-12 && V.K6_si_a_savban_SSKONZ == 1 && ...
+        V.K6_si_a_savban_v12 == 0 && V.K7_munkasuly_maxhiba < 1e-12 && V.K8_nesting < 1e-12 && ...
+        V.K8_korlat_maradek < 1e-12 && V.K8_tartos_adossag_hiba < 1e-8 && V.K8_monoton == 1 && ...
+        V.K9_nesting < 1e-12 && V.K9_ek_hiba < 1e-12 && V.K9_wlc_hiba < 1e-12 && V.K10_nesting < 1e-12 && ...
+        V.K10_kisebb_felar == 1 && V.K11_nesting < 1e-12 && V.K11_expel < 1e-9 && V.K12_adossagrata < 1e-8 && ...
+        V.K12_felezes_fuggetlen < 1e-8 && V.K13_nesting < 1e-12 && abs(V.K13_fable_GDP1620 - 0.306) < 0.005 && ...
+        V.K14_nesting < 1e-12 && V.K14_korlat_maradek < 1e-12 && V.K14_tartos_adossag_hiba < 1e-8 && ...
+        V.K15_preset_maxdiff == 0 && V.K15_sorrend == 1, ...
+        sprintf('t69b SZINT: a v13 tiszta bovites (nesting %.1g, referencia %d/%d, BK %d/%d, PRESET %.1g)', ...
+        V.K1_nest_maxdiff, V.K3_egyezik, V.K3_ossz, V.K4_BK_db, V.K4_BK_ossz, V.K15_preset_maxdiff), ok, hiba);
+    % F18: a jeloltek kozolt szamai (16-20. ev, %), a sorrend, GNI > GDP, tartos fogyasztas > 0
+    jv = @(n, v) J.(v)(strcmp(J.futas, n));
+    cel = {
+        {'v12', 'GDP_1620', 0.39}
+        {'v12', 'C_1620', -0.48}
+        {'j1_preset', 'GDP_1620', 0.38}
+        {'j1_preset', 'GNI_1620', 0.69}
+        {'j1_preset', 'C_1620', 0.69}
+        {'j1_preset', 'yD_1620', 0.89}
+        {'j1_preset', 'yL_1620', 0.24}
+        {'j1_preset', 'yE_1620', 0.03}
+        {'j1_preset', 'C_tartos', 0.82}
+        {'j2_preset', 'GDP_1620', 0.09}
+        {'j2_preset', 'GNI_1620', 0.38}
+        {'j2_preset', 'C_1620', 0.69}
+        {'j2_preset', 'yD_1620', 0.51}
+        {'j2_preset', 'yL_1620', 0.18}
+        {'j2_preset', 'yE_1620', 0}
+        {'j2_preset', 'C_tartos', 0.72}
+        {'j2_sigw06', 'GDP_1620', 0.28}
+        {'j2_szocho', 'GDP_1620', 0.45}
+        };
+    jo = all(cellfun(@(c) abs(jv(c{1}, c{2}) - c{3}) < 0.005, cel));
+    for n = {'j1_preset', 'j2_preset'}
+        jo = jo && jv(n{1}, 'yD_1620') > jv(n{1}, 'yL_1620') && jv(n{1}, 'yL_1620') > jv(n{1}, 'yE_1620') && ...
+            jv(n{1}, 'GNI_1620') > jv(n{1}, 'GDP_1620') && jv(n{1}, 'C_tartos') > 0;
+    end
+    [ok, hiba] = ell(jo, sprintf(['t69f SZINT: a v13 jeloltjei (16-20. ev GDP: kozponti %+.2f%%, ' ...
+        'javitott %+.2f%%; belpiaci KKV %+.2f%% / %+.2f%%)'], jv('j1_preset', 'GDP_1620'), ...
+        jv('j2_preset', 'GDP_1620'), jv('j1_preset', 'yD_1620'), jv('j2_preset', 'yD_1620')), ok, hiba);
+end
+
 t53c = fullfile(repo, 'output', 'tables', 't53c_dekomp_bk.csv');
 [ok, hiba] = ell(exist(t53c, 'file') == 2, 't53c dekomp BK-stressz letezik', ok, hiba);
 if exist(t53c, 'file') == 2

@@ -1,6 +1,99 @@
 # Modellverziók összefoglalója
 
-> ## 🎯 2026-11-07: a fő csapás a `jv_dsge_v12.mod`
+> ## 🎯 2026-11-12: a fő csapás a `jv_dsge_v13.mod`
+>
+> **A v12 kiegészítése** (munkaneve `jv_dsge_v12k` volt). A csapat két bírálata
+> nyomán a háztartás–euró–fogyasztás részt és a fiskális blokkot javítja. Minden
+> új kapcsoló alapból ki van kapcsolva, kikapcsolva a v13 **bitre a v12**; az
+> alapértelmezés váltása csapatdöntés. Addig két előbeállítás fut:
+> `-DPRESET=1` (központi jelölt) és `-DPRESET=2` (javított jelölt).
+>
+> **Mit javít:**
+>
+> - **Kalibrációs ellentmondás** (`-DSSKONZ=1`). A v12-ben a tőkehányad és a
+>   beruházási súly nem fért össze, ezért a tartós fogyasztás negatív lett. A
+>   szintek most a nemzeti számlákból (Eurostat S11, OECD ICIO) jönnek, a típusok
+>   közti különbség az Optenből. Ezzel a tartós fogyasztás pozitív.
+> - **Fiskális blokk** (`-DFISCK=1`). Forint- és devizaadósság, mért külföldi
+>   tulajdon (ÁKK), többéves állampapír, a felár piaci felbontása (hitelkockázati
+>   rész 0,38; forint–euró hozamrés évi 124 bp, ebből 50 bp inflációs).
+>   A külföldieknek fizetett kamat a külső pozícióban jelenik meg, ezért a GNI
+>   nagyobb a GDP-nél.
+> - **Nettóvagyon-javítás** (`-DNWKAM=1`, `-DLEVKAM=1`). A v12 a felárat a teljes
+>   kötelezettségre vonta le. Most csak a felárat hordozó részre (Opten: bankhitel,
+>   kölcsön, szállítók, hosszú egyéb; 0,52 / 0,52 / 0,51). A `LEVKAM` a
+>   következetes forma: ott a tőkeáttétel is a kamatozó adósságra vonatkozik.
+> - **Hiteles cégek** (`-DSBAR=1`). A felárcsökkenés csak a hitellel rendelkező
+>   cégek tőkéjén hat (Opten: 0,60 / 0,40 / 0,47).
+> - **Adósságszabály** (`-DDRULE=1`). Célpályás szabály: a végállapot nem függ a
+>   szabály sebességétől.
+> - **Háztartás** (`-DHHB=1|2`). Hitelfelvevő háztartás puha, illetve törlesztési
+>   korláttal. Hosszú távon csak átcsoportosít: a tartós aggregált fogyasztás és a
+>   vállalattípusok tartós kibocsátása nem változik, a többlet évtizedes átmenet.
+> - **Érzékenységek** (`-DSIGW`, `-DNUB`, `-DEXPEL`), **szochós visszaadás**
+>   (`-DSZOCHO=1`, forgatókönyv), **munkasúlyok** (`-DSHLNORM`), **kísérlet**
+>   (`-DSWAPED=1`: a két KKV-típus pénzügyi paramétereinek cseréje).
+>
+> **Eredmény** (`F18`, `A37`; futtató `check_v13.m`, `t69`–`t69f`; a 16–20. év
+> átlaga, eltérés az euró nélküli pályától, %):
+>
+> | | GDP | GNI | fogyasztás | belpiaci KKV | nagyvállalat | exportáló KKV | fogyasztás tartósan |
+> |---|---:|---:|---:|---:|---:|---:|---:|
+> | v12 alap | 0,39 | 0,39 | −0,48 | 0,35 | 0,17 | 0,12 | −0,51 |
+> | központi (`PRESET=1`) | 0,38 | 0,69 | 0,69 | 0,89 | 0,24 | 0,03 | 0,82 |
+> | javított (`PRESET=2`) | 0,09 | 0,38 | 0,69 | 0,51 | 0,18 | −0,00 | 0,72 |
+> | javított + európai vagyonhatás (`-DSIGW=0.6`) | 0,28 | 0,57 | 0,75 | 0,59 | 0,30 | 0,11 | 0,80 |
+> | javított + szochós visszaadás (`-DSZOCHO=1`) | 0,45 | 0,74 | 0,80 | 0,66 | 0,40 | 0,22 | 0,86 |
+>
+> **Ami minden vizsgált változatban áll:** a tartós fogyasztás pozitív a
+> konzisztens kalibrációval; a belpiaci KKV nyer a legtöbbet, utána a
+> nagyvállalat, az exportáló KKV nulla körül marad; a GNI nagyobb a GDP-nél.
+> **Ami nem áll:** a szintek. A GDP-hatás a 16–20. évben 0,01 és 0,45% között
+> van, a belpiaci KKV 0,43 és 1,02% között; csak sávként közölhető.
+>
+> **Ami bizonytalan** (nagyság szerint):
+>
+> 1. **A hiteles cégek tőkearánya (`SBAR`):** a belpiaci KKV-t 0,86-ról 0,51-re
+>    viszi. Az arány mért, de feltevés, hogy a hitel nélküli cégek forrásköltsége
+>    nem követi a felárat; ha részben követi, a hatás nagyobb.
+> 2. **A vagyonhatás erőssége (`SIGW`):** a javított jelöltön a GDP-t 0,09-ről
+>    0,28–0,33-ra mozdítja. Magyar becslés nincs; az amerikai (Golosov és tsai,
+>    2024) és a svéd–holland (Cesarini és tsai, 2017) lottós becslésből képeztük
+>    le, részleges egyensúlyi képlettel. A σ-t a modell csak a bérgörbében téríti
+>    el, ez nem konzisztens preferencia (tisztább: GHH vagy Jaimovich–Rebelo).
+> 3. **Az exportrugalmasság (`EXPEL`):** a belpiaci KKV 0,43–0,97, a fogyasztás
+>    0,47–1,08. A központi érték nem mért, a sáv irodalmi.
+> 4. **A felár felbontása:** egynapi piaci pillanatkép (2026-11-11; ÁKK, Cbonds,
+>    Eurostat). Januárban a hitelkockázati rész 0,56 volt. Az inflációs rész az
+>    MNB és az EKB céljának különbsége, nem piaci várakozás.
+> 5. **A nettóvagyon-javítás formája és aránya:** a 0,52-es arány feltevése, hogy a
+>    szállítói tartozás az árban hordozza a felárat, és a hosszú egyéb tartozás
+>    kamatozó. A `LEVKAM` mellett a felár tőkeáttétel-érzékenységét (`chi`) nem
+>    kalibráltuk újra.
+> 6. **A háztartási hitel paraméterei** (átgyűrűzés, korlát, megújulás,
+>    törlesztés) becslés nélküliek.
+> 7. **A konzisztens kalibráció alapja:** nyitott, hogy az Opten-alapú tőke- és
+>    munkahányad melyik költségtételekből áll.
+> 8. **Szerkezeti korlátok:** a modell az egész GDP-t vállalati termelésként
+>    kezeli, és minden beruházás a vállalati felárra reagál; a GDP-százalék ezért
+>    felfelé torzít, a típusonkénti kibocsátás értelmezhetőbb.
+> 9. **Mérőszámok:** a GNI közelítés (GDP + a külső pozíció hozama − a
+>    külföldieknek fizetett kamat); jólétmérés nincs.
+>
+> **Csapatdöntést igényel:** melyik jelölt a kiindulás; az `SSKONZ`, a
+> nettóvagyon-forma (`NWFIX` / `NWKAM` / `LEVKAM`), az `SBAR` és a `DRULE` az
+> alapba kerül-e; a háztartási hitelcsatorna érzékenység marad-e; a fiskális
+> visszaadás módja; a fő mutató és az időablak; a `SOVCSAT` alapértéke; a
+> felárbontás forrása (pillanatkép vagy többhavi átlag).
+>
+> **Ismert, nem javított apróságok** (az eredményt nem mozdítják): a `pi_L`
+> egyenletében `e_mx_ar` áll `eps_md` helyett (determinisztikus futásban nem hat);
+> a `gam_nwx = omega_nw·beta` szorzó egy bírálat szerint `omega_nw` lenne (1%).
+>
+> A v12 változatlanul megmarad. A részletes mérések (v86–v106) nem részei a
+> commitnak; az ellenőrzés és a fő számok a `check_v13.m`-ben és a `t69`–`t69f` táblákban vannak.
+
+> ## 2026-11-07: a fő csapás a `jv_dsge_v12.mod` (2026-11-12 óta a v13)
 >
 > **Fővonal-váltás.** A v12 a v11 három új alapértelmezéssel; minden további
 > blokk (fiskális, külföldi, adózási) erre épül. A döntést MPT hozta egy külső

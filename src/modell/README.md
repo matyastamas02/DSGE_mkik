@@ -4,7 +4,7 @@
 >
 > | Mappa | Mi ez | Státusz |
 > |---|---|---|
-> | **[`1_fo_vonal_jv/`](1_fo_vonal_jv/)** | Jakab–Világi mag, háromtípusos. **A fő csapás (2026-11-07 óta): `jv_dsge_v12.mod`** | 🟢 élő |
+> | **[`1_fo_vonal_jv/`](1_fo_vonal_jv/)** | Jakab–Világi mag, háromtípusos. **A fő csapás (2026-11-12 óta): `jv_dsge_v13.mod`** | 🟢 élő |
 > | [`2_referencia_eagle/`](2_referencia_eagle/) | EAGLE-HU mag — robusztussági összevetés | 🟡 referencia |
 > | [`3_archiv_korai_jv/`](3_archiv_korai_jv/) | meghaladott JV-lépcsők (v01–v05) + a `_stoch` nyitott tétel | ⚪ archív |
 > | [`4_app/`](4_app/) | a Streamlit-app futtató-modellje | 🟡 külön termék |
@@ -103,8 +103,26 @@ tanulmány KERETEZÉSÉT módosította, nem a DSGE szerepét.
 
 ### JV-vonal (fő):
 
-- **`jv_dsge_v12.mod`** (2026-11-07) — 🎯 **A FŐ CSAPÁS, minden új munka erre
-  épül.** A v11 + három új alapértelmezés, egy külső reviewer ajánlása szerint
+- **`jv_dsge_v13.mod`** (2026-11-12) — 🎯 **A FŐ CSAPÁS, minden új munka erre
+  épül.** A v12 + új kapcsolók a csapat két bírálata nyomán (munkanév: `jv_dsge_v12k`):
+  **konzisztens kalibráció** (`-DSSKONZ=1`: a tőke- és importhányad szintje a nemzeti
+  számlákból, ezzel megszűnik a v12 negatív tartós fogyasztása), **közös fiskális blokk**
+  (`-DFISCK=1`: forint- és devizaadósság, mért külföldi tulajdon, többéves állampapír, a
+  felár piaci felbontása, a külföldieknek fizetett kamat a külső pozícióban),
+  **nettóvagyon-javítás a felárat hordozó részre** (`-DNWKAM=1`) és **tőkeáttétel a
+  kamatozó adósságra** (`-DLEVKAM=1`), **hiteles cégek tőkearánya** (`-DSBAR=1`),
+  **célpályás adósságszabály** (`-DDRULE=1`), **hitelfelvevő háztartás** (`-DHHB=1|2`),
+  **szochós visszaadás** (`-DSZOCHO=1`), munkasúlyok (`-DSHLNORM`), érzékenységek
+  (`-DSIGW`, `-DNUB`, `-DEXPEL`), kísérlet (`-DSWAPED=1`) és két előbeállítás
+  (`-DPRESET=1|2`). **Minden új kapcsoló alapból ki van kapcsolva, kikapcsolva bitre a
+  v12**; az alapértelmezés váltása csapatdöntés. Futtatás: `check_v13` → `t69`–`t69f`.
+  **Eredmény:** K1–K15 teljesül, BK **63/63** · a 16–20. évben a központi jelölt
+  (`PRESET=1`) GDP **+0,38%**, GNI +0,69%, fogyasztás +0,69%, belpiaci KKV +0,89%, nagyvállalat
+  +0,24%, exportáló KKV +0,03%; a javított (`PRESET=2`) GDP **+0,09%**, GNI +0,38%, fogyasztás
+  +0,69%, belpiaci KKV +0,51%, nagyvállalat +0,18%, exportáló KKV −0,00% · a szintek
+  feltevésfüggők (bizonytalanságok: `F18`). Állítások: `A37`, `F18`.
+
+- **`jv_dsge_v12.mod`** (2026-11-07) — **A FŐ CSAPÁS 2026-11-07 és 2026-11-12 között.** A v11 + három új alapértelmezés, egy külső reviewer ajánlása szerint
   (MPT döntése): **B-forma hitelhozzáférés** (`-DACCFORM=1`: a hozzáférés
   tőkeköltség-ékként hat, `efp = efpA − μ·acc`, és az `acc` a BGG-felárra,
   `efpA`-ra reagál, ezért nincs önerősítő hurok; az `omega_acc`-tag kikerül a
