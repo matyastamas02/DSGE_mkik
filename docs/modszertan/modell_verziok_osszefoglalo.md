@@ -2,6 +2,12 @@
 
 > ## 🎯 2026-11-12: a fő csapás a `jv_dsge_v13.mod`
 >
+> **2026-11-16 (csapatdöntés):** az alap a `PRESET=2` + `SOVCSAT=2` + `KODJAV=1`
+> (a három kódjavítás: a saját tőke hozama a nettóvagyon-egyenletben,
+> `gam_nwx = omega_nw`, a `pi_L` sokkja). 16–20. év: GDP 0,17%, GNI 0,42%,
+> fogyasztás 0,50%, belpiaci KKV 0,45% (`F20`). Régi, v12-vel bitre azonos alap:
+> `-DPRESET=0 -DSOVCSAT=1 -DKODJAV=0`.
+>
 > **A v12 kiegészítése** (munkaneve `jv_dsge_v12k` volt). A csapat két bírálata
 > nyomán a háztartás–euró–fogyasztás részt és a fiskális blokkot javítja. Minden
 > új kapcsoló alapból ki van kapcsolva, kikapcsolva a v13 **bitre a v12**; az

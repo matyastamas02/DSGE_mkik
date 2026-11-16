@@ -10,6 +10,7 @@
 > - **hiteles cégek tőkearánya** (`-DSBAR=1`), **célpályás adósságszabály** (`-DDRULE=1`);
 > - **hitelfelvevő háztartás** (`-DHHB=1|2`), **szochós visszaadás** (`-DSZOCHO=1`), munkasúlyok (`-DSHLNORM`), érzékenységek (`-DSIGW`, `-DNUB`, `-DEXPEL`), kísérlet (`-DSWAPED=1`);
 > - **két előbeállítás:** **`-DPRESET=2` (központi jelölt, Fable-konform)**, `-DPRESET=1` (összevetés: régi alakok).
+> - **2026-11-16 óta az alap:** `PRESET=2` + `SOVCSAT=2` + `KODJAV=1`; a v12-vel bitre azonos régi alap: `-DPRESET=0 -DSOVCSAT=1 -DKODJAV=0` (`F20`, `check_v13.m` K16).
 >
 > Minden új kapcsoló alapból ki van kapcsolva: **kikapcsolva bitre a v12**; az
 > alapértelmezés váltása csapatdöntés. Futtató: `check_v13.m` → `t69`–`t69f`;

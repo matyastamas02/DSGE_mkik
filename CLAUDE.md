@@ -16,8 +16,11 @@ ez még ötletelés fázisú vitaanyag, a végleges forrás később kerül be i
 **Minden új munka erre a modellre épül** (`src/modell/1_fo_vonal_jv/jv_dsge_v13.mod`).
 A v13 a v12 másolata új kapcsolókkal: a háztartás–euró–fogyasztás rész és a
 fiskális blokk javításai, a csapat két bírálata nyomán (2026-11).
-**Minden új kapcsoló alapból ki van kapcsolva: kikapcsolva a v13 bitre a v12.**
-Hogy melyik kerül az alapba, csapatdöntés; addig a két jelölt előbeállításként fut.
+**2026-11-16 óta (csapatdöntés) az alap a központi, Fable-konform jelölt:**
+`PRESET=2` + `SOVCSAT=2` + `KODJAV=1` (három kis kódjavítás a Fable-review
+„apró” listájáról). A v12-vel bitre azonos régi alap: `-DPRESET=0 -DSOVCSAT=1 -DKODJAV=0`.
+Az alap számai (16–20. év): GDP 0,17%, GNI 0,42%, fogyasztás 0,50%, belpiaci KKV
+0,45%, nagyvállalat 0,19%, exportáló KKV 0,06%; tartósan GDP 0,09%, fogyasztás 0,72% (`F20`).
 
 | Kapcsoló | Mit jelent |
 |---|---|
@@ -40,7 +43,8 @@ Hogy melyik kerül az alapba, csapatdöntés; addig a két jelölt előbeállít
   | | GDP | GNI | fogyasztás | belpiaci KKV | nagyvállalat | exportáló KKV |
   |---|---:|---:|---:|---:|---:|---:|
   | v12 alap | 0,39 | 0,39 | −0,48 | 0,35 | 0,17 | 0,12 |
-  | **központi, Fable-konform (`PRESET=2`)** | **0,09** | **0,38** | **0,69** | **0,51** | **0,18** | **−0,00** |
+  | **v13 alap 2026-11-16 óta** (`PRESET=2` + `SOVCSAT=2` + `KODJAV=1`) | **0,17** | **0,42** | **0,50** | **0,45** | **0,19** | **0,06** |
+  | központi, Fable-konform (`PRESET=2`, `SOVCSAT=1`, `KODJAV=0`) | **0,09** | **0,38** | **0,69** | **0,51** | **0,18** | **−0,00** |
   | összevetés: régi alakok (`PRESET=1`) | 0,38 | 0,69 | 0,69 | 0,89 | 0,24 | 0,03 |
 
   - a fogyasztás a konzisztens kalibrációval pozitív lesz (a v12 negatív

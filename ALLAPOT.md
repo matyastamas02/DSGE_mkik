@@ -5,11 +5,11 @@
 
 # DSGE_mkik — állapotlap
 
-*Generálva a füstteszt 2026-11-16 17:07-kor futott eredményéből · commit `fc82fc7` · ág `main`*
+*Generálva a füstteszt 2026-11-16 17:16-kor futott eredményéből · commit `5c586f3` · ág `main`*
 
 **Fő modell:** `src/modell/1_fo_vonal_jv/jv_dsge_v09_access.mod` (Jakab–Világi mag). A `kkv_dsge_*` a referencia-vonal.
 
-**Őrök:** 216 rendben, 0 hiba.
+**Őrök:** 217 rendben, 0 hiba.
 
 ✅ **Minden „áll” állításnak van őre, és minden őr fut.**
 
@@ -191,9 +191,9 @@
 > bizonyíték: `t68b, t68c, t68` — — őr: ✅ `t68b SZINT: a v12 tiszta bovites es visszaadja a reviewer szamait (nesting 0, reviewer 182/184, BK 24/24)`
 > *2026-11-07 · Futtató: check_v12.m (400 negyedéves horizont). Forrás: külső reviewer, „A hitelhozzáférési csatorna: a B, C és B+C eredményei” (2026-11) és „Összetétel-alapú hozzáférés” (2026-10-28). A C- és a B+C-forma nincs a v12-ben (a reviewer szerint a C tartósan pontosan nulla). A v12 alapértelmezése MPT döntése (2026-11-07); a v11 változatlanul megmarad összevetésre.*
 
-**A37.** A v13 (jv_dsge_v13.mod, 2026-11-12 óta a fő modell) a v12 tiszta bővítése: 13 új kapcsoló (SSKONZ, FISCK, NWKAM, SHLNORM, HHB=1|2, SZOCHO, SBAR, SIGW / NUB / EXPEL, DRULE, LEVKAM, SWAPED) és két előbeállítás (PRESET=1|2). Az új kapcsolók nélkül minden pálya bitre azonos a v12-vel; a közös fiskális blokk külföldi tulajdon és likviditáskorlátos teher nélkül tiszta nyilvántartás (max |eltérés| 3e−17); a helyi Python-megoldó 27 referenciaszáma a tűréshatáron belül visszajön; a blokkok azonosságai (adósságegyenlet, konzisztens kalibráció, munkasúlyok, a hitelfelvevő háztartás korlátja, szocho-ék, célpályás szabály) gépi pontossággal teljesülnek; a két előbeállítás bitre azonos a kiírt kapcsolólistával. Mind a 63 futás BK-stabil mindkét rezsimben.
+**A37.** A v13 (jv_dsge_v13.mod, 2026-11-12 óta a fő modell) a v12 tiszta bővítése: 13 új kapcsoló (SSKONZ, FISCK, NWKAM, SHLNORM, HHB=1|2, SZOCHO, SBAR, SIGW / NUB / EXPEL, DRULE, LEVKAM, SWAPED) és két előbeállítás (PRESET=1|2). A -DPRESET=0 -DSOVCSAT=1 -DKODJAV=0 kapcsolókkal (2026-11-16-ig ez volt az alap) minden pálya bitre azonos a v12-vel; a közös fiskális blokk külföldi tulajdon és likviditáskorlátos teher nélkül tiszta nyilvántartás (max |eltérés| 3e−17); a helyi Python-megoldó 27 referenciaszáma a tűréshatáron belül visszajön; a blokkok azonosságai (adósságegyenlet, konzisztens kalibráció, munkasúlyok, a hitelfelvevő háztartás korlátja, szocho-ék, célpályás szabály) gépi pontossággal teljesülnek; a két előbeállítás bitre azonos a kiírt kapcsolólistával. Mind a 67 futás BK-stabil mindkét rezsimben.
 
-> bizonyíték: `t69b, t69c, t69` — — őr: ✅ `t69b SZINT: a v13 tiszta bovites (nesting 0, referencia 27/27, BK 63/63, PRESET 0)`
+> bizonyíték: `t69b, t69c, t69` — — őr: ✅ `t69b SZINT: a v13 tiszta bovites (nesting 0, referencia 27/27, BK 67/67, PRESET 0)`
 > *2026-11-12 · Futtató: check_v13.m (63 futás, K1–K15, 400 negyedéves horizont; Dynare 7.2, MATLAB R2026a; a Dynare 6.5-tel való futás kódszinten átnézve, futtatva nem). Munkanév: jv_dsge_v12k. A K13 a v12-n a 03_FABLE_JELENTES tőkeáttétel-számát (16–20. évi GDP 0,306) is visszaadja. Az alapértelmezés minden új kapcsolónál 0: a v13 alapból bitre a v12, a váltás csapatdöntés.*
 
 **A38.** A háztartási kamatfelár kapcsolója (v12 -DHHSP=1: az optimalizáló háztartás Euler-egyenletében a kamat r + tsov_h·sov + tbank_h·bank, miközben a közös hazai kamat, a cégek és az állam kamata változatlan; -DNUB: a külső zárás rugalmassága) tiszta bővítés: kikapcsolva a t68b-ben rögzített v12-es értéket adja (2e−16), nulla átgyűrűzéssel bitre azonos, tartósan a háztartás reálkamata pontosan visszaáll, és a külföldi adósság pontosan az analitikus (tsov_h·sov + tbank_h·bank)/nu_b. Mind a 11 futás BK-stabil (13/13 mindkét rezsimben).
@@ -201,7 +201,7 @@
 > bizonyíték: `t72b, t72` — — őr: ✅ `t72b SZINT: a haztartasi felar kapcsoloja tiszta bovites (alapag 2e-16, nulla atgyuruzes 0, analitikus adossag 0, BK 11/11)`
 > *2026-11-11 · Futtató: check_hhsp_v12.m (400 negyedéves horizont). Az alapértelmezés HHSP=0 és NUB=0,001 marad (csapatdöntés). A -DNUB EXTCLOSE≥1 mellett mindkét rezsimben hat; 1 pp éves GDP-arányos külső adósság a kamatot nu_b·1600 bp-vel emeli.*
 
-### 🟡 Ami FELTÉTELES — 20 db
+### 🟡 Ami FELTÉTELES — 21 db
 
 *Csak a feltétellel együtt közölhető — küszöbformában, vagy az elfogadási feltétel kiírásával.*
 
@@ -304,6 +304,11 @@
 
 > bizonyíték: `t72b, t72` — — őr: ✅ `t72b SZINT: a haztartasi felar es a kulso zaras (fogyasztas az 1-10. evben +0.86 ... +2.19%, GDP a 16-20. evben -0.12 ... +0.08%, a hazai kamat tartosan +55.25 bp)`
 > *2026-11-11 · FELTÉTELES: (1) Az átgyűrűzés (tsov_h, tbank_h) közelítés, a vállalati semleges értékkel azonos; MNB-kamatstatisztikából (lakás- és személyi hitelek kamata az állampapírhozamhoz képest) horgonyozandó. Az eredmény erősen függ tőle: fél átgyűrűzéssel a GDP +0,18%, teljessel −1,49% a 16–20. évben. (2) A külső zárás rugalmassága (nu_b) nincs horgonyozva; az adósság kamathatására vonatkozó empirikus becslések nagyságrendileg néhány bp-t adnak 1 pp adósságra, ez 0,002–0,005-nek felel meg. (3) A tartós GDP-veszteség a reprezentatív háztartású kis nyitott gazdaság zárásának következménye: tartósan a háztartás reálkamata a diszkontrátához kötött, ezért egy tartósan kisebb háztartási felárat a külső adósság felára pontosan ellensúlyoz, és ez a közös kamaton át a cégeket is terheli. Hogy a valóságban a háztartási eladósodás mennyire emeli a vállalati forrásköltséget, a modell nem mondja meg; háztartás-specifikus adósságfelárral (a felár csak a háztartási kamatot emeli) a cégek kamata változatlan maradna. (4) Az alapértelmezés HHSP=0 marad (csapatdöntés). (5) Előzmény: a SOVCSAT=0-s rács (2026-11-11, próbafutás, nincs a regiszterben) a felárat a közös kamatba tette, így a cégeket és az államot is érintette; ott a 16–20. évi fogyasztás minden zárással negatív volt.*
+
+**F20.** A v13 alapértelmezése 2026-11-16 óta (csapatdöntés): a központi, Fable-konform jelölt (PRESET=2), SOVCSAT=2 (a szuverén felár csak a vállalati felárban, a rezsimek között következetesen) és a kódjavítások (KODJAV=1: a saját tőke biztonságos hozama a nettóvagyon-egyenletben, gam_nwx = omega_nw, a pi_L sokkja eps_md). Ezen az euró hatása a 16–20. évben GDP 0,17%, GNI 0,42%, fogyasztás 0,50%, belpiaci KKV 0,45%, nagyvállalat 0,19%, exportáló KKV 0,06%; tartósan GDP 0,09%, fogyasztás 0,72%. A SOVCSAT=2 csak az átmenetet változtatja (SOVCSAT=1-gyel a 16–20. évi GDP 0,10%, a végállapot azonos); a kódjavítások a 16–20. évi GDP-t +0,02 pp-tel, a végállapotot +0,002 pp-tel mozdítják. A kapcsoló nélküli v13 bitre azonos a -DPRESET=2 -DSOVCSAT=2 -DKODJAV=1 futással. Dynare 6.5-ön a K1–K15 mind teljesül, a jelöltek számai Samu 7.2-es futásával egyeznek.
+
+> bizonyíték: `t69f` — — őr: ✅ `t69f SZINT: a v13 uj alapertelmezese (16-20. ev GDP +0.17%, GNI +0.42%, fogyasztas +0.50%; SOVCSAT=1-gyel GDP +0.10%, KODJAV nelkul +0.15%)`
+> *2026-11-16 · FELTÉTELES: ugyanazok a feltevések, mint az F18 központi jelöltjénél (SBAR, SIGW, exportrugalmasság, a felárbontás sávja 0,28–0,56, a LEVKAM melletti chi nincs újrakalibrálva). Az előre rögzített K16b elvárás (a KODJAV < 0,02 pp-tel mozdítja a 16–20. évi GDP-t) nem teljesült: 0,022 pp; a Fable-becslés (~0,001) a SOVCSAT=1 ágra vonatkozott. A KKV-sorrend feltétel, nem eredmény (F18 8a).*
 
 ### 🔴 Amit VISSZAVONTUNK — 9 db
 
@@ -484,7 +489,7 @@
 
 ---
 
-## Őrök (216 db)
+## Őrök (217 db)
 
 *A füstteszt minden ellenőrzése. Ez a projekt egyetlen olyan nyilvántartása, ami nem tud némán elcsúszni: ha egy állítás megdől, itt megbukik egy sor.*
 
@@ -685,8 +690,9 @@
 - ✅ t72b SZINT: a haztartasi felar kapcsoloja tiszta bovites (alapag 2e-16, nulla atgyuruzes 0, analitikus adossag 0, BK 11/11)
 - ✅ t72b SZINT: a haztartasi felar es a kulso zaras (fogyasztas az 1-10. evben +0.86 ... +2.19%, GDP a 16-20. evben -0.12 ... +0.08%, a hazai kamat tartosan +55.25 bp)
 - ✅ t69 v13 tablak leteznek
-- ✅ t69b SZINT: a v13 tiszta bovites (nesting 0, referencia 27/27, BK 63/63, PRESET 0)
+- ✅ t69b SZINT: a v13 tiszta bovites (nesting 0, referencia 27/27, BK 67/67, PRESET 0)
 - ✅ t69f SZINT: a v13 jeloltjei (16-20. ev GDP: kozponti +0.38%, javitott +0.09%; belpiaci KKV +0.89% / +0.51%)
+- ✅ t69f SZINT: a v13 uj alapertelmezese (16-20. ev GDP +0.17%, GNI +0.42%, fogyasztas +0.50%; SOVCSAT=1-gyel GDP +0.10%, KODJAV nelkul +0.15%)
 - ✅ t53c dekomp BK-stressz letezik
 - ✅ t53c: mind a 45 PF/BK diagnosztika technikailag lefutott
 - ✅ t53c KORREKCIO: az OPTEN1 ACC100 racs pontosan 0/45 terminalis BK-stabil (gyok/elo=15/13)

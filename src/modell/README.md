@@ -116,6 +116,7 @@ tanulmány KERETEZÉSÉT módosította, nem a DSGE szerepét.
   (`-DSIGW`, `-DNUB`, `-DEXPEL`), kísérlet (`-DSWAPED=1`) és két előbeállítás
   (`-DPRESET=1|2`). **Minden új kapcsoló alapból ki van kapcsolva, kikapcsolva bitre a
   v12**; az alapértelmezés váltása csapatdöntés. Futtatás: `check_v13` → `t69`–`t69f`.
+  **2026-11-16:** az alap `PRESET=2` + `SOVCSAT=2` + `KODJAV=1` (régi alap: `-DPRESET=0 -DSOVCSAT=1 -DKODJAV=0`); 16–20. év GDP 0,17%, GNI 0,42%, fogyasztás 0,50% (`F20`, K16; Dynare 6.5-ön K1–K16 teljesül, BK 67/67).
   **Eredmény:** K1–K15 teljesül, BK **63/63** · a 16–20. évben a központi, Fable-konform jelölt
   (`PRESET=2`) GDP **+0,09%**, GNI +0,38%, fogyasztás +0,69%, belpiaci KKV +0,51%, nagyvállalat
   +0,18%, exportáló KKV −0,00%; összevetésként a régi alakokkal (`PRESET=1`, `NWKAM`, régi adósságszabály, `SBAR` nélkül) GDP +0,38%, GNI +0,69%, fogyasztás

@@ -73,6 +73,14 @@
 %   K14 -DHHB=2: (a) -DOMB=0 -DOMNOB=0.25 -DTAXB=0 mellett a kozos valtozok palyaja a
 %       v12-e (< 1e-12); (b) a hitelfelvevo korlatjanak maradeka < 1e-12; (c) a tartos
 %       tobbletadossag d_b - (w + ll) = -rbe/(r_bss + kap_b) (< 1e-8).
+%   K16 Az uj alapertelmezes (2026-11-16): a kapcsolo nelkuli v13 bitre azonos a
+%       -DPRESET=2 -DSOVCSAT=2 -DKODJAV=1 futassal (max |elteres| = 0).
+%       [Az elore rogzitett masodik elvaras -- a kodjavitasok (KODJAV) a 16-20.
+%       evi GDP-t 0.02 pp-nel kevesebbel mozditjak -- 6.5-on NEM teljesult:
+%       0.022 pp (a vegallapotban 0.002 pp). A Fable-becsles (~0.001) a SOVCSAT=1
+%       agra vonatkozott. 2026-11-16 ota csak kozolt szam, nem feltetel.] A K1-K15 futasai a regi alapon futnak (a hianyzo -DPRESET=0
+%       -DSOVCSAT=1 -DKODJAV=0 kapcsolot a futtato hozzaadja), ezert a szamaik
+%       nem valtoztak; az "u_" kezdetu futasok az uj alapon.
 %   K15 Elobeallitasok: -DPRESET=1 es -DPRESET=2 bitre azonos a kiirt kapcsololistaval
 %       (max |elteres| = 0); mindket jeloltnel a 16-20. evben a belpiaci KKV (y_D)
 %       kibocsatasa no a legjobban, utana a nagyvallalate (y_L), utana az exportalo
@@ -233,7 +241,22 @@ F = {
     'j2_sigw06',      MK,  {'-DPRESET=2', '-DSIGW=0.6'}
     'j2_szocho',      MK,  {'-DPRESET=2', '-DSZOCHO=1'}
     'j2_swaped',      MK,  {'-DPRESET=2', '-DSWAPED=1'}
+    % --- az uj alapertelmezes (K16, 2026-11-16) ---
+    'u_alap',         MK,  {}
+    'u_kezi',         MK,  {'-DPRESET=2', '-DSOVCSAT=2', '-DKODJAV=1'}
+    'u_sov1',         MK,  {'-DSOVCSAT=1'}
+    'u_kod0',         MK,  {'-DKODJAV=0'}
     };
+% A K1-K15 futasai a regi (v12-vel bitre azonos) alapon: a hianyzo kapcsolok potlasa.
+REGI = {'-DPRESET=0', '-DSOVCSAT=1', '-DKODJAV=0'};
+for i = 1:size(F, 1)
+    if strcmp(F{i, 2}, MK) && ~startsWith(F{i, 1}, 'u_')
+        for r = REGI
+            nev = extractBefore(r{1}, '=');
+            if ~any(startsWith(F{i, 3}, [nev '='])), F{i, 3} = [F{i, 3}, r]; end
+        end
+    end
+end
 gyorsitotar = fullfile(tempdir, 'check_v13_futasok.mat');
 if strcmp(getenv('V13_CACHE'), '1') && isfile(gyorsitotar)
     load(gyorsitotar, 'R');
@@ -424,7 +447,7 @@ writetable(E, fullfile(tab, 't69e_v13_eves_palya.csv'));
 
 % --- K15: elobeallitasok, a jeloltek (t69f) ----------------------------------------------
 k15a = max(elteres_(R.j1_preset, R.j1_kezi), elteres_(R.j2_preset, R.j2_kezi));
-J = table(); jn = {'v12', 'j1_preset', 'j2_preset', 'j2_sigw06', 'j2_szocho', 'j2_swaped'};
+J = table(); jn = {'v12', 'j1_preset', 'j2_preset', 'j2_sigw06', 'j2_szocho', 'j2_swaped', 'u_alap', 'u_sov1', 'u_kod0'};
 for i = 1:numel(jn)
     x = R.(jn{i}); g = @(v, t) 100*mean(x.pa(v, t)); f = @(v) 100*x.ss(v);
     be = x.p('beta'); tt = 2:size(x.S, 2);
@@ -447,6 +470,12 @@ k15b = all(arrayfun(@(i) J.yD_1620(i) > J.yL_1620(i) && J.yL_1620(i) > J.yE_1620
 fprintf('K15 %.3g  sorrend D > L > E %d\n', k15a, k15b);
 k15ok = k15a == 0 && k15b;
 
+% --- K16: az uj alapertelmezes ----------------------------------------------------------
+k16a = elteres_(R.u_alap, R.u_kezi);
+k16b = abs(Mt.u_alap.GDP1620 - Mt.u_kod0.GDP1620);
+fprintf('K16 %.3g  KODJAV hatasa a 16-20. evi GDP-re %.4f pp\n', k16a, k16b);
+k16ok = k16a == 0;   % a k16b (KODJAV hatasa) kozolt szam, lasd a fejlecet
+
 % --- osszegzes --------------------------------------------------------------------------
 O = table();
 O.K1_nest_maxdiff = k1; O.K2_tiszta_maxdiff = k2;
@@ -463,7 +492,8 @@ O.K12_adossagrata = k12a; O.K12_felezes_fuggetlen = k12b;
 O.K13_nesting = k13a; O.K13_fable_GDP1620 = k13b;
 O.K14_nesting = k14a; O.K14_korlat_maradek = k14b; O.K14_tartos_adossag_hiba = k14c;
 O.K15_preset_maxdiff = k15a; O.K15_sorrend = double(k15b);
-for n = {'j1_preset', 'j2_preset', 'j2_sigw06', 'j2_szocho', 'j2_swaped'}
+O.K16_alap_maxdiff = k16a; O.K16_kodjav_GDP1620_pp = k16b;
+for n = {'j1_preset', 'j2_preset', 'j2_sigw06', 'j2_szocho', 'j2_swaped', 'u_alap', 'u_sov1', 'u_kod0'}
     s = sor(n{1}); b = strrep(n{1}, '_preset', '');
     for v = {'GDP_1620', 'GNI_1620', 'C_1620', 'yE_1620', 'yD_1620', 'yL_1620', 'C_tartos', 'GDP_kozep'}
         O.([b '_' v{1}]) = s.(v{1});
@@ -490,10 +520,10 @@ writetable(O, fullfile(tab, 't69b_v13_osszegzes.csv'));
 disp(rows2vars(O));
 
 k6ok = k6 < 1e-12 && k6sav && ~k6regi;
-rendben = k1 == 0 && k2 < 1e-9 && all(T3.ok == 1) && all(G.ervenyes == 1) && k5 < 1e-10 && k6ok && k7 < 1e-12 && k8ok && k9ok && k10ok && k11ok && k12ok && k13ok && k14ok && k15ok;
-fprintf('\nK1 %d  K2 %d  K3 %d  K4 %d  K5 %d  K6 %d  K7 %d  K8 %d  K9 %d  K10 %d  K11 %d  K12 %d  K13 %d  K14 %d  K15 %d  ->  %s\nKimenet: %s\n', k1 == 0, k2 < 1e-9, ...
-    all(T3.ok == 1), all(G.ervenyes == 1), k5 < 1e-10, k6ok, k7 < 1e-12, k8ok, k9ok, k10ok, k11ok, k12ok, k13ok, k14ok, k15ok, char(string(rendben)), tab);
-assert(rendben, 'Legalabb egy elvaras (K1-K15) nem teljesult -- lasd fent.');
+rendben = k1 == 0 && k2 < 1e-9 && all(T3.ok == 1) && all(G.ervenyes == 1) && k5 < 1e-10 && k6ok && k7 < 1e-12 && k8ok && k9ok && k10ok && k11ok && k12ok && k13ok && k14ok && k15ok && k16ok;
+fprintf('\nK1 %d  K2 %d  K3 %d  K4 %d  K5 %d  K6 %d  K7 %d  K8 %d  K9 %d  K10 %d  K11 %d  K12 %d  K13 %d  K14 %d  K15 %d  K16 %d  ->  %s\nKimenet: %s\n', k1 == 0, k2 < 1e-9, ...
+    all(T3.ok == 1), all(G.ervenyes == 1), k5 < 1e-10, k6ok, k7 < 1e-12, k8ok, k9ok, k10ok, k11ok, k12ok, k13ok, k14ok, k15ok, k16ok, char(string(rendben)), tab);
+assert(rendben, 'Legalabb egy elvaras (K1-K16) nem teljesult -- lasd fent.');
 end
 
 % =====================================================================

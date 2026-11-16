@@ -190,7 +190,19 @@
  *    nwk. A valos (termelesi, export-, keresleti) parameterek maradnak. Azt meri,
  *    mennyit szamit a finanszirozas a keresleti oldalhoz kepest.
  *
- * 13. ELOBEALLITASOK: -DPRESET=1|2 (alapbol nincs; egyenkent felulirhato -D-vel
+ * 14. ALAPERTELMEZES (2026-11-16, csapatdontes): PRESET=2, SOVCSAT=2, KODJAV=1.
+ *    A v12-vel bitre azonos regi alap: -DPRESET=0 -DSOVCSAT=1 -DKODJAV=0.
+ *    -DKODJAV=0|1 (alap 1): harom kis javitas a 03_FABLE_JELENTES "apro" listajabol:
+ *      (a) a nettovagyon-egyenletben a sajat toke biztonsagos hozama:
+ *          + omega_nw*(r(-1) - infl)  [pontos alak: lev*ret - (lev-1)*r];
+ *      (b) gam_nwx = omega_nw (nem omega_nw*beta): a kamat- es a felartag
+ *          ugyanabban a log-egysegben van, a beta szorzonak nincs levezetese;
+ *      (c) a pi_L arazasi sokkja eps_md (mint a pi_E-ben es a pi_D-ben), nem
+ *          e_mx_ar. Determinisztikus futasban hatastalan.
+ *    -DSOVCSAT=2: a szuveren felar csak a vallalati felarban hat, a rezsimek
+ *          kozott kovetkezetesen (03_FABLE_JELENTES K1).
+ *
+ * 13. ELOBEALLITASOK: -DPRESET=0|1|2 (2026-11-16 ota alap 2; 0 = nincs; egyenkent felulirhato -D-vel
  *    csak a PRESET-ben nem szereplo kapcsolok)
  *    (2026-11-16 atnevezve: a 2-es a kozponti jelolt, az 1-es csak osszevetes)
  *    1 = osszevetes, regi alakok: SSKONZ=1 FISCK=1 KAPX=0.38 GAPHX=0.0031 GAPINF=0.00125 NWKAM=1
@@ -203,7 +215,18 @@
  * ---------------------------------------------------------------------
  * ELOZMENY (a v12 fejlece, valtozatlanul):
  */
-@#ifdef PRESET
+// 2026-11-16 (csapatdontes, MPT): az ALAPERTELMEZES a kozponti jelolt (PRESET=2),
+// SOVCSAT=2 es a kodjavitasok (KODJAV=1). A v12-vel bitre azonos regi alap:
+// -DPRESET=0 -DSOVCSAT=1 -DKODJAV=0.
+@#ifndef PRESET
+  @#define PRESET = 2
+@#endif
+@#ifndef SOVCSAT
+  @#define SOVCSAT = 2
+@#endif
+@#ifndef KODJAV
+  @#define KODJAV = 1
+@#endif
 @#if PRESET == 1 || PRESET == 2
   @#define SSKONZ = 1
   @#define FISCK = 1
@@ -220,9 +243,8 @@
   @#define SBAR = 1
   @#define NUB = 0.0025
 @#endif
-@#if PRESET != 1 && PRESET != 2
-  @#error "A -DPRESET erteke 1 (osszevetes, regi alakok) vagy 2 (kozponti jelolt) lehet."
-@#endif
+@#if PRESET != 0 && PRESET != 1 && PRESET != 2
+  @#error "A -DPRESET erteke 0 (nincs elobeallitas), 1 (osszevetes, regi alakok) vagy 2 (kozponti jelolt) lehet."
 @#endif
 /*
  * jv_dsge_v12.mod — 7. LEPCSO (v12): A FO CSAPAS (2026-11-07)
@@ -1543,7 +1565,11 @@ mu_acc_E = @{ACCMUE};
 mu_acc_D = @{ACCMUD};
 @#endif
 @#if NWFIX == 1
+@#if KODJAV == 1
+gam_nwx = omega_nw;          // -DKODJAV=1: a levezetes szerinti szorzo (Fable, apro lista)
+@#else
 gam_nwx = omega_nw*beta;
+@#endif
 @#endif
 @#if NWSPEC >= 1
 pi_nw  = @{PINW};
@@ -1754,6 +1780,9 @@ efp_L = chi_L*(q_L + k_L - nw_L) + @{SBKL}tsov_L*sov + tbank_L*bank@{SBKC};
 @#if NWSPEC == 0
 // v12 -DNWFIX=1 (alap): az adossag utan a szuveren es a banki felar is levonodik.
 nw_E = omega_nw*(nw_E(-1) + lev_E*(ret_E - (r(-1) - infl)))
+@#if KODJAV == 1
+       + omega_nw*(r(-1) - infl)     // -DKODJAV=1: a sajat toke biztonsagos hozama
+@#endif
 @#if NWFIX == 1
 @#if NWKAM == 1
        - gam_nwx*(lev_E - 1)*nwk_E*(tsov_E*sov(-1) + tbank_E*bank(-1))
@@ -1763,6 +1792,9 @@ nw_E = omega_nw*(nw_E(-1) + lev_E*(ret_E - (r(-1) - infl)))
 @#endif
        ;
 nw_D = omega_nw*(nw_D(-1) + lev_D*(ret_D - (r(-1) - infl)))
+@#if KODJAV == 1
+       + omega_nw*(r(-1) - infl)     // -DKODJAV=1: a sajat toke biztonsagos hozama
+@#endif
 @#if NWFIX == 1
 @#if NWKAM == 1
        - gam_nwx*(lev_D - 1)*nwk_D*(tsov_D*sov(-1) + tbank_D*bank(-1))
@@ -1772,6 +1804,9 @@ nw_D = omega_nw*(nw_D(-1) + lev_D*(ret_D - (r(-1) - infl)))
 @#endif
        ;
 nw_L = omega_nw*(nw_L(-1) + lev_L*(ret_L - (r(-1) - infl)))
+@#if KODJAV == 1
+       + omega_nw*(r(-1) - infl)     // -DKODJAV=1: a sajat toke biztonsagos hozama
+@#endif
 @#if NWFIX == 1
 @#if NWKAM == 1
        - gam_nwx*(lev_L - 1)*nwk_L*(tsov_L*sov(-1) + tbank_L*bank(-1))
@@ -1929,7 +1964,11 @@ pi_E = beta/(1+beta*vth_p)*pi_E(+1) + vth_p/(1+beta*vth_p)*pi_E(-1)
 pi_D = beta/(1+beta*vth_p)*pi_D(+1) + vth_p/(1+beta*vth_p)*pi_D(-1)
        + lam_p/(1+beta*vth_p)*(mc_D - p_D) + eps_md;
 pi_L = beta/(1+beta*vth_p)*pi_L(+1) + vth_p/(1+beta*vth_p)*pi_L(-1)
+@#if KODJAV == 1
+       + lam_p/(1+beta*vth_p)*(mc_L - p_L) + eps_md;   // -DKODJAV=1: mint a pi_E es a pi_D
+@#else
        + lam_p/(1+beta*vth_p)*(mc_L - p_L) + e_mx_ar;
+@#endif
 // Relativ arak mozgasa.
 p_E = p_E(-1) + pi_E - infl;
 p_D = p_D(-1) + pi_D - infl;
