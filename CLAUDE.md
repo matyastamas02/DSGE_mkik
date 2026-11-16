@@ -34,7 +34,7 @@ reviewer ajánlása nyomán (2026-11):
   - a KKV-küszöb (`F01`, `A22`, `(λ·ω)* = 500`) az A-formáról szól, **a v12-ben
     nem értelmezett**;
   - a fiskális eredmények (`A32`–`A35`, `F12`–`F16`) 2026-11-08 óta a v12-n vannak
-    (`check_*_v12.m` → `t69`–`t71`); az F13 fogyasztási előjele és az F15 mechanizmusa
+    (`check_*_v12.m` → `t73`, `t70`–`t71`); az F13 fogyasztási előjele és az F15 mechanizmusa
     megfordult, a v11-es értékek a megjegyzésekben (a `t65`–`t67` őrei alatt).
 - **Új blokkot vagy kapcsolót a v12-be teszünk**, nem a v11-be. A v11 régi
   ágait csak összevetésre futtatjuk.

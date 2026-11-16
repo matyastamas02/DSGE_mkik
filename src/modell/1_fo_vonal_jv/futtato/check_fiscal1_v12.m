@@ -1,6 +1,6 @@
 % check_fiscal1_v12.m — v12: fiskalis blokk, 1. lepes (-DFISCAL=1) ellenorzese
 % A v11-es futtato (check_fiscal1_v11.m) masolata a v12-re, a fo csapasra (2026-11-08):
-% csak a modell neve es a kimeneti tablak (t69*) valtoztak. Az elvarasok a
+% csak a modell neve es a kimeneti tablak (t73*) valtoztak. Az elvarasok a
 % v11-es futtatoeval azonosak; a v12 alapja B-forma hozzaferes, JV-export es
 % javitott nettovagyon-egyenlet, ezert a szamszeru varakozasok elterhetnek.
 % =====================================================================
@@ -39,9 +39,9 @@
 % Szamitasi horizont 400 negyedev; kozolni legfeljebb 20 evet (a fo mutato a
 % 16-20. ev atlaga = 61-80. negyedev).
 %
-% Kimenet: output/tables/t69_fiscal1_racs.csv        (BK-racs)
-%          output/tables/t69b_fiscal1_osszegzes.csv  (T1a-T1e)
-%          output/tables/t69c_fiscal1_palyak.csv     (negyedeves palyak, 0-80)
+% Kimenet: output/tables/t73_fiscal1_racs.csv        (BK-racs)
+%          output/tables/t73b_fiscal1_osszegzes.csv  (T1a-T1e)
+%          output/tables/t73c_fiscal1_palyak.csv     (negyedeves palyak, 0-80)
 % Futtatas: matlab -batch "cd('<repo>/src/modell/1_fo_vonal_jv/futtato'); check_fiscal1_v12"
 
 cd(fileparts(fileparts(mfilename('fullpath'))));
@@ -100,7 +100,7 @@ G = [G; sor_("regi", 0, 0, 100, Q1)];
 G = [G; sor_("regi", THETA, 0, 100, fut_([REGI, {'-DFISCAL=1', sprintf('-DTHETAF=%g', THETA)}]))];
 G = [G; sor_("aktiv_FOREIGN1", THETA, 0, 100, ...
     fut_({'-DFISCAL=1', sprintf('-DTHETAF=%g', THETA), '-DFOREIGN=1'}))];
-writetable(G, fullfile(tab, 't69_fiscal1_racs.csv'));
+writetable(G, fullfile(tab, 't73_fiscal1_racs.csv'));
 
 % --- palyak (negyedeves, 0-80) -----------------------------------------------
 P = table((0:80)', 'VariableNames', {'negyedev'});
@@ -113,7 +113,7 @@ P.nyereseg_aram_th04 = ny4(1:81)';
 for nv = {'y', 'c', 'im', 'rer', 'dep'}
     P.(['d_' nv{1} '_th04_pp']) = 100*(R4.pa(nv{1}, 1:81) - R1.pa(nv{1}, 1:81))';
 end
-writetable(P, fullfile(tab, 't69c_fiscal1_palyak.csv'));
+writetable(P, fullfile(tab, 't73c_fiscal1_palyak.csv'));
 
 % --- osszegzes -----------------------------------------------------------------
 akt = G(G.beallitas == "aktiv", :); rg_ = G(G.beallitas == "regi", :);
@@ -160,7 +160,7 @@ O.rhom_kamatkiadas_1ev_GDP_pct = 100*q(m, 'intexp', 4);
 O.rhom_kamatkiadas_5ev_GDP_pct = 100*q(m, 'intexp', 20);
 O.rhom_kamatkiadas_1620_GDP_pct = 100*mean(m.pa('intexp', ab));
 O.rhom_bg_20ev_arany = q(m, 'bg', 80)/m.ss('bg');
-writetable(O, fullfile(tab, 't69b_fiscal1_osszegzes.csv'));
+writetable(O, fullfile(tab, 't73b_fiscal1_osszegzes.csv'));
 disp(rows2vars(O));
 
 % =====================================================================
