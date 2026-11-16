@@ -37,6 +37,8 @@
  *    A -DFOREIGN=1 aggal nincs levezetve (forditasi hiba).
  *
  * 2. NETTOVAGYON-JAVITAS A MERT FELARAS ARANNYAL: -DNWKAM=0|1 (alap 0)
+ *    !! 2026-11-16: a 03_FABLE_JELENTES szerint NEM KOVETKEZETES (csak a levonast
+ *    szukiti, a tokeattetelt nem); a kovetkezetes forma a -DLEVKAM=1. Csak osszevetesre.
  *    A v12 -DNWFIX=1 a felarat a TELJES kotelezettsegre (lev_j - 1) vonja le.
  *    1 = a levonas a kotelezettsegek felarat hordozo reszere szorul:
  *          - gam_nwx*(lev_j - 1)*nwk_j*(tsov_j*sov(-1) + tbank_j*bank(-1))
@@ -85,6 +87,8 @@
  *    A SSKONZ utan all. A tobbi kapcsolotol fuggetlen.
  *
  * 5. HITELFELVEVO HAZTARTAS PUHA HITELKORLATTAL: -DHHB=0|1 (alap 0)
+ *    !! 2026-11-16: a 03_FABLE_JELENTES ezt a format vetette el (a nagysag egy becsles
+ *    nelkuli rugalmassagon mulik); a javasolt forma a -DHHB=2. Csak osszevetesre.
  *    Terv: haztartas_v96/terv_hhb.md, szamok: haztartas_v96/README.md.
  *    Harom csoport: megtakarito (Euler r-rel, valtozatlan), hitelfelvevo
  *    (om_b), likviditaskorlatos (om_no). A hitelfelvevo:
@@ -188,8 +192,9 @@
  *
  * 13. ELOBEALLITASOK: -DPRESET=1|2 (alapbol nincs; egyenkent felulirhato -D-vel
  *    csak a PRESET-ben nem szereplo kapcsolok)
- *    1 = kozponti jelolt: SSKONZ=1 FISCK=1 KAPX=0.38 GAPHX=0.0031 GAPINF=0.00125 NWKAM=1
- *    2 = javitott jelolt (a 03_FABLE_JELENTES javitasaival): SSKONZ=1 FISCK=1
+ *    (2026-11-16 atnevezve: a 2-es a kozponti jelolt, az 1-es csak osszevetes)
+ *    1 = osszevetes, regi alakok: SSKONZ=1 FISCK=1 KAPX=0.38 GAPHX=0.0031 GAPINF=0.00125 NWKAM=1
+ *    2 = KOZPONTI JELOLT, Fable-konform (a 03_FABLE_JELENTES javitasaival): SSKONZ=1 FISCK=1
  *        KAPX=0.38 GAPHX=0.0031 GAPINF=0.00125 LEVKAM=1 DRULE=1 SBAR=1 NUB=0.0025
  *
  * A HOZZAFERESI FORMAHOZ nem kell uj kapcsolo: a v12 -DACCFORM=1 a B-forma.
@@ -216,7 +221,7 @@
   @#define NUB = 0.0025
 @#endif
 @#if PRESET != 1 && PRESET != 2
-  @#error "A -DPRESET erteke 1 (kozponti jelolt) vagy 2 (javitott jelolt) lehet."
+  @#error "A -DPRESET erteke 1 (osszevetes, regi alakok) vagy 2 (kozponti jelolt) lehet."
 @#endif
 @#endif
 /*

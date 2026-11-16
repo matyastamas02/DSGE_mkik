@@ -6,7 +6,7 @@
 > nyomán a háztartás–euró–fogyasztás részt és a fiskális blokkot javítja. Minden
 > új kapcsoló alapból ki van kapcsolva, kikapcsolva a v13 **bitre a v12**; az
 > alapértelmezés váltása csapatdöntés. Addig két előbeállítás fut:
-> `-DPRESET=1` (központi jelölt) és `-DPRESET=2` (javított jelölt).
+> **`-DPRESET=2` (központi jelölt, Fable-konform)** és `-DPRESET=1` (összevetés: régi alakok, `NWKAM`, régi adósságszabály, `SBAR` nélkül, `nu` 0,001; 2026-11-16-ig „központi” néven).
 >
 > **Mit javít:**
 >
@@ -40,14 +40,16 @@
 > | | GDP | GNI | fogyasztás | belpiaci KKV | nagyvállalat | exportáló KKV | fogyasztás tartósan |
 > |---|---:|---:|---:|---:|---:|---:|---:|
 > | v12 alap | 0,39 | 0,39 | −0,48 | 0,35 | 0,17 | 0,12 | −0,51 |
-> | központi (`PRESET=1`) | 0,38 | 0,69 | 0,69 | 0,89 | 0,24 | 0,03 | 0,82 |
-> | javított (`PRESET=2`) | 0,09 | 0,38 | 0,69 | 0,51 | 0,18 | −0,00 | 0,72 |
+> | **központi, Fable-konform (`PRESET=2`)** | **0,09** | **0,38** | **0,69** | **0,51** | **0,18** | **−0,00** | **0,72** |
+> | összevetés: régi alakok (`PRESET=1`) | 0,38 | 0,69 | 0,69 | 0,89 | 0,24 | 0,03 | 0,82 |
 > | javított + európai vagyonhatás (`-DSIGW=0.6`) | 0,28 | 0,57 | 0,75 | 0,59 | 0,30 | 0,11 | 0,80 |
 > | javított + szochós visszaadás (`-DSZOCHO=1`) | 0,45 | 0,74 | 0,80 | 0,66 | 0,40 | 0,22 | 0,86 |
 >
 > **Ami minden vizsgált változatban áll:** a tartós fogyasztás pozitív a
 > konzisztens kalibrációval; a belpiaci KKV nyer a legtöbbet, utána a
 > nagyvállalat, az exportáló KKV nulla körül marad; a GNI nagyobb a GDP-nél.
+> ⚠ A KKV-sorrend feltétel, nem eredmény: az exportálók euróhaszna (tranzakciós
+> költség, árfolyamkockázat) nincs a modellben.
 > **Ami nem áll:** a szintek. A GDP-hatás a 16–20. évben 0,01 és 0,45% között
 > van, a belpiaci KKV 0,43 és 1,02% között; csak sávként közölhető.
 >
@@ -56,7 +58,7 @@
 > 1. **A hiteles cégek tőkearánya (`SBAR`):** a belpiaci KKV-t 0,86-ról 0,51-re
 >    viszi. Az arány mért, de feltevés, hogy a hitel nélküli cégek forrásköltsége
 >    nem követi a felárat; ha részben követi, a hatás nagyobb.
-> 2. **A vagyonhatás erőssége (`SIGW`):** a javított jelöltön a GDP-t 0,09-ről
+> 2. **A vagyonhatás erőssége (`SIGW`):** a központi jelöltön a GDP-t 0,09-ről
 >    0,28–0,33-ra mozdítja. Magyar becslés nincs; az amerikai (Golosov és tsai,
 >    2024) és a svéd–holland (Cesarini és tsai, 2017) lottós becslésből képeztük
 >    le, részleges egyensúlyi képlettel. A σ-t a modell csak a bérgörbében téríti

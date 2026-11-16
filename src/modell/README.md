@@ -116,10 +116,10 @@ tanulmány KERETEZÉSÉT módosította, nem a DSGE szerepét.
   (`-DSIGW`, `-DNUB`, `-DEXPEL`), kísérlet (`-DSWAPED=1`) és két előbeállítás
   (`-DPRESET=1|2`). **Minden új kapcsoló alapból ki van kapcsolva, kikapcsolva bitre a
   v12**; az alapértelmezés váltása csapatdöntés. Futtatás: `check_v13` → `t69`–`t69f`.
-  **Eredmény:** K1–K15 teljesül, BK **63/63** · a 16–20. évben a központi jelölt
-  (`PRESET=1`) GDP **+0,38%**, GNI +0,69%, fogyasztás +0,69%, belpiaci KKV +0,89%, nagyvállalat
-  +0,24%, exportáló KKV +0,03%; a javított (`PRESET=2`) GDP **+0,09%**, GNI +0,38%, fogyasztás
-  +0,69%, belpiaci KKV +0,51%, nagyvállalat +0,18%, exportáló KKV −0,00% · a szintek
+  **Eredmény:** K1–K15 teljesül, BK **63/63** · a 16–20. évben a központi, Fable-konform jelölt
+  (`PRESET=2`) GDP **+0,09%**, GNI +0,38%, fogyasztás +0,69%, belpiaci KKV +0,51%, nagyvállalat
+  +0,18%, exportáló KKV −0,00%; összevetésként a régi alakokkal (`PRESET=1`, `NWKAM`, régi adósságszabály, `SBAR` nélkül) GDP +0,38%, GNI +0,69%, fogyasztás
+  +0,69%, belpiaci KKV +0,89%, nagyvállalat +0,24%, exportáló KKV +0,03% · a szintek
   feltevésfüggők (bizonytalanságok: `F18`). Állítások: `A37`, `F18`.
 
 - **`jv_dsge_v12.mod`** (2026-11-07) — **A FŐ CSAPÁS 2026-11-07 és 2026-11-12 között.** A v11 + három új alapértelmezés, egy külső reviewer ajánlása szerint

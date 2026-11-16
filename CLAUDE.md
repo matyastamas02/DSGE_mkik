@@ -23,15 +23,15 @@ Hogy melyik kerül az alapba, csapatdöntés; addig a két jelölt előbeállít
 |---|---|
 | `-DSSKONZ=1` | konzisztens kalibráció: a tőke- és az importhányad szintje a nemzeti számlákból (Eurostat S11, OECD ICIO), a típusok közti különbség az Optenből |
 | `-DFISCK=1` | közös fiskális blokk: forint- és devizaadósság, mért külföldi tulajdon (ÁKK), többéves állampapír, adósságszabály |
-| `-DNWKAM=1` / `-DLEVKAM=1` | a nettóvagyon-javítás csak a felárat hordozó kötelezettségrészre (Opten 0,52 / 0,52 / 0,51), illetve a tőkeáttétel a kamatozó adósságra |
+| `-DNWKAM=1` / `-DLEVKAM=1` | a nettóvagyon-javítás csak a felárat hordozó kötelezettségrészre (Opten 0,52 / 0,52 / 0,51), illetve a tőkeáttétel a kamatozó adósságra. ⚠ A `NWKAM` Fable szerint nem következetes, a `LEVKAM` a helyes forma |
 | `-DSBAR=1` | a felárcsökkenés csak a hitellel rendelkező cégek tőkéjén hat (Opten 0,60 / 0,40 / 0,47) |
 | `-DDRULE=1` | célpályás adósságszabály (a végállapot nem függ a szabály sebességétől) |
-| `-DHHB=1\|2` | hitelfelvevő háztartás: puha korlát, illetve törlesztési korlát |
+| `-DHHB=1\|2` | hitelfelvevő háztartás: puha korlát, illetve törlesztési korlát. ⚠ Az `1`-es formát Fable elvetette, a `2`-es a javasolt |
 | `-DSZOCHO=1` | a kamatmegtakarítás visszaadása szochón keresztül (forgatókönyv) |
 | `-DSHLNORM=1\|2` | a munkasúlyok összege 1 |
 | `-DSIGW` · `-DNUB` · `-DEXPEL` | érzékenység: vagyonhatás, a külső zárás rugalmassága, exportrugalmasság |
 | `-DSWAPED=1` | kísérlet: a két KKV-típus pénzügyi paramétereinek cseréje |
-| `-DPRESET=1\|2` | előbeállítás: 1 = központi jelölt (`SSKONZ FISCK NWKAM` + mért felárbontás), 2 = javított jelölt (`SSKONZ FISCK LEVKAM DRULE SBAR`, `nu` 0,0025) |
+| `-DPRESET=1\|2` | előbeállítás: **2 = központi jelölt, Fable-konform** (`SSKONZ FISCK LEVKAM DRULE SBAR` + mért felárbontás, `nu` 0,0025); 1 = összevetés, régi alakok (`SSKONZ FISCK NWKAM` + mért felárbontás) |
 
 - **Futtató:** `futtato/check_v13.m` → `t69`–`t69f` (63 futás, K1–K15).
   **Állítások:** `A37` (tiszta bővítés), `F18` (a jelöltek eredményei).
@@ -40,12 +40,15 @@ Hogy melyik kerül az alapba, csapatdöntés; addig a két jelölt előbeállít
   | | GDP | GNI | fogyasztás | belpiaci KKV | nagyvállalat | exportáló KKV |
   |---|---:|---:|---:|---:|---:|---:|
   | v12 alap | 0,39 | 0,39 | −0,48 | 0,35 | 0,17 | 0,12 |
-  | központi (`PRESET=1`) | 0,38 | 0,69 | 0,69 | 0,89 | 0,24 | 0,03 |
-  | javított (`PRESET=2`) | 0,09 | 0,38 | 0,69 | 0,51 | 0,18 | −0,00 |
+  | **központi, Fable-konform (`PRESET=2`)** | **0,09** | **0,38** | **0,69** | **0,51** | **0,18** | **−0,00** |
+  | összevetés: régi alakok (`PRESET=1`) | 0,38 | 0,69 | 0,69 | 0,89 | 0,24 | 0,03 |
 
   - a fogyasztás a konzisztens kalibrációval pozitív lesz (a v12 negatív
     fogyasztása a tőke- és importhányad ellentmondásából jött);
-  - a sorrend mindkét jelöltnél: belpiaci KKV > nagyvállalat > exportáló KKV;
+  - a sorrend mindkét változatban: belpiaci KKV > nagyvállalat > exportáló KKV —
+    ez **feltétel, nem eredmény**: a modellben nincs az exportálók euróhaszna
+    (tranzakciós költség, árfolyamkockázat), és a különbség a keresleti oldalból jön;
+  - a felárbontás hitelkockázati része egynapi pillanatkép: **sáv 0,28–0,56**, a 0,38 csak középpont;
   - a **szintek feltevésfüggők** (a GDP 16–20. évi hatása a vizsgált
     változatokban 0,01–0,45%), pontszámként nem közölhetők, csak sávként.
 - **Ami bizonytalan**, nagyság szerint: a hiteles cégek tőkearánya (`SBAR`), a

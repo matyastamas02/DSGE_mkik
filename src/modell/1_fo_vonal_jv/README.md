@@ -9,13 +9,13 @@
 > - **nettóvagyon-javítás a felárat hordozó részre** (`-DNWKAM=1`), illetve **tőkeáttétel a kamatozó adósságra** (`-DLEVKAM=1`);
 > - **hiteles cégek tőkearánya** (`-DSBAR=1`), **célpályás adósságszabály** (`-DDRULE=1`);
 > - **hitelfelvevő háztartás** (`-DHHB=1|2`), **szochós visszaadás** (`-DSZOCHO=1`), munkasúlyok (`-DSHLNORM`), érzékenységek (`-DSIGW`, `-DNUB`, `-DEXPEL`), kísérlet (`-DSWAPED=1`);
-> - **két előbeállítás:** `-DPRESET=1` (központi jelölt), `-DPRESET=2` (javított jelölt).
+> - **két előbeállítás:** **`-DPRESET=2` (központi jelölt, Fable-konform)**, `-DPRESET=1` (összevetés: régi alakok).
 >
 > Minden új kapcsoló alapból ki van kapcsolva: **kikapcsolva bitre a v12**; az
 > alapértelmezés váltása csapatdöntés. Futtató: `check_v13.m` → `t69`–`t69f`;
-> állítások: `A37`, `F18`. A 16–20. évben a GDP-hatás a központi jelöltön
-> 0,38%, a javítotton 0,09% (v12: 0,39%); a belpiaci KKV 0,89%, illetve
-> 0,51%. A szintek feltevésfüggők, a bizonytalanságokat az `F18` sorolja fel.
+> állítások: `A37`, `F18`. A 16–20. évben a GDP-hatás a központi (Fable-konform) jelöltön
+> 0,09%, a régi alakokkal 0,38% (v12: 0,39%); a belpiaci KKV 0,51%, illetve
+> 0,89%. A szintek feltevésfüggők, a bizonytalanságokat az `F18` sorolja fel.
 >
 > *A v12 (2026-11-07 – 2026-11-12 a fő csapás) változatlanul megmarad; a v13
 > nesting-tesztje (K1) rajta áll.*
@@ -77,7 +77,7 @@ matlab -batch "cd('src/modell/1_fo_vonal_jv/futtato'); stress_jv_access_v09"
 
 ## Makró-kapcsolók
 
-**v13** (mind alap 0 = ki; a részletek és az alkapcsolók a `.mod` fejlécében): **`-DSSKONZ=1`** (konzisztens kalibráció; `-DZETABAR`, `-DIMPQ`) · **`-DFISCK=1`** (közös fiskális blokk; `-DKAPX`, `-DGAPHX`, `-DGAPINF`, `-DTHETAH`, `-DTHETAX`, `-DTAXCASH`, `-DFELEZES`, `-DFISCPAUSE` stb.; a v12 `-DFISCAL=1` blokkjával nem kapcsolható együtt) · **`-DNWKAM=1`** · **`-DLEVKAM=1`** (`-DLVE/LVD/LVL`) · **`-DSBAR=1`** (`-DSBE/SBD/SBL`) · **`-DDRULE=1`** · **`-DHHB=1|2`** (`-DNUHH`, `-DOMB` stb.) · **`-DSZOCHO=1`** (`-DSZD`) · **`-DSHLNORM=1|2`** · **`-DSIGW=<x>`** · **`-DNUB=<x>`** · **`-DEXPEL=<x>`** · **`-DSWAPED=1`** (kísérlet) · **`-DPRESET=1|2`** (központi, illetve javított jelölt; a PRESET-ben nem szereplő kapcsolók mellé adhatók).
+**v13** (mind alap 0 = ki; a részletek és az alkapcsolók a `.mod` fejlécében): **`-DSSKONZ=1`** (konzisztens kalibráció; `-DZETABAR`, `-DIMPQ`) · **`-DFISCK=1`** (közös fiskális blokk; `-DKAPX`, `-DGAPHX`, `-DGAPINF`, `-DTHETAH`, `-DTHETAX`, `-DTAXCASH`, `-DFELEZES`, `-DFISCPAUSE` stb.; a v12 `-DFISCAL=1` blokkjával nem kapcsolható együtt) · **`-DNWKAM=1`** (⚠ Fable szerint nem következetes, a `LEVKAM` a helyes forma) · **`-DLEVKAM=1`** (`-DLVE/LVD/LVL`) · **`-DSBAR=1`** (`-DSBE/SBD/SBL`) · **`-DDRULE=1`** · **`-DHHB=1|2`** (⚠ az `1`-est Fable elvetette, a `2`-es a javasolt; `-DNUHH`, `-DOMB` stb.) · **`-DSZOCHO=1`** (`-DSZD`) · **`-DSHLNORM=1|2`** · **`-DSIGW=<x>`** · **`-DNUB=<x>`** · **`-DEXPEL=<x>`** · **`-DSWAPED=1`** (kísérlet) · **`-DPRESET=1|2`** (2 = központi jelölt, Fable-konform; 1 = összevetés, régi alakok; a PRESET-ben nem szereplő kapcsolók mellé adhatók).
 
 **v12:** **`-DACCFORM=0|1`** (A / **B**, alap 1) · **`-DACCMUE=<x>` / `-DACCMUD=<x>`**
 (a `μ_j`, alap 0,0051 / 0,0116) · **`-DEXPJV=0|1`** (alap 1) · **`-DNWFIX=0|1`**

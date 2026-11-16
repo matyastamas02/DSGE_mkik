@@ -23,7 +23,7 @@
 %   -DLEVKAM=1  a tokeattetel a kamatozo adossagra (levkam_v103)
 %   -DHHB=2     torlesztesi korlatos hitelfelvevo haztartas (hhb_jtm_v104)
 %   -DSWAPED=1  kiserlet: az E es a D penzugyi parametereinek csereje (csere_v106)
-%   -DPRESET=1|2 elobeallitas: kozponti (1), javitott (2) jelolt
+%   -DPRESET=1|2 elobeallitas: osszevetes, regi alakok (1), kozponti jelolt, Fable-konform (2)
 % A zarojelben a reszletes meresek munkamappai (codex, nem a repoban).
 % A hozzaferesi forma a v12 B-formaja (-DACCFORM=1); ket beallitassal fut:
 %   v12:   mu E 0.0051 / D 0.0116, rho_acc 0.85 (a v12 alapertelmezese)
